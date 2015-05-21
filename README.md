@@ -2,11 +2,19 @@ Imager is an image/video processing package for R, based on CImg, a C++ library 
 
 How to install:
 
-So far the package is only available as source code, so you'll need a functional R build environment. 
+So far the package is only available as source code, so you'll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11. 
 You'll also need ImageMagick and ffmpeg somewhere on your path if you want to import and save images. 
 
 Quick start:
-Read the package vignette. 
+
+``
+tennis <- load.image(system.file('extdata/tennis_sif.mpeg',package='imager'))
+play(tennis)
+ #now filter in the time direction and pipe to play
+deriche(tennis,10,axis="z") %>% play
+``
+
+Documentation is available [here](http://dahtah.github.io/imager/)
 
 Current status:
 
