@@ -44,7 +44,7 @@ void play(NumericVector inp,bool loop=false,int delay=30)
 	    }
 	  }
 	
-	if (disp.is_closed() | Rcpp::checkUserInterrupt())
+	if (disp.is_closed())
 	  {
 	    break;
 	  }
@@ -53,6 +53,7 @@ void play(NumericVector inp,bool loop=false,int delay=30)
 	    i++;
 	  }
 	disp.wait(delay);
+	Rcpp::checkUserInterrupt();
       }
 
     return;
