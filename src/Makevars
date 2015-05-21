@@ -1,0 +1,1 @@
+PKG_LIBS +=  -lX11 $(RCPP_LDFLAGS)
