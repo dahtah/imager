@@ -1,11 +1,12 @@
 Imager is an image/video processing package for R, based on CImg, a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for applications like video processing/hyperspectral imaging/MRI.
 
-How to install:
+## How to install
 
 So far the package is only available as source code, so you'll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11. 
 You'll also need ImageMagick and ffmpeg somewhere on your path if you want to import and save images. 
 
-Quick start:
+
+## Getting started 
 
 ``
 tennis <- load.image(system.file('extdata/tennis_sif.mpeg',package='imager'))
@@ -14,9 +15,12 @@ play(tennis)
 deriche(tennis,10,axis="z") %>% play
 ``
 
-Documentation is available [here](http://dahtah.github.io/imager/)
+Documentation is available [here](http://dahtah.github.io/imager/). To get a list of all package functions, run:
+``ls(pos = "package:imager")`` 
 
-Current status:
+
+
+## Current status
 
 - Most CImg functions for filtering, morphology and colourspace conversions have R interfaces. The function calls and documentation is mostly verbatim copy from the original C++ API.
 - There isn't a whole lot of argument checking so you might crash your session if you try something unexpected. Please report it if that happens.
