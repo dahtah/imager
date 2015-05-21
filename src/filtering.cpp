@@ -11,7 +11,6 @@ using namespace cimg_library;
 //' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
 //' @export
 // [[Rcpp::export]]
-
 NumericVector deriche(NumericVector inp,float sigma,int order=0,char axis = 'x',bool boundary_conditions=0)
 {
   CImg<double> img = as<CImg<double> >(inp);

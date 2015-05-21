@@ -17,11 +17,12 @@ NULL
 ##' cimg is a class for storing image or video/hyperspectral data.  It is designed to provide easy interaction with the CImg library, but in order to use it you need to be aware of how CImg wants its image data stored. 
 ##' Images have up to 4 dimensions, labelled x,y,z,c. x and y are the usual spatial dimensions, z is a depth dimension (which would correspond to time in a movie), and c is a colour dimension. Images are stored linearly in that order, starting from the top-left pixel and going along *rows* (scanline order).
 ##' A colour image is just three R,G,B channels in succession. A sequence of N images is encoded as R1,R2,....,RN,G1,...,GN,B1,...,BN where R_i is the red channel of frame i.
+##' The number of pixels along the x,y,z, and c axes is called (in that order), width, height, depth and spectrum. 
 ##' 
 ##' @title Create a cimg object 
 ##' @param X a four-dimensional numeric array
 ##' @return an object of class cimg
-##' @author simon
+##' @author Simon Barthelme
 ##' @export
 cimg <- function(X)
     {
@@ -29,43 +30,42 @@ cimg <- function(X)
         X
     }
 
-##' @export
-cimg.gs <- function(X)
-    {
-        dim(X) <- c(dim(X),1,1)
-        cimg(X)
-    }
 
-##' @export
-cimg.colour <- function(X)
-    {
-        dim(X) <- c(dim(X)[1:2],1,dim(X)[3])
-        cimg(X)
-    }
 
+
+
+
+
+##' Display an image using base graphics
+##'
+##' @param im the image 
+##' @param frame which frame to display, if the image has depth > 1
+##' @param rescale.color rescale channels so that the values are in [0,1] 
+##' @param ... other parameters to be passed to plot.default (eg "main")
+##' @seealso display, which is much faster
 ##' @export
-plot.cimg <- function(X,frame,rescale.color=TRUE,...)
+plot.cimg <- function(im,frame,rescale.color=TRUE,...)
     {
-        w <- width(X)
-        h <- height(X)
-        if (rescale.color & !all(X==0))  X <- (X-min(X))/diff(range(X))
-        if (dim(X)[3] == 1) #Single image (depth=1)
+        w <- width(im)
+        h <- height(im)
+        if (rescale.color & !all(im==0))  im <- (im-min(im))/diff(range(im))
+        if (dim(im)[3] == 1) #Single image (depth=1)
             {
                 
-                dim(X) <- dim(X)[-3]
-                if (dim(X)[3] == 1) #BW
+                dim(im) <- dim(im)[-3]
+                if (dim(im)[3] == 1) #BW
                     {
-                        dim(X) <- dim(X)[1:2]
-                        X <- t(X)
-                        class(X) <- "matrix"
+                        dim(im) <- dim(im)[1:2]
+                        im <- t(im)
+                        class(im) <- "matrix"
                     }
                 else{
-                    X <- aperm(X,c(2,1,3))
-                    class(X) <- "array"
+                    im <- aperm(im,c(2,1,3))
+                    class(im) <- "array"
                 }
                 plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...)
                 
-                rasterImage(X,1,1,w,h)
+                rasterImage(im,1,1,w,h)
             }
         else
             {
@@ -74,7 +74,7 @@ plot.cimg <- function(X,frame,rescale.color=TRUE,...)
                         warning("Showing first frame")
                         frame <- 1
                     }
-                plot.cimg(X[,,frame,],rescale.color=rescale.color,...)
+                plot.cimg(im[,,frame,],rescale.color=rescale.color,...)
             }
     }
 
@@ -142,48 +142,21 @@ print.cimg <- function(im)
 
 chan.index <- list("x"=1,"y"=2,"z"=3,"c"=4)
 
-labind <- function(lst,d)
-    {
-        do.call(function(...) abind(...,along=d),lst)
-    }
-
 ##' @export
 width <- function(im) dim(im)[1]
+
 
 ##' @export
 height <- function(im) dim(im)[2]
 
+
 ##' @export
 spectrum <- function(im) dim(im)[4]
+
 
 ##' @export
 depth <- function(im) dim(im)[3]
 
-iiply <- function(im,d,fun)
-    {
-        if (is.character(d)) d <- chan.index[[d]]
-        if (dim(im)[d] == 1)
-            {
-                res <- fun(im)
-            }
-        if (spectrum(im)==1 & depth(im)==1)
-            {
-
-                
-            }
-        else if (depth(im)==1)
-            {
-                res <- alply(im,d,fun) %>% labind(d-1)
-                browser()
-                dim(res) <- c(dim(res)[1:2],1,dim(res)[3])
-            }
-        else if (spectrum(im)==1)
-            {
-                res <- alply(im,d,fun) %>% labind(d-1)
-                dim(res) <- c(dim(res)[1:3],1)
-            }
-        cimg(res)
-    }
 
 renormalise.channels <- function(im)
     {
@@ -195,6 +168,13 @@ ldim <- function(v)
         if (is.vector(v)) length(v) else dim(v)
     }
 
+##' Split a video into separate frames
+##'
+##' @param im an image 
+##' @param index which channels to extract (default all)
+##' @param drop if TRUE drop extra dimensions, returning normal arrays and not cimg objects
+##' @seealso channels
+##' @return a list of frames 
 ##' @export
 frames <- function(im,index,drop=FALSE)
     {
@@ -212,6 +192,14 @@ frames <- function(im,index,drop=FALSE)
         res
     }
 
+
+##' Split a colour image into a list of separate channels
+##'
+##' @param im an image 
+##' @param index which channels to extract (default all)
+##' @param drop if TRUE drop extra dimensions, returning normal arrays and not cimg objects
+##' @seealso frames
+##' @return a list of channels 
 ##' @export
 channels <- function(im,index,drop=FALSE)
     {
@@ -229,12 +217,6 @@ channels <- function(im,index,drop=FALSE)
         res
     }
 
-squeeze <- function(V)
-    {
-        d <- dim(V)
-        dim(V) <- d[d!=1]
-        V
-    }
 
 
 
@@ -353,16 +335,40 @@ as.cimg.function <- function(fun,width,height,depth=1,normalise.coord=FALSE)
         
     }
 
+##' Turn an numeric array into a cimg object
+##'
+##' If the array has two dimensions, we assume it's a grayscale image. If it has three dimensions we assume it's a video, unless the third dimension has a depth of 3, in which case we assume it's a colour image,
+##' 
 ##' @export
-as.cimg.array <- function(x)
+##' @param X an array
+as.cimg.array <- function(X)
     {
-        if (length(dim(x))==4)
+        d <- dim(X)
+        if (length(d)==4)
             {
-                cimg(x)
+                cimg(X)
             }
+        else if (length(d) == 2)
+            {
+                as.cimg.matrix(X)
+            }
+        else if (length(d) == 3)
+        {
+            if (d[3] == 3)
+                    {
+                        warning('Assuming third dimension corresponds to colour')
+                        dim(X) <- c(d[1:2],1,d[3])
+                        cimg(X)
+                    }
+            else {
+                warning('Assuming third dimension corresponds to time/depth')
+                dim(X) <- c(d,1)
+                cimg(X)
+            }
+        }
         else
             {
-                stop('Array needs to have four dimensions')
+                stop("Array must have at most 4 dimensions ")
             }
     }
 
@@ -384,6 +390,7 @@ squeeze <- function(x) {
     x
 }
 
+##' @describeIn cimg 
 ##' @export
 as.matrix.cimg <- function(x) {
     d <- dim(x)
@@ -454,3 +461,10 @@ pad <- function(im,nPix,axis,pos=0,val=0)
 .onUnload <- function (libpath) {
   library.dynam.unload("imager", libpath)
 }
+
+##' @export
+as.cimg.matrix <- function(X)
+    {
+        dim(X) <- c(dim(X),1,1)
+        cimg(X)
+    }
