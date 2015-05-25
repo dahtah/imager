@@ -6,6 +6,7 @@ Install the devtools package if you haven't already. Then run:
 
 ``
 library(devtools)
+
 install_github("dahtah/imager")
 ``
 
