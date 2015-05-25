@@ -457,6 +457,11 @@ pad <- function(im,nPix,axis,pos=0,val=0)
         
     }
 
+impatch <- function(x,y,z=0,cc=0,wx=0,wy=0,wz=0,wc=0)
+    {
+        
+    }
+
 
 .onUnload <- function (libpath) {
   library.dynam.unload("imager", libpath)

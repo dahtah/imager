@@ -56,12 +56,33 @@ NumericVector imappend(List imlist,char axis)
    return wrap(out);
 }
 
+
 //' @export
 // [[Rcpp::export]]
-NumericVector testappend2(NumericVector im,char axis,int nb=-1)
+List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
 {
-   CImg<double> img = as<CImg<double> >(im);
-   img.get_split(axis,nb).get_append(axis);
-   img.display();
-   return wrap(img);
+  CImg<double> img = as<CImg<double> >(im);
+  int n = cx.length();
+  CImgList<double> L;
+
+  for (int i = 0; i < n; i++)
+    {
+      L.insert(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2),i,true);
+    }
+  return wrap(L);
+}
+
+//' @export
+// [[Rcpp::export]]
+List select_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector cz,IntegerVector wx,IntegerVector wy,IntegerVector wz)
+{
+  CImg<double> img = as<CImg<double> >(im);
+  int n = cx.length();
+  CImgList<double> L;
+
+  for (int i = 0; i < n; i++)
+    {
+      L.insert(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cz(i)-wz(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2,cz(i)+wz(i)/2),i,true);
+    }
+  return wrap(L);
 }

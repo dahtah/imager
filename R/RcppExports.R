@@ -531,8 +531,13 @@ imappend <- function(imlist, axis) {
 }
 
 #' @export
-testappend2 <- function(im, axis, nb = -1L) {
-    .Call('imager_testappend2', PACKAGE = 'imager', im, axis, nb)
+select_patches <- function(im, cx, cy, wx, wy) {
+    .Call('imager_select_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)
+}
+
+#' @export
+select_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {
+    .Call('imager_select_patches3D', PACKAGE = 'imager', im, cx, cy, cz, wx, wy, wz)
 }
 
 # Register entry points for exported C++ functions
