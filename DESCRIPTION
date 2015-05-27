@@ -1,0 +1,12 @@
+Package: imager
+Type: Package
+Title: Image processing library based on CImg
+Version: 0.1
+Date: 2015-05-07
+Author: Simon Barthelmé <simon.barthelme@gipsa-lab.fr>
+Maintainer: Simon Barthelmé <simon.barthelme@gipsa-lab.fr>
+Description: imager provides fast image processing functions for images in up to 4 dimensions. 
+License: CeCILL-C (V1)
+Imports: Rcpp (>= 0.11.5)
+Depends: plyr,magrittr
+LinkingTo: Rcpp
