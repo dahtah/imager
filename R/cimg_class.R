@@ -218,13 +218,117 @@ channels <- function(im,index,drop=FALSE)
     }
 
 
+all.names <- function(cl)
+    {
+        if (length(cl) == 0)
+            {
+                NULL
+            }
+        else
+            {
+                el <- cl[[1]]
+                if (is.name(el))
+                    {
+                        c(as.character(el),all.names(cl[-1]))
+                    }
+                else if (is.call(el))
+                    {
+                        c(all.names(el),all.names(cl[-1]))
+                    }
+                else
+                    {
+                        all.names(cl[-1])
+                    }
+            }
+    }
 
+##' Select part of an image
+##'
+##' subim selects an image part based on coordinates: it allows you to select a subset of rows, columns, frames etc. Refer to the examples to see how it works
+##' 
+##' @param im 
+##' @param ... 
+##' @return an image with some parts cut out
+##' @seealso crop, which does the same thing with a less convenient interface
+##' @author Simon Barthelme
+##' @examples
+##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' subim(parrots,x < 30) #Only the first 30 columns
+##' subim(parrots,y < 30) #Only the first 30 rows
+##' subim(parrots,x < 30,y < 30) #First 30 columns and rows
+##' subim(parrots, sqrt(x) > 8) #Can use arbitrary expressions
+##'subim(parrots,x > height/2,y > width/2)  #height and width are defined based on the image
+##' subim(parrots,cc==1) #Colour axis is "cc" not "c" here because "c" is an important R function
+##' ##Not run
+##' ##subim(parrots,x+y==1)
+##' ##can't have expressions involving interactions between variables (domain might not be square)
+##' @export
+subim <- function(im,...)
+    {
+        l <- as.list(substitute(list(...))[-1])
+        consts <- data.frame(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
+        Reduce(function(a,b) subs(a,b,consts),l,init=im)
+    }
 
+subs <- function(im,cl,consts)
+    {
+        if (missing(consts))
+            {
+               consts <- data.frame(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
+            }
+        vl <- intersect(all.names(cl),c("x","y","z","cc"))
+        if (length(vl)>1)
+            {
+                stop('Use only one of x,y,z,cc at a time')
+            }
+        else
+            {
+                vname <- vl
+                mval <- list(x=width(im),y=height(im),z=depth(im),cc=spectrum(im))
+                maxval <- mval[[vl]]
+                df <- data.frame(v=1:maxval)
+                df <- cbind(df,consts)
+                names(df)[1] <- vname
+                inds <- eval(cl,df)
+                #Should find a better way to implement what follows
+                if (vname == "x")
+                    {
+                        (as.array(im)[inds,,,,drop=FALSE]) %>% cimg
+                    }
+                else if (vname == "y")
+                    {
+                        (as.array(im)[,inds,,,drop=FALSE]) %>% cimg
+                    }
+                else if (vname == "z")
+                    {
+                        (as.array(im)[,,inds,,drop=FALSE]) %>% cimg
+                    }
+                else 
+                    {
+                        (as.array(im)[,,,inds,drop=FALSE]) %>% cimg
+                    }
+            }
+    }
+
+##' Array subset operator for cimg objects
+##'
+##' Works mostly just like the regular array version of x[...], the only difference being that it returns cimg objects when it makes sense to do so. For example im[,,,1] is just like as.array(im)[,,,1] except it returns a cimg object (containing only the first colour channel)
+##' 
+##' @param x 
+##' @param ...
+##' @seealso imsub, which provides a more convenient interface, crop
 ##' @export
 `[.cimg` <- function(x,...)
     {
         y <- NextMethod("[",drop=FALSE)
-        cimg(y)
+        if (is.vector(y))
+            {
+                y
+            }
+        else
+            {
+                cimg(y)
+            }
     }
 
 
@@ -472,4 +576,100 @@ as.cimg.matrix <- function(X)
     {
         dim(X) <- c(dim(X),1,1)
         cimg(X)
+    }
+
+##' Convert cimg to spatstat im object
+##'
+##' The spatstat library uses a different format for images, which have class "im". This utility converts a cimg object to an im object. spatstat im objects are limited to 2D grayscale images, so if the image has depth or spectrum > 1 a list is returned for the separate frames or channels (or both, in which case a list of lists is returned, with frames at the higher level and channels at the lower one).
+##' 
+##' @param img an image of class cimg
+##' @param W a spatial window (see spatstat doc). Default NULL
+##' @return an object of class im, or a list of objects of class im, or a list of lists of objects of class im
+##' @author Simon Barthelme
+##' @seealso im, as.im
+as.im.cimg <- function(img,W=NULL)
+    {
+        require(spatstat)
+        if (depth(img) > 1)
+            {
+                l <- imsplit(img,axis="z") %>% llply(as.im.cimg,W=W)
+                names(l) <- paste("Frame",1:depth(img))
+                l
+            }
+        else if (spectrum(img) > 1)
+            {
+                l <- imsplit(img,axis="c") %>% llply(as.im.cimg,W=W)
+                names(l) <- paste("Channel",1:spectrum(img))
+                l
+            }
+        else
+            {
+                imager::rotate(img,90) %>% as.array %>% squeeze %>% as.im(W=W)
+            }
+    }
+
+##' Linear index in internal vector from pixel coordinates
+##'
+##' Pixels are stored linearly in (x,y,z,c) order. This function computes the vector index of a pixel given its coordinates
+##' @param im an image
+##' @param coords a data.frame with values x,y,z (optional), c (optional)
+##' @return a vector of indices
+##' @examples
+##' im <- as.cimg(function(x,y) x+y,100,100)
+##' px <- pixel.index(im,data.frame(x=c(3,3),y=c(1,2)))
+##' im[px] #Values should be 3+1=4, 3+2=5
+##' @author Simon Barthelmé
+##' @export
+pixel.index <- function(im,coords)
+    {
+        d <- dim(im)
+        if ("c" %in% names(im))
+            {
+                coords <- rename(coords,list("c"="cc")) #Safer
+            }
+        if (setequal(names(coords),c("x","y")))
+            {
+                if (depth(im) > 1)
+                    {
+                        stop("Coordinates are ambiguous, must specify frame")
+                    }
+                else if (spectrum(im) > 1)
+                    {
+                        stop("Coordinates are ambiguous, must specify channel")
+                    }
+                else
+                    {
+                        coords$x+d[1]*(coords$y-1)
+                    }
+            }
+        else if (setequal(names(coords),c("x","y","z")))
+            {
+                if (spectrum(im) > 1)
+                    {
+                        stop("Coordinates are ambiguous, must specify channel")
+                    }
+                else
+                    {
+                        coords$x+d[1]*(coords$y-1)+(d[1]*d[2])*(coords$z-1)
+                    }
+            }
+        else if (setequal(names(coords),c("x","y","cc")))
+            {
+                if (depth(im) > 1)
+                    {
+                        stop("Coordinates are ambiguous, must specify frame")
+                    }
+                else
+                    {
+                        coords$x+d[1]*(coords$y-1)+(d[1]*d[2])*(coords$cc-1)
+                    }
+            }
+        else if (setequal(names(coords),c("x","y","cc","z")))
+            {
+                coords$x+d[1]*(coords$y-1)+(d[1]*d[2])*(coords$z-1)+prod(d[1:3])*(coords$cc-1)
+            }
+        else
+            {
+                stop("Unrecognised coordinates")
+            }
     }

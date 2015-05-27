@@ -30,7 +30,14 @@ Here's an example of imager in action:
 
 ```{r quickstart}
 library(imager)
-im <- load.image(system.file('extdata/parrots.png',package='imager'))
+
+
+file <- system.file('extdata/parrots.png',package='imager')
+#system.file gives the full path for a file that ships with a R package
+#if you already have the full path to the file you want to load just run:
+#im <- load.image("/somedirectory/myfile.png")
+im <- load.image(file)
+
 plot(im) #Parrots!
 im.blurry <- isoblur(im,10) #Blurry parrots!
 plot(im.blurry)
@@ -230,5 +237,23 @@ autocrop will remove any extra padding:
 ```{r autocrop}
 #The argument to autocrop is the colour of the background it needs to remove
 pad(parrots,axis="y",140,pos=-1) %>% autocrop(c(0,0,0)) %>% plot
+
+```
+
+
+## Lagged operators
+
+To compute the difference between successive images in a video, you can use the shift operator:
+
+```{r lag}
+#Compute difference between two successive frames (at lag 1)
+(shift(tennis,delta_z=1)-tennis) %>% plot(frame=2,main="Difference betw. frames 2 and 1")
+
+#Compute difference between frames (at lag 3)
+(shift(tennis,delta_z=3)-tennis) %>% plot(frame=4,main="Difference between frames 3 and 1")
+
+#note that shift uses interpolation. that makes relatively slow, but one advantage is that it allows non-integer lags:
+#shift(tennis,delta_z=3.5)-tennis
+#is valid
 
 ```

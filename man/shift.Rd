@@ -4,7 +4,7 @@
 \alias{shift}
 \title{Shift image content.}
 \usage{
-shift(im, delta_x, delta_y = 0L, delta_z = 0L, delta_c = 0L,
+shift(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L,
   boundary_conditions = 0L)
 }
 \arguments{

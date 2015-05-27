@@ -139,7 +139,7 @@ NumericVector resize_tripleXY(NumericVector im)
 //'          - 2: Repeat Pattern (Fourier style).
 //' @export
 // [[Rcpp::export]]
-NumericVector shift(NumericVector im, int delta_x,  int delta_y=0,  int delta_z=0,  int delta_c=0,
+NumericVector shift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_z=0,  int delta_c=0,
                     int boundary_conditions=0)
 {
    CImg<double> img = as<CImg<double> >(im);

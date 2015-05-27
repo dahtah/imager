@@ -467,7 +467,7 @@ resize_tripleXY <- function(im) {
 #'          - 1: Nearest neighbors (Neumann).
 #'          - 2: Repeat Pattern (Fourier style).
 #' @export
-shift <- function(im, delta_x, delta_y = 0L, delta_z = 0L, delta_c = 0L, boundary_conditions = 0L) {
+shift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, boundary_conditions = 0L) {
     .Call('imager_shift', PACKAGE = 'imager', im, delta_x, delta_y, delta_z, delta_c, boundary_conditions)
 }
 
