@@ -66,19 +66,31 @@ grayscale <- function(inp) {
     .Call('imager_grayscale', PACKAGE = 'imager', inp)
 }
 
+#' Display image using CImg library
+#'
+#' @param im an image (cimg object)
 #' @export
 display <- function(im) {
     invisible(.Call('imager_display', PACKAGE = 'imager', im))
 }
 
+#' Display image list using CImg library
+#'
+#' @param imlist a list of cimg objects
 #' @export
 display_list <- function(imlist) {
     invisible(.Call('imager_display_list', PACKAGE = 'imager', imlist))
 }
 
+#' Play a video 
+#'
+#' A very basic video player. Press the space bar to pause and ESC to close. 
+#' @param vid A cimg object, to be played as video
+#' @param loop loop the video (default false)
+#' @param delay delay between frames, in ms. Default 30. 
 #' @export
-play <- function(inp, loop = FALSE, delay = 30L) {
-    invisible(.Call('imager_play', PACKAGE = 'imager', inp, loop, delay))
+play <- function(vid, loop = FALSE, delay = 30L) {
+    invisible(.Call('imager_play', PACKAGE = 'imager', vid, loop, delay))
 }
 
 #' Apply recursive Deriche filter.

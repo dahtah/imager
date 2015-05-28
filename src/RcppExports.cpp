@@ -172,14 +172,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // play
-void play(NumericVector inp, bool loop, int delay);
-RcppExport SEXP imager_play(SEXP inpSEXP, SEXP loopSEXP, SEXP delaySEXP) {
+void play(NumericVector vid, bool loop, unsigned long delay);
+RcppExport SEXP imager_play(SEXP vidSEXP, SEXP loopSEXP, SEXP delaySEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type vid(vidSEXP);
     Rcpp::traits::input_parameter< bool >::type loop(loopSEXP);
-    Rcpp::traits::input_parameter< int >::type delay(delaySEXP);
-    play(inp, loop, delay);
+    Rcpp::traits::input_parameter< unsigned long >::type delay(delaySEXP);
+    play(vid, loop, delay);
     return R_NilValue;
 END_RCPP
 }

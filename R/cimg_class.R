@@ -267,6 +267,7 @@ subim <- function(im,...)
     {
         l <- as.list(substitute(list(...))[-1])
         consts <- data.frame(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
+        consts <- mutate(consts,cx=width/2,cy=height/2,cz=depth/2)
         Reduce(function(a,b) subs(a,b,consts),l,init=im)
     }
 
@@ -672,4 +673,29 @@ pixel.index <- function(im,coords)
             {
                 stop("Unrecognised coordinates")
             }
+    }
+
+
+get.mask <- function(im,expr)
+    {
+        expr <- substitute(expr)
+        df <- pixel.grid(im)
+        width <- width(im)
+        height <- height(im)
+        depth <- depth(im)
+        spectrum <- spectrum(im)
+        cx <- width/2
+        cy <- height/2
+        cz <- depth/2
+        eval(expr,df)
+    }
+
+center.stencil <- function(stencil,...)
+    {
+        coords <- list(...)
+        nms <- names(coords)
+        l_ply(nms,function(v) {
+                  nv <- paste0("d",v)
+                  stencil[[v]] <<- stencil[[nv]]+coords[[v]] })
+        stencil
     }

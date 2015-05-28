@@ -4,7 +4,9 @@
 using namespace Rcpp;
 using namespace cimg_library;
 
-
+//' Display image using CImg library
+//'
+//' @param im an image (cimg object)
 //' @export
 // [[Rcpp::export]]
 void display(NumericVector im)
@@ -14,6 +16,9 @@ void display(NumericVector im)
    return;
 }
 
+//' Display image list using CImg library
+//'
+//' @param imlist a list of cimg objects
 //' @export
 // [[Rcpp::export]]
 void display_list(List imlist)
@@ -23,36 +28,60 @@ void display_list(List imlist)
    return;
 }
 
+//' Play a video 
+//'
+//' A very basic video player. Press the space bar to pause and ESC to close. 
+//' @param vid A cimg object, to be played as video
+//' @param loop loop the video (default false)
+//' @param delay delay between frames, in ms. Default 30. 
 //' @export
 // [[Rcpp::export]]
-void play(NumericVector inp,bool loop=false,int delay=30)
+void play(NumericVector vid,bool loop=false,unsigned long delay=30)
 {
-    CImg<double> img = as<CImg<double> >(inp);
-    CImgDisplay disp(img.get_slice(0),"My images");
-    int i = 0,n=img.depth();
-    while (true)
+  unsigned long t0 = cimg::time();
+  unsigned long dt;
+  CImg<double> img = as<CImg<double> >(vid);
+  CImgDisplay disp(img.get_slice(0),"My images");
+  int i = 0,n=img.depth();
+  bool pause=false;
+  while (true)
       {
-	img.get_slice(i).display(disp);
-	if (i == n)
+	dt = cimg::time() - t0;
+	// Rcout << "dt " << dt << std::endl;
+	// Rcout << "time " << cimg::time() << std::endl;
+	// Rcout << "t0 " << t0 << std::endl;
+	//Time to update the display
+	if ((dt >= delay) and (!pause))
 	  {
-	    if (loop)
+	    //	    Rcout << "updating" << std::endl;
+	    img.get_slice(i).display(disp);
+	    if (i == n)
 	      {
-		i = 0;
+		if (loop)
+		  {
+		    i = 0;
+		  }
+		else {
+		  break;
+		}
 	      }
-	    else {
-	      break;
-	    }
+	    t0 = cimg::time();
+	    i++;
 	  }
 	
-	if (disp.is_closed())
+	if (disp.is_closed() or disp.is_key(cimg::keyESC))
 	  {
 	    break;
 	  }
-	else
+	if (disp.is_key(cimg::keySPACE))
 	  {
-	    i++;
+	    pause = !pause;
+	    if (!pause)
+	      {
+	        t0 =cimg::time();
+	      }
+	    disp.flush();
 	  }
-	disp.wait(delay);
 	Rcpp::checkUserInterrupt();
       }
 
