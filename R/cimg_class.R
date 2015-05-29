@@ -10,7 +10,8 @@ NULL
 #' @importFrom Rcpp sourceCpp
 NULL
 
-
+names.coords <- c('x','y','z','c','cc')
+coord.index <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
 
 ##' Create a cimg object 
 ##'
@@ -140,7 +141,7 @@ print.cimg <- function(im)
         print(msg)
     }
 
-chan.index <- list("x"=1,"y"=2,"z"=3,"c"=4)
+
 
 ##' @export
 width <- function(im) dim(im)[1]
@@ -579,6 +580,45 @@ as.cimg.matrix <- function(X)
         cimg(X)
     }
 
+##' Create an image from a data.frame
+##'
+##' The data frame must be of the form (x,y,value) or (x,y,z,value), or (x,y,z,cc,value). The coordinates must be valid image coordinates (i.e., positive integers). 
+##' 
+##' @param df a data.frame
+##' @param v.name name of the variable to extract pixel values from (e.g. "val")
+##' @param dims a vector of length 4 corresponding to image dimensions. If missing, a guess will be made. 
+##' @return an object of class cimg
+##' @author Simon Barthelme
+##' @export
+as.cimg.data.frame <- function(df,v.name,dims)
+    {
+        which.v <- (names(df) == v.name) %>% which
+        col.coord <- (names(df) %in% names.coords) %>% which
+        coords <- names(df)[col.coord]
+        if (length(which.v) == 0)
+            {
+                sprintf("Variable %s is missing",v.name) %>% stop
+            }
+        if (any(sapply(df[,-which.v],min) <= 0))
+            {
+                stop('Indices must be positive')
+            }
+        if (missing(dims))
+            {
+                warning('Guessing dimension from maximum coordinate values')
+                dims <- rep(1,4)
+                for (n in coords)
+                    {
+                        dims[coord.index[[n]]] <- max(df[[n]])
+                    }
+            }
+        im <- as.cimg(array(0,dims))
+        ind <- pixel.index(im,df[,col.coord])
+        im[ind] <- df[[v.name]]
+        im
+    }
+
+
 ##' Convert cimg to spatstat im object
 ##'
 ##' The spatstat library uses a different format for images, which have class "im". This utility converts a cimg object to an im object. spatstat im objects are limited to 2D grayscale images, so if the image has depth or spectrum > 1 a list is returned for the separate frames or channels (or both, in which case a list of lists is returned, with frames at the higher level and channels at the lower one).
@@ -614,7 +654,7 @@ as.im.cimg <- function(img,W=NULL)
 ##' Pixels are stored linearly in (x,y,z,c) order. This function computes the vector index of a pixel given its coordinates
 ##' @param im an image
 ##' @param coords a data.frame with values x,y,z (optional), c (optional)
-##' @return a vector of indices
+##' @return a vector of indices (NA if the indices are invalid)
 ##' @examples
 ##' im <- as.cimg(function(x,y) x+y,100,100)
 ##' px <- pixel.index(im,data.frame(x=c(3,3),y=c(1,2)))
@@ -640,7 +680,7 @@ pixel.index <- function(im,coords)
                     }
                 else
                     {
-                        coords$x+d[1]*(coords$y-1)
+                        out <- check.x(im,coords$x)+d[1]*(check.y(im,coords$y)-1)
                     }
             }
         else if (setequal(names(coords),c("x","y","z")))
@@ -651,7 +691,7 @@ pixel.index <- function(im,coords)
                     }
                 else
                     {
-                        coords$x+d[1]*(coords$y-1)+(d[1]*d[2])*(coords$z-1)
+                        out <- check.x(im,coords$x)+d[1]*(check.y(im,coords$y)-1)+(d[1]*d[2])*(check.z(im,coords$z)-1)
                     }
             }
         else if (setequal(names(coords),c("x","y","cc")))
@@ -662,17 +702,20 @@ pixel.index <- function(im,coords)
                     }
                 else
                     {
-                        coords$x+d[1]*(coords$y-1)+(d[1]*d[2])*(coords$cc-1)
+                        out <- check.x(im,coords$x)+d[1]*(check.y(im,coords$y)-1)+(d[1]*d[2])*(check.cc(im,coords$cc)-1)
                     }
             }
         else if (setequal(names(coords),c("x","y","cc","z")))
             {
-                coords$x+d[1]*(coords$y-1)+(d[1]*d[2])*(coords$z-1)+prod(d[1:3])*(coords$cc-1)
+                out <- check.x(im,coords$x)+d[1]*(check.y(im,coords$y)-1)+(d[1]*d[2])*(check.z(im,coords$z)-1)+prod(d[1:3])*(check.cc(im,coords$cc)-1)
             }
         else
             {
                 stop("Unrecognised coordinates")
             }
+        out[out < 0] <- NA
+        out[out > prod(dim(im))] <- NA
+        out
     }
 
 
@@ -690,12 +733,151 @@ get.mask <- function(im,expr)
         eval(expr,df)
     }
 
+##' Center stencil at a location
+##' @export
 center.stencil <- function(stencil,...)
     {
         coords <- list(...)
         nms <- names(coords)
-        l_ply(nms,function(v) {
-                  nv <- paste0("d",v)
-                  stencil[[v]] <<- stencil[[nv]]+coords[[v]] })
-        stencil
+        
+        for (v in nms)
+            {
+                nv <- paste0("d",v)
+                if (!is.null(stencil[[nv]]))
+                    {
+                        stencil[[v]] <- stencil[[nv]]+coords[[v]]
+                    }
+                else
+                    {
+                        stencil[[v]] <- coords[[v]]
+                    }
+            }
+        nms <- names(stencil)
+        stencil[,!str_detect(nms,"^d.")]
+    }
+
+##' Return pixel values in a neighbourhood defined by a stencil
+##'
+##' A stencil defines a neighbourhood in an image (for example, the four nearest neighbours in a 2d image). This function centers the stencil at a certain pixel and returns the values of the neighbourhing pixels.
+##' @param im 
+##' @param stencil a data.frame with values dx,dy,[dz],[dcc] defining the neighbourhood
+##' @param ... where to center, e.g. x = 100,y = 10,z=3,cc=1
+##' @return pixel values in neighbourhood
+##' @examples
+##' #The following stencil defines a neighbourhood that includes the next pixel to the left (delta_x = -1) and the next pixel to the right (delta_x = 1)
+##' stencil <- data.frame(dx=c(-1,1),dy=c(0,0))
+##' im <- as.cimg(function(x,y) x+y,w=100,h=100)
+##' get.stencil(im,stencil,x=50,y=50)
+##'
+##' #A larger neighbourhood that includes pixels upwards and downwards of center (delta_y = -1 and +1)
+##' stencil <- stencil.cross()
+##' im <- as.cimg(function(x,y) x,w=100,h=100)
+##' get.stencil(im,stencil,x=5,y=50)
+##' @author Simon Barthelme
+##' @export
+get.stencil <- function(im,stencil,...)
+    {
+        center.stencil(stencil,...) %>% pixel.index(im,.) %>% im[.]
+    }
+
+check.x <- function(im,x)
+    {
+        x[x < 1] <- NA
+        x[x > width(im)] <- NA
+        x
+    }
+
+check.y <- function(im,y)
+    {
+        y[y < 1] <- NA
+        y[y > height(im)] <- NA
+        y
+    }
+
+check.z <- function(im,z)
+    {
+        z[z < 1] <- NA
+        z[z > depth(im)] <- NA
+        z
+    }
+
+check.cc <- function(im,cc)
+    {
+        cc[cc < 1] <- NA
+        cc[cc > spectrum(im)] <- NA
+        cc
+    }
+
+##' A cross-shaped stencil 
+##'
+##' Returns a stencil corresponding to all nearest-neighbours of a pixel
+##' @param z include neighbours along the z axis
+##' @param cc include neighbours along the cc axis
+##' @param origin include center pixel (default false)
+##' @return a data.frame defining a stencil
+##' @seealso get.stencil
+##' @author Simon Barthelme
+stencil.cross <- function(z=FALSE,cc=FALSE,origin=FALSE)
+    {
+        if (z & cc)
+            {
+                A <- c()
+                for (ind in 1:4)
+                    {
+                        B <- matrix(0,2,4)
+                        B[,ind] <- c(-1,1)
+                        A <- rbind(A,B)
+                    }
+                v <- as.data.frame(A)
+                names(v) <- c("dx","dy","dz","dcc")
+            }
+        else if (z)
+            {
+                A <- matrix(c(-1,1,rep(0,4)),2,3)
+                v <- as.data.frame(rbind(A,A[,c(2,1,3)],A[,c(3,2,1)]))
+                names(v) <- c("dx","dy","dz")
+            }
+        else if (cc)
+            {
+                A <- matrix(c(-1,1,rep(0,4)),2,3)
+                v <- as.data.frame(rbind(A,A[,c(2,1,3)],A[,c(3,2,1)]))
+                names(v) <- c("dx","dy","dcc")
+
+            }
+        else
+            {
+                A <- matrix(c(-1,1,0,0),2,2)
+                v <- as.data.frame(rbind(A,A[,2:1]))
+                names(v) <- c("dx","dy")
+            }
+        if (origin) v <- rbind(0,v)
+        v
+    }
+
+##' Generates a "dirac" image, i.e. with all values set to 0 except one.
+##'
+##' This small utility is useful to examine the impulse response of a filter
+##' 
+##' @param dims a vector of image dimensions, or an image whose dimensions will be used 
+##' @param x where to put the dirac
+##' @param y 
+##' @param z (default 1)
+##' @param cc (default 1)
+##' @return an image
+##' @examples
+##' #Impulse response of the blur filter
+##' imdirac(c(50,50,1,1),20,20) %>% isoblur(sigma=2)  %>% plot
+##' #Impulse response of the first-order Deriche filter
+##' imdirac(c(50,50,1,1),20,20) %>% deriche(sigma=2,order=1,axis="x")  %>% plot
+##' @author Simon Barthelme
+##' @export
+imdirac <- function(dims,x,y,z=1,cc=1)
+    {
+        if (class(dims) == "cimg")
+            {
+                dims <- dim(dims)
+            }
+        A <- array(0,dims)
+        A[x,y,z,cc] <- 1
+        cimg(A)
     }

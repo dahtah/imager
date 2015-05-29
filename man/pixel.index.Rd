@@ -12,7 +12,7 @@ pixel.index(im, coords)
 \item{coords}{a data.frame with values x,y,z (optional), c (optional)}
 }
 \value{
-a vector of indices
+a vector of indices (NA if the indices are invalid)
 }
 \description{
 Pixels are stored linearly in (x,y,z,c) order. This function computes the vector index of a pixel given its coordinates

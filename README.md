@@ -1,14 +1,19 @@
-Imager is an image/video processing package for R, based on CImg, a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for applications like video processing/hyperspectral imaging/MRI.
+Imager is an image/video processing package for R, based on [http://cimg.sourceforge.net/](CImg), a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for applications like video processing/hyperspectral imaging/MRI.
 
 ## How to install
+
+### The package
 
 Install the devtools package if you haven't already. Then run:
 
 	library(devtools)
 	install_github("dahtah/imager")
 
-So far the package is only available as source code, so you'll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11. 
-You'll also need ImageMagick and ffmpeg somewhere on your path if you want to import and save images. 
+So far the package is only available as source code, so you'll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11.
+
+### Dependencies
+
+You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to be able to import and save images. 
 
 
 ## Getting started 
