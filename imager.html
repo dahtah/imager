@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>imager: an R package for image processing</title>
+
+<script src="imager_files/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="imager_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
+<script src="imager_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="imager_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="imager_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="imager_files/highlight/default.css"
+      type="text/css" />
+<script src="imager_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div id="header">
+<h1 class="title">imager: an R package for image processing</h1>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#quick-start"><span class="toc-section-number">1</span> Quick start</a></li>
+<li><a href="#how-images-are-represented"><span class="toc-section-number">2</span> How images are represented</a></li>
+<li><a href="#coordinates"><span class="toc-section-number">3</span> Coordinates</a></li>
+<li><a href="#the-cimg-class"><span class="toc-section-number">4</span> The cimg class</a><ul>
+<li><a href="#displaying-images-and-videos"><span class="toc-section-number">4.1</span> Displaying images and videos</a></li>
+</ul></li>
+<li><a href="#loading-and-saving"><span class="toc-section-number">5</span> Loading and saving</a></li>
+<li><a href="#splitting-and-concatenating-images"><span class="toc-section-number">6</span> Splitting and concatenating images</a></li>
+<li><a href="#colour-spaces"><span class="toc-section-number">7</span> Colour spaces</a></li>
+<li><a href="#resizing-rotation-etc."><span class="toc-section-number">8</span> Resizing, rotation, etc.</a></li>
+<li><a href="#lagged-operators"><span class="toc-section-number">9</span> Lagged operators</a></li>
+</ul>
+</div>
+
+<div id="quick-start" class="section level1">
+<h1><span class="header-section-number">1</span> Quick start</h1>
+<p>Here’s an example of imager in action:</p>
+<pre class="r"><code>library(imager)
+
+
+file &lt;- system.file(&#39;extdata/parrots.png&#39;,package=&#39;imager&#39;)
+#system.file gives the full path for a file that ships with a R package
+#if you already have the full path to the file you want to load just run:
+#im &lt;- load.image(&quot;/somedirectory/myfile.png&quot;)
+im &lt;- load.image(file)
+
+plot(im) #Parrots!</code></pre>
+<p><img src="imager_files/figure-html/quickstart-1.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>im.blurry &lt;- isoblur(im,10) #Blurry parrots!
+plot(im.blurry)</code></pre>
+<p><img src="imager_files/figure-html/quickstart-2.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>im.xedges &lt;- deriche(im,2,order=2,axis=&quot;x&quot;) #Edge detector along x-axis
+plot(im.xedges)</code></pre>
+<p><img src="imager_files/figure-html/quickstart-3.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>im.yedges &lt;- deriche(im,2,order=2,axis=&quot;y&quot;) #Edge detector along y-axis
+plot(im.yedges)</code></pre>
+<p><img src="imager_files/figure-html/quickstart-4.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>#Chain operations using the pipe operator (from magrittr)
+deriche(im,2,order=2,axis=&quot;x&quot;) %&gt;% deriche(2,order=2,axis=&quot;y&quot;) %&gt;% plot</code></pre>
+<p><img src="imager_files/figure-html/quickstart-5.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>#Another example of chaining: image gradient along x and y axes
+layout(matrix(1:2,1,2));
+grayscale(im) %&gt;% get_gradient(axes=&quot;xy&quot;) %&gt;% l_ply(plot)</code></pre>
+<p><img src="imager_files/figure-html/quickstart2-1.png" title="" alt="" width="1152" /></p>
+<pre class="r"><code>#Can load videos as well:
+tennis &lt;- load.image(system.file(&#39;extdata/tennis_sif.mpeg&#39;,package=&#39;imager&#39;))
+
+plot(tennis,frame=1)
+plot(tennis,frame=5)</code></pre>
+<p><img src="imager_files/figure-html/quickstart2-2.png" title="" alt="" width="1152" /></p>
+<p>In the next example, we convert the video to grayscale, run a motion detector, and combine both videos to display them side-by-side:</p>
+<pre class="r"><code>tennis.g &lt;- grayscale(tennis)
+motion &lt;- deriche(tennis.g,1,order=1,axis=&quot;z&quot;)^2 #Differentiate along z axis and square
+combined &lt;- list(motion/max(motion),tennis.g/max(tennis.g)) %&gt;% imappend(&quot;x&quot;) #Paste the two videos together</code></pre>
+<p>In an interactive session you can run play(combined) to view the results.</p>
+<video width="1152"  controls loop>
+<source src="imager_files/figure-html/animate-.webm" />
+<p>video of chunk animate</video></p>
+</div>
+<div id="how-images-are-represented" class="section level1">
+<h1><span class="header-section-number">2</span> How images are represented</h1>
+<p>Images are represented as 4D numeric arrays, which is consistent with CImg’s storage standard (it is unfortunately inconsistent with other R libraries, like spatstat, but converting between representations is easy). The four dimensions are labelled x,y,z,c. The first two are the usual spatial dimensions, the third one will usually correspond to depth or time, and the fourth one is colour. Remember the order, it will be used consistently in imager. If you only have grayscale images then the two extra dimensions are obviously pointless, but they won’t bother you much. Your objects will still be officially 4 dimensional, with two trailing flat dimensions. Pixels are stored in the following manner: we scan the image beginning at the upper-left corner, along the x axis. Once we hit the end of the scanline, we move to the next line. Once we hit the end of the screen, we move to the next frame (increasing z) and repeat the process. If we have several colour channels, then once we’re done with the first colour channel we move to the next one. All in all the different dimensions are represented in the x,y,z,c order. In R the object is represented as a 4D array. Here’s an example with a grayscale image:</p>
+<pre class="r"><code>parrots &lt;- load.image(system.file(&#39;extdata/parrots.png&#39;,package=&#39;imager&#39;))
+gray.parrots &lt;- grayscale(parrots)
+dim(gray.parrots)</code></pre>
+<pre><code>## [1] 768 512   1   1</code></pre>
+<p>and a colour image:</p>
+<pre class="r"><code>dim(parrots)</code></pre>
+<pre><code>## [1] 768 512   1   3</code></pre>
+<p>and finally a video, also in colour:</p>
+<pre class="r"><code>dim(tennis)</code></pre>
+<pre><code>## [1] 352 240 150   3</code></pre>
+</div>
+<div id="coordinates" class="section level1">
+<h1><span class="header-section-number">3</span> Coordinates</h1>
+<p>CImg uses standard image coordinates: the origin is at the top left corner, with the x axis pointing right and the y axis pointing <em>down</em>. imager uses the same coordinate system, except the origin is now (1,1) and not (0,0) (the reason being that R indices start at 1 and not at 0). The number of pixels along the x axis is called the width, along the y axis it’s height, along the z axis it’s depth and finally the number of colour channels is called “spectrum”.</p>
+<pre class="r"><code>width(parrots)</code></pre>
+<pre><code>## [1] 768</code></pre>
+<pre class="r"><code>height(parrots)</code></pre>
+<pre><code>## [1] 512</code></pre>
+<pre class="r"><code>depth(parrots)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>spectrum(parrots)</code></pre>
+<pre><code>## [1] 3</code></pre>
+</div>
+<div id="the-cimg-class" class="section level1">
+<h1><span class="header-section-number">4</span> The cimg class</h1>
+<p>Imager uses the “cimg” class for its images. “cimg” is just a regular 4d array with an S3 class tacked on so we can have custom plot, print, etc. To promote an array to a “cimg” object, use as.cimg:</p>
+<pre class="r"><code>noise &lt;- array(runif(5*5*5*3),c(5,5,5,3)) #5x5 pixels, 5 frames, 3 colours. All noise
+noise &lt;- as.cimg(noise)</code></pre>
+<p>You can treat the object as you would any other array:</p>
+<pre class="r"><code>#Arithmetic
+sin(noise) + 3*noise </code></pre>
+<pre><code>## [1] &quot;Image. Width: 5 pix Height 5 pix Depth 5 Colour channels 3\n&quot;</code></pre>
+<pre class="r"><code>#Subsetting
+noise[,,,1] #First colour channel</code></pre>
+<pre><code>## [1] &quot;Image. Width: 5 pix Height 5 pix Depth 5 Colour channels 1\n&quot;</code></pre>
+<pre class="r"><code>dim(noise[1:4,,,] )</code></pre>
+<pre><code>## [1] 4 5 5 3</code></pre>
+<p>and you can convert it to a data.frame:</p>
+<pre class="r"><code>head(as.data.frame(parrots))</code></pre>
+<pre><code>##   x y z cc value
+## 1 1 1 1  1   116
+## 2 2 1 1  1   117
+## 3 3 1 1  1   120
+## 4 4 1 1  1   119
+## 5 5 1 1  1   120
+## 6 6 1 1  1   120</code></pre>
+<p>which makes life easier if you want to use ggplot2 for plotting.</p>
+<div id="displaying-images-and-videos" class="section level2">
+<h2><span class="header-section-number">4.1</span> Displaying images and videos</h2>
+<p>To get a standard R plot use the plot function:</p>
+<pre class="r"><code>plot(parrots)</code></pre>
+<p><img src="imager_files/figure-html/plotting-1.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>plot(tennis,frame=1) </code></pre>
+<p><img src="imager_files/figure-html/plotting-2.png" title="" alt="" width="624" /></p>
+<p>In addition imager provides display() (for images) and play() (for videos), which are much faster C++ functions for quickly viewing your results.</p>
+</div>
+</div>
+<div id="loading-and-saving" class="section level1">
+<h1><span class="header-section-number">5</span> Loading and saving</h1>
+<p>Use load.image and save.image. You’ll most likely need imagemagick on your path somewhere for images, and ffmpeg for videos. CImg supports very few formats natively.</p>
+</div>
+<div id="splitting-and-concatenating-images" class="section level1">
+<h1><span class="header-section-number">6</span> Splitting and concatenating images</h1>
+<p>One often needs to perform separate computations on each channel of an image, or on each frame, each line, etc. This can be achieved using a loop or more conveniently using imsplit:</p>
+<pre class="r"><code>imsplit(parrots,&quot;c&quot;) #A list with three elements corresponding to the three channels</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;Image. Width: 768 pix Height 512 pix Depth 1 Colour channels 1\n&quot;
+## 
+## [[2]]
+## [1] &quot;Image. Width: 768 pix Height 512 pix Depth 1 Colour channels 1\n&quot;
+## 
+## [[3]]
+## [1] &quot;Image. Width: 768 pix Height 512 pix Depth 1 Colour channels 1\n&quot;</code></pre>
+<pre class="r"><code>imsplit(parrots,&quot;c&quot;) %&gt;% laply(mean) #Mean pixel value in each channel</code></pre>
+<pre><code>## [1] 121.6621 109.5960  75.7940</code></pre>
+<pre class="r"><code>imsplit(parrots,&quot;x&quot;) %&gt;% laply(mean) %&gt;% head #Mean pixel value in each line (across all channels)</code></pre>
+<pre><code>## [1] 93.50716 93.90885 94.28646 94.49089 94.55208 94.56445</code></pre>
+<p>The inverse operation is called imappend: it takes a list of images and concatenates them along the dimension of your choice.</p>
+<pre class="r"><code>#Sample functions and turn them into separate R,G,B channels
+R &lt;- as.cimg(function(x,y) sin(cos(3*x*y)),100,100)
+G &lt;- as.cimg(function(x,y) sin(cos(3*x*y + pi/2)),100,100)
+B &lt;- as.cimg(function(x,y) exp(-.03*x),100,100)
+trippy &lt;- imappend(list(R,G,B),&quot;c&quot;) #Bind the three channels into one image
+plot(trippy)</code></pre>
+<p><img src="imager_files/figure-html/imappend-1.png" title="" alt="" width="624" /></p>
+</div>
+<div id="colour-spaces" class="section level1">
+<h1><span class="header-section-number">7</span> Colour spaces</h1>
+<p>To convert from RGB to HSL/HSV/HSI/YUV/YCbCR, run RGBto[…], as in the following example:</p>
+<pre class="r"><code>parrots.hsl &lt;- RGBtoHSL(parrots)
+chan &lt;- channels(parrots.hsl) #Extract the channels as a list of images
+names(chan) &lt;- c(&quot;H&quot;,&quot;S&quot;,&quot;L&quot;)
+#Plot
+layout(matrix(1:3,1,3))
+l_ply(names(chan),function(nm) plot(chan[[nm]],main=nm))</code></pre>
+<p><img src="imager_files/figure-html/hsl,im-1.png" title="" alt="" width="1728" /></p>
+<p>The reverse operation is done by running […]toRGB. Note that all display functions assume that your image is in RGB.</p>
+<pre class="r"><code>YUVtoRGB(trippy) %&gt;% plot</code></pre>
+<p><img src="imager_files/figure-html/trippy_is_back-1.png" title="" alt="" width="624" /></p>
+<p>If you have a colour image, you convert it to grayscale using the grayscale function. If you have a grayscale image, add colour channels using add.colour:</p>
+<pre class="r"><code>grayscale(parrots) %&gt;% spectrum</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>#Image has only one channel (luminance)
+
+grayscale(parrots) %&gt;% add.colour %&gt;% spectrum</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>#Image is still in gray tones but has R,G,B channels </code></pre>
+</div>
+<div id="resizing-rotation-etc." class="section level1">
+<h1><span class="header-section-number">8</span> Resizing, rotation, etc.</h1>
+<p>Functions for resizing and rotation should be fairly intuitive:</p>
+<pre class="r"><code>thmb &lt;- resize(parrots,round(width(parrots)/10),round(height(parrots)/10))
+plot(thmb,main=&quot;Thumbnail&quot;) #Pixellated parrots</code></pre>
+<p><img src="imager_files/figure-html/resize_rotate-1.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>#Same as above: negative arguments are interpreted as percentages
+thmb &lt;- resize(parrots,-10,-10)
+
+rotate(parrots,30) %&gt;% plot(main=&quot;Rotating&quot;)</code></pre>
+<p><img src="imager_files/figure-html/resize_rotate-2.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>shift(parrots,40,20) %&gt;% plot(main=&quot;Shifting&quot;)</code></pre>
+<p><img src="imager_files/figure-html/resize_rotate-3.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>shift(parrots,100,100,boundary=1) %&gt;% plot(main=&quot;Shifting (Neumann boundaries)&quot;)</code></pre>
+<p><img src="imager_files/figure-html/resize_rotate-4.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>shift(parrots,100,100,boundary=2) %&gt;% plot(main=&quot;Shifting (circular)&quot;)</code></pre>
+<p><img src="imager_files/figure-html/resize_rotate-5.png" title="" alt="" width="624" /></p>
+<p>You can pad an image using “pad”:</p>
+<pre class="r"><code>pad(parrots,axis=&quot;y&quot;,140) %&gt;% plot</code></pre>
+<p><img src="imager_files/figure-html/pad-1.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>pad(parrots,axis=&quot;y&quot;,140,pos=-1) %&gt;% plot</code></pre>
+<p><img src="imager_files/figure-html/pad-2.png" title="" alt="" width="624" /></p>
+<p>autocrop will remove any extra padding:</p>
+<pre class="r"><code>#The argument to autocrop is the colour of the background it needs to remove
+pad(parrots,axis=&quot;y&quot;,140,pos=-1) %&gt;% autocrop(c(0,0,0)) %&gt;% plot</code></pre>
+<p><img src="imager_files/figure-html/autocrop-1.png" title="" alt="" width="624" /></p>
+</div>
+<div id="lagged-operators" class="section level1">
+<h1><span class="header-section-number">9</span> Lagged operators</h1>
+<p>To compute the difference between successive images in a video, you can use the shift operator:</p>
+<pre class="r"><code>#Compute difference between two successive frames (at lag 1)
+(shift(tennis,delta_z=1)-tennis) %&gt;% plot(frame=2,main=&quot;Difference betw. frames 2 and 1&quot;)</code></pre>
+<p><img src="imager_files/figure-html/lag-1.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>#Compute difference between frames (at lag 3)
+(shift(tennis,delta_z=3)-tennis) %&gt;% plot(frame=4,main=&quot;Difference between frames 3 and 1&quot;)</code></pre>
+<p><img src="imager_files/figure-html/lag-2.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>#note that shift uses interpolation. that makes relatively slow, but one advantage is that it allows non-integer lags:
+#shift(tennis,delta_z=3.5)-tennis
+#is valid</code></pre>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

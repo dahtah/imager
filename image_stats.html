@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Natural image statistics using imager</title>
+
+<script src="image_stats_files/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="image_stats_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
+<script src="image_stats_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="image_stats_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="image_stats_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="image_stats_files/highlight/default.css"
+      type="text/css" />
+<script src="image_stats_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div id="header">
+<h1 class="title">Natural image statistics using imager</h1>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#how-strongly-does-a-pixel-correlate-with-its-neighbours"><span class="toc-section-number">1</span> How strongly does a pixel correlate with its neighbours?</a></li>
+<li><a href="#filtering-and-whitening"><span class="toc-section-number">2</span> Filtering and whitening</a></li>
+</ul>
+</div>
+
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<p>The purpose of this vignette is to illustrate some of the features in imager by doing some basics statistics on natural images.</p>
+<div id="how-strongly-does-a-pixel-correlate-with-its-neighbours" class="section level1">
+<h1><span class="header-section-number">1</span> How strongly does a pixel correlate with its neighbours?</h1>
+<p>A basic finding in natural image statistics is that it’s very easy to predict the value of a given pixel if you know the value of its neighbours. To study pixel neighbourhoods in imager you can define stencils: a stencil is just a series of offsets, with respect to a central pixel, giving the coordinates of the neighbours you care about. Here’s a valid stencil:</p>
+<pre class="r"><code>stencil &lt;- data.frame(dx=c(-1,1),dy=c(0,0))</code></pre>
+<p>“dx” is short for <span class="math">\(\delta_x\)</span> and denotes the offset in the x direction, and the same goes for “dy”. Our stencil defines two neighbours: the next pixel to the left (dx = -1), and the next pixel to the right (dx = 1).</p>
+<p>We can define another valid stencil that adds a neighbour at (+1,+1):</p>
+<pre class="r"><code>stencil &lt;- data.frame(dx=c(-1,1,1),dy=c(0,0,1))</code></pre>
+<p>To get absolute coordinates, use center.stencil:</p>
+<pre class="r"><code>center.stencil(stencil,x=50,y=30)</code></pre>
+<pre><code>##    x  y
+## 1 49 30
+## 2 51 30
+## 3 51 31</code></pre>
+<p>To retrieve pixel values using a stencil, use get.stencil:</p>
+<pre class="r"><code>im &lt;- as.cimg(function(x,y) x,w=100,h=100) #An artificial image
+get.stencil(im,stencil,x=3,y=2) #Stencil values at (3,2)</code></pre>
+<pre><code>## [1] 2 4 4</code></pre>
+<p>Now that we’ve defined a stencil and we have a way of retrieving image neighbourhoods, we can use these tools to study how much a pixel correlates with its neighbours. Let’s define a stencil that includes the central pixel (the origin), plus the left-hand and right-hand neighbours:</p>
+<pre class="r"><code>stencil &lt;- data.frame(dx=c(0,-1,1),dy=c(0,0,0))</code></pre>
+<p>We open the usual picture of parrots, convert to grayscale, and select 500 random locations in the image:</p>
+<pre class="r"><code>im &lt;- load.image(system.file(&#39;extdata/parrots.png&#39;,package=&#39;imager&#39;))
+im.bw &lt;- grayscale(im)
+
+pos.x &lt;- round(runif(500,2,width(im)-1))
+pos.y &lt;- round(runif(500,1,height(im)))
+pos &lt;- cbind(pos.x,pos.y)</code></pre>
+<p>Note that we’ve constrained the positions to be one pixel away from the border (along the x axis), to avoid the issue of selecting non-existent neighbours.</p>
+<p>Using plyr we go through the random positions, and retrieve stencil values at each location</p>
+<pre class="r"><code>val &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2]))
+head(val,3)</code></pre>
+<pre><code>## $`1`
+## [1] 0.3784314 0.3294118 0.3627451
+## 
+## $`2`
+## [1] 0.6313725 0.6392157 0.6313725
+## 
+## $`3`
+## [1] 0.3607843 0.3156863 0.3078431</code></pre>
+<p>In each element of the list, the first value corresponds to the value of the central pixel, the second to the left-hand neighbour and the third to the right-hand neighbour. We transform the list to a matrix and plot the value of the neighbours as a function of the value of the central pixel:</p>
+<pre class="r"><code>mat &lt;- do.call(rbind,val)
+plot(mat[,1],mat[,2],xlab=&quot;Central value&quot;,ylab=&quot;Left-hand neighbour&#39;s value&quot; )</code></pre>
+<p><img src="image_stats_files/figure-html/scatter-1.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>plot(mat[,1],mat[,3],xlab=&quot;Central value&quot;,ylab=&quot;Right-hand neighbour&#39;s value&quot; )</code></pre>
+<p><img src="image_stats_files/figure-html/scatter-2.png" title="" alt="" width="624" /></p>
+<p>As the scatterplots suggest, neighbouring pixels tend to be highly correlated:</p>
+<pre class="r"><code>cor(mat)</code></pre>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 1.0000000 0.9773019 0.9866158
+## [2,] 0.9773019 1.0000000 0.9496135
+## [3,] 0.9866158 0.9496135 1.0000000</code></pre>
+<p>We can repeat the analysis using neighbours that are further away:</p>
+<pre class="r"><code>stencil &lt;- data.frame(dx=c(0,-4,4),dy=c(0,0,0)) #Selects neighbours that are 4 pixels away in x direction
+pos.x &lt;- round(runif(500,5,width(im)-4))
+pos &lt;- cbind(pos.x,pos.y)
+mat &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2])) %&gt;% do.call(rbind,.)
+cor(mat)</code></pre>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 1.0000000 0.9332095 0.9531620
+## [2,] 0.9332095 1.0000000 0.8797441
+## [3,] 0.9531620 0.8797441 1.0000000</code></pre>
+<p>Here the correlation coefficients (1,2) and (1,3) represent correlations between pixels that are 4 units away (~ 98%), while coefficient (2,3) represents a correlation between pixels that are 8 units away (~ 94%). Correlation then seems to drop as a function of distance. We can make a more systematic analysis using a wider stencil:</p>
+<pre class="r"><code>stencil &lt;- expand.grid(dx=seq(-10,10,1),dy=seq(-10,10,1))
+head(stencil,4)</code></pre>
+<pre><code>##    dx  dy
+## 1 -10 -10
+## 2  -9 -10
+## 3  -8 -10
+## 4  -7 -10</code></pre>
+<pre class="r"><code>plot(stencil$dx,stencil$dy,pch=19,xlab=&quot;dx&quot;,ylab=&quot;dy&quot;,main=&quot;Square stencil&quot;)</code></pre>
+<p><img src="image_stats_files/figure-html/wide_stencil-1.png" title="" alt="" width="624" /></p>
+<p>The stencil we’ve just defined contains all neighbours within a square patch of size 20x20. If we’d wanted a circular stencil we could have done the following:</p>
+<pre class="r"><code>circ.stencil &lt;- subset(stencil,(dx^2 + dy^2) &lt; 10^2)
+plot(circ.stencil$dx,circ.stencil$dy,pch=19,xlab=&quot;dx&quot;,ylab=&quot;dy&quot;,main=&quot;Circular stencil&quot;)</code></pre>
+<p><img src="image_stats_files/figure-html/circular_stencil-1.png" title="" alt="" width="624" /></p>
+<p>We extract pixel values just as we did before:</p>
+<pre class="r"><code>pos.x &lt;- round(runif(5000,11,width(im)-10)) #Use more locations
+pos.y &lt;- round(runif(5000,11,height(im)-10))
+pos &lt;- cbind(pos.x,pos.y)
+mat &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2]))  %&gt;% do.call(rbind,.)
+C &lt;- cor(mat)</code></pre>
+<p>Each coefficient in C corresponds to a pair of pixels that are a certain distance apart (as defined by our stencil). To compute the corresponding distances, we can use R’s built-in dist function:</p>
+<pre class="r"><code>Dx &lt;- dist(stencil$dx) %&gt;% as.matrix #Distance along the x axis
+Dy &lt;- dist(stencil$dy) %&gt;% as.matrix #Distance along the y axis
+df &lt;- data.frame(dist.x = c(Dx),dist.y = c(Dy), cor = c(C))
+head(df,3)</code></pre>
+<pre><code>##   dist.x dist.y       cor
+## 1      0      0 1.0000000
+## 2      1      0 0.9783350
+## 3      2      0 0.9464415</code></pre>
+<p>Plotting the results:</p>
+<pre class="r"><code>library(ggplot2)
+ggplot(df,aes(dist.x,dist.y))+geom_point(aes(size=cor))</code></pre>
+<p><img src="image_stats_files/figure-html/plot_cor-1.png" title="" alt="" width="624" /></p>
+<p>we see that correlation drops faster along the x axis than it does along the y axis. This visual impression can be confirmed by focusing on a subset of the data:</p>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;
+## 
+## The following object is masked _by_ &#39;.GlobalEnv&#39;:
+## 
+##     last
+## 
+## The following objects are masked from &#39;package:plyr&#39;:
+## 
+##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+##     summarize
+## 
+## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter
+## 
+## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>#The following uses some dplyr shortcuts
+suby &lt;- subset(df,dist.x==0) %&gt;% select(cor,dist.axis=dist.y) %&gt;%   mutate(label=&quot;Correlation along y&quot;)
+subx &lt;- subset(df,dist.y==0) %&gt;%  select(cor,dist.axis=dist.x) %&gt;% mutate(label=&quot;Correlation along x&quot;) 
+rbind(subx,suby) %&gt;% ggplot(aes(dist.axis,cor,col=label))+geom_point()+geom_smooth()+labs(x=&quot;Distance along axis (x or y), pix.&quot;,y=&quot;Correlation between values&quot;,col=&quot;&quot;)</code></pre>
+<p><img src="image_stats_files/figure-html/correlation_axis-1.png" title="" alt="" width="864" /></p>
+<p>It’s interesting to look at the principal components of the image patches we extract. They describe the directions of greatest variance among the set of patches from this particular image (more interesting analyses use of course a whole set of images, not just the one).</p>
+<p>Notice that the eigenspectrum of the covariance matrix falls off very rapidly:</p>
+<pre class="r"><code>Cm &lt;- cov(mat)
+evd &lt;- eigen(Cm)
+plot(sqrt(evd$val[1:30]),xlab=&quot;Eigenvalue index&quot;,ylab=&quot;Eigenvalue^1/2&quot;,type=&quot;o&quot;,pch=19)</code></pre>
+<p><img src="image_stats_files/figure-html/eigenspectrum-1.png" title="" alt="" width="624" /></p>
+<p>meaning most of the variance falls along a very low-dimensional subspace. We can visualise the eigenvalues as image patches, therefore images. To do so we could use ggplot:</p>
+<pre class="r"><code>vec &lt;- evd$vec[,1] #First eigenvector (first principal component)
+mutate(stencil,val=vec) %&gt;% ggplot(aes(dx,dy)) +geom_raster(aes(fill=val)) + scale_y_reverse()</code></pre>
+<p><img src="image_stats_files/figure-html/view_eigenvec-1.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>#Notice scale_y_reverse: the y arrow in image coordinates is reversed compared to the usual one </code></pre>
+<p>The eigenvector has a classic center-surround structure.</p>
+<p>We can also turn the eigenvector into a cimg object, using the as.cimg methods for data.frames. It expects a data.frame of the form (x,y,value), where x and y are valid image coordinates (meaning they have to be between 1 and whatever the width or height of the image is). First we center the stencil at a location where we’ll get correct image coordinates, then we add pixel value information, then we convert:</p>
+<pre class="r"><code>make.im &lt;- function(v) center.stencil(stencil,x=11,y=11) %&gt;% mutate(v=v) %&gt;% as.cimg(&quot;v&quot;,dims=c(21,21,1,1))  
+make.im(vec) %&gt;% plot #vec is now a cimg object</code></pre>
+<p><img src="image_stats_files/figure-html/as.cimg.data.frame-1.png" title="" alt="" width="624" /></p>
+<p>We can use that trick to plot the first 5 principal components as a single image:</p>
+<pre class="r"><code>scaled.pc &lt;- function(ind) scale(evd$vec[,ind]) %&gt;% make.im
+llply(1:5,scaled.pc) %&gt;% imappend(&quot;x&quot;) %&gt;% plot(main=&quot;5 principal components&quot;) </code></pre>
+<p><img src="image_stats_files/figure-html/first_five-1.png" title="" alt="" width="624" /></p>
+<p>The first principal components in images usual have a center-surround or gradient structure. What that tells us is the same thing we could already tell from the correlogram: images are spatially smooth, so that the way they can vary locally is pretty constrained.</p>
+</div>
+<div id="filtering-and-whitening" class="section level1">
+<h1><span class="header-section-number">2</span> Filtering and whitening</h1>
+<p>Whitening is signal processing jargon for making a signal uncorrelated. As we can see from the principal components (which are a set of basis functions that decorrelates the image locally), whitening is going to be about taking local differences. Many filters do just that: CImg implements a filter called deriche which essentially takes first and second-order differences. To examine what the filter does we can begin with its impulse response. The impulse response is the filter output when the input is dirac pulse, which we can generate using imdirac:</p>
+<pre class="r"><code>impulse &lt;- imdirac(c(50,50,1,1),25,25)
+plot(impulse,main=&quot;Dirac image&quot;)</code></pre>
+<p><img src="image_stats_files/figure-html/imdirac-1.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>isoblur(impulse,sigma=2)  %&gt;% plot(main=&quot;Impulse response of the blur filter&quot;)</code></pre>
+<p><img src="image_stats_files/figure-html/imdirac-2.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>deriche(impulse,sigma=2,order=1,axis=&quot;x&quot;)  %&gt;% plot(main=&quot;Impulse response of the first-order\n Deriche filter along x&quot;)</code></pre>
+<p><img src="image_stats_files/figure-html/imdirac-3.png" title="" alt="" width="624" /></p>
+<pre class="r"><code>deriche(impulse,sigma=2,order=1,axis=&quot;y&quot;)  %&gt;% plot(main=&quot;Impulse response of the first-order\n Deriche filter along y&quot;)</code></pre>
+<p><img src="image_stats_files/figure-html/imdirac-4.png" title="" alt="" width="624" /></p>
+<p>which shows that the blur filter performs local averaging, and the first-order Deriche filter performs local differentiation. The scale can be set using the “sigma” parameter:</p>
+<pre class="r"><code>deriche(impulse,sigma=5,order=1,axis=&quot;x&quot;)  %&gt;% plot(main=&quot;Impulse response of the first-order\n Deriche filter (sigma = 5)&quot;)</code></pre>
+<p><img src="image_stats_files/figure-html/imdirac_wider-1.png" title="" alt="" width="624" /></p>
+<p>Taking finite differences usually has the effect of partially decorrelating the image. To illustrate this we need a function that encapsulates what we did above and computes the correlation along the x and y axes.</p>
+<pre class="r"><code>correlogram &lt;- function(im,pos)
+    {
+        #A cross-shaped stencil
+        stencil &lt;- data.frame(dx=c(seq(-10,10,1),rep(0,11)),dy=c(rep(0,11),seq(-10,10,1)))
+        mat &lt;- alply(pos,1,function(v) get.stencil(im,stencil,x=v[1],y=v[2])) %&gt;% do.call(rbind,.)
+        Dx &lt;- dist(stencil$dx) %&gt;% as.matrix #Distance along the x axis
+        Dy &lt;- dist(stencil$dy) %&gt;% as.matrix #Distance along the y axis
+        df &lt;- data.frame(dist.x = c(Dx),dist.y = c(Dy), cor = c(cor(mat)))
+        suby &lt;- subset(df,dist.x==0) %&gt;% select(cor,dist.axis=dist.y) %&gt;%   mutate(label=&quot;Correlation along y&quot;)
+        subx &lt;- subset(df,dist.y==0) %&gt;%  select(cor,dist.axis=dist.x) %&gt;% mutate(label=&quot;Correlation along x&quot;) 
+        rbind(subx,suby) %&gt;% ggplot(aes(dist.axis,cor,col=label))+geom_point()+labs(x=&quot;Distance along axis (x or y), pix.&quot;,y=&quot;Correlation between values&quot;,col=&quot;&quot;)+stat_summary(fun.y=&quot;mean&quot;,geom=&quot;line&quot;)
+    }</code></pre>
+<p>As a sanity check we can apply the new function to filtered noise:</p>
+<pre class="r"><code>#A white noise image
+wn &lt;- array(rnorm(prod(dim(im.bw))),dim(im.bw)) %&gt;% cimg
+#Filtered noise, similar to an MA process
+fn &lt;- isoblur(wn,2)
+plot(fn)</code></pre>
+<p><img src="image_stats_files/figure-html/filtered_noise-1.png" title="" alt="" width="624" /></p>
+<p>Since the blur filter used a standard deviation of 2 pixels, the correlation should have mostly disappeared by a distance of 6 pixels:</p>
+<pre class="r"><code>correlogram(fn,pos)</code></pre>
+<p><img src="image_stats_files/figure-html/corr_fnoise-1.png" title="" alt="" width="864" /></p>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
