@@ -19,4 +19,5 @@ At this stage imager covers:
 
 ### Documentation
 
-There's a [tutorial](image_stats.html) on natural image statistics using imager as well as classical package [documentation](imager.html). In addition functions are documented using R's traditional help system, and you might find [CImg](http://cimg.sourceforge.net/)'s doc useful as well. 
+There's a [tutorial](image_stats.html) on natural image statistics using imager, another (incomplete) tutorial on [morphology and detrending](morphology.html)  as well as classical package [documentation](imager.html). 
+In addition functions are documented using R's traditional help system, and you might find [CImg](http://cimg.sourceforge.net/)'s doc useful as well. 

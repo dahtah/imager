@@ -1,0 +1,68 @@
+---
+title: "Morphological operations in imager"
+output:
+  html_document:
+    fig_width: 6.2
+    fig_height: 8
+    toc: true
+    number_sections: true
+---
+
+```{r init,echo=FALSE}
+library(imager)
+```
+[Simon Barthelmé](http://sites.google.com/site/simonbarthelme) (GIPSA-lab, CNRS)
+
+
+Our first example will be based on a sketch by Leonardo. Let's say we want to extract an outline of the birds: 
+
+```{r birds}
+im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
+plot(im)
+im.g <- grayscale(im)
+plot(im.g)
+```
+
+We could try thresholding:
+
+```{r thresholding,fig.width=18}
+layout(t(1:3))
+threshold(im.g,"20%") %>% plot
+threshold(im.g,"15%") %>% plot
+threshold(im.g,"10%") %>% plot
+```
+
+The problem is that there is a luminance trend in the image (it is noticeably lighter at the bottom), so that a fixed threshold doesn't work very well. Fortunately we can remove that trend using a linear model. We're going to use R's built-in lm function. The first step is to convert the image data to a data.frame, then fit a model:
+
+```{r remove_trend_A}
+df <- as.data.frame(im.g)
+head(df,5) 
+m <- lm(value ~ x + y,data=df) #linear trend
+summary(m)
+```
+
+We can extract fitted values to remove the luminance trend:
+
+```{r remove_trend_B,fig.width=12}
+layout(t(1:2))
+im.f <- im.g-fitted(m)
+plot(im.g,main="Before")
+plot(im.f,main="After trend removal")
+```
+
+It's now easier to threshold the image:
+
+```{r threshold2,fig.width=18}
+layout(t(1:3))
+l_ply(paste0(c(20,15,10),"%"),function(v) threshold(im.f,v) %>% plot(main=v))
+```
+
+We'll go on with a thresholding at 16%, and we can start to play with some morphological operations. "Morphological closing" will help get rid of some of the blotches: 
+
+```{r mclosing,fig.width=12}
+im.t <- threshold(im.f,"16%")
+layout(t(1:2))
+plot(im.t,main="Before")
+mclosing_square(im.t,4) %>% plot(main="After morphological closing")
+```
+

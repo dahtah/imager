@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Morphological operations in imager</title>
+
+<script src="morphology_files/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="morphology_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
+<script src="morphology_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="morphology_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="morphology_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="morphology_files/highlight/default.css"
+      type="text/css" />
+<script src="morphology_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div id="header">
+<h1 class="title">Morphological operations in imager</h1>
+</div>
+
+
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<p>Our first example will be based on a sketch by Leonardo. Let’s say we want to extract an outline of the birds:</p>
+<pre class="r"><code>im &lt;- load.image(system.file(&#39;extdata/Leonardo_Birds.jpg&#39;,package=&#39;imager&#39;))
+plot(im)</code></pre>
+<p><img src="morphology_files/figure-html/birds-1.png" title="" alt="" width="595.2" /></p>
+<pre class="r"><code>im.g &lt;- grayscale(im)
+plot(im.g)</code></pre>
+<p><img src="morphology_files/figure-html/birds-2.png" title="" alt="" width="595.2" /></p>
+<p>We could try thresholding:</p>
+<pre class="r"><code>layout(t(1:3))
+threshold(im.g,&quot;20%&quot;) %&gt;% plot
+threshold(im.g,&quot;15%&quot;) %&gt;% plot
+threshold(im.g,&quot;10%&quot;) %&gt;% plot</code></pre>
+<p><img src="morphology_files/figure-html/thresholding-1.png" title="" alt="" width="1728" /></p>
+<p>The problem is that there is a luminance trend in the image (it is noticeably lighter at the bottom), so that a fixed threshold doesn’t work very well. Fortunately we can remove that trend using a linear model. We’re going to use R’s built-in lm function. The first step is to convert the image data to a data.frame, then fit a model:</p>
+<pre class="r"><code>df &lt;- as.data.frame(im.g)
+head(df,5) </code></pre>
+<pre><code>##   x y z cc     value
+## 1 1 1 1  1 0.3960784
+## 2 2 1 1  1 0.4784314
+## 3 3 1 1  1 0.4490196
+## 4 4 1 1  1 0.4843137
+## 5 5 1 1  1 0.4764706</code></pre>
+<pre class="r"><code>m &lt;- lm(value ~ x + y,data=df) #linear trend
+summary(m)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = value ~ x + y, data = df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.59376  0.01662  0.07721  0.10761  0.23143 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 3.932e-01  1.077e-03   365.3   &lt;2e-16 ***
+## x           5.251e-04  3.985e-06   131.8   &lt;2e-16 ***
+## y           5.391e-04  2.425e-06   222.3   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1838 on 204737 degrees of freedom
+## Multiple R-squared:  0.2459, Adjusted R-squared:  0.2459 
+## F-statistic: 3.338e+04 on 2 and 204737 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>We can extract fitted values to remove the luminance trend:</p>
+<pre class="r"><code>layout(t(1:2))
+im.f &lt;- im.g-fitted(m)
+plot(im.g,main=&quot;Before&quot;)
+plot(im.f,main=&quot;After trend removal&quot;)</code></pre>
+<p><img src="morphology_files/figure-html/remove_trend_B-1.png" title="" alt="" width="1152" /></p>
+<p>It’s now easier to threshold the image:</p>
+<pre class="r"><code>layout(t(1:3))
+l_ply(paste0(c(20,15,10),&quot;%&quot;),function(v) threshold(im.f,v) %&gt;% plot(main=v))</code></pre>
+<p><img src="morphology_files/figure-html/threshold2-1.png" title="" alt="" width="1728" /></p>
+<p>We’ll go on with a thresholding at 16%, and we can start to play with some morphological operations. “Morphological closing” will help get rid of some of the blotches:</p>
+<pre class="r"><code>im.t &lt;- threshold(im.f,&quot;16%&quot;)
+layout(t(1:2))
+plot(im.t,main=&quot;Before&quot;)
+mclosing_square(im.t,4) %&gt;% plot(main=&quot;After morphological closing&quot;)</code></pre>
+<p><img src="morphology_files/figure-html/mclosing-1.png" title="" alt="" width="1152" /></p>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
