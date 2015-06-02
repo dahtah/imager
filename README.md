@@ -1,5 +1,12 @@
 Imager is an image/video processing package for R, based on [http://cimg.sourceforge.net/](CImg), a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for applications like video processing/hyperspectral imaging/MRI.
 
+## Warning: experimental branch!!!
+
+This is the experimental branch of imager, which contains new/untested features! It has more external dependencies than the main branch, you'll need:
+- libfftw3
+- libpng
+- libjpeg
+
 ## How to install
 
 ### The package
