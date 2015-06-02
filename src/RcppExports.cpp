@@ -579,6 +579,58 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// mopening
+NumericVector mopening(NumericVector im, NumericVector mask, bool boundary_conditions, bool is_normalised);
+RcppExport SEXP imager_mopening(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP is_normalisedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_normalised(is_normalisedSEXP);
+    __result = Rcpp::wrap(mopening(im, mask, boundary_conditions, is_normalised));
+    return __result;
+END_RCPP
+}
+// mopening_square
+NumericVector mopening_square(NumericVector im, int size);
+RcppExport SEXP imager_mopening_square(SEXP imSEXP, SEXP sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    __result = Rcpp::wrap(mopening_square(im, size));
+    return __result;
+END_RCPP
+}
+// mclosing_square
+NumericVector mclosing_square(NumericVector im, int size);
+RcppExport SEXP imager_mclosing_square(SEXP imSEXP, SEXP sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    __result = Rcpp::wrap(mclosing_square(im, size));
+    return __result;
+END_RCPP
+}
+// mclosing
+NumericVector mclosing(NumericVector im, NumericVector mask, bool boundary_conditions, bool is_normalised);
+RcppExport SEXP imager_mclosing(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP is_normalisedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_normalised(is_normalisedSEXP);
+    __result = Rcpp::wrap(mclosing(im, mask, boundary_conditions, is_normalised));
+    return __result;
+END_RCPP
+}
 // autocrop
 NumericVector autocrop(NumericVector im, NumericVector color, std::string axes);
 RcppExport SEXP imager_autocrop(SEXP imSEXP, SEXP colorSEXP, SEXP axesSEXP) {

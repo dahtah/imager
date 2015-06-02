@@ -4,12 +4,12 @@
 \alias{as.cimg.data.frame}
 \title{Create an image from a data.frame}
 \usage{
-\method{as.cimg}{data.frame}(df, v.name, dims)
+\method{as.cimg}{data.frame}(df, v.name = "value", dims)
 }
 \arguments{
 \item{df}{a data.frame}
 
-\item{v.name}{name of the variable to extract pixel values from (e.g. "val")}
+\item{v.name}{name of the variable to extract pixel values from (default "value")}
 
 \item{dims}{a vector of length 4 corresponding to image dimensions. If missing, a guess will be made.}
 }

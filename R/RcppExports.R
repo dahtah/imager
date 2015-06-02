@@ -394,6 +394,46 @@ distance_transform <- function(im, value, metric = 2L) {
     .Call('imager_distance_transform', PACKAGE = 'imager', im, value, metric)
 }
 
+#' Morphological opening (erosion followed by dilation)
+#'
+#' @param mask Structuring element.
+#' @param boundary_conditions Boundary conditions.
+#' @param is_normalized Determines if the opening is locally normalized.
+#'
+#' @export
+mopening <- function(im, mask, boundary_conditions = TRUE, is_normalised = FALSE) {
+    .Call('imager_mopening', PACKAGE = 'imager', im, mask, boundary_conditions, is_normalised)
+}
+
+#' Morphological opening by a square element (erosion followed by dilation)
+#'
+#' @param size size of the square element
+#'
+#' @export
+mopening_square <- function(im, size) {
+    .Call('imager_mopening_square', PACKAGE = 'imager', im, size)
+}
+
+#' Morphological closing by a square element (dilation followed by erosion)
+#'
+#' @param size size of the square element
+#'
+#' @export
+mclosing_square <- function(im, size) {
+    .Call('imager_mclosing_square', PACKAGE = 'imager', im, size)
+}
+
+#' Morphological closing (dilation followed by erosion)
+#'
+#' @param mask Structuring element.
+#' @param boundary_conditions Boundary conditions.
+#' @param is_normalized Determines if the closing is locally normalized.
+#'
+#' @export
+mclosing <- function(im, mask, boundary_conditions = TRUE, is_normalised = FALSE) {
+    .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, is_normalised)
+}
+
 #' Autocrop image region 
 #'
 #' @param color Color used for the crop. If \c 0, color is guessed.

@@ -11,7 +11,7 @@ NULL
 NULL
 
 names.coords <- c('x','y','z','c','cc')
-coord.index <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
+index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
 
 ##' Create a cimg object 
 ##'
@@ -218,6 +218,24 @@ channels <- function(im,index,drop=FALSE)
         res
     }
 
+##' Extract an image channel
+##' @export
+channel <- function(im,ind)
+    {
+        im[,,,ind] 
+    }
+
+##' Extract red channel
+##' @export
+R <- function(im) { channel(im,1) }
+
+##' Extract green channel
+##' @export
+G <- function(im) { channel(im,2) }
+
+##' Extract blue channel
+##' @export
+B <- function(im) { channel(im,3) }
 
 all.names <- function(cl)
     {
@@ -563,11 +581,6 @@ pad <- function(im,nPix,axis,pos=0,val=0)
         
     }
 
-impatch <- function(x,y,z=0,cc=0,wx=0,wy=0,wz=0,wc=0)
-    {
-        
-    }
-
 
 .onUnload <- function (libpath) {
   library.dynam.unload("imager", libpath)
@@ -585,12 +598,12 @@ as.cimg.matrix <- function(X)
 ##' The data frame must be of the form (x,y,value) or (x,y,z,value), or (x,y,z,cc,value). The coordinates must be valid image coordinates (i.e., positive integers). 
 ##' 
 ##' @param df a data.frame
-##' @param v.name name of the variable to extract pixel values from (e.g. "val")
+##' @param v.name name of the variable to extract pixel values from (default "value")
 ##' @param dims a vector of length 4 corresponding to image dimensions. If missing, a guess will be made. 
 ##' @return an object of class cimg
 ##' @author Simon Barthelme
 ##' @export
-as.cimg.data.frame <- function(df,v.name,dims)
+as.cimg.data.frame <- function(df,v.name="value",dims)
     {
         which.v <- (names(df) == v.name) %>% which
         col.coord <- (names(df) %in% names.coords) %>% which
@@ -609,7 +622,7 @@ as.cimg.data.frame <- function(df,v.name,dims)
                 dims <- rep(1,4)
                 for (n in coords)
                     {
-                        dims[coord.index[[n]]] <- max(df[[n]])
+                        dims[index.coords[[n]]] <- max(df[[n]])
                     }
             }
         im <- as.cimg(array(0,dims))
@@ -718,6 +731,34 @@ pixel.index <- function(im,coords)
         out
     }
 
+
+coord.index <- function(im,index)
+    {
+        index <- index-1
+        d <- dim(im)
+        dr <- c(cumprod(d)[3:1],1)
+        V <- matrix(NA,nrow=length(index),ncol=4)
+        rem <- index
+        for (ind in 1:4)
+            {
+                n <- rem %/% dr[ind]
+                rem <- rem %% dr[ind]
+                V[,5-ind] <- n
+            }
+        maxIndex <- prod(dim(im))
+        V[index >= maxIndex,] <- NA
+        if (nrow(V) == 1) {
+            V <- as.vector(V)
+            names(V) <- c("x","y","z","cc")
+        }
+        else
+            {
+                colnames(V) <- c("x","y","z","cc")
+            }
+        
+        
+        V+1
+    }
 
 get.mask <- function(im,expr)
     {
@@ -880,4 +921,52 @@ imdirac <- function(dims,x,y,z=1,cc=1)
         A <- array(0,dims)
         A[x,y,z,cc] <- 1
         cimg(A)
+    }
+
+
+##' Return coordinates of subset of pixels
+##'
+##' Typical use case: you want the coordinates of all pixels with a value above a certain threshold
+##'
+##' @param im the image
+##' @param condition a function that takes scalars and returns logicals
+##' @return coordinates of all pixels such that condition(pixel) == TRUE
+##' @examples
+##' im <- as.cimg(function(x,y) x+y,10,10)
+##' get.locations(im,function(v) v < 4)
+##' get.locations(im,function(v) v^2 + 3*v - 2 < 30)
+##' @author Simon Barthelme
+get.locations <- function(im,condition)
+    {
+        if (!is.function(condition))
+            {
+                stop("condition should be a function")
+            }
+        coord.index(im,which(condition(im)))
+    }
+
+##' Threshold grayscale image 
+##'
+##' Thresholding corresponding to setting all values below a threshold to 0, all above to 1. 
+##' 
+##' @param im the image
+##' @param thr a threshold, either numeric, or a string with format "XX%". In the case of the latter, XX will be interpreted as a percentile (set the lower XX% of the pixels to 0, the rest to 1)
+##' @return a thresholded image
+##' @examples
+##' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
+##' grayscale(im) %>% threshold("15%") %>% plot
+##' @author Simon Barthelme
+##' @export
+threshold <- function(im,thr)
+    {
+        if (is.character(thr))
+            {
+                qt <- str_match(thr,"(\\d+)%")[,2] %>% as.numeric
+                thr <- quantile(im,qt/100)
+            }
+        a <- im > thr
+        b <- im <= thr
+        im[a] <- 1
+        im[b] <- 0
+        im
     }

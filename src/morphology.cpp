@@ -138,3 +138,58 @@ NumericVector distance_transform(NumericVector im,double value,unsigned int metr
 }
 
 
+//' Morphological opening (erosion followed by dilation)
+//'
+//' @param mask Structuring element.
+//' @param boundary_conditions Boundary conditions.
+//' @param is_normalized Determines if the opening is locally normalized.
+//'
+//' @export
+// [[Rcpp::export]]
+NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool is_normalised = false) {
+  CImg<double> img = as<CImg<double> >(im);
+  CImg<double> msk = as<CImg<double> >(mask);
+  img.erode(msk,boundary_conditions,is_normalised).dilate(msk,boundary_conditions,is_normalised);
+  return wrap(img);
+}
+
+
+//' Morphological opening by a square element (erosion followed by dilation)
+//'
+//' @param size size of the square element
+//'
+//' @export
+// [[Rcpp::export]]
+NumericVector mopening_square(NumericVector im,int size) {
+  CImg<double> img = as<CImg<double> >(im);
+  img.erode(size).dilate(size);
+  return wrap(img);
+}
+
+//' Morphological closing by a square element (dilation followed by erosion)
+//'
+//' @param size size of the square element
+//'
+//' @export
+// [[Rcpp::export]]
+NumericVector mclosing_square(NumericVector im,int size) {
+  CImg<double> img = as<CImg<double> >(im);
+  img.dilate(size).erode(size);
+  return wrap(img);
+}
+
+//' Morphological closing (dilation followed by erosion)
+//'
+//' @param mask Structuring element.
+//' @param boundary_conditions Boundary conditions.
+//' @param is_normalized Determines if the closing is locally normalized.
+//'
+//' @export
+// [[Rcpp::export]]
+NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool is_normalised = false) {
+  CImg<double> img = as<CImg<double> >(im);
+  CImg<double> msk = as<CImg<double> >(mask);
+  img.dilate(msk,boundary_conditions,is_normalised).erode(msk,boundary_conditions,is_normalised);
+  return wrap(img);
+}
+
