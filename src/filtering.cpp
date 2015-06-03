@@ -254,3 +254,30 @@ NumericVector displacement(NumericVector sourceIm,NumericVector destIm,float smo
    out.displacement(dst,smoothness,precision,nb_scales,iteration_max,is_backward);
    return wrap(out);
 }
+
+
+//' Blur image anisotropically, in an edge-preserving way.
+//' @param amplitude Amplitude of the smoothing.
+//' @param sharpness Sharpness.
+//' @param anisotropy Anisotropy.
+//' @param alpha Standard deviation of the gradient blur.
+//' @param sigma Standard deviation of the structure tensor blur.
+//' @param dl Spatial discretization.
+//' @param da Angular discretization.
+//' @param gauss_prec Precision of the diffusion process.
+//' @param interpolation_type Interpolation scheme.
+//'  Can be 0=nearest-neighbor | 1=linear | 2=Runge-Kutta 
+//' @param is_fast_approx Determines if a fast approximation of the gaussian function is used or not.
+//' @export
+//' @examples
+//' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
+//' im.noisy <- (im + 80*rnorm(prod(dim(im)))) 
+//' blur_anisotropic(im.noisy,ampl=1e4,sharp=1) %>% plot
+// [[Rcpp::export]]
+NumericVector blur_anisotropic(NumericVector inp, float amplitude,  float sharpness=0.7,  float anisotropy=0.6,float alpha=0.6,  float sigma=1.1,  float dl=0.8,  float da=30,
+                               float gauss_prec=2,  unsigned int interpolation_type=0,
+                               bool is_fast_approx=true) {
+  CImg<double> img = as<CImg<double> >(inp);
+  img.blur_anisotropic(amplitude,sharpness,anisotropy,alpha,sigma,dl,da,gauss_prec,interpolation_type,is_fast_approx);
+  return wrap(img);
+}

@@ -396,6 +396,27 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// blur_anisotropic
+NumericVector blur_anisotropic(NumericVector inp, float amplitude, float sharpness, float anisotropy, float alpha, float sigma, float dl, float da, float gauss_prec, unsigned int interpolation_type, bool is_fast_approx);
+RcppExport SEXP imager_blur_anisotropic(SEXP inpSEXP, SEXP amplitudeSEXP, SEXP sharpnessSEXP, SEXP anisotropySEXP, SEXP alphaSEXP, SEXP sigmaSEXP, SEXP dlSEXP, SEXP daSEXP, SEXP gauss_precSEXP, SEXP interpolation_typeSEXP, SEXP is_fast_approxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< float >::type amplitude(amplitudeSEXP);
+    Rcpp::traits::input_parameter< float >::type sharpness(sharpnessSEXP);
+    Rcpp::traits::input_parameter< float >::type anisotropy(anisotropySEXP);
+    Rcpp::traits::input_parameter< float >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< float >::type dl(dlSEXP);
+    Rcpp::traits::input_parameter< float >::type da(daSEXP);
+    Rcpp::traits::input_parameter< float >::type gauss_prec(gauss_precSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type interpolation_type(interpolation_typeSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_fast_approx(is_fast_approxSEXP);
+    __result = Rcpp::wrap(blur_anisotropic(inp, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, is_fast_approx));
+    return __result;
+END_RCPP
+}
 // interp_xy
 NumericVector interp_xy(NumericVector inp, NumericVector ix, NumericVector iy, int z, int c, bool cubic);
 RcppExport SEXP imager_interp_xy(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP zSEXP, SEXP cSEXP, SEXP cubicSEXP) {

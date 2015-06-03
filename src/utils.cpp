@@ -56,20 +56,23 @@ NumericVector imappend(List imlist,char axis)
    return wrap(out);
 }
 
-
+//' Return image patches centered at cx,cy with width wx and height wy
+//'
+//' @param cx,cy: vector of coordinates for patch centers
+//' @param wx,wy: vector of coordinates for patch width and height
 //' @export
 // [[Rcpp::export]]
 List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
 {
   CImg<double> img = as<CImg<double> >(im);
   int n = cx.length();
-  CImgList<double> L;
+  List out(n);
 
   for (int i = 0; i < n; i++)
     {
-      L.insert(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2),i,true);
+      out[i] = wrap(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2));
     }
-  return wrap(L);
+  return out;
 }
 
 //' @export
@@ -78,11 +81,12 @@ List select_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,Integer
 {
   CImg<double> img = as<CImg<double> >(im);
   int n = cx.length();
-  CImgList<double> L;
+  List out(n);
+
 
   for (int i = 0; i < n; i++)
     {
-      L.insert(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cz(i)-wz(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2,cz(i)+wz(i)/2),i,true);
+      out[i] = img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cz(i)-wz(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2,cz(i)+wz(i)/2);
     }
-  return wrap(L);
+  return out;
 }

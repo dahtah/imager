@@ -275,6 +275,23 @@ displacement <- function(sourceIm, destIm, smoothness = 0.1, precision = 5.0, nb
     .Call('imager_displacement', PACKAGE = 'imager', sourceIm, destIm, smoothness, precision, nb_scales, iteration_max, is_backward)
 }
 
+#' Blur image anisotropically, in an edge-preserving way.
+#' @param amplitude Amplitude of the smoothing.
+#' @param sharpness Sharpness.
+#' @param anisotropy Anisotropy.
+#' @param alpha Standard deviation of the gradient blur.
+#' @param sigma Standard deviation of the structure tensor blur.
+#' @param dl Spatial discretization.
+#' @param da Angular discretization.
+#' @param gauss_prec Precision of the diffusion process.
+#' @param interpolation_type Interpolation scheme.
+#'  Can be 0=nearest-neighbor | 1=linear | 2=Runge-Kutta 
+#' @param is_fast_approx Determines if a fast approximation of the gaussian function is used or not.
+#' @export
+blur_anisotropic <- function(inp, amplitude, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2, interpolation_type = 0L, is_fast_approx = TRUE) {
+    .Call('imager_blur_anisotropic', PACKAGE = 'imager', inp, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, is_fast_approx)
+}
+
 #' @export
 interp_xy <- function(inp, ix, iy, z = 0L, c = 0L, cubic = FALSE) {
     .Call('imager_interp_xy', PACKAGE = 'imager', inp, ix, iy, z, c, cubic)
@@ -436,7 +453,7 @@ mclosing <- function(im, mask, boundary_conditions = TRUE, is_normalised = FALSE
 
 #' Autocrop image region 
 #'
-#' @param color Color used for the crop. If \c 0, color is guessed.
+#' @param color Color used for the crop. If  0, color is guessed.
 #' @param axes Axes used for the crop.
 #' @export
 autocrop <- function(im, color, axes = "zyx") {
@@ -531,7 +548,7 @@ shift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, bo
 #' @param size_c Number of vector-channels (new size along the C-axis).
 #' @param interpolation_type Method of interpolation:
 #' 1 = no interpolation: raw memory resizing.
-#' 0 = no interpolation: additional space is filled according to \p boundary_conditions.
+#' 0 = no interpolation: additional space is filled according to  boundary_conditions.
 #' 1 = nearest-neighbor interpolation.
 #' 2 = moving average interpolation.
 #' 3 = linear interpolation.
@@ -539,10 +556,10 @@ shift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, bo
 #' 5 = cubic interpolation.
 #' 6 = lanczos interpolation.
 #' @param boundary_conditions Border condition type.
-#' @param centering_x Set centering type (only if \p interpolation_type=0).
-#' @param centering_y Set centering type (only if \p interpolation_type=0).
-#' @param centering_z Set centering type (only if \p interpolation_type=0).
-#' @param centering_c Set centering type (only if \p interpolation_type=0).
+#' @param centering_x Set centering type (only if  interpolation_type=0).
+#' @param centering_y Set centering type (only if  interpolation_type=0).
+#' @param centering_z Set centering type (only if  interpolation_type=0).
+#' @param centering_c Set centering type (only if  interpolation_type=0).
 #' @export
 resize <- function(im, size_x, size_y = -100L, size_z = -100L, size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L, centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0) {
     .Call('imager_resize', PACKAGE = 'imager', im, size_x, size_y, size_z, size_c, interpolation_type, boundary_conditions, centering_x, centering_y, centering_z, centering_c)
@@ -582,6 +599,10 @@ imappend <- function(imlist, axis) {
     .Call('imager_imappend', PACKAGE = 'imager', imlist, axis)
 }
 
+#' Return image patches centered at cx,cy with width wx and height wy
+#'
+#' @param cx,cy: vector of coordinates for patch centers
+#' @param wx,wy: vector of coordinates for patch width and height
 #' @export
 select_patches <- function(im, cx, cy, wx, wy) {
     .Call('imager_select_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)

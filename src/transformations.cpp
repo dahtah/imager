@@ -6,7 +6,7 @@ using namespace cimg_library;
 
 //' Autocrop image region 
 //'
-//' @param color Color used for the crop. If \c 0, color is guessed.
+//' @param color Color used for the crop. If  0, color is guessed.
 //' @param axes Axes used for the crop.
 //' @export
 // [[Rcpp::export]]
@@ -156,7 +156,7 @@ NumericVector shift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_
 //' @param size_c Number of vector-channels (new size along the C-axis).
 //' @param interpolation_type Method of interpolation:
 //' 1 = no interpolation: raw memory resizing.
-//' 0 = no interpolation: additional space is filled according to \p boundary_conditions.
+//' 0 = no interpolation: additional space is filled according to  boundary_conditions.
 //' 1 = nearest-neighbor interpolation.
 //' 2 = moving average interpolation.
 //' 3 = linear interpolation.
@@ -164,10 +164,10 @@ NumericVector shift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_
 //' 5 = cubic interpolation.
 //' 6 = lanczos interpolation.
 //' @param boundary_conditions Border condition type.
-//' @param centering_x Set centering type (only if \p interpolation_type=0).
-//' @param centering_y Set centering type (only if \p interpolation_type=0).
-//' @param centering_z Set centering type (only if \p interpolation_type=0).
-//' @param centering_c Set centering type (only if \p interpolation_type=0).
+//' @param centering_x Set centering type (only if  interpolation_type=0).
+//' @param centering_y Set centering type (only if  interpolation_type=0).
+//' @param centering_z Set centering type (only if  interpolation_type=0).
+//' @param centering_c Set centering type (only if  interpolation_type=0).
 //' @export
 // [[Rcpp::export]]
 NumericVector resize(NumericVector im, int size_x,  int size_y=-100,

@@ -6,7 +6,8 @@
 ##' @param locations a data.frame 
 ##' @param cubic if TRUE, use cubic interpolation. If FALSE, use linear (default FALSE)
 ##' @examples
-##' loc = data.frame(x=runif(10,1,1024),y=runif(10,1,768)) #Ten random locations
+##' im <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' loc <- data.frame(x=runif(10,1,width(im)),y=runif(10,1,height(im))) #Ten random locations
 ##' interp(im,loc)
 ##' @export
 interp <- function(im,locations,cubic=FALSE)
@@ -28,11 +29,11 @@ interp <- function(im,locations,cubic=FALSE)
                 }
             else if (depth(im) != 1)
                 {
-                    frames(im,drop=FALSE) %>% llply(interp,locations=locations,cubic=cubic)
+                    frames(im) %>% llply(interp,locations=locations,cubic=cubic)
                 }
             else if (spectrum(im) != 1)
                 {
-                    channels(im,drop=FALSE) %>% llply(interp,locations=locations,cubic=cubic)
+                    channels(im) %>% llply(interp,locations=locations,cubic=cubic)
                 }
         }
     else if (setequal(nms,c("x","y","z")))
@@ -43,7 +44,7 @@ interp <- function(im,locations,cubic=FALSE)
                 }
             else
                 {
-                      channels(im,drop=FALSE) %>% llply(interp,locations=locations,cubic=cubic)
+                      channels(im) %>% llply(interp,locations=locations,cubic=cubic)
                 }
         }
         else if (setequal(nms,c("x","y","c")))
@@ -54,7 +55,7 @@ interp <- function(im,locations,cubic=FALSE)
                 }
             else
                 {
-                      depth(im,drop=FALSE) %>% llply(interp,locations=locations,cubic=cubic)
+                      frames(im) %>% llply(interp,locations=locations,cubic=cubic)
                 }
         }
     else if (setequal(nms,c("x","y","z","c")))

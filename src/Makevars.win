@@ -1,0 +1,1 @@
+PKG_LIBS +=  -lgdi32 $(RCPP_LDFLAGS)

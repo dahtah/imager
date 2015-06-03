@@ -268,7 +268,6 @@ all.names <- function(cl)
 ##' @param im 
 ##' @param ... 
 ##' @return an image with some parts cut out
-##' @seealso crop, which does the same thing with a less convenient interface
 ##' @author Simon Barthelme
 ##' @examples
 ##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
@@ -805,12 +804,14 @@ center.stencil <- function(stencil,...)
 ##' @param ... where to center, e.g. x = 100,y = 10,z=3,cc=1
 ##' @return pixel values in neighbourhood
 ##' @examples
-##' #The following stencil defines a neighbourhood that includes the next pixel to the left (delta_x = -1) and the next pixel to the right (delta_x = 1)
+##' #The following stencil defines a neighbourhood that
+##' #includes the next pixel to the left (delta_x = -1) and the next pixel to the right (delta_x = 1)
 ##' stencil <- data.frame(dx=c(-1,1),dy=c(0,0))
 ##' im <- as.cimg(function(x,y) x+y,w=100,h=100)
 ##' get.stencil(im,stencil,x=50,y=50)
 ##'
-##' #A larger neighbourhood that includes pixels upwards and downwards of center (delta_y = -1 and +1)
+##' #A larger neighbourhood that includes pixels upwards and
+##' #downwards of center (delta_y = -1 and +1)
 ##' stencil <- stencil.cross()
 ##' im <- as.cimg(function(x,y) x,w=100,h=100)
 ##' get.stencil(im,stencil,x=5,y=50)
@@ -858,6 +859,7 @@ check.cc <- function(im,cc)
 ##' @return a data.frame defining a stencil
 ##' @seealso get.stencil
 ##' @author Simon Barthelme
+##' @export
 stencil.cross <- function(z=FALSE,cc=FALSE,origin=FALSE)
     {
         if (z & cc)
@@ -935,7 +937,9 @@ imdirac <- function(dims,x,y,z=1,cc=1)
 ##' im <- as.cimg(function(x,y) x+y,10,10)
 ##' get.locations(im,function(v) v < 4)
 ##' get.locations(im,function(v) v^2 + 3*v - 2 < 30)
+##' 
 ##' @author Simon Barthelme
+##' @export
 get.locations <- function(im,condition)
     {
         if (!is.function(condition))
