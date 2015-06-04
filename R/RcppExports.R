@@ -93,6 +93,33 @@ play <- function(vid, loop = FALSE, delay = 30L) {
     invisible(.Call('imager_play', PACKAGE = 'imager', vid, loop, delay))
 }
 
+#' Bucket fill
+#' @param x X-coordinate of the starting point of the region to fill.
+#' @param y Y-coordinate of the starting point of the region to fill.
+#' @param z Z-coordinate of the starting point of the region to fill.
+#' @param color Pointer to spectrum() consecutive values, defining the drawing color.
+#' @param sigma Tolerance concerning neighborhood values.
+#' @param opacity Opacity of the drawing.
+#' @param is_high_connexity Use 8-connexity (only for 2d images).
+#' @export
+bucket_fill <- function(im, x, y, z, color, opacity = 1, sigma = 0, is_high_connexity = FALSE) {
+    .Call('imager_bucket_fill', PACKAGE = 'imager', im, x, y, z, color, opacity, sigma, is_high_connexity)
+}
+
+#' Select a region of homogeneous colour 
+#'
+#' The underlying algorithm is the same as the bucket fill (AKA flood fill). Unlike with the bucket fill, the image isn't changed, the function simply returns a binary mask of the selected region
+#'
+#' @param x X-coordinate of the starting point of the region to fill.
+#' @param y Y-coordinate of the starting point of the region to fill.
+#' @param z Z-coordinate of the starting point of the region to fill.
+#' @param sigma Tolerance concerning neighborhood values.
+#' @param is_high_connexity Use 8-connexity (only for 2d images).
+#' @export
+bucket_select <- function(im, x, y, z, sigma = 0, is_high_connexity = FALSE) {
+    .Call('imager_bucket_select', PACKAGE = 'imager', im, x, y, z, sigma, is_high_connexity)
+}
+
 #' Apply recursive Deriche filter.
 #' @param sigma Standard deviation of the filter.
 #' @param order Order of the filter. Can be <tt>{ 0=smooth-filter | 1=1st-derivative | 2=2nd-derivative }</tt>.
@@ -288,6 +315,10 @@ displacement <- function(sourceIm, destIm, smoothness = 0.1, precision = 5.0, nb
 #'  Can be 0=nearest-neighbor | 1=linear | 2=Runge-Kutta 
 #' @param is_fast_approx Determines if a fast approximation of the gaussian function is used or not.
 #' @export
+#' @examples
+#' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
+#' im.noisy <- (im + 80*rnorm(prod(dim(im)))) 
+#' blur_anisotropic(im.noisy,ampl=1e4,sharp=1) %>% plot
 blur_anisotropic <- function(inp, amplitude, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2, interpolation_type = 0L, is_fast_approx = TRUE) {
     .Call('imager_blur_anisotropic', PACKAGE = 'imager', inp, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, is_fast_approx)
 }

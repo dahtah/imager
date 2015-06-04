@@ -183,6 +183,40 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// bucket_fill
+NumericVector bucket_fill(NumericVector im, int x, int y, int z, NumericVector color, float opacity, float sigma, bool is_high_connexity);
+RcppExport SEXP imager_bucket_fill(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP sigmaSEXP, SEXP is_high_connexitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type z(zSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type color(colorSEXP);
+    Rcpp::traits::input_parameter< float >::type opacity(opacitySEXP);
+    Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_high_connexity(is_high_connexitySEXP);
+    __result = Rcpp::wrap(bucket_fill(im, x, y, z, color, opacity, sigma, is_high_connexity));
+    return __result;
+END_RCPP
+}
+// bucket_select
+NumericVector bucket_select(NumericVector im, int x, int y, int z, float sigma, bool is_high_connexity);
+RcppExport SEXP imager_bucket_select(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP sigmaSEXP, SEXP is_high_connexitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type z(zSEXP);
+    Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< bool >::type is_high_connexity(is_high_connexitySEXP);
+    __result = Rcpp::wrap(bucket_select(im, x, y, z, sigma, is_high_connexity));
+    return __result;
+END_RCPP
+}
 // deriche
 NumericVector deriche(NumericVector inp, float sigma, int order, char axis, bool boundary_conditions);
 RcppExport SEXP imager_deriche(SEXP inpSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP boundary_conditionsSEXP) {

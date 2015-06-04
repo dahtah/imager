@@ -53,20 +53,21 @@ plot.cimg <- function(im,frame,rescale.color=TRUE,...)
         if (dim(im)[3] == 1) #Single image (depth=1)
             {
                 
-                dim(im) <- dim(im)[-3]
-                if (dim(im)[3] == 1) #BW
-                    {
-                        dim(im) <- dim(im)[1:2]
-                        im <- t(im)
-                        class(im) <- "matrix"
-                    }
-                else{
-                    im <- aperm(im,c(2,1,3))
-                    class(im) <- "array"
-                }
-                plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...)
+                ## dim(im) <- dim(im)[-3]
+                ## if (dim(im)[3] == 1) #BW
+                ##     {
+                ##         dim(im) <- dim(im)[1:2]
+                ##         im <- t(im)
+                ##         class(im) <- "matrix"
+                ##     }
+                ## else{
+                ##     im <- aperm(im,c(2,1,3))
+                ##     class(im) <- "array"
+                ## }
                 
-                rasterImage(im,1,1,w,h)
+                plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...,ylim=c(h,1))
+                as.raster(im) %>% rasterImage(1,height(im),width(im),1)
+#                rasterImage(im,1,1,w,h)
             }
         else
             {
@@ -236,6 +237,26 @@ G <- function(im) { channel(im,2) }
 ##' Extract blue channel
 ##' @export
 B <- function(im) { channel(im,3) }
+
+##' Return pixel value at coordinates
+##'
+##' @param im an image (cimg object)
+##' @param x x coordinate (vector)
+##' @param y y coordinate (vector)
+##' @param z z coordinate (vector, default 1)
+##' @param cc colour coordinate (vector, default 1)
+##' @return pixel values
+##' @author Simon Barthelme
+##' @examples
+##' im <- as.cimg(function(x,y) x+y,50,50)
+##' at(im,10,1)
+##' at(im,10:12,1)
+##' at(im,10:12,1:3)
+##' @export
+at <- function(im,x,y,z=1,cc=1)
+    {
+        as.array(im)[x,y,z,cc]
+    }
 
 all.names <- function(cl)
     {
@@ -756,7 +777,7 @@ coord.index <- function(im,index)
             }
         
         
-        V+1
+        as.data.frame(V+1)
     }
 
 get.mask <- function(im,expr)
@@ -973,4 +994,21 @@ threshold <- function(im,thr)
         im[a] <- 1
         im[b] <- 0
         im
+    }
+
+
+##' Capture the current R plot device as a cimg image
+##'
+##' @return a cimg image corresponding to the contents of the current plotting window
+##' @author Simon Barthelme
+##' @examples
+##' plot(1:10)
+##' capture.plot() %>% plot #A plot of the plot
+##' @export
+capture.plot <- function()
+    {
+        rst <- dev.capture(native=FALSE)
+        d <- dim(rst)
+        v <- rst %>% col2rgb %>% t %>% as.numeric
+        array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% rotate(-90)
     }
