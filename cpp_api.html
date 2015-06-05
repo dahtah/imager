@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Accessing the CImg API using Rcpp and imager</title>
+
+<script src="cpp_api_files/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="cpp_api_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
+<script src="cpp_api_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="cpp_api_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="cpp_api_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="cpp_api_files/highlight/default.css"
+      type="text/css" />
+<script src="cpp_api_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div id="header">
+<h1 class="title">Accessing the CImg API using Rcpp and imager</h1>
+</div>
+
+
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<p>If R isn’t fast enough for your needs, it may be worth using the CImg C++ API directly. Imager provides some wrappers that makes the process relatively convenient (if anything involving C++ can ever be called convenient).</p>
+<p>Here’s a basic example: we define a C++ function inline, call cppFunction, and the function becomes magically accessible.</p>
+<pre class="r"><code>library(imager)
+
+#Some C++ code as a character string
+#The function takes an image, applies blur and erode operations, and returns the result
+foo.inline &lt;- &quot;
+NumericVector foo(NumericVector inp)
+{
+    CImg&lt;double&gt; img = as&lt;CImg&lt;double&gt; &gt;(inp);
+    img.blur(3).erode(4);
+    return wrap(img);
+} &quot;
+
+#Compile the function. The compiler may issue a number of warnings which you cann all ignore
+cppFunction(foo.inline,depends=&quot;imager&quot;)
+
+
+im &lt;- load.image(system.file(&#39;extdata/Leonardo_Birds.jpg&#39;,package=&#39;imager&#39;))
+
+#Function foo is now accessible
+foo(im) %&gt;% plot</code></pre>
+<p><img src="cpp_api_files/figure-html/example_inline-1.png" title="" alt="" width="595.2" /></p>
+<p>Going through the C++ code in more detail:</p>
+<pre><code>NumericVector foo(NumericVector inp)</code></pre>
+<p>cimg objects are passed from R to C++ as vectors of doubles with a dimension attribute of length 4 (corresponding to the x,y,z,c axes). We use the NumericVector class defined by Rcpp for that purpose.</p>
+<pre><code>CImg&lt;double&gt; img = as&lt;CImg&lt;double&gt; &gt;(inp);</code></pre>
+<p>Cimg is a templated library, and here we instantiate a CImg object (representing an image) with type double. The as function handles the conversion from NumericVector to CImg<double>.</p>
+<pre><code>img.blur(3).erode(4);</code></pre>
+<p>This is a straightforward call to the CImg API, using chaining syntax. Note that operations are done in-place.</p>
+<pre><code>return wrap(img);</code></pre>
+<p>Use a custom wrap function that takes a CImg object and turns into into a NumericVector object with the right attributes. The result will show up in R as a cimg object.</p>
+<p>To learn more about CImg, see the <a href="http://cimg.eu">website</a> or these <a href="http://cimg.eu/CImg_slides.pdf">slides</a>.</p>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
