@@ -24,6 +24,7 @@ At the moment you'll find
 - a [tutorial](image_stats.html) on natural image statistics using imager
 - another (incomplete) tutorial on [morphology and detrending](morphology.html)
 - information on [accessing the CImg API using Rcpp](cpp_api.html)
-- classical package [documentation](imager.html).
+- general package [documentation](imager.html)
+- a [list of all functions](imager.pdf) with examples
 
-In addition functions are documented using R's traditional help system, and you might find [CImg](http://cimg.sourceforge.net/)'s doc useful as well. 
+You might find [CImg](http://cimg.sourceforge.net/)'s doc useful as well. 
