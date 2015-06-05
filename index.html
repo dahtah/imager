@@ -68,8 +68,8 @@ img {
 
 <p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
 <p>R is a bit lacking in the area of image processing, where Matlab is still king. Imager aims to make image processing work in R easier. It is based on <a href="http://cimg.sourceforge.net/">CImg</a>, a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for basic video processing/hyperspectral imaging as well.</p>
-<div id="features" class="section level3">
-<h3>Features</h3>
+<div id="features" class="section level2">
+<h2>Features</h2>
 <p>At this stage imager covers:</p>
 <ul>
 <li>loading and saving images in various formats</li>
@@ -80,8 +80,29 @@ img {
 <li>morphological operations</li>
 </ul>
 </div>
-<div id="documentation" class="section level3">
-<h3>Documentation</h3>
+<div id="how-to-install" class="section level2">
+<h2>How to install</h2>
+<div id="the-package" class="section level3">
+<h3>The package</h3>
+<p>Install the devtools package if you haven’t already. Then run:</p>
+<pre><code>library(devtools)
+install_github(&quot;dahtah/imager&quot;)</code></pre>
+<p>So far the package is only available as source code, so you’ll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11.</p>
+</div>
+<div id="dependencies" class="section level3">
+<h3>Dependencies</h3>
+<p>You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to be able to import and save images.</p>
+</div>
+</div>
+<div id="getting-started" class="section level2">
+<h2>Getting started</h2>
+<pre><code>tennis &lt;- load.image(system.file(&#39;extdata/tennis_sif.mpeg&#39;,package=&#39;imager&#39;))
+play(tennis)
+#now filter in the time direction and pipe to play
+deriche(tennis,10,axis=&quot;z&quot;) %&gt;% play</code></pre>
+</div>
+<div id="documentation" class="section level2">
+<h2>Documentation</h2>
 <p>At the moment you’ll find</p>
 <ul>
 <li>a <a href="image_stats.html">tutorial</a> on natural image statistics using imager</li>
