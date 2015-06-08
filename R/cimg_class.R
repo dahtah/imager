@@ -975,7 +975,7 @@ get.locations <- function(im,condition)
 ##' Thresholding corresponding to setting all values below a threshold to 0, all above to 1. 
 ##' 
 ##' @param im the image
-##' @param thr a threshold, either numeric, or a string with format "XX%". In the case of the latter, XX will be interpreted as a percentile (set the lower XX% of the pixels to 0, the rest to 1)
+##' @param thr a threshold, either numeric, or a string with format "XX\%". In the case of the latter, XX will be interpreted as a percentile (set the lower XX\% of the pixels to 0, the rest to 1)
 ##' @return a thresholded image
 ##' @examples
 ##' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))

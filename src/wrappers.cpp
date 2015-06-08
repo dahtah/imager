@@ -1,4 +1,3 @@
-//[[Rcpp::interfaces(r, cpp)]]
 #include "CImg.h"
 #include <Rcpp.h>
 #include "wrappers.h"

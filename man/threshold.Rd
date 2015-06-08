@@ -9,7 +9,7 @@ threshold(im, thr)
 \arguments{
 \item{im}{the image}
 
-\item{thr}{a threshold, either numeric, or a string with format "XX%". In the case of the latter, XX will be interpreted as a percentile (set the lower XX% of the pixels to 0, the rest to 1)}
+\item{thr}{a threshold, either numeric, or a string with format "XX\%". In the case of the latter, XX will be interpreted as a percentile (set the lower XX\% of the pixels to 0, the rest to 1)}
 }
 \value{
 a thresholded image
