@@ -5,9 +5,9 @@
 \title{Resize image to new dimensions.
 If pd[x,y,z,v]<0, it corresponds to a percentage of the original size (the default value is -100).}
 \usage{
-resize(im, size_x, size_y = -100L, size_z = -100L, size_c = -100L,
-  interpolation_type = 1L, boundary_conditions = 0L, centering_x = 0,
-  centering_y = 0, centering_z = 0, centering_c = 0)
+resize(im, size_x = -100L, size_y = -100L, size_z = -100L,
+  size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L,
+  centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0)
 }
 \arguments{
 \item{size_x}{Number of columns (new size along the X-axis).}
@@ -19,7 +19,7 @@ resize(im, size_x, size_y = -100L, size_z = -100L, size_c = -100L,
 \item{size_c}{Number of vector-channels (new size along the C-axis).}
 
 \item{interpolation_type}{Method of interpolation:
-1 = no interpolation: raw memory resizing.
+-1 = no interpolation: raw memory resizing.
 0 = no interpolation: additional space is filled according to  boundary_conditions.
 1 = nearest-neighbor interpolation.
 2 = moving average interpolation.

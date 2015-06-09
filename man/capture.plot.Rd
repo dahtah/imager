@@ -13,8 +13,10 @@ a cimg image corresponding to the contents of the current plotting window
 Capture the current R plot device as a cimg image
 }
 \examples{
-plot(1:10)
-capture.plot() \%>\% plot #A plot of the plot
+##interactive only:
+##plot(1:10)
+###Make a plot of the plot
+##capture.plot() \%>\% plot
 }
 \author{
 Simon Barthelme

@@ -1002,8 +1002,10 @@ threshold <- function(im,thr)
 ##' @return a cimg image corresponding to the contents of the current plotting window
 ##' @author Simon Barthelme
 ##' @examples
-##' plot(1:10)
-##' capture.plot() %>% plot #A plot of the plot
+##' ##interactive only:
+##' ##plot(1:10)
+##' ###Make a plot of the plot
+##' ##capture.plot() %>% plot 
 ##' @export
 capture.plot <- function()
     {

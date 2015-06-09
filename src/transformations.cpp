@@ -155,7 +155,7 @@ NumericVector shift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_
 //' @param size_z Number of slices (new size along the Z-axis).
 //' @param size_c Number of vector-channels (new size along the C-axis).
 //' @param interpolation_type Method of interpolation:
-//' 1 = no interpolation: raw memory resizing.
+//' -1 = no interpolation: raw memory resizing.
 //' 0 = no interpolation: additional space is filled according to  boundary_conditions.
 //' 1 = nearest-neighbor interpolation.
 //' 2 = moving average interpolation.
@@ -170,7 +170,7 @@ NumericVector shift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_
 //' @param centering_c Set centering type (only if  interpolation_type=0).
 //' @export
 // [[Rcpp::export]]
-NumericVector resize(NumericVector im, int size_x,  int size_y=-100,
+NumericVector resize(NumericVector im, int size_x=-100,  int size_y=-100,
                      int size_z=-100,  int size_c=-100,
                      int interpolation_type=1,  unsigned int boundary_conditions=0,
                      float centering_x = 0,  float centering_y = 0,

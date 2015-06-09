@@ -41,7 +41,7 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30)
   unsigned long t0 = cimg::time();
   unsigned long dt;
   CImg<double> img = as<CImg<double> >(vid);
-  CImgDisplay disp(img.get_slice(0),"My images");
+  CImgDisplay disp(img.get_slice(0),"Video player");
   int i = 0,n=img.depth();
   bool pause=false;
   while (true)

@@ -578,7 +578,7 @@ shift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, bo
 #' @param size_z Number of slices (new size along the Z-axis).
 #' @param size_c Number of vector-channels (new size along the C-axis).
 #' @param interpolation_type Method of interpolation:
-#' 1 = no interpolation: raw memory resizing.
+#' -1 = no interpolation: raw memory resizing.
 #' 0 = no interpolation: additional space is filled according to  boundary_conditions.
 #' 1 = nearest-neighbor interpolation.
 #' 2 = moving average interpolation.
@@ -592,7 +592,7 @@ shift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, bo
 #' @param centering_z Set centering type (only if  interpolation_type=0).
 #' @param centering_c Set centering type (only if  interpolation_type=0).
 #' @export
-resize <- function(im, size_x, size_y = -100L, size_z = -100L, size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L, centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0) {
+resize <- function(im, size_x = -100L, size_y = -100L, size_z = -100L, size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L, centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0) {
     .Call('imager_resize', PACKAGE = 'imager', im, size_x, size_y, size_z, size_c, interpolation_type, boundary_conditions, centering_x, centering_y, centering_z, centering_c)
 }
 
