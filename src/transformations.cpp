@@ -104,7 +104,7 @@ NumericVector resize_halfXY(NumericVector im)
 {
    CImg<double> img = as<CImg<double> >(im);
    CImg<double> out(img,false);
-   img.resize_halfXY();
+   out.resize_halfXY();
    return wrap(out);
 }
 
