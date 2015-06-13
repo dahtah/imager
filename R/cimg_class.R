@@ -194,6 +194,18 @@ frames <- function(im,index,drop=FALSE)
         res
     }
 
+##' Extract one frame out of a 4D image/video
+##'
+##' @param im 
+##' @param index 
+##' @return an image (class cimg)
+##' @author Simon Barthelme
+##' @export
+frame <- function(im,index)
+    {
+        im[,,index,]
+    }
+
 
 ##' Split a colour image into a list of separate channels
 ##'
@@ -1013,4 +1025,27 @@ capture.plot <- function()
         d <- dim(rst)
         v <- rst %>% col2rgb %>% t %>% as.numeric
         array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% rotate(-90)
+    }
+
+##' Compute image gradient 
+##'
+##' Light interface for get_gradient. Refer to get_gradient for details on the computation.
+##' 
+##' @param im an image of class cimg
+##' @param axes: direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz")
+##' @param scheme numerical scheme (default '3')
+##' @return an image or a list of images, depending on the value of "axes" 
+##' @author Simon Barthelmé
+##' @export
+imgradient <- function(im,axes,scheme=3)
+    {
+        gr <- get_gradient(im,axes,scheme)
+        if (length(gr) == 1)
+            {
+                gr[[1]]
+            }
+        else
+            {
+                gr
+            }
     }
