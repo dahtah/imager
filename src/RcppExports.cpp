@@ -824,6 +824,21 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// warp
+NumericVector warp(NumericVector im, NumericVector warpfield, unsigned int mode, unsigned int interpolation, unsigned int boundary_conditions);
+RcppExport SEXP imager_warp(SEXP imSEXP, SEXP warpfieldSEXP, SEXP modeSEXP, SEXP interpolationSEXP, SEXP boundary_conditionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type warpfield(warpfieldSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type mode(modeSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type interpolation(interpolationSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type boundary_conditions(boundary_conditionsSEXP);
+    __result = Rcpp::wrap(warp(im, warpfield, mode, interpolation, boundary_conditions));
+    return __result;
+END_RCPP
+}
 // load_image
 NumericVector load_image(std::string fname);
 RcppExport SEXP imager_load_image(SEXP fnameSEXP) {

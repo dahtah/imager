@@ -90,7 +90,6 @@ NumericVector boxblur(NumericVector inp,float sigma,bool boundary_conditions=tru
 //'
 //'       @param sigma_x Size of the box window, along the X-axis.
 //'       @param sigma_y Size of the box window, along the Y-axis.
-//'       @param sigma_z Size of the box window, along the Z-axis.
 //'       @param boundary_conditions Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.
 //'       @seealso blur().
 //'

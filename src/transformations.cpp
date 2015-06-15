@@ -3,7 +3,6 @@
 #include "wrappers.h"
 using namespace Rcpp;
 using namespace cimg_library;
-
 //' Autocrop image region 
 //'
 //' @param color Color used for the crop. If  0, color is guessed.
@@ -181,6 +180,30 @@ NumericVector resize(NumericVector im, int size_x=-100,  int size_y=-100,
    out.resize(size_x,size_y,size_z,size_c,interpolation_type,boundary_conditions,
 	      centering_x,centering_y,centering_z,centering_c);
    return wrap(out);
+}
+
+//' Warp image
+//'
+//' @param warp Warping field. The (x,y,z) fields should be stacked along the colour coordinate. 
+//' @param mode Can be { 0=backward-absolute | 1=backward-relative | 2=forward-absolute | 3=forward-relative }
+//' @param is_relative does warping field give absolute or relative warping coordinates?
+//' @param interpolation Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
+//' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann | 2=periodic }</tt>.
+//' @seealso imwarp for a user-friendly interface
+//' @export
+// [[Rcpp::export]]
+NumericVector warp(NumericVector im,NumericVector warpfield, 
+		   unsigned int mode=0,
+		   unsigned int interpolation=1, 
+		   unsigned int boundary_conditions=0)
+{
+  CImg<double> img = as<CImg<double> >(im);
+  CImg<double> wrp = as<CImg<double> >(warpfield);
+  //CImg<double> out(img,false);
+
+  CImg<double> out=img.get_warp(wrp,mode,interpolation,boundary_conditions);
+  //out.warp(wrp,mode,interpolation,boundary_conditions);
+  return wrap(out);
 }
 
 

@@ -185,7 +185,6 @@ boxblur <- function(inp, sigma, boundary_conditions = TRUE) {
 #'
 #'       @param sigma_x Size of the box window, along the X-axis.
 #'       @param sigma_y Size of the box window, along the Y-axis.
-#'       @param sigma_z Size of the box window, along the Z-axis.
 #'       @param boundary_conditions Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.
 #'       @seealso blur().
 #'
@@ -594,6 +593,19 @@ shift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, bo
 #' @export
 resize <- function(im, size_x = -100L, size_y = -100L, size_z = -100L, size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L, centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0) {
     .Call('imager_resize', PACKAGE = 'imager', im, size_x, size_y, size_z, size_c, interpolation_type, boundary_conditions, centering_x, centering_y, centering_z, centering_c)
+}
+
+#' Warp image
+#'
+#' @param warp Warping field. The (x,y,z) fields should be stacked along the colour coordinate. 
+#' @param mode Can be { 0=backward-absolute | 1=backward-relative | 2=forward-absolute | 3=forward-relative }
+#' @param is_relative does warping field give absolute or relative warping coordinates?
+#' @param interpolation Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
+#' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann | 2=periodic }</tt>.
+#' @seealso imwarp for a user-friendly interface
+#' @export
+warp <- function(im, warpfield, mode = 0L, interpolation = 1L, boundary_conditions = 0L) {
+    .Call('imager_warp', PACKAGE = 'imager', im, warpfield, mode, interpolation, boundary_conditions)
 }
 
 #' @export

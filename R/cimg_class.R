@@ -414,15 +414,25 @@ save.image <- function(im,file)
 ##' Returns the pixel grid for an image
 ##'
 ##' The pixel grid for image im gives the (x,y,z,c) coordinates of each successive pixel as a data.frame. The c coordinate has been renamed 'cc' to avoid conflicts with R's c function.
-##' NB: coordinates start at (x=1,y=1), corresponding to the top left corner of the image
+##' NB: coordinates start at (x=1,y=1), corresponding to the top left corner of the image, unless standardise == TRUE, in which case we use the usual Cartesian coordinates with origin at the center of the image and scaled such that x varies between -.5 and .5, and a y arrow pointing up
 ##'
 ##' 
-##' @param im 
+##' @param im
+##' @param standardise. If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
 ##' @return a data.frame
 ##' @export
-pixel.grid <- function(im)
+pixel.grid <- function(im,standardise=FALSE)
     {
-        expand.grid(x=1:width(im),y=1:height(im),z=1:depth(im),cc=1:spectrum(im))
+        if (standardise)
+            {
+                dy <- height(im)/width(im)
+                dz <- depth(im)/width(im)
+                expand.grid(x=seq(-.5,.5,l=width(im)),y=seq(dy/2,-dy/2,l=height(im)),z=seq(-dz/2,dz/2,l=depth(im)),cc=1:spectrum(im))
+            }
+        else
+            {
+                expand.grid(x=1:width(im),y=1:height(im),z=1:depth(im),cc=1:spectrum(im))
+            }
     }
 
 ##' @export
@@ -546,7 +556,6 @@ squeeze <- function(x) {
     x
 }
 
-##' @describeIn cimg 
 ##' @export
 as.matrix.cimg <- function(x) {
     d <- dim(x)
@@ -1048,4 +1057,71 @@ imgradient <- function(im,axes,scheme=3)
             {
                 gr
             }
+    }
+
+##' Image warping
+##'
+##' Image warping consists in remapping pixels, ie. you define a function 
+##' M(x,y,z) -> (x',y',z')
+##' that displaces pixel content from (x,y,z) to (x',y',z'). 
+##' Actual implementations rely on either the forward transformation M, or the backward (inverse) transformation M^-1. 
+##' In CImg the forward implementation will go through all source (x,y,z) pixels and "paint" the corresponding pixel at (x',y',z'). This will result in unpainted pixels in the output if M is expansive (for example in the case of a scaling M(x,y,z) = 5*(x,y,z)).
+##' The backward implementation will go through every pixel in the destination image and look for ancestors in the source, meaning that every pixel will be painted.
+##' There are two ways of specifying the map: absolute or relative coordinates. In absolute coordinates you specify M or M^-1 directly. In relative coordinates you specify an offset function D:
+##' M(x,y) = (x,y) + D(x,y) (forward)
+##' M^-1(x,y) = (x,y) - D(x,y) (backward)
+##'
+##' Note that 3D warps are possible as well.
+##' The mapping should be specified via the "map" argument, see examples. 
+##' 
+##' @param im an image
+##' @param map a function that takes (x,y) or (x,y,z) as arguments and returns a named list with members (x,y) or (x,y,z) 
+##' @param direction "forward" or "backward" (default "forward")
+##' @param coordinates "absolute" or "relative" (default "relative")
+##' @param boundary boundary conditions: "dirichlet", "neumann", "periodic". Default "dirichlet"
+##' @param interpolation "nearest", "linear", "cubic" (default "linear")
+##' @return a warped image
+##' @examples
+##' im <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' #Shift image
+##' map.shift <- function(x,y) list(x=x+10,y=y+30)
+##' imwarp(im,map=map.shift) %>% plot
+##' #Shift image (backward transform)
+##' imwarp(im,map=map.shift,dir="backward") %>% plot
+##'
+##' #Shift using relative coordinates
+##' map.rel <- function(x,y) list(x=10+0*x,y=30+0*y)
+##' imwarp(im,map=map.rel,coordinates="relative") %>% plot
+##'
+##' #Scaling
+##' map.scaling <- function(x,y) list(x=1.5*x,y=1.5*y)
+##' imwarp(im,map=map.scaling) %>% plot #Note the holes
+##' map.scaling.inv <- function(x,y) list(x=x/1.5,y=y/1.5)
+##' imwarp(im,map=map.scaling.inv,dir="backward") %>% plot #No holes
+##'
+##' #Bending
+##' map.bend.rel <- function(x,y) list(x=50*sin(y/10),y=0*y)
+##' imwarp(im,map=map.bend.rel,coord="relative",dir="backward") %>% plot #No holes
+##' @author Simon Barthelme
+##' @seealso warp for direct access to the CImg function
+##' @export
+imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="dirichlet",interpolation="linear")
+    {
+        gr <- pixel.grid(im)
+        args <- formals(map)%>%names
+        if (length(args)==2)
+            {
+                out <- map(gr$x,gr$y)
+            }
+        else if (length(args)==3)
+            {
+                out <- map(gr$x,gr$y,gr$z)
+            }
+        else
+            {
+                stop("Map should be a function with arguments x,y or x,y,z")
+            }
+        wf <- llply(out,function(v) array(v,c(dim(im)[1:3],1))) %>% imappend("c")
+        mode <- (direction=="forward")*2+(coordinates=="relative")
+        warp(im,wf-1,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary=switch(boundary,dirichlet=0,neumann=1,periodic=2))
     }
