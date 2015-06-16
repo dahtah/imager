@@ -225,6 +225,48 @@ pad(parrots,axis="y",140,pos=-1) %>% autocrop(c(0,0,0)) %>% plot
 ```
 
 
+# Warping
+
+Warping maps the pixels of the input image to a different location in the output. Scaling is a special case of warping, so is shifting. Warping relies on a map:
+$M(x,y) = (x',y')$
+
+that describes where to send pixel (x,y). Shifting the image corresponds to adding a constant to the coordinates:
+$M(x,y) = (x+\delta_x,y+\delta_y)$
+
+In imager:
+
+```{r warp_shift}
+map.shift <- function(x,y) list(x=x+10,y=y+30)
+imwarp(parrots,map=map.shift) %>% plot
+```
+
+The map function should take (x,y) as arguments and output a named list with values (x,y).
+
+The warping algorithm has two modes, "forward" and "backward". In forward mode you go through all $(x,y)$ pixels in the source, and paint the corresponding location $M(x,y)$ in the target image. This may result in unpainted pixels, as in the following example:
+
+```{r warp_scale_forward}
+map.scale <- function(x,y) list(x=1.5*x,y=1.5*y)
+imwarp(parrots,map=map.scale) %>% plot(main="Forward mode")
+```
+
+In backward mode you go through all pixels $(x',y')$ in the target image, and look up their ancestor $M^{-1}(x',y')$ in the source image. Backward mode has no missing pixel problems, but now you need to define the inverse map and set the "direction" argument to "backward".
+
+```{r warp_scale_backward}
+map.scale.bw <- function(x,y) list(x=x/1.5,y=y/1.5)
+imwarp(parrots,map=map.scale.bw,direction="backward") %>% plot(main="Backward mode")
+```
+
+Of course shifting and scaling things is boring and the whole point of warping is to do things like that:
+
+```{r warped_warp}
+map <- function(x,y) list(x=exp(y/600)*x,y=y*exp(-sin(x/40)))
+imwarp(parrots,map=map,direction="forward") %>% plot()
+
+```
+
+See ?imwarp for more. Note that 3D warping is possible as well. 
+
+
 # Lagged operators
 
 To compute the difference between successive images in a video, you can use the shift operator:
@@ -236,7 +278,7 @@ To compute the difference between successive images in a video, you can use the 
 #Compute difference between frames (at lag 3)
 (shift(tennis,delta_z=3)-tennis) %>% plot(frame=4,main="Difference between frames 3 and 1")
 
-#note that shift uses interpolation. that makes relatively slow, but one advantage is that it allows non-integer lags:
+#note that shift uses interpolation. that makes it relatively slow, but one advantage is that it allows non-integer lags:
 #shift(tennis,delta_z=3.5)-tennis
 #is valid
 
