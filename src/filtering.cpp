@@ -1,4 +1,4 @@
-//#define cimg_use_fftw3
+#define cimg_use_fftw3
 #include "CImg.h"
 #include <Rcpp.h>
 #include "wrappers.h"
