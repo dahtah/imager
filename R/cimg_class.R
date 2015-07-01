@@ -159,10 +159,7 @@ spectrum <- function(im) dim(im)[4]
 depth <- function(im) dim(im)[3]
 
 
-renormalise.channels <- function(im)
-    {
-        rn <- function(x) (x-min(x))/diff(range(x))
-    }
+rn <- function(x) (x-min(x))/diff(range(x))
 
 ldim <- function(v)
     {
@@ -390,19 +387,71 @@ subs <- function(im,cl,consts)
 
 ##' Load image from file
 ##'
-##' You'll need ImageMagick for some formats. 
+##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
 ##' 
 ##' @param file path to file
 ##' @return an object of class 'cimg'
+##' @examples
+##' fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') #Path to example file from package
+##' im <- load.image(fpath)
+##' plot(im)
 ##' @export
 load.image <- function(file)
     {
-        load_image(path.expand(file))
+        has.magick <- Sys.which("convert") %>% { length(.) > 0 }
+        if (has.magick)
+            {
+                path.expand(file) %>% load_image
+            }
+        else
+            {
+                ftype <- str_match(file,"\\.(.+)$")[1,2]
+                if (ftype == "png")
+                    {
+                        load.png(file)
+                    }
+                else if (ftype == "jpeg" | ftype == "jpg")
+                    {
+                        load.jpg(file)
+                    }
+                else
+                    {
+                        stop("Unsupported file format. Please convert to jpg/png or install image magick")
+                    }
+            }
+
     }
+
+convert.im.fromPNG <- function(A)
+    {
+        A <- A*255
+        d <- dim(A)
+        if (length(d) == 3)
+            {
+                dim(A) <- c(d[1:2],1,d[3])
+            }
+        else
+            {
+                dim(A) <- c(d[1:2],1,1)
+            }
+        mirror(A,"x") %>% rotate(-90)
+    }
+
+load.png <- function(file)
+    {
+        readPNG(file) %>% convert.im.fromPNG
+    }
+
+load.jpeg <- function(file)
+    {
+        readJPEG(file) %>% convert.im.fromPNG
+    }
+
+
 
 ##' Save image
 ##'
-##' You'll need ImageMagick for some formats. 
+##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
 ##'
 ##' @param im an image (of class cimg)
 ##' @param file path to file. The format is determined by the file's name
@@ -410,9 +459,49 @@ load.image <- function(file)
 ##' @export
 save.image <- function(im,file)
     {
-        save_image(im,path.expand(file))
+        has.magick <- Sys.which("convert") %>% { length(.) > 0 }
+        if (has.magick)
+            {
+                save_image(im,path.expand(file))
+            }
+        else
+            {
+                ftype <- str_match(file,"\\.(.+)$")[1,2]
+                if (ftype == "png")
+                    {
+                        save.png(im,file)
+                    }
+                else if (ftype == "jpeg" | ftype == "jpg")
+                    {
+                        save.jpg(im,file)
+                    }
+                else
+                    {
+                        stop("Unsupported file format. Please convert to jpg/png or install image magick")
+                    }
+            }
     }
 
+save.png <- function(im,file)
+    {
+        convert.im.toPNG(im) %>% writePNG(file) 
+    }
+
+save.jpeg <- function(im,file)
+    {
+        convert.im.toPNG(im) %>% writeJPEG(file)
+    }
+
+convert.im.toPNG <- function(A)
+    {
+        if (any(A > 1) | any(A < 0))
+            {
+                A <-  rn(A)
+            }
+        A <- rotate(A,90) %>% mirror("x") 
+        dim(A) <- dim(A)[-3]
+        A
+    }
 
 ##' Returns the pixel grid for an image
 ##'

@@ -15,6 +15,6 @@ save.image(im, file)
 nothing
 }
 \description{
-You'll need ImageMagick for some formats.
+You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
 }
 

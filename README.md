@@ -13,7 +13,8 @@ So far the package is only available as source code, so you'll need a functional
 
 ### External dependencies
 
-You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to be able to import and save images. 
+On its own imager only supports JPEG and PNG formats. If you need support for other file types install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php).
+To load videos you'll need [ffmpeg](http://ffmpeg.org/download.html), no file formats are supported natively.
 
 
 ## Getting started 
