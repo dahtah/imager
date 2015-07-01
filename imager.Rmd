@@ -127,6 +127,20 @@ head(as.data.frame(parrots))
 
 which makes life easier if you want to use ggplot2 for plotting.
 
+The reverse is possible as well: if you have a data.frame with columns x,y,z,cc,value, you can turn it into a cimg object:
+
+```{r as.cimg.data.frame}
+df <- expand.grid(x=1:10,y=1:10,z=1,cc=1)
+mutate(df,value=cos(sin(x+y)^2)) %>% as.cimg
+```
+
+By default as.cimg.data.frame will try to guess image size from the input. You can also be specific by setting the "dims" argument explicitly:
+
+```{r as.cimg.data.frame2}
+mutate(df,value=cos(sin(x+y)^2)) %>% as.cimg(dims=c(10,10,1,1))
+```
+
+
 ## Displaying images and videos 
 
 To get a standard R plot use the plot function:
@@ -162,6 +176,44 @@ B <- as.cimg(function(x,y) exp(-.03*x),100,100)
 trippy <- imappend(list(R,G,B),"c") #Bind the three channels into one image
 plot(trippy)
 ```
+
+# Sub-images, pixel neighbourhoods, etc.
+
+If you need to select a part of an image, you can use subim, which is best explained by example:
+
+```{r subim} 
+subim(parrots,x < 30) #Only the first 30 rows
+subim(parrots,y < 30) #Only the first 30 rows
+subim(parrots,x < 30,y < 30) #First 30 columns and rows
+subim(parrots, sqrt(x) > 8) #Can use arbitrary expressions
+subim(parrots,x > height/2,y > width/2)  #height and width are defined based on the image
+subim(parrots,cc==1) #Colour axis is "cc" not "c" here because "c" is an important R function
+```
+
+
+Pixel neighbourhoods (for example, all nearest neighbours of pixel (x,y,z)) can be selected using stencils. See ?get.stencil and the [vignette](image_statistics.html) on natural image statistics for more.
+
+
+# Denoising
+
+Denoising can be performed using basic filters that average over space:
+
+```{r denoise_blur}
+birds <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
+birds.noisy <- (birds + 80*rnorm(prod(dim(birds)))) 
+layout(t(1:2))
+plot(birds.noisy,main="Original")
+isoblur(birds.noisy,5) %>% plot(main="Blurred")
+```
+
+Blurring removes some of the noise but also blurs away the contours. CImg provides an anisotropic blur that does not have that problem:
+
+```{r denoise_aniso}
+layout(t(1:2))
+plot(birds.noisy,main="Original")
+blur_anisotropic(birds.noisy,ampl=1e5,sharp=1) %>% plot(main="Blurred (anisotropic)")
+```
+
 
 # Colour spaces
 
@@ -241,3 +293,15 @@ To compute the difference between successive images in a video, you can use the 
 #is valid
 
 ```
+
+
+<!-- # Using the CImg API directly -->
+
+<!-- Warning: this feature is only available in the experimental branch of imager for now. -->
+
+<!-- If you need fast operations or tighter control over memory usage, you can implement your processing algorithms in C++ and call them from R. Example: -->
+
+<!-- ```{r} -->
+
+
+<!-- ``` -->
