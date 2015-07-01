@@ -119,7 +119,7 @@ NumericVector resize_tripleXY(NumericVector im)
 {
    CImg<double> img = as<CImg<double> >(im);
    CImg<double> out(img,false);
-   img.resize_tripleXY();
+   out.resize_tripleXY();
    return wrap(out);
 }
 

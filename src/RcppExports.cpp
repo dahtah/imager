@@ -9,145 +9,145 @@
 using namespace Rcpp;
 
 // RGBtoHSL
-NumericVector RGBtoHSL(NumericVector inp);
-RcppExport SEXP imager_RGBtoHSL(SEXP inpSEXP) {
+NumericVector RGBtoHSL(NumericVector im);
+RcppExport SEXP imager_RGBtoHSL(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(RGBtoHSL(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(RGBtoHSL(im));
     return __result;
 END_RCPP
 }
 // HSLtoRGB
-NumericVector HSLtoRGB(NumericVector inp);
-RcppExport SEXP imager_HSLtoRGB(SEXP inpSEXP) {
+NumericVector HSLtoRGB(NumericVector im);
+RcppExport SEXP imager_HSLtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(HSLtoRGB(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(HSLtoRGB(im));
     return __result;
 END_RCPP
 }
 // RGBtoHSV
-NumericVector RGBtoHSV(NumericVector inp);
-RcppExport SEXP imager_RGBtoHSV(SEXP inpSEXP) {
+NumericVector RGBtoHSV(NumericVector im);
+RcppExport SEXP imager_RGBtoHSV(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(RGBtoHSV(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(RGBtoHSV(im));
     return __result;
 END_RCPP
 }
 // HSVtoRGB
-NumericVector HSVtoRGB(NumericVector inp);
-RcppExport SEXP imager_HSVtoRGB(SEXP inpSEXP) {
+NumericVector HSVtoRGB(NumericVector im);
+RcppExport SEXP imager_HSVtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(HSVtoRGB(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(HSVtoRGB(im));
     return __result;
 END_RCPP
 }
 // RGBtoHSI
-NumericVector RGBtoHSI(NumericVector inp);
-RcppExport SEXP imager_RGBtoHSI(SEXP inpSEXP) {
+NumericVector RGBtoHSI(NumericVector im);
+RcppExport SEXP imager_RGBtoHSI(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(RGBtoHSI(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(RGBtoHSI(im));
     return __result;
 END_RCPP
 }
 // HSItoRGB
-NumericVector HSItoRGB(NumericVector inp);
-RcppExport SEXP imager_HSItoRGB(SEXP inpSEXP) {
+NumericVector HSItoRGB(NumericVector im);
+RcppExport SEXP imager_HSItoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(HSItoRGB(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(HSItoRGB(im));
     return __result;
 END_RCPP
 }
 // RGBtosRGB
-NumericVector RGBtosRGB(NumericVector inp);
-RcppExport SEXP imager_RGBtosRGB(SEXP inpSEXP) {
+NumericVector RGBtosRGB(NumericVector im);
+RcppExport SEXP imager_RGBtosRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(RGBtosRGB(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(RGBtosRGB(im));
     return __result;
 END_RCPP
 }
 // sRGBtoRGB
-NumericVector sRGBtoRGB(NumericVector inp);
-RcppExport SEXP imager_sRGBtoRGB(SEXP inpSEXP) {
+NumericVector sRGBtoRGB(NumericVector im);
+RcppExport SEXP imager_sRGBtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(sRGBtoRGB(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(sRGBtoRGB(im));
     return __result;
 END_RCPP
 }
 // RGBtoYCbCr
-NumericVector RGBtoYCbCr(NumericVector inp);
-RcppExport SEXP imager_RGBtoYCbCr(SEXP inpSEXP) {
+NumericVector RGBtoYCbCr(NumericVector im);
+RcppExport SEXP imager_RGBtoYCbCr(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(RGBtoYCbCr(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(RGBtoYCbCr(im));
     return __result;
 END_RCPP
 }
 // YCbCrtoRGB
-NumericVector YCbCrtoRGB(NumericVector inp);
-RcppExport SEXP imager_YCbCrtoRGB(SEXP inpSEXP) {
+NumericVector YCbCrtoRGB(NumericVector im);
+RcppExport SEXP imager_YCbCrtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(YCbCrtoRGB(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(YCbCrtoRGB(im));
     return __result;
 END_RCPP
 }
 // RGBtoYUV
-NumericVector RGBtoYUV(NumericVector inp);
-RcppExport SEXP imager_RGBtoYUV(SEXP inpSEXP) {
+NumericVector RGBtoYUV(NumericVector im);
+RcppExport SEXP imager_RGBtoYUV(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(RGBtoYUV(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(RGBtoYUV(im));
     return __result;
 END_RCPP
 }
 // YUVtoRGB
-NumericVector YUVtoRGB(NumericVector inp);
-RcppExport SEXP imager_YUVtoRGB(SEXP inpSEXP) {
+NumericVector YUVtoRGB(NumericVector im);
+RcppExport SEXP imager_YUVtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(YUVtoRGB(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(YUVtoRGB(im));
     return __result;
 END_RCPP
 }
 // grayscale
-NumericVector grayscale(NumericVector inp);
-RcppExport SEXP imager_grayscale(SEXP inpSEXP) {
+NumericVector grayscale(NumericVector im);
+RcppExport SEXP imager_grayscale(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
-    __result = Rcpp::wrap(grayscale(inp));
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(grayscale(im));
     return __result;
 END_RCPP
 }
@@ -218,86 +218,86 @@ BEGIN_RCPP
 END_RCPP
 }
 // deriche
-NumericVector deriche(NumericVector inp, float sigma, int order, char axis, bool boundary_conditions);
-RcppExport SEXP imager_deriche(SEXP inpSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP boundary_conditionsSEXP) {
+NumericVector deriche(NumericVector im, float sigma, int order, char axis, bool boundary_conditions);
+RcppExport SEXP imager_deriche(SEXP imSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< int >::type order(orderSEXP);
     Rcpp::traits::input_parameter< char >::type axis(axisSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    __result = Rcpp::wrap(deriche(inp, sigma, order, axis, boundary_conditions));
+    __result = Rcpp::wrap(deriche(im, sigma, order, axis, boundary_conditions));
     return __result;
 END_RCPP
 }
 // vanvliet
-NumericVector vanvliet(NumericVector inp, float sigma, int order, char axis, bool boundary_conditions);
-RcppExport SEXP imager_vanvliet(SEXP inpSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP boundary_conditionsSEXP) {
+NumericVector vanvliet(NumericVector im, float sigma, int order, char axis, bool boundary_conditions);
+RcppExport SEXP imager_vanvliet(SEXP imSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< int >::type order(orderSEXP);
     Rcpp::traits::input_parameter< char >::type axis(axisSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    __result = Rcpp::wrap(vanvliet(inp, sigma, order, axis, boundary_conditions));
+    __result = Rcpp::wrap(vanvliet(im, sigma, order, axis, boundary_conditions));
     return __result;
 END_RCPP
 }
 // isoblur
-NumericVector isoblur(NumericVector inp, float sigma, bool boundary_conditions, bool is_gaussian);
-RcppExport SEXP imager_isoblur(SEXP inpSEXP, SEXP sigmaSEXP, SEXP boundary_conditionsSEXP, SEXP is_gaussianSEXP) {
+NumericVector isoblur(NumericVector im, float sigma, bool boundary_conditions, bool is_gaussian);
+RcppExport SEXP imager_isoblur(SEXP imSEXP, SEXP sigmaSEXP, SEXP boundary_conditionsSEXP, SEXP is_gaussianSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
     Rcpp::traits::input_parameter< bool >::type is_gaussian(is_gaussianSEXP);
-    __result = Rcpp::wrap(isoblur(inp, sigma, boundary_conditions, is_gaussian));
+    __result = Rcpp::wrap(isoblur(im, sigma, boundary_conditions, is_gaussian));
     return __result;
 END_RCPP
 }
 // medianblur
-NumericVector medianblur(NumericVector inp, int n, float threshold);
-RcppExport SEXP imager_medianblur(SEXP inpSEXP, SEXP nSEXP, SEXP thresholdSEXP) {
+NumericVector medianblur(NumericVector im, int n, float threshold);
+RcppExport SEXP imager_medianblur(SEXP imSEXP, SEXP nSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< float >::type threshold(thresholdSEXP);
-    __result = Rcpp::wrap(medianblur(inp, n, threshold));
+    __result = Rcpp::wrap(medianblur(im, n, threshold));
     return __result;
 END_RCPP
 }
 // boxblur
-NumericVector boxblur(NumericVector inp, float sigma, bool boundary_conditions);
-RcppExport SEXP imager_boxblur(SEXP inpSEXP, SEXP sigmaSEXP, SEXP boundary_conditionsSEXP) {
+NumericVector boxblur(NumericVector im, float sigma, bool boundary_conditions);
+RcppExport SEXP imager_boxblur(SEXP imSEXP, SEXP sigmaSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    __result = Rcpp::wrap(boxblur(inp, sigma, boundary_conditions));
+    __result = Rcpp::wrap(boxblur(im, sigma, boundary_conditions));
     return __result;
 END_RCPP
 }
 // boxblur_xy
-NumericVector boxblur_xy(NumericVector inp, float sx, float sy, bool boundary_conditions);
-RcppExport SEXP imager_boxblur_xy(SEXP inpSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP boundary_conditionsSEXP) {
+NumericVector boxblur_xy(NumericVector im, float sx, float sy, bool boundary_conditions);
+RcppExport SEXP imager_boxblur_xy(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< float >::type sx(sxSEXP);
     Rcpp::traits::input_parameter< float >::type sy(sySEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    __result = Rcpp::wrap(boxblur_xy(inp, sx, sy, boundary_conditions));
+    __result = Rcpp::wrap(boxblur_xy(im, sx, sy, boundary_conditions));
     return __result;
 END_RCPP
 }
@@ -413,6 +413,33 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// FFT_realim
+List FFT_realim(NumericVector real, bool inverse, int nb_threads);
+RcppExport SEXP imager_FFT_realim(SEXP realSEXP, SEXP inverseSEXP, SEXP nb_threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type real(realSEXP);
+    Rcpp::traits::input_parameter< bool >::type inverse(inverseSEXP);
+    Rcpp::traits::input_parameter< int >::type nb_threads(nb_threadsSEXP);
+    __result = Rcpp::wrap(FFT_realim(real, inverse, nb_threads));
+    return __result;
+END_RCPP
+}
+// FFT_realout
+NumericVector FFT_realout(NumericVector real, NumericVector imag, bool inverse, int nb_threads);
+RcppExport SEXP imager_FFT_realout(SEXP realSEXP, SEXP imagSEXP, SEXP inverseSEXP, SEXP nb_threadsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type real(realSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type imag(imagSEXP);
+    Rcpp::traits::input_parameter< bool >::type inverse(inverseSEXP);
+    Rcpp::traits::input_parameter< int >::type nb_threads(nb_threadsSEXP);
+    __result = Rcpp::wrap(FFT_realout(real, imag, inverse, nb_threads));
+    return __result;
+END_RCPP
+}
 // displacement
 NumericVector displacement(NumericVector sourceIm, NumericVector destIm, float smoothness, float precision, unsigned int nb_scales, unsigned int iteration_max, bool is_backward);
 RcppExport SEXP imager_displacement(SEXP sourceImSEXP, SEXP destImSEXP, SEXP smoothnessSEXP, SEXP precisionSEXP, SEXP nb_scalesSEXP, SEXP iteration_maxSEXP, SEXP is_backwardSEXP) {
@@ -431,12 +458,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // blur_anisotropic
-NumericVector blur_anisotropic(NumericVector inp, float amplitude, float sharpness, float anisotropy, float alpha, float sigma, float dl, float da, float gauss_prec, unsigned int interpolation_type, bool is_fast_approx);
-RcppExport SEXP imager_blur_anisotropic(SEXP inpSEXP, SEXP amplitudeSEXP, SEXP sharpnessSEXP, SEXP anisotropySEXP, SEXP alphaSEXP, SEXP sigmaSEXP, SEXP dlSEXP, SEXP daSEXP, SEXP gauss_precSEXP, SEXP interpolation_typeSEXP, SEXP is_fast_approxSEXP) {
+NumericVector blur_anisotropic(NumericVector im, float amplitude, float sharpness, float anisotropy, float alpha, float sigma, float dl, float da, float gauss_prec, unsigned int interpolation_type, bool is_fast_approx);
+RcppExport SEXP imager_blur_anisotropic(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpnessSEXP, SEXP anisotropySEXP, SEXP alphaSEXP, SEXP sigmaSEXP, SEXP dlSEXP, SEXP daSEXP, SEXP gauss_precSEXP, SEXP interpolation_typeSEXP, SEXP is_fast_approxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< float >::type amplitude(amplitudeSEXP);
     Rcpp::traits::input_parameter< float >::type sharpness(sharpnessSEXP);
     Rcpp::traits::input_parameter< float >::type anisotropy(anisotropySEXP);
@@ -447,7 +474,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type gauss_prec(gauss_precSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type interpolation_type(interpolation_typeSEXP);
     Rcpp::traits::input_parameter< bool >::type is_fast_approx(is_fast_approxSEXP);
-    __result = Rcpp::wrap(blur_anisotropic(inp, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, is_fast_approx));
+    __result = Rcpp::wrap(blur_anisotropic(im, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, is_fast_approx));
+    return __result;
+END_RCPP
+}
+// periodic_part
+NumericVector periodic_part(NumericVector im);
+RcppExport SEXP imager_periodic_part(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(periodic_part(im));
     return __result;
 END_RCPP
 }
@@ -861,16 +899,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// imsplit
-List imsplit(NumericVector im, char axis, int nb);
-RcppExport SEXP imager_imsplit(SEXP imSEXP, SEXP axisSEXP, SEXP nbSEXP) {
+// im_split
+List im_split(NumericVector im, char axis, int nb);
+RcppExport SEXP imager_im_split(SEXP imSEXP, SEXP axisSEXP, SEXP nbSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< char >::type axis(axisSEXP);
     Rcpp::traits::input_parameter< int >::type nb(nbSEXP);
-    __result = Rcpp::wrap(imsplit(im, axis, nb));
+    __result = Rcpp::wrap(im_split(im, axis, nb));
     return __result;
 END_RCPP
 }

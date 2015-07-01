@@ -9,9 +9,9 @@ Install the devtools package if you haven't already. Then run:
 	library(devtools)
 	install_github("dahtah/imager")
 
-So far the package is only available as source code, so you'll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11.
+So far the package is only available as source code, so you'll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11 and libfftw3.
 
-### Dependencies
+### External dependencies
 
 You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to be able to import and save images. 
 
