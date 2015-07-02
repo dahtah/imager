@@ -162,7 +162,7 @@ NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_cond
 //'
 //' @export
 // [[Rcpp::export]]
-NumericVector sharpen(NumericVector im,float amplitude,
+NumericVector imsharpen(NumericVector im,float amplitude,
 		bool sharpen_type = false,float edge = 1,
 		float alpha = 0,float sigma = 0)
  {
