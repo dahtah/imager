@@ -32,4 +32,5 @@
 [#]*[#]
 .\#*
 
+#R temp files
 .Rhistory

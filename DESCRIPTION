@@ -8,5 +8,5 @@ Maintainer: Simon Barthelmé <simon.barthelme@gipsa-lab.fr>
 Description: imager provides fast image processing functions for images in up to 4 dimensions. 
 License: CeCILL-C (V1)
 Imports: Rcpp (>= 0.11.5)
-Depends: plyr,magrittr,stringr,grDevices
+Depends: plyr,magrittr,stringr,grDevices,png,jpeg
 LinkingTo: Rcpp

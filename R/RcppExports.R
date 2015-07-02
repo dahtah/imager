@@ -2,68 +2,72 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @export
-RGBtoHSL <- function(inp) {
-    .Call('imager_RGBtoHSL', PACKAGE = 'imager', inp)
+RGBtoHSL <- function(im) {
+    .Call('imager_RGBtoHSL', PACKAGE = 'imager', im)
 }
 
 #' @export
-HSLtoRGB <- function(inp) {
-    .Call('imager_HSLtoRGB', PACKAGE = 'imager', inp)
+HSLtoRGB <- function(im) {
+    .Call('imager_HSLtoRGB', PACKAGE = 'imager', im)
 }
 
 #' @export
-RGBtoHSV <- function(inp) {
-    .Call('imager_RGBtoHSV', PACKAGE = 'imager', inp)
+RGBtoHSV <- function(im) {
+    .Call('imager_RGBtoHSV', PACKAGE = 'imager', im)
 }
 
 #' @export
-HSVtoRGB <- function(inp) {
-    .Call('imager_HSVtoRGB', PACKAGE = 'imager', inp)
+HSVtoRGB <- function(im) {
+    .Call('imager_HSVtoRGB', PACKAGE = 'imager', im)
 }
 
 #' @export
-RGBtoHSI <- function(inp) {
-    .Call('imager_RGBtoHSI', PACKAGE = 'imager', inp)
+RGBtoHSI <- function(im) {
+    .Call('imager_RGBtoHSI', PACKAGE = 'imager', im)
 }
 
 #' @export
-HSItoRGB <- function(inp) {
-    .Call('imager_HSItoRGB', PACKAGE = 'imager', inp)
+HSItoRGB <- function(im) {
+    .Call('imager_HSItoRGB', PACKAGE = 'imager', im)
 }
 
 #' @export
-RGBtosRGB <- function(inp) {
-    .Call('imager_RGBtosRGB', PACKAGE = 'imager', inp)
+RGBtosRGB <- function(im) {
+    .Call('imager_RGBtosRGB', PACKAGE = 'imager', im)
 }
 
 #' @export
-sRGBtoRGB <- function(inp) {
-    .Call('imager_sRGBtoRGB', PACKAGE = 'imager', inp)
+sRGBtoRGB <- function(im) {
+    .Call('imager_sRGBtoRGB', PACKAGE = 'imager', im)
 }
 
 #' @export
-RGBtoYCbCr <- function(inp) {
-    .Call('imager_RGBtoYCbCr', PACKAGE = 'imager', inp)
+RGBtoYCbCr <- function(im) {
+    .Call('imager_RGBtoYCbCr', PACKAGE = 'imager', im)
 }
 
 #' @export
-YCbCrtoRGB <- function(inp) {
-    .Call('imager_YCbCrtoRGB', PACKAGE = 'imager', inp)
+YCbCrtoRGB <- function(im) {
+    .Call('imager_YCbCrtoRGB', PACKAGE = 'imager', im)
 }
 
 #' @export
-RGBtoYUV <- function(inp) {
-    .Call('imager_RGBtoYUV', PACKAGE = 'imager', inp)
+RGBtoYUV <- function(im) {
+    .Call('imager_RGBtoYUV', PACKAGE = 'imager', im)
 }
 
 #' @export
-YUVtoRGB <- function(inp) {
-    .Call('imager_YUVtoRGB', PACKAGE = 'imager', inp)
+YUVtoRGB <- function(im) {
+    .Call('imager_YUVtoRGB', PACKAGE = 'imager', im)
 }
 
+#' Convert an RGB image to grayscale 
+#' 
+#' This function converts from RGB to grayscale by first converting to HSL and keeping only the L channel
+#' @return a grayscale image (spectrum == 1)
 #' @export
-grayscale <- function(inp) {
-    .Call('imager_grayscale', PACKAGE = 'imager', inp)
+grayscale <- function(im) {
+    .Call('imager_grayscale', PACKAGE = 'imager', im)
 }
 
 #' Display image using CImg library
@@ -121,13 +125,15 @@ bucket_select <- function(im, x, y, z, sigma = 0, is_high_connexity = FALSE) {
 }
 
 #' Apply recursive Deriche filter.
+#'
+#' @param im an image
 #' @param sigma Standard deviation of the filter.
 #' @param order Order of the filter. Can be <tt>{ 0=smooth-filter | 1=1st-derivative | 2=2nd-derivative }</tt>.
 #' @param axis Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
 #' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
 #' @export
-deriche <- function(inp, sigma, order = 0L, axis = 'x', boundary_conditions = 0L) {
-    .Call('imager_deriche', PACKAGE = 'imager', inp, sigma, order, axis, boundary_conditions)
+deriche <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L) {
+    .Call('imager_deriche', PACKAGE = 'imager', im, sigma, order, axis, boundary_conditions)
 }
 
 #' Van Vliet recursive Gaussian filter.
@@ -141,56 +147,61 @@ deriche <- function(inp, sigma, order = 0L, axis = 'x', boundary_conditions = 0L
 #'       recursive filtering. IEEE Trans. Signal Processing,
 #'       vol. 54, pp. 2365-2367, 2006.
 #'
+#'       @param im an image
 #'       @param sigma standard deviation of the Gaussian filter
 #'       @param order the order of the filter 0,1,2,3
 #'       @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
 #'       @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
 #'       (Dirichlet boundary condition has a strange behavior)
 #' @export
-vanvliet <- function(inp, sigma, order = 0L, axis = 'x', boundary_conditions = 0L) {
-    .Call('imager_vanvliet', PACKAGE = 'imager', inp, sigma, order, axis, boundary_conditions)
+vanvliet <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L) {
+    .Call('imager_vanvliet', PACKAGE = 'imager', im, sigma, order, axis, boundary_conditions)
 }
 
 #' Blur image isotropically.
+#' @param im an image
 #' @param sigma Standard deviation of the blur.
 #' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }
 #' @seealso
 #'  deriche(), vanvliet().
 #' @export
-isoblur <- function(inp, sigma, boundary_conditions = TRUE, is_gaussian = FALSE) {
-    .Call('imager_isoblur', PACKAGE = 'imager', inp, sigma, boundary_conditions, is_gaussian)
+isoblur <- function(im, sigma, boundary_conditions = TRUE, is_gaussian = FALSE) {
+    .Call('imager_isoblur', PACKAGE = 'imager', im, sigma, boundary_conditions, is_gaussian)
 }
 
 #' Blur image with the median filter.
 #'    
+#' @param im an image
 #'  @param n Size of the median filter.
 #'  @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation.
 #' @export
-medianblur <- function(inp, n, threshold) {
-    .Call('imager_medianblur', PACKAGE = 'imager', inp, n, threshold)
+medianblur <- function(im, n, threshold) {
+    .Call('imager_medianblur', PACKAGE = 'imager', im, n, threshold)
 }
 
 #' Blur image with a box filter.
+#' @param im an image
 #' @param sigma Size of the box window.
 #' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.a
 #' @seealso deriche(), vanvliet().
 #' @export
-boxblur <- function(inp, sigma, boundary_conditions = TRUE) {
-    .Call('imager_boxblur', PACKAGE = 'imager', inp, sigma, boundary_conditions)
+boxblur <- function(im, sigma, boundary_conditions = TRUE) {
+    .Call('imager_boxblur', PACKAGE = 'imager', im, sigma, boundary_conditions)
 }
 
 #' Blur image with a box filter.
 #'
 #' This is a recursive algorithm, not depending on the values of the box kernel size.
 #'
+#'       @param im an image
 #'       @param sigma_x Size of the box window, along the X-axis.
 #'       @param sigma_y Size of the box window, along the Y-axis.
 #'       @param boundary_conditions Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.
 #'       @seealso blur().
 #'
 #' @export
-boxblur_xy <- function(inp, sx, sy, boundary_conditions = TRUE) {
-    .Call('imager_boxblur_xy', PACKAGE = 'imager', inp, sx, sy, boundary_conditions)
+boxblur_xy <- function(im, sx, sy, boundary_conditions = TRUE) {
+    .Call('imager_boxblur_xy', PACKAGE = 'imager', im, sx, sy, boundary_conditions)
 }
 
 #' Correlate image by a mask.
@@ -198,6 +209,7 @@ boxblur_xy <- function(inp, sx, sy, boundary_conditions = TRUE) {
 #'  The correlation of the image instance this by the mask mask is defined to be:
 #'  res(x,y,z) = sum_{i,j,k} (*this)(x + i,y + j,z + k)*mask(i,j,k).
 #'
+#'       @param im an image
 #'       @param mask = the correlation kernel.
 #'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
 #'       @param is_normalized = enable local normalization.
@@ -213,7 +225,8 @@ correlate <- function(im, filter, boundary_conditions = TRUE, is_normalised = FA
 #'      The result  res of the convolution of an image img by a mask mask is defined to be:
 #'       res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*mask(i,j,k)
 #'
-#'       @param mask = the correlation kernel.
+#'       @param im an image
+#'       @param mask = the convolution kernel.
 #'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
 #'       @param is_normalized = enable local normalization.
 #'
@@ -225,6 +238,7 @@ convolve <- function(im, filter, boundary_conditions = TRUE, is_normalised = FAL
 
 #' Sharpen image.
 #'
+#'       @param im an image
 #'       @param amplitude Sharpening amplitude
 #'       @param sharpen_type Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.
 #'       @param edge Edge threshold (shock filters only).
@@ -238,6 +252,7 @@ sharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, si
 
 #' Compute image gradient.
 #'
+#' @param im an image
 #' @param axes Axes considered for the gradient computation, as a C-string (e.g "xy").
 #' @param scheme = Numerical scheme used for the gradient computation:
 #'       1 = Backward finite differences
@@ -254,7 +269,8 @@ get_gradient <- function(im, axes = "", scheme = 3L) {
 }
 
 #' Return image hessian.
-#'       @param axes Axes considered for the hessian computation, as a character string (e.g "xy").
+#' @param im an image
+#' @param axes Axes considered for the hessian computation, as a character string (e.g "xy").
 #' @export
 get_hessian <- function(im, axes = "") {
     .Call('imager_get_hessian', PACKAGE = 'imager', im, axes)
@@ -262,6 +278,7 @@ get_hessian <- function(im, axes = "") {
 
 #' Compute field of diffusion tensors for edge-preserving smoothing.
 #'
+#'       @param im an image
 #'       @param sharpness Sharpness
 #'       @param anisotropy Anisotropy
 #'       @param alpha Standard deviation of the gradient blur.
@@ -274,6 +291,7 @@ diffusion_tensors <- function(im, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6
 
 #' Compute Haar multiscale wavelet transform.
 #'
+#'       @param im an image
 #'       @param axis Axis considered for the transform.
 #'       @param invert Set inverse of direct transform.
 #'       @param nb_scales Number of scales used for the transform.
@@ -283,9 +301,16 @@ haar <- function(im, inverse = FALSE, nb_scales = 1L) {
     .Call('imager_haar', PACKAGE = 'imager', im, inverse, nb_scales)
 }
 
-#' @export
 FFT_complex <- function(real, imag, inverse = FALSE, nb_threads = 0L) {
     .Call('imager_FFT_complex', PACKAGE = 'imager', real, imag, inverse, nb_threads)
+}
+
+FFT_realim <- function(real, inverse = FALSE, nb_threads = 0L) {
+    .Call('imager_FFT_realim', PACKAGE = 'imager', real, inverse, nb_threads)
+}
+
+FFT_realout <- function(real, imag, inverse = FALSE, nb_threads = 0L) {
+    .Call('imager_FFT_realout', PACKAGE = 'imager', real, imag, inverse, nb_threads)
 }
 
 #' Estimate displacement field between two images.
@@ -318,8 +343,12 @@ displacement <- function(sourceIm, destIm, smoothness = 0.1, precision = 5.0, nb
 #' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
 #' im.noisy <- (im + 80*rnorm(prod(dim(im)))) 
 #' blur_anisotropic(im.noisy,ampl=1e4,sharp=1) %>% plot
-blur_anisotropic <- function(inp, amplitude, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2, interpolation_type = 0L, is_fast_approx = TRUE) {
-    .Call('imager_blur_anisotropic', PACKAGE = 'imager', inp, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, is_fast_approx)
+blur_anisotropic <- function(im, amplitude, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2, interpolation_type = 0L, is_fast_approx = TRUE) {
+    .Call('imager_blur_anisotropic', PACKAGE = 'imager', im, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, is_fast_approx)
+}
+
+periodic_part <- function(im) {
+    .Call('imager_periodic_part', PACKAGE = 'imager', im)
 }
 
 #' @export
@@ -625,9 +654,8 @@ save_image <- function(im, fname) {
 #' @param nb number of objects to split into. 
 #' if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels
 #' @seealso imappend (the reverse operation)
-#' @export
-imsplit <- function(im, axis, nb = -1L) {
-    .Call('imager_imsplit', PACKAGE = 'imager', im, axis, nb)
+im_split <- function(im, axis, nb = -1L) {
+    .Call('imager_im_split', PACKAGE = 'imager', im, axis, nb)
 }
 
 #' Combine a list of images into a single image 

@@ -29,9 +29,8 @@ void save_image(NumericVector im, std::string fname) {
 //' @param nb number of objects to split into. 
 //' if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels
 //' @seealso imappend (the reverse operation)
-//' @export
 // [[Rcpp::export]]
-List imsplit(NumericVector im,char axis,int nb=-1)
+List im_split(NumericVector im,char axis,int nb=-1)
 {
    CImg<double> img = as<CImg<double> >(im);
    CImgList<double> out;

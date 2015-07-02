@@ -36,7 +36,6 @@ cimg <- function(X)
 
 
 
-
 ##' Display an image using base graphics
 ##'
 ##' @param im the image 
@@ -160,10 +159,7 @@ spectrum <- function(im) dim(im)[4]
 depth <- function(im) dim(im)[3]
 
 
-renormalise.channels <- function(im)
-    {
-        rn <- function(x) (x-min(x))/diff(range(x))
-    }
+rn <- function(x) (x-min(x))/diff(range(x))
 
 ldim <- function(v)
     {
@@ -196,8 +192,8 @@ frames <- function(im,index,drop=FALSE)
 
 ##' Extract one frame out of a 4D image/video
 ##'
-##' @param im 
-##' @param index 
+##' @param im an image
+##' @param index frame index 
 ##' @return an image (class cimg)
 ##' @author Simon Barthelme
 ##' @export
@@ -232,6 +228,7 @@ channels <- function(im,index,drop=FALSE)
     }
 
 ##' Extract an image channel
+##' @param im an image (cimg object)
 ##' @export
 channel <- function(im,ind)
     {
@@ -239,14 +236,17 @@ channel <- function(im,ind)
     }
 
 ##' Extract red channel
+##' @param im an image (cimg object)
 ##' @export
 R <- function(im) { channel(im,1) }
 
 ##' Extract green channel
+##' @param im an image (cimg object)
 ##' @export
 G <- function(im) { channel(im,2) }
 
-##' Extract blue channel
+##' Extract blue
+##' @param im an image (cimg object)
 ##' @export
 B <- function(im) { channel(im,3) }
 
@@ -308,7 +308,7 @@ all.names <- function(cl)
 ##' subim(parrots,y < 30) #Only the first 30 rows
 ##' subim(parrots,x < 30,y < 30) #First 30 columns and rows
 ##' subim(parrots, sqrt(x) > 8) #Can use arbitrary expressions
-##'subim(parrots,x > height/2,y > width/2)  #height and width are defined based on the image
+##' subim(parrots,x > height/2,y > width/2)  #height and width are defined based on the image
 ##' subim(parrots,cc==1) #Colour axis is "cc" not "c" here because "c" is an important R function
 ##' ##Not run
 ##' ##subim(parrots,x+y==1)
@@ -366,8 +366,8 @@ subs <- function(im,cl,consts)
 ##'
 ##' Works mostly just like the regular array version of x[...], the only difference being that it returns cimg objects when it makes sense to do so. For example im[,,,1] is just like as.array(im)[,,,1] except it returns a cimg object (containing only the first colour channel)
 ##' 
-##' @param x 
-##' @param ...
+##' @param x an image (cimg object)
+##' @param ... subsetting arguments
 ##' @seealso imsub, which provides a more convenient interface, crop
 ##' @export
 `[.cimg` <- function(x,...)
@@ -387,19 +387,71 @@ subs <- function(im,cl,consts)
 
 ##' Load image from file
 ##'
-##' You'll need ImageMagick for some formats. 
+##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
 ##' 
 ##' @param file path to file
 ##' @return an object of class 'cimg'
+##' @examples
+##' fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') #Path to example file from package
+##' im <- load.image(fpath)
+##' plot(im)
 ##' @export
 load.image <- function(file)
     {
-        load_image(path.expand(file))
+        has.magick <- Sys.which("convert") %>% { length(.) > 0 }
+        if (has.magick)
+            {
+                path.expand(file) %>% load_image
+            }
+        else
+            {
+                ftype <- str_match(file,"\\.(.+)$")[1,2]
+                if (ftype == "png")
+                    {
+                        load.png(file)
+                    }
+                else if (ftype == "jpeg" | ftype == "jpg")
+                    {
+                        load.jpg(file)
+                    }
+                else
+                    {
+                        stop("Unsupported file format. Please convert to jpg/png or install image magick")
+                    }
+            }
+
     }
+
+convert.im.fromPNG <- function(A)
+    {
+        A <- A*255
+        d <- dim(A)
+        if (length(d) == 3)
+            {
+                dim(A) <- c(d[1:2],1,d[3])
+            }
+        else
+            {
+                dim(A) <- c(d[1:2],1,1)
+            }
+        mirror(A,"x") %>% rotate(-90)
+    }
+
+load.png <- function(file)
+    {
+        readPNG(file) %>% convert.im.fromPNG
+    }
+
+load.jpeg <- function(file)
+    {
+        readJPEG(file) %>% convert.im.fromPNG
+    }
+
+
 
 ##' Save image
 ##'
-##' You'll need ImageMagick for some formats. 
+##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
 ##'
 ##' @param im an image (of class cimg)
 ##' @param file path to file. The format is determined by the file's name
@@ -407,9 +459,49 @@ load.image <- function(file)
 ##' @export
 save.image <- function(im,file)
     {
-        save_image(im,path.expand(file))
+        has.magick <- Sys.which("convert") %>% { length(.) > 0 }
+        if (has.magick)
+            {
+                save_image(im,path.expand(file))
+            }
+        else
+            {
+                ftype <- str_match(file,"\\.(.+)$")[1,2]
+                if (ftype == "png")
+                    {
+                        save.png(im,file)
+                    }
+                else if (ftype == "jpeg" | ftype == "jpg")
+                    {
+                        save.jpg(im,file)
+                    }
+                else
+                    {
+                        stop("Unsupported file format. Please convert to jpg/png or install image magick")
+                    }
+            }
     }
 
+save.png <- function(im,file)
+    {
+        convert.im.toPNG(im) %>% writePNG(file) 
+    }
+
+save.jpeg <- function(im,file)
+    {
+        convert.im.toPNG(im) %>% writeJPEG(file)
+    }
+
+convert.im.toPNG <- function(A)
+    {
+        if (any(A > 1) | any(A < 0))
+            {
+                A <-  rn(A)
+            }
+        A <- rotate(A,90) %>% mirror("x") 
+        dim(A) <- dim(A)[-3]
+        A
+    }
 
 ##' Returns the pixel grid for an image
 ##'
@@ -417,7 +509,7 @@ save.image <- function(im,file)
 ##' NB: coordinates start at (x=1,y=1), corresponding to the top left corner of the image, unless standardise == TRUE, in which case we use the usual Cartesian coordinates with origin at the center of the image and scaled such that x varies between -.5 and .5, and a y arrow pointing up
 ##'
 ##' 
-##' @param im
+##' @param im an image
 ##' @param standardise. If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
 ##' @return a data.frame
 ##' @export
@@ -444,9 +536,9 @@ as.cimg <- function(x,...) UseMethod("as.cimg")
 ##' Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluate the input function at these values. 
 ##' 
 ##' @param fun a function with arguments (x,y) or (x,y,z). Must be vectorised. 
-##' @param width 
-##' @param height 
-##' @param depth
+##' @param width width of the image (in pixels)
+##' @param height height of the image (in pixels)
+##' @param depth depth of the image (in pixels)
 ##' @param normalise.coord coordinates are normalised so that x,y,z are in (0,1) (default FALSE)
 ##' @return an object of class cimg
 ##' @author Simon Barthelmé
@@ -573,7 +665,7 @@ as.matrix.cimg <- function(x) {
 
 ##' Add colour channels to an grayscale image
 ##'
-##' @param im 
+##' @param im a grayscale image
 ##' @return an image of class cimg
 ##' @author Simon Barthelme
 ##' @export
@@ -841,7 +933,7 @@ center.stencil <- function(stencil,...)
 ##' Return pixel values in a neighbourhood defined by a stencil
 ##'
 ##' A stencil defines a neighbourhood in an image (for example, the four nearest neighbours in a 2d image). This function centers the stencil at a certain pixel and returns the values of the neighbourhing pixels.
-##' @param im 
+##' @param im an image
 ##' @param stencil a data.frame with values dx,dy,[dz],[dcc] defining the neighbourhood
 ##' @param ... where to center, e.g. x = 100,y = 10,z=3,cc=1
 ##' @return pixel values in neighbourhood
@@ -944,10 +1036,10 @@ stencil.cross <- function(z=FALSE,cc=FALSE,origin=FALSE)
 ##' This small utility is useful to examine the impulse response of a filter
 ##' 
 ##' @param dims a vector of image dimensions, or an image whose dimensions will be used 
-##' @param x where to put the dirac
-##' @param y 
-##' @param z (default 1)
-##' @param cc (default 1)
+##' @param x where to put the dirac (x coordinate)
+##' @param y y coordinate
+##' @param z  z coordinate (default 1)
+##' @param cc colour coordinate (default 1)
 ##' @return an image
 ##' @examples
 ##' #Impulse response of the blur filter
@@ -1134,4 +1226,171 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
         wf <- llply(out,function(v) array(v,c(dim(im)[1:3],1))) %>% imappend("c")
         mode <- (direction=="forward")*2+(coordinates=="relative")
         warp(im,wf-1,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary=switch(boundary,dirichlet=0,neumann=1,periodic=2))
+    }
+
+##' Apply function to each element of a list, then combine the result as an image by appending along specified axis
+##'
+##' This is just a shortcut for llply followed by imappend
+##' @param lst a list
+##' @param axis which axis to append along (e.g. "c" for colour)
+##' @examples
+##' build.im <- function(size) as.cimg(function(x,y) (x+y)/size,size,size)
+##' liply(c(10,50,100),build.im,"y") %>% plot
+##' @export
+liply <- function(lst,fun,axis,...)
+    {
+        llply(lst,fun,...) %>% imappend(axis=axis)
+    }
+
+
+##' Split an image along axis, apply function, return a list
+##'
+##' Shorthand for imsplit followed by llply
+##' @param im image
+##' @param axis axis for the split (e.g "c")
+##' @param fun function to apply
+##' @param ... extra arguments for function fun
+##' @examples
+##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' ilply(parrots,"c",mean) #mean luminance per colour channel
+##' @export
+ilply <- function(im,axis,fun,...)
+    {
+        imsplit(im,axis) %>% llply(fun,...) 
+    }
+##' Split an image along axis, apply function, return a data.frame
+##'
+##' Shorthand for imsplit followed by ldply
+##' @param im image
+##' @param axis axis for the split (e.g "c")
+##' @param fun function to apply
+##' @param ... extra arguments to function fun
+##' @examples
+##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' idply(parrots,"c",mean) #mean luminance per colour channel
+##' @export
+idply <- function(im,axis,fun,...)
+    {
+        imsplit(im,axis) %>% ldply(fun,...) 
+    }
+
+##' Split an image, apply function, recombine the results as an image
+##'
+##' This is just imsplit followed by llply followed by imappend
+##' 
+##' @param im image 
+##' @param axis axis for the split (e.g "c")
+##' @param fun function to apply
+##' @param ... extra arguments to function fun
+##' @examples
+##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' #Normalise colour channels separately, recombine
+##' iiply(parrots,"c",function(v) (v-mean(v))/sd(v)) %>% plot 
+##' 
+##' @export
+iiply <- function(im,axis,fun,...)
+    {
+        imsplit(im,axis) %>% llply(fun,...) %>% imappend(axis=axis)
+    }
+
+##' Split an image along a certain axis (producing a list)
+##'
+##' Use this if you need to process colour channels separately, or frames separately, or rows separately, etc. You can also use it to chop up an image into blocks.
+##' 
+##' @param im an image 
+##' @param axis the axis along which to split (for example 'c')
+##' @param nb number of objects to split into. 
+##' if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels
+##' @seealso imappend (the reverse operation)
+##' @examples
+##' im <- as.cimg(function(x,y,z) x+y+z,10,10,5)
+##' imsplit(im,"z") #Split along the z axis into a list with 5 elements
+##' imsplit(im,"z",2) #Split along the z axis into two groups
+##' imsplit(im,"z",2) %>% imappend("z") #Split and reshape into a single image
+##' @export
+imsplit <- function(im,axis,nb=-1)
+    {
+        l <- im_split(im,axis,nb)
+        d.ind <- index.coords[[axis]]
+        d <- dim(im)
+        if (nb!=-1)
+            {
+                b.end <- laply(l,function(v) dim(v)[d.ind]) %>% cumsum
+                b.start <- c(1,b.end[-length(l)]+1)
+                b.str <- sprintf("= %i - %i",b.start,b.end)
+                names(l) <- paste(axis,b.str)
+            }
+        else
+            {
+                names(l) <- paste(axis,1:length(l),sep=" = ")
+            }
+        l
+    }
+
+
+##' Compute the periodic part of an image, using the periodic/smooth decomposition of Moisan (2009)
+##'
+##' Moisan (2009) defines an additive image decomposition
+##' im = periodic + smooth
+##' where the periodic part shouldn't be too far from the original image. The periodic part can be used in frequency-domain analyses, to reduce the artifacts induced by non-periodicity.
+##' 
+##' @param im an image
+##' @return an image
+##' @examples
+##' im <- load.image(system.file('extdata/parrots.png',package='imager')) %>% subim(x <= 512)
+##' layout(t(1:3))
+##' plot(im,main="Original image")
+##' periodic.part(im) %>% plot(main="Periodic part")
+##' #The smooth error is the difference between the original image and its periodic part
+##' (im-periodic.part(im)) %>% plot(main="Smooth part")
+##' 
+##' @references  L. Moisan, Periodic plus Smooth Image Decomposition,J. Math. Imaging Vision, vol. 39:2, pp. 161-179, 2011
+##' @author Simon Barthelmé
+##' @export
+periodic.part <- function(im)
+    {
+        if (spectrum(im) > 1)
+            {
+                iiply(im,"c",periodic.part)
+            }
+        else
+            {
+                periodic_part(im)
+            }
+        
+    }
+
+
+##' Compute the Discrete Fourier Transform of an image
+##'
+##' This function is equivalent to R's builtin fft, up to normalisation (R's version is unnormalised, this one is). It calls CImg's implementation.
+##' Important note: FFT will compute a multidimensional Fast Fourier Transform, using as many dimensions as you have in the image, meaning that if you have a colour video, it will perform a 4D FFT. If you want to compute separate FFTs across channels, use imsplit.
+##' 
+##' @param im.real The real part of the input (an image)
+##' @param im.imag The imaginary part (also an image. If missing, assume the signal is real). 
+##' @param inverse If true compute the inverse FFT (default: FALSE)
+##' @return a list with components "real" (an image) and "imag" (an image), corresponding to the real and imaginary parts of the transform
+##' @examples
+##' 
+##' im <- as.cimg(function(x,y) sin(x/5)+cos(x/4)*sin(y/2),128,128)
+##' ff <- FFT(im)
+##' plot(ff$real,main="Real part of the transform")
+##' plot(ff$imag,main="Imaginary part of the transform")
+##' sqrt(ff$real^2+ff$imag^2) %>% plot(main="Power spectrum")
+##' #Check that we do get our image back
+##' check <- FFT(ff$real,ff$imag,inverse=TRUE)$real #Should be the same as original
+##' mean((check-im)^2)
+##'
+##' @author Simon Barthelme
+##' @export
+FFT <- function(im.real,im.imag,inverse=FALSE)
+    {
+        if (missing(im.imag)) #Assume it's zero
+            {
+                FFT_realim(im.real,inverse=inverse)
+            }
+        else
+            {
+                FFT_complex(im.real,im.imag,inverse=inverse)
+            }
     }
