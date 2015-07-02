@@ -329,9 +329,9 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// sharpen
-NumericVector sharpen(NumericVector im, float amplitude, bool sharpen_type, float edge, float alpha, float sigma);
-RcppExport SEXP imager_sharpen(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpen_typeSEXP, SEXP edgeSEXP, SEXP alphaSEXP, SEXP sigmaSEXP) {
+// imsharpen
+NumericVector imsharpen(NumericVector im, float amplitude, bool sharpen_type, float edge, float alpha, float sigma);
+RcppExport SEXP imager_imsharpen(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpen_typeSEXP, SEXP edgeSEXP, SEXP alphaSEXP, SEXP sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -341,7 +341,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type edge(edgeSEXP);
     Rcpp::traits::input_parameter< float >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
-    __result = Rcpp::wrap(sharpen(im, amplitude, sharpen_type, edge, alpha, sigma));
+    __result = Rcpp::wrap(imsharpen(im, amplitude, sharpen_type, edge, alpha, sigma));
     return __result;
 END_RCPP
 }
@@ -737,9 +737,9 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// rotate
-NumericVector rotate(NumericVector im, float angle, unsigned int interpolation, unsigned int boundary);
-RcppExport SEXP imager_rotate(SEXP imSEXP, SEXP angleSEXP, SEXP interpolationSEXP, SEXP boundarySEXP) {
+// imrotate
+NumericVector imrotate(NumericVector im, float angle, unsigned int interpolation, unsigned int boundary);
+RcppExport SEXP imager_imrotate(SEXP imSEXP, SEXP angleSEXP, SEXP interpolationSEXP, SEXP boundarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -747,7 +747,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type angle(angleSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type interpolation(interpolationSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type boundary(boundarySEXP);
-    __result = Rcpp::wrap(rotate(im, angle, interpolation, boundary));
+    __result = Rcpp::wrap(imrotate(im, angle, interpolation, boundary));
     return __result;
 END_RCPP
 }
@@ -825,9 +825,9 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// shift
-NumericVector shift(NumericVector im, int delta_x, int delta_y, int delta_z, int delta_c, int boundary_conditions);
-RcppExport SEXP imager_shift(SEXP imSEXP, SEXP delta_xSEXP, SEXP delta_ySEXP, SEXP delta_zSEXP, SEXP delta_cSEXP, SEXP boundary_conditionsSEXP) {
+// imshift
+NumericVector imshift(NumericVector im, int delta_x, int delta_y, int delta_z, int delta_c, int boundary_conditions);
+RcppExport SEXP imager_imshift(SEXP imSEXP, SEXP delta_xSEXP, SEXP delta_ySEXP, SEXP delta_zSEXP, SEXP delta_cSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -837,7 +837,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type delta_z(delta_zSEXP);
     Rcpp::traits::input_parameter< int >::type delta_c(delta_cSEXP);
     Rcpp::traits::input_parameter< int >::type boundary_conditions(boundary_conditionsSEXP);
-    __result = Rcpp::wrap(shift(im, delta_x, delta_y, delta_z, delta_c, boundary_conditions));
+    __result = Rcpp::wrap(imshift(im, delta_x, delta_y, delta_z, delta_c, boundary_conditions));
     return __result;
 END_RCPP
 }

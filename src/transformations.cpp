@@ -26,7 +26,7 @@ NumericVector autocrop(NumericVector im,NumericVector color,std::string axes = "
 //' @param boundary Boundary conditions. Can be <tt>{  0=dirichlet | 1=neumann | 2=periodic }</tt>.
 //' @export
 // [[Rcpp::export]]
-NumericVector rotate(NumericVector im,float  	angle,
+NumericVector imrotate(NumericVector im,float  	angle,
 		     unsigned int interpolation = 1,
 		     unsigned int boundary = 0)
 {
@@ -138,7 +138,7 @@ NumericVector resize_tripleXY(NumericVector im)
 //'          - 2: Repeat Pattern (Fourier style).
 //' @export
 // [[Rcpp::export]]
-NumericVector shift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_z=0,  int delta_c=0,
+NumericVector imshift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_z=0,  int delta_c=0,
                     int boundary_conditions=0)
 {
    CImg<double> img = as<CImg<double> >(im);

@@ -246,8 +246,8 @@ convolve <- function(im, filter, boundary_conditions = TRUE, is_normalised = FAL
 #'       @param sigma Tensor smoothness (shock filters only).
 #'
 #' @export
-sharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, sigma = 0) {
-    .Call('imager_sharpen', PACKAGE = 'imager', im, amplitude, sharpen_type, edge, alpha, sigma)
+imsharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, sigma = 0) {
+    .Call('imager_imsharpen', PACKAGE = 'imager', im, amplitude, sharpen_type, edge, alpha, sigma)
 }
 
 #' Compute image gradient.
@@ -527,8 +527,8 @@ autocrop <- function(im, color, axes = "zyx") {
 #' @param interpolation Type of interpolation. Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
 #' @param boundary Boundary conditions. Can be <tt>{  0=dirichlet | 1=neumann | 2=periodic }</tt>.
 #' @export
-rotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
-    .Call('imager_rotate', PACKAGE = 'imager', im, angle, interpolation, boundary)
+imrotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
+    .Call('imager_imrotate', PACKAGE = 'imager', im, angle, interpolation, boundary)
 }
 
 #' Rotate image by an arbitrary angle, around a center point.
@@ -595,8 +595,8 @@ resize_tripleXY <- function(im) {
 #'          - 1: Nearest neighbors (Neumann).
 #'          - 2: Repeat Pattern (Fourier style).
 #' @export
-shift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, boundary_conditions = 0L) {
-    .Call('imager_shift', PACKAGE = 'imager', im, delta_x, delta_y, delta_z, delta_c, boundary_conditions)
+imshift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, boundary_conditions = 0L) {
+    .Call('imager_imshift', PACKAGE = 'imager', im, delta_x, delta_y, delta_z, delta_c, boundary_conditions)
 }
 
 #' Resize image to new dimensions.
