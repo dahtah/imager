@@ -961,11 +961,17 @@ imdirac <- function(dims,x,y,z=1,cc=1)
         if (class(dims) == "cimg")
             {
                 dims <- dim(dims)
-            }
-        A <- array(0,dims)
-        A[x,y,z,cc] <- 1
-        cimg(A)
-    }
+        }
+        
+  A <- array(0,dims)
+  A<-as.cimg(A)
+  if(x>0 && y>0 && z>0 && cc>0) {
+  A[x,y,z,cc] <- 1
+  A}
+  else{
+    stop("dirac coordonates must be positive integers ")
+  }
+  }
 
 
 ##' Return coordinates of subset of pixels
@@ -1029,11 +1035,15 @@ threshold <- function(im,thr)
 ##' ##capture.plot() %>% plot 
 ##' @export
 capture.plot <- function()
-    {
+    {   
         rst <- dev.capture(native=FALSE)
+        if(is.null(rst)){
+          stop("capture.plot does not work when no R device is openned")
+        }
+        else{
         d <- dim(rst)
         v <- rst %>% col2rgb %>% t %>% as.numeric
-        array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% rotate(-90)
+        array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% rotate(-90)}
     }
 
 ##' Compute image gradient 
