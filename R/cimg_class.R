@@ -434,7 +434,7 @@ convert.im.fromPNG <- function(A)
             {
                 dim(A) <- c(d[1:2],1,1)
             }
-        mirror(A,"x") %>% rotate(-90)
+        mirror(A,"x") %>% imrotate(-90)
     }
 
 load.png <- function(file)
@@ -498,7 +498,7 @@ convert.im.toPNG <- function(A)
             {
                 A <-  rn(A)
             }
-        A <- rotate(A,90) %>% mirror("x") 
+        A <- imrotate(A,90) %>% mirror("x") 
         dim(A) <- dim(A)[-3]
         A
     }
@@ -774,7 +774,8 @@ as.cimg.data.frame <- function(df,v.name="value",dims)
 ##' @return an object of class im, or a list of objects of class im, or a list of lists of objects of class im
 ##' @author Simon Barthelme
 ##' @seealso im, as.im
-as.im.cimg <- function(img,W=NULL)
+##' @export
+cimg2im <- function(img,W=NULL)
     {
         require(spatstat)
         if (depth(img) > 1)
@@ -791,7 +792,7 @@ as.im.cimg <- function(img,W=NULL)
             }
         else
             {
-                imager::rotate(img,90) %>% as.array %>% squeeze %>% as.im(W=W)
+                imager::imrotate(img,90) %>% as.array %>% squeeze %>% as.im(W=W)
             }
     }
 
@@ -1125,7 +1126,7 @@ capture.plot <- function()
         rst <- dev.capture(native=FALSE)
         d <- dim(rst)
         v <- rst %>% col2rgb %>% t %>% as.numeric
-        array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% rotate(-90)
+        array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% imrotate(-90)
     }
 
 ##' Compute image gradient 
