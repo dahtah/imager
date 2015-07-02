@@ -31,3 +31,9 @@
 *~
 [#]*[#]
 .\#*
+
+#R temp files
+imager_cache
+.Rdata
+.rdb
+.rdx

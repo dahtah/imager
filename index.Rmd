@@ -1,8 +1,18 @@
----
-title: "imager: an R package for image processing"
----
+<!-- --- -->
+<!-- title: "imager: an R package for image processing" -->
+<!-- --- -->
+
+<div id="header">
+<p><img src="warped_parrots_small.png" style="float: right; margin-left: 20px;" /></p>
+<h1 class="title">imager: an R package for image processing</h1>
+
+</div>
+
 
 [Simon Barthelmé](http://sites.google.com/site/simonbarthelme) (GIPSA-lab, CNRS) 
+
+<!-- <img src="warped_parrots_small.png" style="float: right; margin-left: 20px;" /> -->
+
 
 R is a bit lacking in the area of image processing, where Matlab is still king. Imager aims to make image processing work in R easier. It is based on [CImg](http://cimg.sourceforge.net/), a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for basic video processing/hyperspectral imaging as well. 
 
@@ -13,7 +23,7 @@ At this stage imager covers:
 - loading and saving images in various formats
 - displaying and plotting images
 - working with pixel neighbourhoods 
-- interpolation and resizing
+- interpolation, resizing, warping
 - filtering and FFTs
 - morphological operations 
 

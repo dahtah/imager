@@ -12,7 +12,7 @@ output:
 
 Here's an example of imager in action:
 
-```{r quickstart,message=FALSE}
+```{r quickstart,message=FALSE,cache=TRUE}
 library(imager)
 
 
@@ -33,7 +33,7 @@ plot(im.yedges)
 deriche(im,2,order=2,axis="x") %>% deriche(2,order=2,axis="y") %>% plot
 ```
 
-```{r quickstart2,fig.width=12}
+```{r quickstart2,fig.width=12,cache=TRUE}
 #Another example of chaining: image gradient along x and y axes
 layout(matrix(1:2,1,2));
 grayscale(im) %>% get_gradient(axes="xy") %>% l_ply(plot)
@@ -47,7 +47,7 @@ plot(tennis,frame=5)
 
 In the next example, we convert the video to grayscale, run a motion detector, and combine both videos to display them side-by-side:
 
-```{r motion_example}
+```{r motion_example,cache=TRUE}
 tennis.g <- grayscale(tennis)
 motion <- deriche(tennis.g,1,order=1,axis="z")^2 #Differentiate along z axis and square
 combined <- list(motion/max(motion),tennis.g/max(tennis.g)) %>% imappend("x") #Paste the two videos together
@@ -55,7 +55,7 @@ combined <- list(motion/max(motion),tennis.g/max(tennis.g)) %>% imappend("x") #P
 
 In an interactive session you can run play(combined) to view the results. 
 
-```{r animate,echo=FALSE,fig.show="animate",interval=.03,fig.width=12}
+```{r animate,echo=FALSE,fig.show="animate",interval=.03,fig.width=12,cache=TRUE}
 imsplit(combined,"z") %>% l_ply(plot)
 ```
 
@@ -67,20 +67,20 @@ The four dimensions are labelled x,y,z,c. The first two are the usual spatial di
 If you only have grayscale images then the two extra dimensions are obviously pointless, but they won't bother you much. Your objects will still be officially 4 dimensional, with two trailing flat dimensions.
 Pixels are stored in the following manner: we scan the image beginning at the upper-left corner, along the x axis. Once we hit the end of the scanline, we move to the next line. Once we hit the end of the screen, we move to the next frame (increasing z) and repeat the process. If we have several colour channels, then once we're done with the first colour channel we move to the next one.
 All in all the different dimensions are represented in the x,y,z,c order. In R the object is represented as a 4D array. Here's an example with a grayscale image:
-```{r dim_gray}
+```{r dim_gray,cache=TRUE}
 parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
 gray.parrots <- grayscale(parrots)
 dim(gray.parrots)
 ```
 
 and a colour image:
-```{r dim_colour}
+```{r dim_colour,cache=TRUE}
 dim(parrots)
 ```
 
 and finally a video, also in colour:
 
-```{r dim_video}
+```{r dim_video,cache=TRUE}
 dim(tennis)
 ```
 
@@ -89,7 +89,7 @@ dim(tennis)
 CImg uses standard image coordinates: the origin is at the top left corner, with the x axis pointing right and the y axis pointing *down*. imager uses the same coordinate system, except the origin is now (1,1) and not (0,0) (the reason being that R indices start at 1 and not at 0).
 The number of pixels along the x axis is called the width, along the y axis it's height, along the z axis it's depth and finally the number of colour channels is called "spectrum".
 
-```{r dimensions}
+```{r dimensions,cache=TRUE}
 width(parrots)
 height(parrots)
 depth(parrots)
@@ -102,14 +102,14 @@ spectrum(parrots)
 Imager uses the "cimg" class for its images. "cimg" is just a regular 4d array with an S3 class tacked on so we can have custom plot, print, etc. 
 To promote an array to a "cimg" object, use as.cimg:
 
-```{r as.cimg.array}
+```{r as.cimg.array,cache=TRUE}
 noise <- array(runif(5*5*5*3),c(5,5,5,3)) #5x5 pixels, 5 frames, 3 colours. All noise
 noise <- as.cimg(noise)
 ```
 
 You can treat the object as you would any other array:
 
-```{r}
+```{r math_array,cache=TRUE}
 #Arithmetic
 sin(noise) + 3*noise 
 
@@ -121,7 +121,7 @@ dim(noise[1:4,,,] )
 
 and you can convert it to a data.frame:
 
-```{r as.df}
+```{r as.df,cache=TRUE}
 head(as.data.frame(parrots))
 ```
 
@@ -176,6 +176,20 @@ B <- as.cimg(function(x,y) exp(-.03*x),100,100)
 trippy <- imappend(list(R,G,B),"c") #Bind the three channels into one image
 plot(trippy)
 ```
+
+# Split, apply, combine
+
+Often what one wants to do is to split the image along a certain axis (e.g. colour), apply a transformation separately and recombine the result. iiply does that:
+```{r iiply}
+iiply(parrots,"c",function(v) v/max(v))  %>% plot
+
+#Same thing but longer:
+#imsplit(parrots,"c") %>% llply(function(v) v/max(v)
+```
+
+The code above separates colour channels, applies a normalisation and recombines the result into an image.
+Following the same convention used by plyr, imager also defines ilply (which splits, applies and returns a list), idply (which splits, applies and returns a data.frame) and liply (which applies, combines and returns an image). 
+
 
 # Sub-images, pixel neighbourhoods, etc.
 
@@ -277,24 +291,95 @@ pad(parrots,axis="y",140,pos=-1) %>% autocrop(c(0,0,0)) %>% plot
 ```
 
 
+# Warping
+
+Warping maps the pixels of the input image to a different location in the output. Scaling is a special case of warping, so is shifting. Warping relies on a map:
+$M(x,y) = (x',y')$
+
+that describes where to send pixel (x,y). Shifting the image corresponds to adding a constant to the coordinates:
+$M(x,y) = (x+\delta_x,y+\delta_y)$
+
+In imager:
+
+```{r warp_shift}
+map.shift <- function(x,y) list(x=x+10,y=y+30)
+imwarp(parrots,map=map.shift) %>% plot
+```
+
+The map function should take (x,y) as arguments and output a named list with values (x,y).
+
+The warping algorithm has two modes, "forward" and "backward". In forward mode you go through all $(x,y)$ pixels in the source, and paint the corresponding location $M(x,y)$ in the target image. This may result in unpainted pixels, as in the following example:
+
+```{r warp_scale_forward,cache=TRUE}
+map.scale <- function(x,y) list(x=1.5*x,y=1.5*y)
+imwarp(parrots,map=map.scale) %>% plot(main="Forward mode")
+```
+
+In backward mode you go through all pixels $(x',y')$ in the target image, and look up their ancestor $M^{-1}(x',y')$ in the source image. Backward mode has no missing pixel problems, but now you need to define the inverse map and set the "direction" argument to "backward".
+
+```{r warp_scale_backward,cache=TRUE}
+map.scale.bw <- function(x,y) list(x=x/1.5,y=y/1.5)
+imwarp(parrots,map=map.scale.bw,direction="backward") %>% plot(main="Backward mode")
+```
+
+Of course shifting and scaling things is boring and the whole point of warping is to do things like that:
+
+```{r warped_warp,cache=TRUE}
+map <- function(x,y) list(x=exp(y/600)*x,y=y*exp(-sin(x/40)))
+imwarp(parrots,map=map,direction="forward") %>% plot()
+
+```
+
+See ?imwarp for more. Note that 3D warping is possible as well. 
+
+
 # Lagged operators
 
 To compute the difference between successive images in a video, you can use the shift operator:
 
-```{r lag}
+```{r lag,cache=TRUE}
 #Compute difference between two successive frames (at lag 1)
 (shift(tennis,delta_z=1)-tennis) %>% plot(frame=2,main="Difference betw. frames 2 and 1")
 
 #Compute difference between frames (at lag 3)
 (shift(tennis,delta_z=3)-tennis) %>% plot(frame=4,main="Difference between frames 3 and 1")
 
-#note that shift uses interpolation. that makes relatively slow, but one advantage is that it allows non-integer lags:
+#note that shift uses interpolation. that makes it relatively slow, but one advantage is that it allows non-integer lags:
 #shift(tennis,delta_z=3.5)-tennis
 #is valid
 
 ```
 
+# FFTs and the periodic/smooth decomposition 
 
+FFTs can be computed via the FFT function:
+
+```{r FFT}
+im <- as.cimg(function(x,y) sin(x/5)+cos(x/4)*sin(y/2),128,128)
+ff <- FFT(im)
+plot(ff$real,main="Real part of the transform")
+plot(ff$imag,main="Imaginary part of the transform")
+sqrt(ff$real^2+ff$imag^2) %>% plot(main="Power spectrum")
+```
+
+If you want to use CImg's FFT on images of arbitrary size you should enable FFTW3 support. Install FFTW3 on your system, then run install_github("dahtah/imager",ref="fftw"). As a workaround you can also use R's native fft:
+
+```{r FFT_nativeR}
+rff <- as.matrix(im) %>% fft
+Re(rff) %>% as.cimg %>% plot(main="Real part of the transform (R's native code)")
+```
+
+Important: both FFT and fft will attempt to perform a multi-dimensional FFT of the input, with dimensionality defined by the dimensionality of the array. If you want to compute a 2D FFT for every frame of a video, use a split (imsplit or ilply).
+
+The FFT works best for periodic signals. One way of making signals periodic is via zero-padding (use the pad function), another is to use the periodic-smooth decomposition of Moisan (2011):
+
+```{r periodicsmooth,fig.width=12}
+layout(t(1:2))
+periodic.part(parrots) %>% plot(main="Periodic part of parrots")
+(parrots- periodic.part(parrots)) %>% plot(main="Smooth residual of parrots")
+```
+
+See ?periodic.smooth for details.
 <!-- # Using the CImg API directly -->
 
 <!-- Warning: this feature is only available in the experimental branch of imager for now. -->
