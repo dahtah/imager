@@ -70,6 +70,7 @@ img {
 <p>If R isn’t fast enough for your needs, it may be worth using the CImg C++ API directly. Imager provides some wrappers that makes the process relatively convenient (if anything involving C++ can ever be called convenient).</p>
 <p>Here’s a basic example: we define a C++ function inline, call cppFunction, and the function becomes magically accessible.</p>
 <pre class="r"><code>library(imager)
+library(Rcpp)
 
 #Some C++ code as a character string
 #The function takes an image, applies blur and erode operations, and returns the result

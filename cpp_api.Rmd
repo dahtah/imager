@@ -16,6 +16,7 @@ Here's a basic example: we define a C++ function inline, call cppFunction, and t
 
 ```{r example_inline,warning=FALSE}
 library(imager)
+library(Rcpp)
 
 #Some C++ code as a character string
 #The function takes an image, applies blur and erode operations, and returns the result

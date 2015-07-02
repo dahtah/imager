@@ -270,10 +270,10 @@ plot(thmb,main="Thumbnail") #Pixellated parrots
 #Same as above: negative arguments are interpreted as percentages
 thmb <- resize(parrots,-10,-10)
 
-rotate(parrots,30) %>% plot(main="Rotating")
-shift(parrots,40,20) %>% plot(main="Shifting")
-shift(parrots,100,100,boundary=1) %>% plot(main="Shifting (Neumann boundaries)")
-shift(parrots,100,100,boundary=2) %>% plot(main="Shifting (circular)")
+imrotate(parrots,30) %>% plot(main="Rotating")
+imshift(parrots,40,20) %>% plot(main="Shifting")
+imshift(parrots,100,100,boundary=1) %>% plot(main="Shifting (Neumann boundaries)")
+imshift(parrots,100,100,boundary=2) %>% plot(main="Shifting (circular)")
 ```
 
 You can pad an image using "pad":
@@ -339,10 +339,10 @@ To compute the difference between successive images in a video, you can use the 
 
 ```{r lag,cache=TRUE}
 #Compute difference between two successive frames (at lag 1)
-(shift(tennis,delta_z=1)-tennis) %>% plot(frame=2,main="Difference betw. frames 2 and 1")
+(imshift(tennis,delta_z=1)-tennis) %>% plot(frame=2,main="Difference betw. frames 2 and 1")
 
 #Compute difference between frames (at lag 3)
-(shift(tennis,delta_z=3)-tennis) %>% plot(frame=4,main="Difference between frames 3 and 1")
+(imshift(tennis,delta_z=3)-tennis) %>% plot(frame=4,main="Difference between frames 3 and 1")
 
 #note that shift uses interpolation. that makes it relatively slow, but one advantage is that it allows non-integer lags:
 #shift(tennis,delta_z=3.5)-tennis
