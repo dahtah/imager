@@ -780,21 +780,35 @@ cimg2im <- function(img,W=NULL)
         require(spatstat)
         if (depth(img) > 1)
             {
-                l <- imsplit(img,axis="z") %>% llply(as.im.cimg,W=W)
-                names(l) <- paste("Frame",1:depth(img))
+                l <- ilply(img,axis="z",cimg2im,W=W)
                 l
             }
         else if (spectrum(img) > 1)
             {
-                l <- imsplit(img,axis="c") %>% llply(as.im.cimg,W=W)
-                names(l) <- paste("Channel",1:spectrum(img))
+                l <- ilply(img,axis="c",cimg2im,W=W)
                 l
             }
         else
             {
-                imager::imrotate(img,90) %>% as.array %>% squeeze %>% as.im(W=W)
+                imrotate(img,90) %>% as.array %>% squeeze %>% as.im(W=W)
             }
     }
+
+##' Convert an image in spatstat format to an image in cimg format
+##'
+##' as.cimg.im is an alias for the same function
+##' 
+##' @param img a spatstat image
+##' @return a cimg image
+##' @author Simon Barthelme
+##' @export
+im2cimg <- function(img)
+    {
+        require(spatstat)
+        as.matrix(img) %>% as.cimg %>% imrotate(-90) 
+    }
+
+as.cimg.im <- im2cimg
 
 ##' Linear index in internal vector from pixel coordinates
 ##'
