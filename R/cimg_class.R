@@ -1152,6 +1152,7 @@ capture.plot <- function()
         v <- rst %>% col2rgb %>% t %>% as.numeric
         array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% imrotate(-90)
     }
+    }
 
 ##' Compute image gradient 
 ##'
