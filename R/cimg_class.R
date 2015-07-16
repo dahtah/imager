@@ -1150,11 +1150,7 @@ capture.plot <- function()
         else{
         d <- dim(rst)
         v <- rst %>% col2rgb %>% t %>% as.numeric
-<<<<<<< HEAD
         array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% imrotate(-90)
-=======
-        array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% rotate(-90)}
->>>>>>> 797518a77d857371e64f083fd29d76379bdaa006
     }
 
 ##' Compute image gradient 
