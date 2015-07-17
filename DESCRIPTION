@@ -9,4 +9,5 @@ Description: This package provides fast image processing functions for images in
 License: file LICENSE
 Imports: Rcpp (>= 0.11.5)
 Depends: plyr,magrittr,stringr,grDevices,png,jpeg
+Enhances: spatstat
 LinkingTo: Rcpp
