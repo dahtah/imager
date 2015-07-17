@@ -1,13 +1,15 @@
 #' imager: an R library for image processing, based on CImg
 #'
-#' CImg by David Tschumperlé is a C++ library for image processing. It provides most common functions for image manipulation and filtering, as well as some advanced algorithms. imager makes these functions accessible from R and adds some basic plotting and subsetting. 
+#' CImg by David Tschumperle is a C++ library for image processing. It provides most common functions for image manipulation and filtering, as well as some advanced algorithms. imager makes these functions accessible from R and adds some basic plotting and subsetting. 
 #' You should install ImageMagick if you want support for common image formats (png, jpg, etc.)
 #' @docType package
 #' @name imager
 NULL
 
 #' @useDynLib imager
+#' @importFrom grDevices as.raster
 #' @importFrom Rcpp sourceCpp
+#' @importFrom magrittr "%>%"
 NULL
 
 names.coords <- c('x','y','z','c','cc')
@@ -541,7 +543,7 @@ as.cimg <- function(x,...) UseMethod("as.cimg")
 ##' @param depth depth of the image (in pixels)
 ##' @param normalise.coord coordinates are normalised so that x,y,z are in (0,1) (default FALSE)
 ##' @return an object of class cimg
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @examples
 ##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100)
 ##' plot(im)
@@ -820,7 +822,7 @@ as.cimg.im <- im2cimg
 ##' im <- as.cimg(function(x,y) x+y,100,100)
 ##' px <- pixel.index(im,data.frame(x=c(3,3),y=c(1,2)))
 ##' im[px] #Values should be 3+1=4, 3+2=5
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 pixel.index <- function(im,coords)
     {
@@ -1162,7 +1164,7 @@ capture.plot <- function()
 ##' @param axes: direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz")
 ##' @param scheme numerical scheme (default '3')
 ##' @return an image or a list of images, depending on the value of "axes" 
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 imgradient <- function(im,axes,scheme=3)
     {
@@ -1361,7 +1363,7 @@ imsplit <- function(im,axis,nb=-1)
 ##' (im-periodic.part(im)) %>% plot(main="Smooth part")
 ##' 
 ##' @references  L. Moisan, Periodic plus Smooth Image Decomposition,J. Math. Imaging Vision, vol. 39:2, pp. 161-179, 2011
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 periodic.part <- function(im)
     {
