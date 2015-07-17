@@ -1,18 +1,16 @@
-#include "CImg.h"
-#include <Rcpp.h>
-#include "wrappers.h"
+#include "imager.h"
 using namespace Rcpp;
 using namespace cimg_library;
 
 //Return a CImg object for in-place modification
-CImg<double> sharedCImg(SEXP inp) {
+CId sharedCImg(SEXP inp) {
     Rcpp::NumericVector Rvec(inp);
     IntegerVector d = Rvec.attr("dim");
     if (d.length() < 4)
       {
 	Rcpp::stop("Expecting a four-dimensional array");
       }
-    CImg<double> img(Rvec.begin(),d[0],d[1],d[2],d[3],true);
+    CId img(Rvec.begin(),d[0],d[1],d[2],d[3],true);
     return img;		
   }
 
@@ -21,7 +19,7 @@ CImgList<double> sharedCImgList(SEXP inp) {
   Rcpp::List L(inp);
   int n = L.length();
   CImgList<double> CL;
-  CImg<double> tmp;
+  CId tmp;
   for (int i=0;i < n;i++)
     {
       CL.insert(sharedCImg(L[i]),i,true);
@@ -34,20 +32,20 @@ CImgList<double> sharedCImgList(SEXP inp) {
 namespace Rcpp {
 
   //Convert a R cimg object to a C++ CImg object
-  template <> CImg<double> as(SEXP inp) {
+  template <> CId as(SEXP inp) {
     Rcpp::NumericVector Rvec(inp);
     IntegerVector d = Rvec.attr("dim");
     if (d.length() < 4)
       {
 	Rcpp::stop("Expecting a four-dimensional array");
       }
-    CImg<double> img(Rvec.begin(),d[0],d[1],d[2],d[3],false);
+    CId img(Rvec.begin(),d[0],d[1],d[2],d[3],false);
     return img;		
   }
   
 
   //Convert a CImg object to an R cimg object
-  template <> SEXP wrap(const CImg<double> &img) 
+  template <> SEXP wrap(const CId &img) 
   {
     IntegerVector dims(4);
     dims[0] = img.width();

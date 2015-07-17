@@ -6,7 +6,7 @@ using namespace cimg_library;
 // [[Rcpp::export]]
 NumericVector interp_xy(NumericVector inp,NumericVector ix,NumericVector iy, int z=0,int c=0,bool cubic=false)
 {
-    CImg<double> img = as<CImg<double> >(inp);
+    CId img = as<CId >(inp);
     int n = ix.length();
     double val;
     NumericVector out(n);
@@ -31,7 +31,7 @@ NumericVector interp_xy(NumericVector inp,NumericVector ix,NumericVector iy, int
 // [[Rcpp::export]]
 NumericVector interp_xyz(NumericVector inp,NumericVector ix,NumericVector iy,NumericVector iz,int c=0,bool cubic=false)
 {
-    CImg<double> img = as<CImg<double> >(inp);
+    CId img = as<CId >(inp);
     int n = ix.length();
     double val;
       NumericVector out(n);
@@ -57,7 +57,7 @@ NumericVector interp_xyz(NumericVector inp,NumericVector ix,NumericVector iy,Num
 // [[Rcpp::export]]
 NumericVector interp_xyzc(NumericVector inp,NumericVector ix,NumericVector iy,NumericVector iz,IntegerVector ic,bool cubic=false)
 {
-    CImg<double> img = as<CImg<double> >(inp);
+    CId img = as<CId >(inp);
     int n = ix.length();
     double val;
     NumericVector out(n);
@@ -82,7 +82,7 @@ NumericVector interp_xyzc(NumericVector inp,NumericVector ix,NumericVector iy,Nu
 // [[Rcpp::export]]
 NumericVector interp_xyc(NumericVector inp,NumericVector ix,NumericVector iy,int z,IntegerVector ic,bool cubic=false)
 {
-    CImg<double> img = as<CImg<double> >(inp);
+    CId img = as<CId >(inp);
     int n = ix.length();
     double val;
     NumericVector out(n);

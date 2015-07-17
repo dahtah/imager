@@ -7,14 +7,14 @@ using namespace cimg_library;
 //' @export
 // [[Rcpp::export]]
 NumericVector load_image(std::string fname) {
-  CImg<double> image(fname.c_str());
+  CId image(fname.c_str());
   return wrap(image);
 }
 
 //' @export
 // [[Rcpp::export]]
 void save_image(NumericVector im, std::string fname) {
-  CImg<double> image = as<CImg<double> >(im);
+  CId image = as<CId >(im);
   image.save(fname.c_str());
   return;
 }
@@ -29,7 +29,7 @@ void save_image(NumericVector im, std::string fname) {
 // [[Rcpp::export]]
 List im_split(NumericVector im,char axis,int nb=-1)
 {
-   CImg<double> img = as<CImg<double> >(im);
+   CId img = as<CId >(im);
    CImgList<double> out;
    out = img.get_split(axis,nb);
    return wrap(out);
@@ -47,7 +47,7 @@ List im_split(NumericVector im,char axis,int nb=-1)
 NumericVector imappend(List imlist,char axis)
 {
    CImgList<double> ilist = sharedCImgList(imlist);
-   CImg<double> out(ilist.get_append(axis));
+   CId out(ilist.get_append(axis));
    //   out.display();
    return wrap(out);
 }
@@ -60,7 +60,7 @@ NumericVector imappend(List imlist,char axis)
 // [[Rcpp::export]]
 List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
 {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   int n = cx.length();
   List out(n);
 
@@ -75,7 +75,7 @@ List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVe
 // [[Rcpp::export]]
 List select_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector cz,IntegerVector wx,IntegerVector wy,IntegerVector wz)
 {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   int n = cx.length();
   List out(n);
 

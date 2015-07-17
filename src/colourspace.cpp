@@ -6,7 +6,7 @@ using namespace cimg_library;
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSL(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.RGBtoHSL();
   return wrap(img);
 }
@@ -14,7 +14,7 @@ NumericVector RGBtoHSL(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector HSLtoRGB(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.HSLtoRGB();
   return wrap(img);
 }
@@ -22,7 +22,7 @@ NumericVector HSLtoRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSV(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.RGBtoHSV();
   return wrap(img);
 }
@@ -30,7 +30,7 @@ NumericVector RGBtoHSV(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector HSVtoRGB(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.HSVtoRGB();
   return wrap(img);
 }
@@ -41,7 +41,7 @@ NumericVector HSVtoRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSI(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.RGBtoHSI();
   return wrap(img);
 }
@@ -49,7 +49,7 @@ NumericVector RGBtoHSI(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector HSItoRGB(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.HSItoRGB();
   return wrap(img);
 }
@@ -57,7 +57,7 @@ NumericVector HSItoRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtosRGB(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.RGBtosRGB();
   return wrap(img);
 }
@@ -65,7 +65,7 @@ NumericVector RGBtosRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector sRGBtoRGB(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.sRGBtoRGB();
   return wrap(img);
 }
@@ -73,7 +73,7 @@ NumericVector sRGBtoRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoYCbCr(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.RGBtoYCbCr();
   return wrap(img);
 }
@@ -81,7 +81,7 @@ NumericVector RGBtoYCbCr(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector YCbCrtoRGB(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.YCbCrtoRGB();
   return wrap(img);
 }
@@ -90,7 +90,7 @@ NumericVector YCbCrtoRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoYUV(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.RGBtoYUV();
   return wrap(img);
 }
@@ -98,7 +98,7 @@ NumericVector RGBtoYUV(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector YUVtoRGB(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.YUVtoRGB();
   return wrap(img);
 }
@@ -110,16 +110,16 @@ NumericVector YUVtoRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector grayscale(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   return wrap(img.RGBtoHSL().get_channel(2));
 }
 
 
 // NumericVector HSLtoRGB(NumericVector inp) {
-//   //There's a bug in CImg with HSLtoRGB with CImg<double>  
-//   CImg<float> img(as<CImg<double> >(inp));
+//   //There's a bug in CImg with HSLtoRGB with CId  
+//   CImg<float> img(as<CId >(inp));
 //   img.HSLtoRGB();
-//   CImg<double> out(img);
+//   CId out(img);
 //   return wrap(out);
 // }
 

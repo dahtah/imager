@@ -14,7 +14,7 @@ using namespace cimg_library;
 // [[Rcpp::export]]
 NumericVector bucket_fill(NumericVector im,int x,int y,int z,NumericVector color,  float opacity=1,float sigma=0,bool is_high_connexity=false)
 {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.draw_fill(x-1,y-1,z-1,color.begin(),opacity,sigma,is_high_connexity);
   return wrap(img);
 }
@@ -33,8 +33,8 @@ NumericVector bucket_fill(NumericVector im,int x,int y,int z,NumericVector color
 // [[Rcpp::export]]
 NumericVector bucket_select(NumericVector im,int x,int y,int z,float sigma=0,bool is_high_connexity=false)
 {
-  CImg<double> img = as<CImg<double> >(im);
-  CImg<double> out(img);
+  CId img = as<CId >(im);
+  CId out(img);
   NumericVector color(img.spectrum());
   float opacity=1;
   img.draw_fill(x-1,y-1,z-1,color.begin(),opacity,out,sigma,is_high_connexity);

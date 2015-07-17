@@ -10,8 +10,8 @@ using namespace cimg_library;
 // [[Rcpp::export]]
 NumericVector autocrop(NumericVector im,NumericVector color,std::string axes = "zyx")
 {
-   CImg<double> img = as<CImg<double> >(im);
-   CImg<double> out(img,false);
+   CId img = as<CId >(im);
+   CId out(img,false);
    out.autocrop(color.begin(),axes.c_str());
    return wrap(out);
 }
@@ -29,8 +29,8 @@ NumericVector imrotate(NumericVector im,float  	angle,
 		     unsigned int interpolation = 1,
 		     unsigned int boundary = 0)
 {
-   CImg<double> img = as<CImg<double> >(im);
-   CImg<double> out(img,false);
+   CId img = as<CId >(im);
+   CId out(img,false);
    out.rotate(angle,interpolation,boundary);
    return wrap(out);
 }
@@ -52,8 +52,8 @@ NumericVector rotate_xy(NumericVector im,
 			unsigned int interpolation = 1,
 			unsigned int boundary = 0)
 {
-   CImg<double> img = as<CImg<double> >(im);
-   CImg<double> out(img,false);
+   CId img = as<CId >(im);
+   CId out(img,false);
    out.rotate(angle,cx,cy,zoom,interpolation,boundary);
    return wrap(out);
 }
@@ -64,7 +64,7 @@ NumericVector rotate_xy(NumericVector im,
 // [[Rcpp::export]]
 NumericVector mirror(NumericVector im,char axis)
 {
-   CImg<double> img = as<CImg<double> >(im);
+   CId img = as<CId >(im);
    img.mirror(axis);
    return wrap(img);
 }
@@ -73,7 +73,7 @@ NumericVector mirror(NumericVector im,char axis)
 // [[Rcpp::export]]
 NumericVector permute_axes(NumericVector im,std::string perm)
 {
-   CImg<double> img = as<CImg<double> >(im);
+   CId img = as<CId >(im);
    img.permute_axes(perm.c_str());
    return wrap(img);
 }
@@ -86,8 +86,8 @@ NumericVector permute_axes(NumericVector im,std::string perm)
 // [[Rcpp::export]]
 NumericVector resize_doubleXY(NumericVector im)
 {
-   CImg<double> img = as<CImg<double> >(im);
-   CImg<double> out(img,false);
+   CId img = as<CId >(im);
+   CId out(img,false);
    out.resize_doubleXY();
    return wrap(out);
 }
@@ -100,8 +100,8 @@ NumericVector resize_doubleXY(NumericVector im)
 // [[Rcpp::export]]
 NumericVector resize_halfXY(NumericVector im)
 {
-   CImg<double> img = as<CImg<double> >(im);
-   CImg<double> out(img,false);
+   CId img = as<CId >(im);
+   CId out(img,false);
    out.resize_halfXY();
    return wrap(out);
 }
@@ -116,8 +116,8 @@ NumericVector resize_halfXY(NumericVector im)
 // [[Rcpp::export]]
 NumericVector resize_tripleXY(NumericVector im)
 {
-   CImg<double> img = as<CImg<double> >(im);
-   CImg<double> out(img,false);
+   CId img = as<CId >(im);
+   CId out(img,false);
    out.resize_tripleXY();
    return wrap(out);
 }
@@ -140,7 +140,7 @@ NumericVector resize_tripleXY(NumericVector im)
 NumericVector imshift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_z=0,  int delta_c=0,
                     int boundary_conditions=0)
 {
-   CImg<double> img = as<CImg<double> >(im);
+   CId img = as<CId >(im);
    img.shift(delta_x,delta_y,delta_z,delta_c,boundary_conditions);
    return wrap(img);
 }
@@ -174,8 +174,8 @@ NumericVector resize(NumericVector im, int size_x=-100,  int size_y=-100,
                      float centering_x = 0,  float centering_y = 0,
                      float centering_z = 0,  float centering_c = 0)
 {
-   CImg<double> img = as<CImg<double> >(im);
-   CImg<double> out(img,false);
+   CId img = as<CId >(im);
+   CId out(img,false);
    out.resize(size_x,size_y,size_z,size_c,interpolation_type,boundary_conditions,
 	      centering_x,centering_y,centering_z,centering_c);
    return wrap(out);
@@ -196,11 +196,11 @@ NumericVector warp(NumericVector im,NumericVector warpfield,
 		   unsigned int interpolation=1, 
 		   unsigned int boundary_conditions=0)
 {
-  CImg<double> img = as<CImg<double> >(im);
-  CImg<double> wrp = as<CImg<double> >(warpfield);
-  //CImg<double> out(img,false);
+  CId img = as<CId >(im);
+  CId wrp = as<CId >(warpfield);
+  //CId out(img,false);
 
-  CImg<double> out=img.get_warp(wrp,mode,interpolation,boundary_conditions);
+  CId out=img.get_warp(wrp,mode,interpolation,boundary_conditions);
   //out.warp(wrp,mode,interpolation,boundary_conditions);
   return wrap(out);
 }
@@ -210,7 +210,7 @@ NumericVector warp(NumericVector im,NumericVector warpfield,
 
 // NumericVector mirror(NumericVector im,std::string axes)
 // {
-//    CImg<double> img = as<CImg<double> >(im);
+//    CId img = as<CId >(im);
 //    img.mirror(axes.c_str());
 //    return wrap(img);
 // }

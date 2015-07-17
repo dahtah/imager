@@ -10,7 +10,7 @@ using namespace cimg_library;
 // [[Rcpp::export]]
 void display(NumericVector im)
 {
-   CImg<double> img = as<CImg<double> >(im);
+   CId img = as<CId >(im);
    img.display();
    return;
 }
@@ -39,7 +39,7 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30)
 {
   unsigned long t0 = cimg::time();
   unsigned long dt;
-  CImg<double> img = as<CImg<double> >(vid);
+  CId img = as<CId >(vid);
   CImgDisplay disp(img.get_slice(0),"Video player");
   int i = 0,n=img.depth();
   bool pause=false;
