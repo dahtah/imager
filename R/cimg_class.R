@@ -779,20 +779,27 @@ as.cimg.data.frame <- function(df,v.name="value",dims)
 ##' @export
 cimg2im <- function(img,W=NULL)
     {
-        require(spatstat)
-        if (depth(img) > 1)
+        
+        if (requireNamespace("spatstat",quietly=TRUE))
             {
-                l <- ilply(img,axis="z",cimg2im,W=W)
-                l
-            }
-        else if (spectrum(img) > 1)
-            {
-                l <- ilply(img,axis="c",cimg2im,W=W)
-                l
+                if (depth(img) > 1)
+                    {
+                        l <- ilply(img,axis="z",cimg2im,W=W)
+                        l
+                    }
+                else if (spectrum(img) > 1)
+                    {
+                        l <- ilply(img,axis="c",cimg2im,W=W)
+                        l
+                    }
+                else
+                    {
+                        imrotate(img,90) %>% as.array %>% squeeze %>% spatstat::as.im(W=W)
+                    }
             }
         else
             {
-                imrotate(img,90) %>% as.array %>% squeeze %>% as.im(W=W)
+                stop("The spatstat package is required")
             }
     }
 
@@ -806,8 +813,14 @@ cimg2im <- function(img,W=NULL)
 ##' @export
 im2cimg <- function(img)
     {
-        require(spatstat)
-        as.matrix(img) %>% as.cimg %>% imrotate(-90) 
+        if (requireNamespace("spatstat",quietly=TRUE))
+            {
+                spatstat::as.matrix(img) %>% as.cimg %>% imrotate(-90)
+            }
+        else
+            {
+                stop("The spatstat package is required")
+            }
     }
 
 as.cimg.im <- im2cimg
