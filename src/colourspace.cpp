@@ -1,4 +1,4 @@
-#include "imager.h"
+#include <imager.h>
 
 using namespace Rcpp;
 using namespace cimg_library;
