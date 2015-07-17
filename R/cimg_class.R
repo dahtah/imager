@@ -1070,14 +1070,15 @@ imdirac <- function(dims,x,y,z=1,cc=1)
                 dims <- dim(dims)
         }
         
-  A <- array(0,dims)
-  A<-as.cimg(A)
-  if(x>0 && y>0 && z>0 && cc>0) {
-  A[x,y,z,cc] <- 1
-  A}
-  else{
-    stop("dirac coordonates must be positive integers ")
-  }
+        A <- array(0,dims)
+        A<-as.cimg(A)
+        if(x>0 && y>0 && z>0 && cc>0) {
+            A[x,y,z,cc] <- 1
+            A
+        }
+        else{
+            stop("dirac coordonates must be positive integers ")
+        }
   }
 
 
@@ -1145,14 +1146,15 @@ capture.plot <- function()
     {   
         rst <- dev.capture(native=FALSE)
         if(is.null(rst)){
-          stop("capture.plot does not work when no R device is openned")
+          stop("dev.capture failed (no compatible device found)")
         }
         else{
-        d <- dim(rst)
-        v <- rst %>% col2rgb %>% t %>% as.numeric
-        array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% imrotate(-90)
+            d <- dim(rst)
+            v <- rst %>% col2rgb %>% t %>% as.numeric
+            array(v,c(d,1,3)) %>% cimg %>% mirror("x") %>% imrotate(-90)
+        }
     }
-    }
+
 
 ##' Compute image gradient 
 ##'
