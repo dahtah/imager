@@ -3,8 +3,6 @@
 
 #include "../inst/include/imager.h"
 #include <Rcpp.h>
-#include <string>
-#include <set>
 
 using namespace Rcpp;
 
@@ -955,18 +953,4 @@ BEGIN_RCPP
     __result = Rcpp::wrap(select_patches3D(im, cx, cy, cz, wx, wy, wz));
     return __result;
 END_RCPP
-}
-
-// validate (ensure exported C++ functions exist before calling them)
-static int imager_RcppExport_validate(const char* sig) { 
-    static std::set<std::string> signatures;
-    if (signatures.empty()) {
-    }
-    return signatures.find(sig) != signatures.end();
-}
-
-// registerCCallable (register entry points for exported C++ functions)
-RcppExport SEXP imager_RcppExport_registerCCallable() { 
-    R_RegisterCCallable("imager", "imager_RcppExport_validate", (DL_FUNC)imager_RcppExport_validate);
-    return R_NilValue;
 }

@@ -684,7 +684,3 @@ select_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {
     .Call('imager_select_patches3D', PACKAGE = 'imager', im, cx, cy, cz, wx, wy, wz)
 }
 
-# Register entry points for exported C++ functions
-methods::setLoadAction(function(ns) {
-    .Call('imager_RcppExport_registerCCallable', PACKAGE = 'imager')
-})
