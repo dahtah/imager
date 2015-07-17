@@ -1,8 +1,7 @@
-#include "CImg.h"
-#include <Rcpp.h>
-#include "wrappers.h"
+#include "imager.h"
 using namespace Rcpp;
 using namespace cimg_library;
+
 //' Autocrop image region 
 //'
 //' @param color Color used for the crop. If  0, color is guessed.
