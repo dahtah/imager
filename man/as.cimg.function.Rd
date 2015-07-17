@@ -31,6 +31,6 @@ im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100,normalise.coord=TRUE)
 plot(im)
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 

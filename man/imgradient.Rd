@@ -20,6 +20,6 @@ an image or a list of images, depending on the value of "axes"
 Light interface for get_gradient. Refer to get_gradient for details on the computation.
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 

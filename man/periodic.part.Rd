@@ -26,7 +26,7 @@ periodic.part(im) \%>\% plot(main="Periodic part")
 (im-periodic.part(im)) \%>\% plot(main="Smooth part")
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 \references{
 L. Moisan, Periodic plus Smooth Image Decomposition,J. Math. Imaging Vision, vol. 39:2, pp. 161-179, 2011

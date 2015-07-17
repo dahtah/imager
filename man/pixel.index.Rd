@@ -23,6 +23,6 @@ px <- pixel.index(im,data.frame(x=c(3,3),y=c(1,2)))
 im[px] #Values should be 3+1=4, 3+2=5
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 
