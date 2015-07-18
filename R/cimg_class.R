@@ -188,7 +188,7 @@ frames <- function(im,index,drop=FALSE)
         names(res) <- nm
         if (drop)
             {
-                res <- llply(res,. %>% as.array %>% squeeze)
+                res <- llply(res,function(v)  as.array(v) %>% squeeze)
             }
         res
     }
@@ -225,7 +225,7 @@ channels <- function(im,index,drop=FALSE)
         names(res) <- nm
         if (drop)
             {
-                res <- llply(res,. %>% as.array %>% squeeze)
+                res <- llply(res,function(v) { as.array(v) %>% squeeze})
             }
         res
     }
