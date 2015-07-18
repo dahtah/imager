@@ -8,7 +8,7 @@ NULL
 
 #' @useDynLib imager
 #' @importFrom grDevices as.raster
-#' @importFrom plyr llply laply ldply ddply dlply ldply
+#' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
 #' @importFrom stringr str_match
@@ -1259,7 +1259,7 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
             }
         wf <- llply(out,function(v) array(v,c(dim(im)[1:3],1))) %>% imappend("c")
         mode <- (direction=="forward")*2+(coordinates=="relative")
-        warp(im,wf-1,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary=switch(boundary,dirichlet=0,neumann=1,periodic=2))
+        warp(im,wf-1,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary_conditions=switch(boundary,dirichlet=0,neumann=1,periodic=2))
     }
 
 ##' Apply function to each element of a list, then combine the result as an image by appending along specified axis
