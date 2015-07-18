@@ -4,7 +4,7 @@
 \alias{as.cimg.array}
 \title{Turn an numeric array into a cimg object}
 \usage{
-\method{as.cimg}{array}(obj)
+\method{as.cimg}{array}(obj, ...)
 }
 \arguments{
 \item{obj}{an array}

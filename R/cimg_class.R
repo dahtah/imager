@@ -18,7 +18,7 @@ NULL
 
 names.coords <- c('x','y','z','c','cc')
 index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
-utils::globalVariables(c(".", "%>%"))
+utils::globalVariables(c(".", "%>%","spatstat::as.matrix"))
 
 ##' Create a cimg object 
 ##'
@@ -103,7 +103,7 @@ as.data.frame.cimg <- function(x,...)
 ##' @seealso plot.cimg, rasterImage
 ##' @author Simon Barthelme
 ##' @export
-as.raster.cimg <- function(x,frames,rescale.color=TRUE)
+as.raster.cimg <- function(x,frames,rescale.color=TRUE,...)
     {
         im <- x
         w <- width(im)
@@ -133,7 +133,7 @@ as.raster.cimg <- function(x,frames,rescale.color=TRUE)
     }
 
 ##' @export
-print.cimg <- function(x)
+print.cimg <- function(x,...)
     {
         d <- dim(x)
         msg <- sprintf("Image. Width: %i pix Height %i pix Depth %i Colour channels %i",d[1],d[2],d[3],d[4])
@@ -532,7 +532,7 @@ as.cimg <- function(obj,...) UseMethod("as.cimg")
 
 ##' Create an image by sampling a function
 ##'
-##' Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluate the input function at these values. 
+##' Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluates the input function at these values. 
 ##' 
 ##' @param obj a function with arguments (x,y) or (x,y,z). Must be vectorised. 
 ##' @param width width of the image (in pixels)
@@ -547,7 +547,7 @@ as.cimg <- function(obj,...) UseMethod("as.cimg")
 ##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100,normalise.coord=TRUE)
 ##' plot(im)
 ##' @export
-as.cimg.function <- function(obj,width,height,depth=1,normalise.coord=FALSE)
+as.cimg.function <- function(obj,width,height,depth=1,normalise.coord=FALSE,...)
     {
         fun <- obj
         args <- formals(fun) %>% names
@@ -599,7 +599,7 @@ as.cimg.function <- function(obj,width,height,depth=1,normalise.coord=FALSE)
 ##' 
 ##' @export
 ##' @param obj an array
-as.cimg.array <- function(obj)
+as.cimg.array <- function(obj,...)
     {
         d <- dim(obj)
         if (length(d)==4)
@@ -720,7 +720,7 @@ pad <- function(im,nPix,axis,pos=0,val=0)
 }
 
 ##' @export
-as.cimg.matrix <- function(obj)
+as.cimg.matrix <- function(obj,...)
     {
         dim(obj) <- c(dim(obj),1,1)
         cimg(obj)
@@ -741,7 +741,7 @@ as.cimg.matrix <- function(obj)
 ##' as.cimg(df,dims=c(10,10,1,1)) %>% plot
 ##' @author Simon Barthelme
 ##' @export
-as.cimg.data.frame <- function(obj,v.name="value",dims)
+as.cimg.data.frame <- function(obj,v.name="value",dims,...)
     {
         which.v <- (names(df) == v.name) %>% which
         col.coord <- (names(df) %in% names.coords) %>% which

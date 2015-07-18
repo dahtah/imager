@@ -4,7 +4,7 @@
 \alias{as.cimg.data.frame}
 \title{Create an image from a data.frame}
 \usage{
-\method{as.cimg}{data.frame}(obj, v.name = "value", dims)
+\method{as.cimg}{data.frame}(obj, v.name = "value", dims, ...)
 }
 \arguments{
 \item{obj}{a data.frame}

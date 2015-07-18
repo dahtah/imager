@@ -5,7 +5,7 @@
 \title{Create an image by sampling a function}
 \usage{
 \method{as.cimg}{function}(obj, width, height, depth = 1,
-  normalise.coord = FALSE)
+  normalise.coord = FALSE, ...)
 }
 \arguments{
 \item{obj}{a function with arguments (x,y) or (x,y,z). Must be vectorised.}
@@ -22,7 +22,7 @@
 an object of class cimg
 }
 \description{
-Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluate the input function at these values.
+Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluates the input function at these values.
 }
 \examples{
 im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100)
