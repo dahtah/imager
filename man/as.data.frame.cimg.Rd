@@ -17,6 +17,10 @@ a data.frame
 \description{
 This function combines the output of pixel.grid with the actual values (stored in $value)
 }
+\examples{
+im <- matrix(1:16,4,4) \%>\% as.cimg
+as.data.frame(im) \%>\% head
+}
 \author{
 Simon Barthelme
 }

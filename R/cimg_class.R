@@ -84,11 +84,14 @@ plot.cimg <- function(x,frame,rescale.color=TRUE,...)
 ##' @param ... arguments passed to pixel.grid
 ##' @return a data.frame
 ##' @author Simon Barthelme
+##' @examples
+##' im <- matrix(1:16,4,4) %>% as.cimg
+##' as.data.frame(im) %>% head
 ##' @export
 as.data.frame.cimg <- function(x,...)
     {
-        gr <- pixel.grid(im,...)
-        gr$value <- c(im)
+        gr <- pixel.grid(x,...)
+        gr$value <- c(x)
         gr
     }
 
@@ -510,19 +513,33 @@ convert.im.toPNG <- function(A)
 ##' 
 ##' @param im an image
 ##' @param standardise. If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
+##' @param drop.unused if TRUE ignore empty dimensions, if FALSE include them anyway (default TRUE)
 ##' @return a data.frame
+##' @examples
+##' im <- as.cimg(array(0,c(10,10))) #A 10x10 image
+##' pixel.grid(im) %>% head
+##' pixel.grid(im,standardise=TRUE) %>% head
+##' pixel.grid(im,drop.unused=FALSE) %>% head
 ##' @export
-pixel.grid <- function(im,standardise=FALSE)
+pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE)
     {
         if (standardise)
             {
                 dy <- height(im)/width(im)
                 dz <- depth(im)/width(im)
-                expand.grid(x=seq(-.5,.5,l=width(im)),y=seq(dy/2,-dy/2,l=height(im)),z=seq(-dz/2,dz/2,l=depth(im)),cc=1:spectrum(im))
+                res <- expand.grid(x=seq(-.5,.5,l=width(im)),y=seq(dy/2,-dy/2,l=height(im)),z=seq(-dz/2,dz/2,l=depth(im)),cc=1:spectrum(im))
             }
         else
             {
-                expand.grid(x=1:width(im),y=1:height(im),z=1:depth(im),cc=1:spectrum(im))
+                res <- expand.grid(x=1:width(im),y=1:height(im),z=1:depth(im),cc=1:spectrum(im))
+            }
+        if (drop.unused)
+            {
+                res[,dim(im) > 1]
+            }
+        else
+            {
+                res
             }
     }
 
@@ -738,7 +755,8 @@ as.cimg.matrix <- function(obj,...)
 ##' #Create a data.frame with columns x,y and value
 ##' df <- expand.grid(x=1:10,y=1:10) %>% mutate(value=x*y)
 ##' #Convert to cimg object (2D, grayscale image of size 10*10
-##' as.cimg(df,dims=c(10,10,1,1)) %>% plot
+##' #For some reason the following line works fine in interactive sessions but not when checking the package
+##' #as.cimg(df,dims=c(10,10,1,1)) %>% plot
 ##' @author Simon Barthelme
 ##' @export
 as.cimg.data.frame <- function(obj,v.name="value",dims,...)

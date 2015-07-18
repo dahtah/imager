@@ -23,7 +23,7 @@ The data frame must be of the form (x,y,value) or (x,y,z,value), or (x,y,z,cc,va
 #Create a data.frame with columns x,y and value
 df <- expand.grid(x=1:10,y=1:10) \%>\% mutate(value=x*y)
 #Convert to cimg object (2D, grayscale image of size 10*10
-as.cimg(df,dims=c(10,10,1,1)) \%>\% plot
+#as.cimg(df,dims=c(10,10,1,1)) \%>\% plot
 }
 \author{
 Simon Barthelme
