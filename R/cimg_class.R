@@ -411,7 +411,7 @@ load.image <- function(file)
                     }
                 else if (ftype == "jpeg" | ftype == "jpg")
                     {
-                        load.jpg(file)
+                        load.jpeg(file)
                     }
                 else
                     {
@@ -472,7 +472,7 @@ save.image <- function(im,file)
                     }
                 else if (ftype == "jpeg" | ftype == "jpg")
                     {
-                        save.jpg(im,file)
+                        save.jpeg(im,file)
                     }
                 else
                     {
