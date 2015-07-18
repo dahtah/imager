@@ -9,12 +9,16 @@ NULL
 #' @useDynLib imager
 #' @importFrom grDevices as.raster
 #' @importFrom plyr llply laply ldply ddply dlply ldply
+#' @importFrom png readPNG writePNG
+#' @importFrom jpeg writeJPEG readJPEG
+#' @importFrom stringr str_match
 #' @importFrom Rcpp sourceCpp
 #' @importFrom magrittr "%>%"
 NULL
 
 names.coords <- c('x','y','z','c','cc')
 index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
+utils::globalVariables(c(".", "%>%"))
 
 ##' Create a cimg object 
 ##'
