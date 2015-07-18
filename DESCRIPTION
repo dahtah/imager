@@ -6,7 +6,7 @@ Date: 2015-07-10
 Author: Simon Barthelme <simon.barthelme@gipsa-lab.fr>
 Maintainer: Simon Barthelme <simon.barthelme@gipsa-lab.fr>
 Description: Fast image processing for images in up to 4 dimensions (two spatial dimensions, one time/depth dimension, one colour dimension). Provides most traditional image processing tools (filtering, morphology, transformations, etc.) as well as various functions for easily analysing image data using R. 
-License: file LICENSE
+License: LGPL
 Imports: Rcpp (>= 0.11.5)
 Depends: plyr,magrittr,stringr,grDevices,png,jpeg
 Enhances: spatstat
