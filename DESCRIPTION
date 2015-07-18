@@ -7,6 +7,13 @@ Author: Simon Barthelme <simon.barthelme@gipsa-lab.fr>
 Maintainer: Simon Barthelme <simon.barthelme@gipsa-lab.fr>
 Description: Fast image processing for images in up to 4 dimensions (two spatial dimensions, one time/depth dimension, one colour dimension). Provides most traditional image processing tools (filtering, morphology, transformations, etc.) as well as various functions for easily analysing image data using R. 
 License: LGPL
+Title: Image processing Library Based on CImg
+Version: 0.1
+Date: 2015-07-10
+Author: Simon Barthelmé <simon.barthelme@gipsa-lab.fr>
+Maintainer: Simon Barthelmé <simon.barthelme@gipsa-lab.fr>
+Description: This package provides fast image processing functions for images in up to 4 dimensions. 
+License: LGPL
 Imports: Rcpp (>= 0.11.5)
 Depends: plyr,magrittr,stringr,grDevices,png,jpeg
 Enhances: spatstat
