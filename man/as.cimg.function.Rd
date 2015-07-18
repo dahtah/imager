@@ -4,11 +4,11 @@
 \alias{as.cimg.function}
 \title{Create an image by sampling a function}
 \usage{
-\method{as.cimg}{function}(fun, width, height, depth = 1,
+\method{as.cimg}{function}(obj, width, height, depth = 1,
   normalise.coord = FALSE)
 }
 \arguments{
-\item{fun}{a function with arguments (x,y) or (x,y,z). Must be vectorised.}
+\item{obj}{a function with arguments (x,y) or (x,y,z). Must be vectorised.}
 
 \item{width}{width of the image (in pixels)}
 

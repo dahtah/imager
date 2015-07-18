@@ -4,9 +4,11 @@
 \alias{as.data.frame.cimg}
 \title{Convert a pixel image to a data.frame}
 \usage{
-\method{as.data.frame}{cimg}(im)
+\method{as.data.frame}{cimg}(x, ...)
 }
 \arguments{
+\item{...}{arguments passed to pixel.grid}
+
 \item{im}{an image of class cimg}
 }
 \value{

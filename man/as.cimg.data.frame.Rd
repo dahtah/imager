@@ -4,10 +4,10 @@
 \alias{as.cimg.data.frame}
 \title{Create an image from a data.frame}
 \usage{
-\method{as.cimg}{data.frame}(df, v.name = "value", dims)
+\method{as.cimg}{data.frame}(obj, v.name = "value", dims)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{obj}{a data.frame}
 
 \item{v.name}{name of the variable to extract pixel values from (default "value")}
 
@@ -18,6 +18,12 @@ an object of class cimg
 }
 \description{
 The data frame must be of the form (x,y,value) or (x,y,z,value), or (x,y,z,cc,value). The coordinates must be valid image coordinates (i.e., positive integers).
+}
+\examples{
+#Create a data.frame with columns x,y and value
+df <- expand.grid(x=1:10,y=1:10) \%>\% mutate(value=x*y)
+#Convert to cimg object (2D, grayscale image of size 10*10
+as.cimg(df,dims=c(10,10,1,1)) \%>\% plot
 }
 \author{
 Simon Barthelme

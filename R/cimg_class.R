@@ -45,31 +45,21 @@ cimg <- function(X)
 
 ##' Display an image using base graphics
 ##'
-##' @param im the image 
+##' @param x the image 
 ##' @param frame which frame to display, if the image has depth > 1
 ##' @param rescale.color rescale channels so that the values are in [0,1] 
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster
 ##' @export
-plot.cimg <- function(im,frame,rescale.color=TRUE,...)
+plot.cimg <- function(x,frame,rescale.color=TRUE,...)
     {
+        im <- x
         w <- width(im)
         h <- height(im)
         if (rescale.color & !all(im==0))  im <- (im-min(im))/diff(range(im))
         if (dim(im)[3] == 1) #Single image (depth=1)
             {
                 
-                ## dim(im) <- dim(im)[-3]
-                ## if (dim(im)[3] == 1) #BW
-                ##     {
-                ##         dim(im) <- dim(im)[1:2]
-                ##         im <- t(im)
-                ##         class(im) <- "matrix"
-                ##     }
-                ## else{
-                ##     im <- aperm(im,c(2,1,3))
-                ##     class(im) <- "array"
-                ## }
                 
                 plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...,ylim=c(h,1))
                 as.raster(im) %>% rasterImage(1,height(im),width(im),1)
@@ -91,12 +81,13 @@ plot.cimg <- function(im,frame,rescale.color=TRUE,...)
 ##' This function combines the output of pixel.grid with the actual values (stored in $value)
 ##' 
 ##' @param im an image of class cimg
+##' @param ... arguments passed to pixel.grid
 ##' @return a data.frame
 ##' @author Simon Barthelme
 ##' @export
-as.data.frame.cimg <- function(im)
+as.data.frame.cimg <- function(x,...)
     {
-        gr <- pixel.grid(im)
+        gr <- pixel.grid(im,...)
         gr$value <- c(im)
         gr
     }
@@ -105,15 +96,16 @@ as.data.frame.cimg <- function(im)
 ##' Convert a cimg object to a raster object
 ##'
 ##' raster objects are used by R's base graphics for plotting
-##' @param im a cimg object 
+##' @param x an image (of class cimg)
 ##' @param frames which frames to extract (in case depth > 1)
 ##' @param rescale.color rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE
 ##' @return a raster object
 ##' @seealso plot.cimg, rasterImage
 ##' @author Simon Barthelme
 ##' @export
-as.raster.cimg <- function(im,frames,rescale.color=TRUE)
+as.raster.cimg <- function(x,frames,rescale.color=TRUE)
     {
+        im <- x
         w <- width(im)
         h <- height(im)
 
@@ -141,10 +133,10 @@ as.raster.cimg <- function(im,frames,rescale.color=TRUE)
     }
 
 ##' @export
-print.cimg <- function(im)
+print.cimg <- function(x)
     {
-        d <- dim(im)
-        msg <- sprintf("Image. Width: %i pix Height %i pix Depth %i Colour channels %i\n",d[1],d[2],d[3],d[4])
+        d <- dim(x)
+        msg <- sprintf("Image. Width: %i pix Height %i pix Depth %i Colour channels %i",d[1],d[2],d[3],d[4])
         print(msg)
     }
 
@@ -535,14 +527,14 @@ pixel.grid <- function(im,standardise=FALSE)
     }
 
 ##' @export
-as.cimg <- function(x,...) UseMethod("as.cimg")
+as.cimg <- function(obj,...) UseMethod("as.cimg")
 
 
 ##' Create an image by sampling a function
 ##'
 ##' Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluate the input function at these values. 
 ##' 
-##' @param fun a function with arguments (x,y) or (x,y,z). Must be vectorised. 
+##' @param obj a function with arguments (x,y) or (x,y,z). Must be vectorised. 
 ##' @param width width of the image (in pixels)
 ##' @param height height of the image (in pixels)
 ##' @param depth depth of the image (in pixels)
@@ -555,8 +547,9 @@ as.cimg <- function(x,...) UseMethod("as.cimg")
 ##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100,normalise.coord=TRUE)
 ##' plot(im)
 ##' @export
-as.cimg.function <- function(fun,width,height,depth=1,normalise.coord=FALSE)
+as.cimg.function <- function(obj,width,height,depth=1,normalise.coord=FALSE)
     {
+        fun <- obj
         args <- formals(fun) %>% names
         if (depth == 1)
             {
@@ -605,30 +598,30 @@ as.cimg.function <- function(fun,width,height,depth=1,normalise.coord=FALSE)
 ##' If the array has two dimensions, we assume it's a grayscale image. If it has three dimensions we assume it's a video, unless the third dimension has a depth of 3, in which case we assume it's a colour image,
 ##' 
 ##' @export
-##' @param X an array
-as.cimg.array <- function(X)
+##' @param obj an array
+as.cimg.array <- function(obj)
     {
-        d <- dim(X)
+        d <- dim(obj)
         if (length(d)==4)
             {
-                cimg(X)
+                cimg(obj)
             }
         else if (length(d) == 2)
             {
-                as.cimg.matrix(X)
+                as.cimg.matrix(obj)
             }
         else if (length(d) == 3)
         {
             if (d[3] == 3)
                     {
                         warning('Assuming third dimension corresponds to colour')
-                        dim(X) <- c(d[1:2],1,d[3])
-                        cimg(X)
+                        dim(obj) <- c(d[1:2],1,d[3])
+                        cimg(obj)
                     }
             else {
                 warning('Assuming third dimension corresponds to time/depth')
-                dim(X) <- c(d,1)
-                cimg(X)
+                dim(obj) <- c(d,1)
+                cimg(obj)
             }
         }
         else
@@ -638,7 +631,7 @@ as.cimg.array <- function(X)
     }
 
 ##' @export
-as.array.cimg <- function(x) {
+as.array.cimg <- function(x,...) {
     class(x) <- "array"
     x
 }
@@ -656,7 +649,7 @@ squeeze <- function(x) {
 }
 
 ##' @export
-as.matrix.cimg <- function(x) {
+as.matrix.cimg <- function(x,...) {
     d <- dim(x)
     if (sum(d==1) == 2)
         {
@@ -727,23 +720,28 @@ pad <- function(im,nPix,axis,pos=0,val=0)
 }
 
 ##' @export
-as.cimg.matrix <- function(X)
+as.cimg.matrix <- function(obj)
     {
-        dim(X) <- c(dim(X),1,1)
-        cimg(X)
+        dim(obj) <- c(dim(obj),1,1)
+        cimg(obj)
     }
 
 ##' Create an image from a data.frame
 ##'
 ##' The data frame must be of the form (x,y,value) or (x,y,z,value), or (x,y,z,cc,value). The coordinates must be valid image coordinates (i.e., positive integers). 
 ##' 
-##' @param df a data.frame
+##' @param obj a data.frame
 ##' @param v.name name of the variable to extract pixel values from (default "value")
 ##' @param dims a vector of length 4 corresponding to image dimensions. If missing, a guess will be made. 
 ##' @return an object of class cimg
+##' @examples
+##' #Create a data.frame with columns x,y and value
+##' df <- expand.grid(x=1:10,y=1:10) %>% mutate(value=x*y)
+##' #Convert to cimg object (2D, grayscale image of size 10*10
+##' as.cimg(df,dims=c(10,10,1,1)) %>% plot
 ##' @author Simon Barthelme
 ##' @export
-as.cimg.data.frame <- function(df,v.name="value",dims)
+as.cimg.data.frame <- function(obj,v.name="value",dims)
     {
         which.v <- (names(df) == v.name) %>% which
         col.coord <- (names(df) %in% names.coords) %>% which

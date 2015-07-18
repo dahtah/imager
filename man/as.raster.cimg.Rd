@@ -4,10 +4,10 @@
 \alias{as.raster.cimg}
 \title{Convert a cimg object to a raster object}
 \usage{
-\method{as.raster}{cimg}(im, frames, rescale.color = TRUE)
+\method{as.raster}{cimg}(x, frames, rescale.color = TRUE)
 }
 \arguments{
-\item{im}{a cimg object}
+\item{x}{an image (of class cimg)}
 
 \item{frames}{which frames to extract (in case depth > 1)}
 
