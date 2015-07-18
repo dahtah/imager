@@ -18,7 +18,7 @@ NULL
 
 names.coords <- c('x','y','z','c','cc')
 index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
-utils::globalVariables(c(".", "%>%","spatstat::as.matrix"))
+utils::globalVariables(c(".", "%>%"))
 
 ##' Create a cimg object 
 ##'
@@ -818,7 +818,7 @@ im2cimg <- function(img)
     {
         if (requireNamespace("spatstat",quietly=TRUE))
             {
-                spatstat::as.matrix(img) %>% as.cimg %>% imrotate(-90)
+                spatstat::as.matrix.im(img) %>% as.cimg %>% imrotate(-90)
             }
         else
             {
