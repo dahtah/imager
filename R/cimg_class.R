@@ -8,6 +8,7 @@ NULL
 
 #' @useDynLib imager
 #' @importFrom grDevices as.raster
+#' @importFrom plyr llply laply ldply ddply dlply ldply
 #' @importFrom Rcpp sourceCpp
 #' @importFrom magrittr "%>%"
 NULL
@@ -407,7 +408,7 @@ load.image <- function(file)
             }
         else
             {
-                ftype <- str_match(file,"\\.(.+)$")[1,2]
+                ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
                 if (ftype == "png")
                     {
                         load.png(file)
@@ -441,12 +442,12 @@ convert.im.fromPNG <- function(A)
 
 load.png <- function(file)
     {
-        readPNG(file) %>% convert.im.fromPNG
+        png::readPNG(file) %>% convert.im.fromPNG
     }
 
 load.jpeg <- function(file)
     {
-        readJPEG(file) %>% convert.im.fromPNG
+        jpeg::readJPEG(file) %>% convert.im.fromPNG
     }
 
 
@@ -468,7 +469,7 @@ save.image <- function(im,file)
             }
         else
             {
-                ftype <- str_match(file,"\\.(.+)$")[1,2]
+                ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
                 if (ftype == "png")
                     {
                         save.png(im,file)
@@ -486,12 +487,12 @@ save.image <- function(im,file)
 
 save.png <- function(im,file)
     {
-        convert.im.toPNG(im) %>% writePNG(file) 
+        convert.im.toPNG(im) %>% png::writePNG(file) 
     }
 
 save.jpeg <- function(im,file)
     {
-        convert.im.toPNG(im) %>% writeJPEG(file)
+        convert.im.toPNG(im) %>% jpeg::writeJPEG(file)
     }
 
 convert.im.toPNG <- function(A)
@@ -957,7 +958,7 @@ center.stencil <- function(stencil,...)
                     }
             }
         nms <- names(stencil)
-        stencil[,!str_detect(nms,"^d.")]
+        stencil[,!stringr::str_detect(nms,"^d.")]
     }
 
 ##' Return pixel values in a neighbourhood defined by a stencil
@@ -1135,7 +1136,7 @@ threshold <- function(im,thr)
     {
         if (is.character(thr))
             {
-                qt <- str_match(thr,"(\\d+)%")[,2] %>% as.numeric
+                qt <- stringr::str_match(thr,"(\\d+)%")[,2] %>% as.numeric
                 thr <- quantile(im,qt/100)
             }
         a <- im > thr
