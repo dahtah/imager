@@ -17,6 +17,8 @@
 \item{depth}{depth of the image (in pixels)}
 
 \item{normalise.coord}{coordinates are normalised so that x,y,z are in (0,1) (default FALSE)}
+
+\item{...}{ignored}
 }
 \value{
 an object of class cimg

@@ -171,11 +171,12 @@ vanvliet <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L
 #' @param im an image
 #' @param sigma Standard deviation of the blur.
 #' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }
+#' @param gaussian 
 #' @seealso
 #'  deriche(), vanvliet().
 #' @export
-isoblur <- function(im, sigma, boundary_conditions = TRUE, is_gaussian = FALSE) {
-    .Call('imager_isoblur', PACKAGE = 'imager', im, sigma, boundary_conditions, is_gaussian)
+isoblur <- function(im, sigma, boundary_conditions = TRUE, gaussian = FALSE) {
+    .Call('imager_isoblur', PACKAGE = 'imager', im, sigma, boundary_conditions, gaussian)
 }
 
 #' Blur image with the median filter.
@@ -323,7 +324,8 @@ FFT_realout <- function(real, imag, inverse = FALSE, nb_threads = 0L) {
 
 #' Estimate displacement field between two images.
 #'
-#' @param source Reference image.
+#' @param sourceIm Reference image.
+#' @param destIm Reference image.
 #' @param smoothness Smoothness of estimated displacement field.
 #' @param precision Precision required for algorithm convergence.
 #' @param nb_scales Number of scales used to estimate the displacement field.
@@ -360,22 +362,18 @@ periodic_part <- function(im) {
     .Call('imager_periodic_part', PACKAGE = 'imager', im)
 }
 
-#' @export
 interp_xy <- function(inp, ix, iy, z = 0L, c = 0L, cubic = FALSE) {
     .Call('imager_interp_xy', PACKAGE = 'imager', inp, ix, iy, z, c, cubic)
 }
 
-#' @export
 interp_xyz <- function(inp, ix, iy, iz, c = 0L, cubic = FALSE) {
     .Call('imager_interp_xyz', PACKAGE = 'imager', inp, ix, iy, iz, c, cubic)
 }
 
-#' @export
 interp_xyzc <- function(inp, ix, iy, iz, ic, cubic = FALSE) {
     .Call('imager_interp_xyzc', PACKAGE = 'imager', inp, ix, iy, iz, ic, cubic)
 }
 
-#' @export
 interp_xyc <- function(inp, ix, iy, z, ic, cubic = FALSE) {
     .Call('imager_interp_xyc', PACKAGE = 'imager', inp, ix, iy, z, ic, cubic)
 }
@@ -401,11 +399,11 @@ label <- function(im, high_connectivity = FALSE, tolerance = 0) {
 #' @param im an image
 #' @param mask Structuring element.
 #'       @param boundary_conditions Boundary conditions.
-#'       @param is_normalized Sets if the erosion is locally normalized.
+#' @param normalise Determines if the closing is locally normalised (default FALSE)
 #'
 #' @export
-erode <- function(im, mask, boundary_conditions = TRUE, is_normalised = FALSE) {
-    .Call('imager_erode', PACKAGE = 'imager', im, mask, boundary_conditions, is_normalised)
+erode <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
+    .Call('imager_erode', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
 #' Erode image by a rectangular structuring element of specified size.
@@ -433,10 +431,10 @@ erode_square <- function(im, size) {
 #' @param im an image
 #'      @param mask Structuring element.
 #'       @param boundary_conditions Boundary conditions.
-#'       @param is_normalized Sets if the erosion is locally normalized.
+#'       @param normalise  Normalise mask (default FALSE)
 #' @export
-dilate <- function(im, mask, boundary_conditions = TRUE, is_normalised = FALSE) {
-    .Call('imager_dilate', PACKAGE = 'imager', im, mask, boundary_conditions, is_normalised)
+dilate <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
+    .Call('imager_dilate', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
 #' Dilate image by a rectangular structuring element of specified size.
@@ -493,11 +491,11 @@ distance_transform <- function(im, value, metric = 2L) {
 #' @param im an image
 #' @param mask Structuring element.
 #' @param boundary_conditions Boundary conditions.
-#' @param is_normalized Determines if the opening is locally normalized.
+#' @param normalise Determines if the closing is locally normalised (default FALSE)
 #'
 #' @export
-mopening <- function(im, mask, boundary_conditions = TRUE, is_normalised = FALSE) {
-    .Call('imager_mopening', PACKAGE = 'imager', im, mask, boundary_conditions, is_normalised)
+mopening <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
+    .Call('imager_mopening', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
 #' Morphological opening by a square element (erosion followed by dilation)
@@ -525,11 +523,11 @@ mclosing_square <- function(im, size) {
 #' @param im an image
 #' @param mask Structuring element.
 #' @param boundary_conditions Boundary conditions.
-#' @param is_normalized Determines if the closing is locally normalized.
+#' @param normalise Determines if the closing is locally normalised (default FALSE)
 #'
 #' @export
-mclosing <- function(im, mask, boundary_conditions = TRUE, is_normalised = FALSE) {
-    .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, is_normalised)
+mclosing <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
+    .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
 #' Autocrop image region 
@@ -562,8 +560,8 @@ imrotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
 #'       @param cx X-coordinate of the rotation center.
 #'       @param cy Y-coordinate of the rotation center.
 #'       @param zoom Zoom factor.
-#'       @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
 #'       @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
+#'       @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
 #'
 #' @export
 rotate_xy <- function(im, angle, cx, cy, zoom = 1, interpolation = 1L, boundary_conditions = 0L) {
@@ -677,12 +675,10 @@ warp <- function(im, warpfield, mode = 0L, interpolation = 1L, boundary_conditio
     .Call('imager_warp', PACKAGE = 'imager', im, warpfield, mode, interpolation, boundary_conditions)
 }
 
-#' @export
 load_image <- function(fname) {
     .Call('imager_load_image', PACKAGE = 'imager', fname)
 }
 
-#' @export
 save_image <- function(im, fname) {
     invisible(.Call('imager_save_image', PACKAGE = 'imager', im, fname))
 }
@@ -710,21 +706,27 @@ imappend <- function(imlist, axis) {
     .Call('imager_imappend', PACKAGE = 'imager', imlist, axis)
 }
 
-#' Return image patches centered at cx,cy with width wx and height wy
+#' Return image patches 
+#'
+#' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
 #'
 #' @param im an image
 #' @param cx: vector of x coordinates for patch centers 
 #' @param cy: vector of y coordinates for patch centers 
 #' @param wx: vector of coordinates for patch width 
 #' @param wy: vector of coordinates for patch height 
+#' @return a list of image patches (cimg objects)
 #' @export
-select_patches <- function(im, cx, cy, wx, wy) {
-    .Call('imager_select_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)
+extract_patches <- function(im, cx, cy, wx, wy) {
+    .Call('imager_extract_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)
 }
 
+#' @param cz: vector of z coordinates for patch centers 
+#' @param wz: vector of coordinates for patch depth
+#' @describeIn extract_patches Extract 3D patches
 #' @export
-select_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {
-    .Call('imager_select_patches3D', PACKAGE = 'imager', im, cx, cy, cz, wx, wy, wz)
+extract_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {
+    .Call('imager_extract_patches3D', PACKAGE = 'imager', im, cx, cy, cz, wx, wy, wz)
 }
 
 # Register entry points for exported C++ functions

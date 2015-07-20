@@ -53,13 +53,14 @@ NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',
 //' @param im an image
 //' @param sigma Standard deviation of the blur.
 //' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }
+//' @param gaussian 
 //' @seealso
 //'  deriche(), vanvliet().
 //' @export
 // [[Rcpp::export]]
-NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true,bool is_gaussian=false) {
+NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true,bool gaussian=false) {
   CImg<double> img = as<CImg<double> >(im);
-  img.blur(sigma,boundary_conditions,is_gaussian);
+  img.blur(sigma,boundary_conditions,gaussian);
   return wrap(img);
 }
 
@@ -266,7 +267,8 @@ NumericVector FFT_realout(NumericVector real,NumericVector imag,bool inverse=fal
 
 //' Estimate displacement field between two images.
 //'
-//' @param source Reference image.
+//' @param sourceIm Reference image.
+//' @param destIm Reference image.
 //' @param smoothness Smoothness of estimated displacement field.
 //' @param precision Precision required for algorithm convergence.
 //' @param nb_scales Number of scales used to estimate the displacement field.

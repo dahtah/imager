@@ -8,6 +8,10 @@ displacement(sourceIm, destIm, smoothness = 0.1, precision = 5,
   nb_scales = 0L, iteration_max = 10000L, is_backward = FALSE)
 }
 \arguments{
+\item{sourceIm}{Reference image.}
+
+\item{destIm}{Reference image.}
+
 \item{smoothness}{Smoothness of estimated displacement field.}
 
 \item{precision}{Precision required for algorithm convergence.}
@@ -17,8 +21,6 @@ displacement(sourceIm, destIm, smoothness = 0.1, precision = 5,
 \item{iteration_max}{Maximum number of iterations allowed for one scale.}
 
 \item{is_backward}{If false, match I2(X + U(X)) = I1(X), else match I2(X) = I1(X - U(X)).}
-
-\item{source}{Reference image.}
 }
 \description{
 Estimate displacement field between two images.

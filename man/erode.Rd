@@ -4,7 +4,7 @@
 \alias{erode}
 \title{Erode image by a structuring element.}
 \usage{
-erode(im, mask, boundary_conditions = TRUE, is_normalised = FALSE)
+erode(im, mask, boundary_conditions = TRUE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
@@ -13,7 +13,7 @@ erode(im, mask, boundary_conditions = TRUE, is_normalised = FALSE)
 
 \item{boundary_conditions}{Boundary conditions.}
 
-\item{is_normalized}{Sets if the erosion is locally normalized.}
+\item{normalise}{Determines if the closing is locally normalised (default FALSE)}
 }
 \description{
 Erode image by a structuring element.

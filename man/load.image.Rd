@@ -16,7 +16,8 @@ an object of class 'cimg'
 You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
 }
 \examples{
-fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') #Path to example file from package
+#Find path to example file from package
+fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
 im <- load.image(fpath)
 plot(im)
 }

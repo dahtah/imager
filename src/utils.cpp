@@ -7,14 +7,14 @@ using namespace cimg_library;
 
 
 
-//' @export
+
 // [[Rcpp::export]]
 NumericVector load_image(std::string fname) {
   CImg<double> image(fname.c_str());
   return wrap(image);
 }
 
-//' @export
+
 // [[Rcpp::export]]
 void save_image(NumericVector im, std::string fname) {
   CImg<double> image = as<CImg<double> >(im);
@@ -55,16 +55,19 @@ NumericVector imappend(List imlist,char axis)
    return wrap(out);
 }
 
-//' Return image patches centered at cx,cy with width wx and height wy
+//' Return image patches 
+//'
+//' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
 //'
 //' @param im an image
 //' @param cx: vector of x coordinates for patch centers 
 //' @param cy: vector of y coordinates for patch centers 
 //' @param wx: vector of coordinates for patch width 
 //' @param wy: vector of coordinates for patch height 
+//' @return a list of image patches (cimg objects)
 //' @export
 // [[Rcpp::export]]
-List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
+List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
 {
   CImg<double> img = as<CImg<double> >(im);
   int n = cx.length();
@@ -77,9 +80,12 @@ List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVe
   return out;
 }
 
+//' @param cz: vector of z coordinates for patch centers 
+//' @param wz: vector of coordinates for patch depth
+//' @describeIn extract_patches Extract 3D patches
 //' @export
 // [[Rcpp::export]]
-List select_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector cz,IntegerVector wx,IntegerVector wy,IntegerVector wz)
+List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector cz,IntegerVector wx,IntegerVector wy,IntegerVector wz)
 {
   CImg<double> img = as<CImg<double> >(im);
   int n = cx.length();

@@ -30,14 +30,14 @@ double tolerance=0)
 //' @param im an image
 //' @param mask Structuring element.
 //'       @param boundary_conditions Boundary conditions.
-//'       @param is_normalized Sets if the erosion is locally normalized.
+//' @param normalise Determines if the closing is locally normalised (default FALSE)
 //'
 //' @export
 // [[Rcpp::export]]
-NumericVector erode(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool is_normalised = false) {
+NumericVector erode(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CImg<double> img = as<CImg<double> >(im);
   CImg<double> msk = as<CImg<double> >(mask);
-  img.erode(msk,boundary_conditions,is_normalised);
+  img.erode(msk,boundary_conditions,normalise);
   return wrap(img);
 }
 
@@ -72,13 +72,13 @@ NumericVector erode_square(NumericVector im,int size) {
 //' @param im an image
 //'      @param mask Structuring element.
 //'       @param boundary_conditions Boundary conditions.
-//'       @param is_normalized Sets if the erosion is locally normalized.
+//'       @param normalise  Normalise mask (default FALSE)
 //' @export
 // [[Rcpp::export]]
-NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool is_normalised = false) {
+NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CImg<double> img = as<CImg<double> >(im);
   CImg<double> msk = as<CImg<double> >(mask);
-  img.dilate(msk,boundary_conditions,is_normalised);
+  img.dilate(msk,boundary_conditions,normalise);
   return wrap(img);
 }
 
@@ -152,14 +152,14 @@ NumericVector distance_transform(NumericVector im,double value,unsigned int metr
 //' @param im an image
 //' @param mask Structuring element.
 //' @param boundary_conditions Boundary conditions.
-//' @param is_normalized Determines if the opening is locally normalized.
+//' @param normalise Determines if the closing is locally normalised (default FALSE)
 //'
 //' @export
 // [[Rcpp::export]]
-NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool is_normalised = false) {
+NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CImg<double> img = as<CImg<double> >(im);
   CImg<double> msk = as<CImg<double> >(mask);
-  img.erode(msk,boundary_conditions,is_normalised).dilate(msk,boundary_conditions,is_normalised);
+  img.erode(msk,boundary_conditions,normalise).dilate(msk,boundary_conditions,normalise);
   return wrap(img);
 }
 
@@ -195,14 +195,14 @@ NumericVector mclosing_square(NumericVector im,int size) {
 //' @param im an image
 //' @param mask Structuring element.
 //' @param boundary_conditions Boundary conditions.
-//' @param is_normalized Determines if the closing is locally normalized.
+//' @param normalise Determines if the closing is locally normalised (default FALSE)
 //'
 //' @export
 // [[Rcpp::export]]
-NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool is_normalised = false) {
+NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CImg<double> img = as<CImg<double> >(im);
   CImg<double> msk = as<CImg<double> >(mask);
-  img.dilate(msk,boundary_conditions,is_normalised).erode(msk,boundary_conditions,is_normalised);
+  img.dilate(msk,boundary_conditions,normalise).erode(msk,boundary_conditions,normalise);
   return wrap(img);
 }
 

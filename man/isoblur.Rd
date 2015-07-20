@@ -4,7 +4,7 @@
 \alias{isoblur}
 \title{Blur image isotropically.}
 \usage{
-isoblur(im, sigma, boundary_conditions = TRUE, is_gaussian = FALSE)
+isoblur(im, sigma, boundary_conditions = TRUE, gaussian = FALSE)
 }
 \arguments{
 \item{im}{an image}
@@ -12,6 +12,8 @@ isoblur(im, sigma, boundary_conditions = TRUE, is_gaussian = FALSE)
 \item{sigma}{Standard deviation of the blur.}
 
 \item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }}
+
+\item{gaussian}{}
 }
 \description{
 Blur image isotropically.

@@ -7,9 +7,9 @@
 subim(im, ...)
 }
 \arguments{
-\item{im}{}
+\item{im}{an image}
 
-\item{...}{}
+\item{...}{various conditions defining a rectangular image region}
 }
 \value{
 an image with some parts cut out

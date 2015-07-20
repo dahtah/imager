@@ -45,8 +45,8 @@ NumericVector imrotate(NumericVector im,float  	angle,
 //'       @param cx X-coordinate of the rotation center.
 //'       @param cy Y-coordinate of the rotation center.
 //'       @param zoom Zoom factor.
-//'       @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
 //'       @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
+//'       @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
 //'
 //' @export
 // [[Rcpp::export]]

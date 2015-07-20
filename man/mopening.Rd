@@ -4,7 +4,7 @@
 \alias{mopening}
 \title{Morphological opening (erosion followed by dilation)}
 \usage{
-mopening(im, mask, boundary_conditions = TRUE, is_normalised = FALSE)
+mopening(im, mask, boundary_conditions = TRUE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
@@ -13,7 +13,7 @@ mopening(im, mask, boundary_conditions = TRUE, is_normalised = FALSE)
 
 \item{boundary_conditions}{Boundary conditions.}
 
-\item{is_normalized}{Determines if the opening is locally normalized.}
+\item{normalise}{Determines if the closing is locally normalised (default FALSE)}
 }
 \description{
 Morphological opening (erosion followed by dilation)

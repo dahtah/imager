@@ -37,7 +37,9 @@ cimg <- function(X)
     }
 
 ##' Various shortcuts for extracting colour channels, frames, etc
-##' 
+##'
+##' @param im an image
+##' @param index frame index 
 ##' @name cimg.extract
 NULL
 
@@ -107,6 +109,7 @@ as.data.frame.cimg <- function(x,...)
 ##' @param x an image (of class cimg)
 ##' @param frames which frames to extract (in case depth > 1)
 ##' @param rescale.color rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE
+##' @param ... ignored
 ##' @return a raster object
 ##' @seealso plot.cimg, rasterImage
 ##' @author Simon Barthelme
@@ -203,8 +206,6 @@ frames <- function(im,index,drop=FALSE)
 
 ##' Extract one frame out of a 4D image/video
 ##'
-##' @param im an image
-##' @param index frame index 
 ##' @describeIn cimg.extract
 ##' @author Simon Barthelme
 ##' @export
@@ -239,7 +240,6 @@ channels <- function(im,index,drop=FALSE)
     }
 
 ##' @describeIn cimg.extract Extract an image channel
-##' @param im an image
 ##' @param ind channel index
 ##' @export
 channel <- function(im,ind)
@@ -248,17 +248,14 @@ channel <- function(im,ind)
     }
 
 ##' @describeIn cimg.extract Extract red channel
-##' @param im an image 
 ##' @export
 R <- function(im) { channel(im,1) }
 
 ##' @describeIn cimg.extract Extract green channel
-##' @param im an image 
 ##' @export
 G <- function(im) { channel(im,2) }
 
 ##' @describeIn cimg.extract Extract blue channel
-##' @param im an image 
 ##' @export
 B <- function(im) { channel(im,3) }
 
@@ -554,6 +551,13 @@ pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE)
             }
     }
 
+##' Convert to cimg object
+##'
+##' Imager implements various converters that turn your data into cimg objects
+##' 
+##' @param obj an object
+##' @param ... optional arguments
+##' @seealso as.cimg.array, as.cimg.function, as.cimg.data.frame
 ##' @export
 as.cimg <- function(obj,...) UseMethod("as.cimg")
 
@@ -567,6 +571,7 @@ as.cimg <- function(obj,...) UseMethod("as.cimg")
 ##' @param height height of the image (in pixels)
 ##' @param depth depth of the image (in pixels)
 ##' @param normalise.coord coordinates are normalised so that x,y,z are in (0,1) (default FALSE)
+##' @param ... ignored
 ##' @return an object of class cimg
 ##' @author Simon Barthelme
 ##' @examples
@@ -748,6 +753,7 @@ pad <- function(im,nPix,axis,pos=0,val=0)
   library.dynam.unload("imager", libpath)
 }
 
+##' @describeIn as.cimg
 ##' @export
 as.cimg.matrix <- function(obj,...)
     {
@@ -975,6 +981,7 @@ get.mask <- function(im,expr)
 ##' Center stencil at a location
 ##' 
 ##' @param stencil a stencil (data.frame with coordinates dx,dy,dz,dc)
+##' @param ... centering locations (e.g. x=4,y=2)
 ##' @export
 center.stencil <- function(stencil,...)
     {
@@ -1300,7 +1307,9 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
 ##'
 ##' This is just a shortcut for llply followed by imappend
 ##' @param lst a list
+##' @param fun function to apply
 ##' @param axis which axis to append along (e.g. "c" for colour)
+##' @param ... further arguments to be passed to fun
 ##' @examples
 ##' build.im <- function(size) as.cimg(function(x,y) (x+y)/size,size,size)
 ##' liply(c(10,50,100),build.im,"y") %>% plot

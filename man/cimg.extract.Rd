@@ -25,14 +25,6 @@ B(im)
 \item{index}{frame index}
 
 \item{ind}{channel index}
-
-\item{im}{an image}
-
-\item{im}{an image}
-
-\item{im}{an image}
-
-\item{im}{an image}
 }
 \description{
 Various shortcuts for extracting colour channels, frames, etc

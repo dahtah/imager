@@ -8,6 +8,8 @@ center.stencil(stencil, ...)
 }
 \arguments{
 \item{stencil}{a stencil (data.frame with coordinates dx,dy,dz,dc)}
+
+\item{...}{centering locations (e.g. x=4,y=2)}
 }
 \description{
 Center stencil at a location

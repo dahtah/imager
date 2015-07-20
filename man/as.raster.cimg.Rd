@@ -12,6 +12,8 @@
 \item{frames}{which frames to extract (in case depth > 1)}
 
 \item{rescale.color}{rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE}
+
+\item{...}{ignored}
 }
 \value{
 a raster object
