@@ -6,6 +6,9 @@
 \usage{
 grayscale(im)
 }
+\arguments{
+\item{im}{an RGB image}
+}
 \value{
 a grayscale image (spectrum == 1)
 }

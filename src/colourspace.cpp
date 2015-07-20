@@ -5,6 +5,7 @@
 using namespace Rcpp;
 using namespace cimg_library;
 
+//' @describeIn imager.colourspaces RGB to HSL conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSL(NumericVector im) {
@@ -13,6 +14,7 @@ NumericVector RGBtoHSL(NumericVector im) {
   return wrap(img);
 }
 
+//' @describeIn imager.colourspaces HSL to RGB conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector HSLtoRGB(NumericVector im) {
@@ -21,6 +23,7 @@ NumericVector HSLtoRGB(NumericVector im) {
   return wrap(img);
 }
 
+//' @describeIn imager.colourspaces RGB to HSV conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSV(NumericVector im) {
@@ -29,6 +32,7 @@ NumericVector RGBtoHSV(NumericVector im) {
   return wrap(img);
 }
 
+//' @describeIn imager.colourspaces HSV to RGB conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector HSVtoRGB(NumericVector im) {
@@ -39,7 +43,7 @@ NumericVector HSVtoRGB(NumericVector im) {
 
 
 
-
+//' @describeIn imager.colourspaces RGB to HSI conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSI(NumericVector im) {
@@ -48,6 +52,7 @@ NumericVector RGBtoHSI(NumericVector im) {
   return wrap(img);
 }
 
+//' @describeIn imager.colourspaces HSI to RGB conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector HSItoRGB(NumericVector im) {
@@ -56,14 +61,7 @@ NumericVector HSItoRGB(NumericVector im) {
   return wrap(img);
 }
 
-//' @export
-// [[Rcpp::export]]
-NumericVector RGBtosRGB(NumericVector im) {
-  CImg<double> img = as<CImg<double> >(im);
-  img.RGBtosRGB();
-  return wrap(img);
-}
-
+//' @describeIn imager.colourspaces sRGB to RGB conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector sRGBtoRGB(NumericVector im) {
@@ -72,6 +70,7 @@ NumericVector sRGBtoRGB(NumericVector im) {
   return wrap(img);
 }
 
+//' @describeIn imager.colourspaces RGB to YCbCr conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoYCbCr(NumericVector im) {
@@ -80,6 +79,7 @@ NumericVector RGBtoYCbCr(NumericVector im) {
   return wrap(img);
 }
 
+//' @describeIn imager.colourspaces YCbCr to RGB conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector YCbCrtoRGB(NumericVector im) {
@@ -88,7 +88,7 @@ NumericVector YCbCrtoRGB(NumericVector im) {
   return wrap(img);
 }
 
-
+//' @describeIn imager.colourspaces RGB to YUV conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoYUV(NumericVector im) {
@@ -97,6 +97,7 @@ NumericVector RGBtoYUV(NumericVector im) {
   return wrap(img);
 }
 
+//' @describeIn imager.colourspaces YUV to RGB conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector YUVtoRGB(NumericVector im) {
@@ -108,6 +109,7 @@ NumericVector YUVtoRGB(NumericVector im) {
 //' Convert an RGB image to grayscale 
 //' 
 //' This function converts from RGB to grayscale by first converting to HSL and keeping only the L channel
+//' @param im an RGB image 
 //' @return a grayscale image (spectrum == 1)
 //' @export
 // [[Rcpp::export]]

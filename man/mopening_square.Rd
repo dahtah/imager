@@ -7,6 +7,8 @@
 mopening_square(im, size)
 }
 \arguments{
+\item{im}{an image}
+
 \item{size}{size of the square element}
 }
 \description{

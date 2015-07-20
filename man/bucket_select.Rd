@@ -7,6 +7,8 @@
 bucket_select(im, x, y, z, sigma = 0, is_high_connexity = FALSE)
 }
 \arguments{
+\item{im}{an image}
+
 \item{x}{X-coordinate of the starting point of the region to fill.}
 
 \item{y}{Y-coordinate of the starting point of the region to fill.}

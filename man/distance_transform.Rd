@@ -7,6 +7,8 @@
 distance_transform(im, value, metric = 2L)
 }
 \arguments{
+\item{im}{an image}
+
 \item{value}{Reference value.}
 
 \item{metric}{Type of metric. Can be <tt>{ 0=Chebyshev | 1=Manhattan | 2=Euclidean | 3=Squared-euclidean }</tt>.}

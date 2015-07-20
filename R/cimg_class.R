@@ -20,8 +20,6 @@ names.coords <- c('x','y','z','c','cc')
 index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
 utils::globalVariables(c(".", "%>%"))
 
-##' Create a cimg object 
-##'
 ##' cimg is a class for storing image or video/hyperspectral data.  It is designed to provide easy interaction with the CImg library, but in order to use it you need to be aware of how CImg wants its image data stored. 
 ##' Images have up to 4 dimensions, labelled x,y,z,c. x and y are the usual spatial dimensions, z is a depth dimension (which would correspond to time in a movie), and c is a colour dimension. Images are stored linearly in that order, starting from the top-left pixel and going along *rows* (scanline order).
 ##' A colour image is just three R,G,B channels in succession. A sequence of N images is encoded as R1,R2,....,RN,G1,...,GN,B1,...,BN where R_i is the red channel of frame i.
@@ -38,10 +36,17 @@ cimg <- function(X)
         X
     }
 
+##' Various shortcuts for extracting colour channels, frames, etc
+##' 
+##' @name cimg.extract
+NULL
 
-
-
-
+##' Colour space conversions in imager
+##' 
+##' All functions listed here assume the input image has three colour channels (spectrum(im) == 3)
+##' @name imager.colourspaces
+##' @param im an image
+NULL
 
 ##' Display an image using base graphics
 ##'
@@ -80,7 +85,7 @@ plot.cimg <- function(x,frame,rescale.color=TRUE,...)
 ##'
 ##' This function combines the output of pixel.grid with the actual values (stored in $value)
 ##' 
-##' @param im an image of class cimg
+##' @param x an image of class cimg
 ##' @param ... arguments passed to pixel.grid
 ##' @return a data.frame
 ##' @author Simon Barthelme
@@ -143,20 +148,24 @@ print.cimg <- function(x,...)
         print(msg)
     }
 
+##' Image dimensions
+##' @name cimg.dimensions
+##' @param im an image
+NULL
 
-
+##' @describeIn cimg.dimensions Width of the image (in pixels)
 ##' @export
 width <- function(im) dim(im)[1]
 
-
+##' @describeIn cimg.dimensions Height of the image (in pixels)
 ##' @export
 height <- function(im) dim(im)[2]
 
-
+##' @describeIn cimg.dimensions Number of colour channels
 ##' @export
 spectrum <- function(im) dim(im)[4]
 
-
+##' @describeIn cimg.dimensions Depth of the image/number of frames in a video
 ##' @export
 depth <- function(im) dim(im)[3]
 
@@ -196,7 +205,7 @@ frames <- function(im,index,drop=FALSE)
 ##'
 ##' @param im an image
 ##' @param index frame index 
-##' @return an image (class cimg)
+##' @describeIn cimg.extract
 ##' @author Simon Barthelme
 ##' @export
 frame <- function(im,index)
@@ -229,26 +238,27 @@ channels <- function(im,index,drop=FALSE)
         res
     }
 
-##' Extract an image channel
-##' @param im an image (cimg object)
+##' @describeIn cimg.extract Extract an image channel
+##' @param im an image
+##' @param ind channel index
 ##' @export
 channel <- function(im,ind)
     {
         im[,,,ind] 
     }
 
-##' Extract red channel
-##' @param im an image (cimg object)
+##' @describeIn cimg.extract Extract red channel
+##' @param im an image 
 ##' @export
 R <- function(im) { channel(im,1) }
 
-##' Extract green channel
-##' @param im an image (cimg object)
+##' @describeIn cimg.extract Extract green channel
+##' @param im an image 
 ##' @export
 G <- function(im) { channel(im,2) }
 
-##' Extract blue
-##' @param im an image (cimg object)
+##' @describeIn cimg.extract Extract blue channel
+##' @param im an image 
 ##' @export
 B <- function(im) { channel(im,3) }
 
@@ -300,8 +310,8 @@ all.names <- function(cl)
 ##'
 ##' subim selects an image part based on coordinates: it allows you to select a subset of rows, columns, frames etc. Refer to the examples to see how it works
 ##' 
-##' @param im 
-##' @param ... 
+##' @param im an image
+##' @param ... various conditions defining a rectangular image region
 ##' @return an image with some parts cut out
 ##' @author Simon Barthelme
 ##' @examples
@@ -394,8 +404,9 @@ subs <- function(im,cl,consts)
 ##' @param file path to file
 ##' @return an object of class 'cimg'
 ##' @examples
-##' fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') #Path to example file from package
-##' im <- load.image(fpath)
+##' #Find path to example file from package
+##' fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') 
+##' im <- load.image(fpath) 
 ##' plot(im)
 ##' @export
 load.image <- function(file)
@@ -616,6 +627,7 @@ as.cimg.function <- function(obj,width,height,depth=1,normalise.coord=FALSE,...)
 ##' 
 ##' @export
 ##' @param obj an array
+##' @param ... ignored
 as.cimg.array <- function(obj,...)
     {
         d <- dim(obj)
@@ -749,13 +761,15 @@ as.cimg.matrix <- function(obj,...)
 ##' 
 ##' @param obj a data.frame
 ##' @param v.name name of the variable to extract pixel values from (default "value")
-##' @param dims a vector of length 4 corresponding to image dimensions. If missing, a guess will be made. 
+##' @param dims a vector of length 4 corresponding to image dimensions. If missing, a guess will be made.
+##' @param ... ignored
 ##' @return an object of class cimg
 ##' @examples
 ##' #Create a data.frame with columns x,y and value
 ##' df <- expand.grid(x=1:10,y=1:10) %>% mutate(value=x*y)
 ##' #Convert to cimg object (2D, grayscale image of size 10*10
-##' #For some reason the following line works fine in interactive sessions but not when checking the package
+##' #For some reason the following line works fine in
+##' #interactive sessions but not when checking the package
 ##' #as.cimg(df,dims=c(10,10,1,1)) %>% plot
 ##' @author Simon Barthelme
 ##' @export
@@ -959,6 +973,8 @@ get.mask <- function(im,expr)
     }
 
 ##' Center stencil at a location
+##' 
+##' @param stencil a stencil (data.frame with coordinates dx,dy,dz,dc)
 ##' @export
 center.stencil <- function(stencil,...)
     {
@@ -1195,7 +1211,7 @@ capture.plot <- function()
 ##' Light interface for get_gradient. Refer to get_gradient for details on the computation.
 ##' 
 ##' @param im an image of class cimg
-##' @param axes: direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz")
+##' @param axes direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz")
 ##' @param scheme numerical scheme (default '3')
 ##' @return an image or a list of images, depending on the value of "axes" 
 ##' @author Simon Barthelme

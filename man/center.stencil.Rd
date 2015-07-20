@@ -6,6 +6,9 @@
 \usage{
 center.stencil(stencil, ...)
 }
+\arguments{
+\item{stencil}{a stencil (data.frame with coordinates dx,dy,dz,dc)}
+}
 \description{
 Center stencil at a location
 }

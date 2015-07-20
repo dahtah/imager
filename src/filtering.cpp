@@ -95,9 +95,9 @@ NumericVector boxblur(NumericVector im,float sigma,bool boundary_conditions=true
 //'
 //' This is a recursive algorithm, not depending on the values of the box kernel size.
 //'
-//'       @param im an image
-//'       @param sigma_x Size of the box window, along the X-axis.
-//'       @param sigma_y Size of the box window, along the Y-axis.
+//' @param im an image
+//'       @param sx Size of the box window, along the X-axis.
+//'       @param sy Size of the box window, along the Y-axis.
 //'       @param boundary_conditions Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.
 //'       @seealso blur().
 //'
@@ -109,44 +109,44 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool boundary_condit
   return wrap(img);
 }
 
-//' Correlate image by a mask.
+//' Correlation of image by filter
 //'
-//'  The correlation of the image instance this by the mask mask is defined to be:
-//'  res(x,y,z) = sum_{i,j,k} (*this)(x + i,y + j,z + k)*mask(i,j,k).
+//'  The correlation of image im by filter flt is defined as:
+//'  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
 //'
 //'       @param im an image
-//'       @param mask = the correlation kernel.
+//'       @param filter = the correlation kernel.
 //'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-//'       @param is_normalized = enable local normalization.
+//'       @param normalise  = normalise filter (default FALSE)
 //'      
 //'
 //' @export
 // [[Rcpp::export]]
-NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool is_normalised = false) {
+NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool normalise = false) {
   CImg<double> img = as<CImg<double> >(im);
   CImg<double> flt = as<CImg<double> >(filter);
-  img.correlate(flt,boundary_conditions,is_normalised);
+  img.correlate(flt,boundary_conditions,normalise);
   return wrap(img);
 }
 
 
-//' Convolve image by a mask.
+//' Convolve image by filter.
 //'
-//'      The result  res of the convolution of an image img by a mask mask is defined to be:
-//'       res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*mask(i,j,k)
+//'      The result  res of the convolution of an image img by filter flt is defined to be:
+//'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
 //'
 //'       @param im an image
-//'       @param mask = the convolution kernel.
+//'       @param filter a filter (another image)
 //'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-//'       @param is_normalized = enable local normalization.
+//'       @param normalise = normalise filter (default FALSE)
 //'
 //'
 //' @export
 // [[Rcpp::export]]
-NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool is_normalised = false) {
+NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool normalise = false) {
   CImg<double> img = as<CImg<double> >(im);
   CImg<double> flt = as<CImg<double> >(filter);
-  img.convolve(flt,boundary_conditions,is_normalised);
+  img.convolve(flt,boundary_conditions,normalise);
   return wrap(img);
 }
 
@@ -228,8 +228,7 @@ NumericVector diffusion_tensors(NumericVector im,
 //' Compute Haar multiscale wavelet transform.
 //'
 //'       @param im an image
-//'       @param axis Axis considered for the transform.
-//'       @param invert Set inverse of direct transform.
+//'       @param inverse Compute inverse transform (default FALSE)
 //'       @param nb_scales Number of scales used for the transform.
 //'
 //' @export
@@ -286,6 +285,7 @@ NumericVector displacement(NumericVector sourceIm,NumericVector destIm,float smo
 
 
 //' Blur image anisotropically, in an edge-preserving way.
+//' @param im an image
 //' @param amplitude Amplitude of the smoothing.
 //' @param sharpness Sharpness.
 //' @param anisotropy Anisotropy.

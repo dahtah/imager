@@ -7,6 +7,8 @@
 imrotate(im, angle, interpolation = 1L, boundary = 0L)
 }
 \arguments{
+\item{im}{an image}
+
 \item{angle}{Rotation angle, in degrees.}
 
 \item{interpolation}{Type of interpolation. Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.}

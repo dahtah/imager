@@ -7,6 +7,8 @@
 dilate_square(im, size)
 }
 \arguments{
+\item{im}{an image}
+
 \item{size}{Size of the structuring element.}
 }
 \description{

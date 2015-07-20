@@ -7,6 +7,8 @@
 erode_rect(im, sx, sy, sz = 1L)
 }
 \arguments{
+\item{im}{an image}
+
 \item{sx}{Width of the structuring element.}
 
 \item{sy}{Height of the structuring element.}

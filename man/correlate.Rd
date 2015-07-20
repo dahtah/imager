@@ -2,21 +2,21 @@
 % Please edit documentation in R/RcppExports.R
 \name{correlate}
 \alias{correlate}
-\title{Correlate image by a mask.}
+\title{Correlation of image by filter}
 \usage{
-correlate(im, filter, boundary_conditions = TRUE, is_normalised = FALSE)
+correlate(im, filter, boundary_conditions = TRUE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
+\item{filter}{= the correlation kernel.}
+
 \item{boundary_conditions}{= the border condition type (0=zero, 1=dirichlet)}
 
-\item{mask}{= the correlation kernel.}
-
-\item{is_normalized}{= enable local normalization.}
+\item{normalise}{= normalise filter (default FALSE)}
 }
 \description{
-The correlation of the image instance this by the mask mask is defined to be:
- res(x,y,z) = sum_{i,j,k} (*this)(x + i,y + j,z + k)*mask(i,j,k).
+The correlation of image im by filter flt is defined as:
+ \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
 }
 

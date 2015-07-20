@@ -7,6 +7,8 @@
 dilate(im, mask, boundary_conditions = TRUE, is_normalised = FALSE)
 }
 \arguments{
+\item{im}{an image}
+
 \item{mask}{Structuring element.}
 
 \item{boundary_conditions}{Boundary conditions.}

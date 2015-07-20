@@ -9,11 +9,11 @@ boxblur_xy(im, sx, sy, boundary_conditions = TRUE)
 \arguments{
 \item{im}{an image}
 
+\item{sx}{Size of the box window, along the X-axis.}
+
+\item{sy}{Size of the box window, along the Y-axis.}
+
 \item{boundary_conditions}{Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.}
-
-\item{sigma_x}{Size of the box window, along the X-axis.}
-
-\item{sigma_y}{Size of the box window, along the Y-axis.}
 }
 \description{
 This is a recursive algorithm, not depending on the values of the box kernel size.

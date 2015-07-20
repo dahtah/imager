@@ -42,7 +42,7 @@ List im_split(NumericVector im,char axis,int nb=-1)
 //' 
 //' All images will be concatenated along the x,y,z, or c axis.
 //' 
-//' @param im an image 
+//' @param imlist a list of images (all elements must be of class cimg) 
 //' @param axis the axis along which to split (for example 'c')
 //' @seealso imsplit (the reverse operation)
 //' @export
@@ -57,8 +57,11 @@ NumericVector imappend(List imlist,char axis)
 
 //' Return image patches centered at cx,cy with width wx and height wy
 //'
-//' @param cx,cy: vector of coordinates for patch centers
-//' @param wx,wy: vector of coordinates for patch width and height
+//' @param im an image
+//' @param cx: vector of x coordinates for patch centers 
+//' @param cy: vector of y coordinates for patch centers 
+//' @param wx: vector of coordinates for patch width 
+//' @param wy: vector of coordinates for patch height 
 //' @export
 // [[Rcpp::export]]
 List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)

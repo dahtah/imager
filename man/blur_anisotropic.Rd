@@ -9,6 +9,8 @@ blur_anisotropic(im, amplitude, sharpness = 0.7, anisotropy = 0.6,
   interpolation_type = 0L, is_fast_approx = TRUE)
 }
 \arguments{
+\item{im}{an image}
+
 \item{amplitude}{Amplitude of the smoothing.}
 
 \item{sharpness}{Sharpness.}

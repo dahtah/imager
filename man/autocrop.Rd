@@ -7,6 +7,8 @@
 autocrop(im, color, axes = "zyx")
 }
 \arguments{
+\item{im}{an image}
+
 \item{color}{Color used for the crop. If  0, color is guessed.}
 
 \item{axes}{Axes used for the crop.}

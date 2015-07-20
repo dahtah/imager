@@ -7,9 +7,9 @@
 \method{as.data.frame}{cimg}(x, ...)
 }
 \arguments{
-\item{...}{arguments passed to pixel.grid}
+\item{x}{an image of class cimg}
 
-\item{im}{an image of class cimg}
+\item{...}{arguments passed to pixel.grid}
 }
 \value{
 a data.frame

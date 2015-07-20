@@ -9,11 +9,9 @@ haar(im, inverse = FALSE, nb_scales = 1L)
 \arguments{
 \item{im}{an image}
 
+\item{inverse}{Compute inverse transform (default FALSE)}
+
 \item{nb_scales}{Number of scales used for the transform.}
-
-\item{axis}{Axis considered for the transform.}
-
-\item{invert}{Set inverse of direct transform.}
 }
 \description{
 Compute Haar multiscale wavelet transform.

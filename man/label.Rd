@@ -4,11 +4,13 @@
 \alias{label}
 \title{Label connected components.}
 \usage{
-label(im, is_high_connectivity = FALSE, tolerance = 0)
+label(im, high_connectivity = FALSE, tolerance = 0)
 }
 \arguments{
-\item{is_high_connectivity}{Boolean that choose between 4(false)- or 8(true)-connectivity
-in 2d case, and between 6(false)- or 26(true)-connectivity in 3d case.}
+\item{im}{an image}
+
+\item{high_connectivity}{4(false)- or 8(true)-connectivity
+in 2d case, and between 6(false)- or 26(true)-connectivity in 3d case. Default FALSE}
 
 \item{tolerance}{Tolerance used to determine if two neighboring pixels belong to the same region.}
 }

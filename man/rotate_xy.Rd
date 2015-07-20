@@ -7,6 +7,8 @@
 rotate_xy(im, angle, cx, cy, zoom = 1, interpolation = 1L, boundary = 0L)
 }
 \arguments{
+\item{im}{an image}
+
 \item{angle}{Rotation angle, in degrees.}
 
 \item{cx}{X-coordinate of the rotation center.}
