@@ -1,4 +1,5 @@
 #include <imager.h>
+#include "wrappers_cimglist.h"
 using namespace Rcpp;
 using namespace cimg_library;
 

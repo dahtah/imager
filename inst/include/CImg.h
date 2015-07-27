@@ -1,6 +1,3 @@
-//[[Rcpp::interfaces(cpp)]]
-
-
 /*
  #
  #  File            : CImg.h
