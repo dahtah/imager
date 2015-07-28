@@ -1,0 +1,12 @@
+language: r
+
+# Be strict when checking our package
+warnings_are_errors: false
+
+# System dependencies for HTTP calling
+apt_packages:
+ - libfftw3-dev
+r_binary_packages:
+ - png
+ - jpeg
+ - plyr
