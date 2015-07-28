@@ -1,10 +1,8 @@
 #ifndef CIMG_WRAP
 #define CIMG_WRAP
-/* /\* namespace Rcpp { */
-/* } */
 
 
-#ifndef CIMG_COMPILING
+//#ifndef CIMG_COMPILING
 namespace Rcpp {
   //Convert a R cimg object to a C++ CImg object
   template <> inline cimg_library::CImg<double> as(SEXP inp) {
@@ -45,13 +43,13 @@ namespace Rcpp {
     return Rcpp::wrap(out);
   }
 }
-#else
-namespace Rcpp {
-  template <> cimg_library::CImg<double> as(SEXP inp);
-  template <> cimg_library::CImgList<double> as(SEXP inp);
-  template <> SEXP wrap(const cimg_library::CImg<double> &img); 
-  template <> SEXP wrap(const cimg_library::CImgList<double> &ilist); 
-} 
-#endif
+//#else
+/* namespace Rcpp { */
+/*   template <> cimg_library::CImg<double> as(SEXP inp); */
+/*   template <> cimg_library::CImgList<double> as(SEXP inp); */
+/*   template <> SEXP wrap(const cimg_library::CImg<double> &img);  */
+/*   template <> SEXP wrap(const cimg_library::CImgList<double> &ilist);  */
+/* }  */
+//#endif
 
 #endif
