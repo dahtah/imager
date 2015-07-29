@@ -37,6 +37,12 @@ HSItoRGB <- function(im) {
     .Call('imager_HSItoRGB', PACKAGE = 'imager', im)
 }
 
+#' @describeIn imager.colourspaces RGB to sRGB conversion 
+#' @export
+RGBtosRGB <- function(im) {
+    .Call('imager_RGBtosRGB', PACKAGE = 'imager', im)
+}
+
 #' @describeIn imager.colourspaces sRGB to RGB conversion 
 #' @export
 sRGBtoRGB <- function(im) {

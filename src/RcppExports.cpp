@@ -72,6 +72,17 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// RGBtosRGB
+NumericVector RGBtosRGB(NumericVector im);
+RcppExport SEXP imager_RGBtosRGB(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    __result = Rcpp::wrap(RGBtosRGB(im));
+    return __result;
+END_RCPP
+}
 // sRGBtoRGB
 NumericVector sRGBtoRGB(NumericVector im);
 RcppExport SEXP imager_sRGBtoRGB(SEXP imSEXP) {

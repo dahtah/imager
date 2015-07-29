@@ -73,7 +73,7 @@ NumericVector erode_square(NumericVector im,int size) {
 //'       @param normalise  Normalise mask (default FALSE)
 //' @export
 // [[Rcpp::export]]
-NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool is_normalised = false) {
+NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
   CId msk = as<CId >(mask);
   img.dilate(msk,boundary_conditions,normalise);
