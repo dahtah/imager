@@ -520,7 +520,7 @@ convert.im.toPNG <- function(A)
 ##'
 ##' 
 ##' @param im an image
-##' @param standardise. If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
+##' @param standardise If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
 ##' @param drop.unused if TRUE ignore empty dimensions, if FALSE include them anyway (default TRUE)
 ##' @return a data.frame
 ##' @examples

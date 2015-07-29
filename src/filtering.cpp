@@ -51,7 +51,7 @@ NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',
 //' @param im an image
 //' @param sigma Standard deviation of the blur.
 //' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }
-//' @param gaussian 
+//' @param gaussian Use a Gaussian filter (default FALSE). Default: O-order Deriche filter.
 //' @seealso
 //'  deriche(), vanvliet().
 //' @export

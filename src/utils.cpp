@@ -58,10 +58,10 @@ NumericVector imappend(List imlist,char axis)
 //' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
 //'
 //' @param im an image
-//' @param cx: vector of x coordinates for patch centers 
-//' @param cy: vector of y coordinates for patch centers 
-//' @param wx: vector of coordinates for patch width 
-//' @param wy: vector of coordinates for patch height 
+//' @param cx vector of x coordinates for patch centers 
+//' @param cy vector of y coordinates for patch centers 
+//' @param wx vector of coordinates for patch width 
+//' @param wy vector of coordinates for patch height 
 //' @return a list of image patches (cimg objects)
 //' @export
 // [[Rcpp::export]]
@@ -78,8 +78,8 @@ List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerV
   return out;
 }
 
-//' @param cz: vector of z coordinates for patch centers 
-//' @param wz: vector of coordinates for patch depth
+//' @param cz vector of z coordinates for patch centers 
+//' @param wz vector of coordinates for patch depth
 //' @describeIn extract_patches Extract 3D patches
 //' @export
 // [[Rcpp::export]]
