@@ -4,10 +4,12 @@
 \alias{as.cimg.array}
 \title{Turn an numeric array into a cimg object}
 \usage{
-\method{as.cimg}{array}(X)
+\method{as.cimg}{array}(obj, ...)
 }
 \arguments{
-\item{X}{an array}
+\item{obj}{an array}
+
+\item{...}{ignored}
 }
 \description{
 If the array has two dimensions, we assume it's a grayscale image. If it has three dimensions we assume it's a video, unless the third dimension has a depth of 3, in which case we assume it's a colour image,

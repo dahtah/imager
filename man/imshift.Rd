@@ -8,6 +8,8 @@ imshift(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L,
   boundary_conditions = 0L)
 }
 \arguments{
+\item{im}{an image}
+
 \item{delta_x}{Amount of displacement along the X-axis.}
 
 \item{delta_y}{Amount of displacement along the Y-axis.}

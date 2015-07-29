@@ -8,13 +8,15 @@ warp(im, warpfield, mode = 0L, interpolation = 1L,
   boundary_conditions = 0L)
 }
 \arguments{
+\item{im}{an image}
+
+\item{warpfield}{Warping field. The (x,y,z) fields should be stacked along the colour coordinate.}
+
 \item{mode}{Can be { 0=backward-absolute | 1=backward-relative | 2=forward-absolute | 3=forward-relative }}
 
 \item{interpolation}{Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.}
 
 \item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann | 2=periodic }</tt>.}
-
-\item{warp}{Warping field. The (x,y,z) fields should be stacked along the colour coordinate.}
 
 \item{is_relative}{does warping field give absolute or relative warping coordinates?}
 }

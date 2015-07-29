@@ -2,7 +2,6 @@
 using namespace Rcpp;
 using namespace cimg_library;
 
-//' @export
 // [[Rcpp::export]]
 NumericVector interp_xy(NumericVector inp,NumericVector ix,NumericVector iy, int z=0,int c=0,bool cubic=false)
 {
@@ -27,7 +26,6 @@ NumericVector interp_xy(NumericVector inp,NumericVector ix,NumericVector iy, int
     return wrap(out);
 }
 
-//' @export
 // [[Rcpp::export]]
 NumericVector interp_xyz(NumericVector inp,NumericVector ix,NumericVector iy,NumericVector iz,int c=0,bool cubic=false)
 {
@@ -53,7 +51,6 @@ NumericVector interp_xyz(NumericVector inp,NumericVector ix,NumericVector iy,Num
 }
 
 
-//' @export
 // [[Rcpp::export]]
 NumericVector interp_xyzc(NumericVector inp,NumericVector ix,NumericVector iy,NumericVector iz,IntegerVector ic,bool cubic=false)
 {
@@ -78,7 +75,6 @@ NumericVector interp_xyzc(NumericVector inp,NumericVector ix,NumericVector iy,Nu
     return wrap(out);
 }
 
-//' @export
 // [[Rcpp::export]]
 NumericVector interp_xyc(NumericVector inp,NumericVector ix,NumericVector iy,int z,IntegerVector ic,bool cubic=false)
 {

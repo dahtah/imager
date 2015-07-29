@@ -7,6 +7,8 @@
 mirror(im, axis)
 }
 \arguments{
+\item{im}{an image}
+
 \item{axis}{Mirror axis ("x","y","z","c")}
 }
 \description{

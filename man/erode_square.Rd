@@ -7,6 +7,8 @@
 erode_square(im, size)
 }
 \arguments{
+\item{im}{an image}
+
 \item{size}{size of the structuring element.}
 }
 \description{

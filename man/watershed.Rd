@@ -7,6 +7,8 @@
 watershed(im, priority, fill_lines = TRUE)
 }
 \arguments{
+\item{im}{an image}
+
 \item{priority}{Priority map.}
 
 \item{fill_lines}{Sets if watershed lines must be filled or not.}

@@ -4,14 +4,16 @@
 \alias{mclosing}
 \title{Morphological closing (dilation followed by erosion)}
 \usage{
-mclosing(im, mask, boundary_conditions = TRUE, is_normalised = FALSE)
+mclosing(im, mask, boundary_conditions = TRUE, normalise = FALSE)
 }
 \arguments{
+\item{im}{an image}
+
 \item{mask}{Structuring element.}
 
 \item{boundary_conditions}{Boundary conditions.}
 
-\item{is_normalized}{Determines if the closing is locally normalized.}
+\item{normalise}{Determines if the closing is locally normalised (default FALSE)}
 }
 \description{
 Morphological closing (dilation followed by erosion)

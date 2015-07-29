@@ -5,14 +5,14 @@ using namespace cimg_library;
 
 
 
-//' @export
+
 // [[Rcpp::export]]
 NumericVector load_image(std::string fname) {
   CId image(fname.c_str());
   return wrap(image);
 }
 
-//' @export
+
 // [[Rcpp::export]]
 void save_image(NumericVector im, std::string fname) {
   CId image = as<CId >(im);
@@ -40,7 +40,7 @@ List im_split(NumericVector im,char axis,int nb=-1)
 //' 
 //' All images will be concatenated along the x,y,z, or c axis.
 //' 
-//' @param im an image 
+//' @param imlist a list of images (all elements must be of class cimg) 
 //' @param axis the axis along which to split (for example 'c')
 //' @seealso imsplit (the reverse operation)
 //' @export
@@ -53,13 +53,19 @@ NumericVector imappend(List imlist,char axis)
    return wrap(out);
 }
 
-//' Return image patches centered at cx,cy with width wx and height wy
+//' Return image patches 
 //'
-//' @param cx,cy: vector of coordinates for patch centers
-//' @param wx,wy: vector of coordinates for patch width and height
+//' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
+//'
+//' @param im an image
+//' @param cx: vector of x coordinates for patch centers 
+//' @param cy: vector of y coordinates for patch centers 
+//' @param wx: vector of coordinates for patch width 
+//' @param wy: vector of coordinates for patch height 
+//' @return a list of image patches (cimg objects)
 //' @export
 // [[Rcpp::export]]
-List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
+List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
 {
   CId img = as<CId >(im);
   int n = cx.length();
@@ -72,9 +78,12 @@ List select_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVe
   return out;
 }
 
+//' @param cz: vector of z coordinates for patch centers 
+//' @param wz: vector of coordinates for patch depth
+//' @describeIn extract_patches Extract 3D patches
 //' @export
 // [[Rcpp::export]]
-List select_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector cz,IntegerVector wx,IntegerVector wy,IntegerVector wz)
+List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector cz,IntegerVector wx,IntegerVector wy,IntegerVector wz)
 {
   CId img = as<CId >(im);
   int n = cx.length();

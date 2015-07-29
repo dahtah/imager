@@ -10,6 +10,8 @@ resize(im, size_x = -100L, size_y = -100L, size_z = -100L,
   centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0)
 }
 \arguments{
+\item{im}{an image}
+
 \item{size_x}{Number of columns (new size along the X-axis).}
 
 \item{size_y}{Number of rows (new size along the Y-axis).}

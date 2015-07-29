@@ -6,8 +6,11 @@
 \usage{
 resize_halfXY(im)
 }
+\arguments{
+\item{im}{an image}
+}
 \description{
-Use anisotropic upscaling algorithm
+Uses an anisotropic upscaling algorithm
       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
 }
 

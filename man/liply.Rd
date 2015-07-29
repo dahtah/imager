@@ -9,7 +9,11 @@ liply(lst, fun, axis, ...)
 \arguments{
 \item{lst}{a list}
 
+\item{fun}{function to apply}
+
 \item{axis}{which axis to append along (e.g. "c" for colour)}
+
+\item{...}{further arguments to be passed to fun}
 }
 \description{
 This is just a shortcut for llply followed by imappend

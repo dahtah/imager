@@ -7,9 +7,9 @@
 imappend(imlist, axis)
 }
 \arguments{
-\item{axis}{the axis along which to split (for example 'c')}
+\item{imlist}{a list of images (all elements must be of class cimg)}
 
-\item{im}{an image}
+\item{axis}{the axis along which to split (for example 'c')}
 }
 \description{
 All images will be concatenated along the x,y,z, or c axis.

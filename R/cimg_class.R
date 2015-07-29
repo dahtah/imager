@@ -1,20 +1,25 @@
 #' imager: an R library for image processing, based on CImg
 #'
-#' CImg by David Tschumperlé is a C++ library for image processing. It provides most common functions for image manipulation and filtering, as well as some advanced algorithms. imager makes these functions accessible from R and adds some basic plotting and subsetting. 
+#' CImg by David Tschumperle is a C++ library for image processing. It provides most common functions for image manipulation and filtering, as well as some advanced algorithms. imager makes these functions accessible from R and adds some basic plotting and subsetting. 
 #' You should install ImageMagick if you want support for common image formats (png, jpg, etc.)
 #' @docType package
 #' @name imager
 NULL
 
 #' @useDynLib imager
+#' @importFrom grDevices as.raster
+#' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
+#' @importFrom png readPNG writePNG
+#' @importFrom jpeg writeJPEG readJPEG
+#' @importFrom stringr str_match
 #' @importFrom Rcpp sourceCpp
+#' @importFrom magrittr "%>%"
 NULL
 
 names.coords <- c('x','y','z','c','cc')
 index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
+utils::globalVariables(c(".", "%>%"))
 
-##' Create a cimg object 
-##'
 ##' cimg is a class for storing image or video/hyperspectral data.  It is designed to provide easy interaction with the CImg library, but in order to use it you need to be aware of how CImg wants its image data stored. 
 ##' Images have up to 4 dimensions, labelled x,y,z,c. x and y are the usual spatial dimensions, z is a depth dimension (which would correspond to time in a movie), and c is a colour dimension. Images are stored linearly in that order, starting from the top-left pixel and going along *rows* (scanline order).
 ##' A colour image is just three R,G,B channels in succession. A sequence of N images is encoded as R1,R2,....,RN,G1,...,GN,B1,...,BN where R_i is the red channel of frame i.
@@ -31,38 +36,37 @@ cimg <- function(X)
         X
     }
 
+##' Various shortcuts for extracting colour channels, frames, etc
+##'
+##' @param im an image
+##' @param index frame index 
+##' @name cimg.extract
+NULL
 
-
-
-
+##' Colour space conversions in imager
+##' 
+##' All functions listed here assume the input image has three colour channels (spectrum(im) == 3)
+##' @name imager.colourspaces
+##' @param im an image
+NULL
 
 ##' Display an image using base graphics
 ##'
-##' @param im the image 
+##' @param x the image 
 ##' @param frame which frame to display, if the image has depth > 1
 ##' @param rescale.color rescale channels so that the values are in [0,1] 
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster
 ##' @export
-plot.cimg <- function(im,frame,rescale.color=TRUE,...)
+plot.cimg <- function(x,frame,rescale.color=TRUE,...)
     {
+        im <- x
         w <- width(im)
         h <- height(im)
         if (rescale.color & !all(im==0))  im <- (im-min(im))/diff(range(im))
         if (dim(im)[3] == 1) #Single image (depth=1)
             {
                 
-                ## dim(im) <- dim(im)[-3]
-                ## if (dim(im)[3] == 1) #BW
-                ##     {
-                ##         dim(im) <- dim(im)[1:2]
-                ##         im <- t(im)
-                ##         class(im) <- "matrix"
-                ##     }
-                ## else{
-                ##     im <- aperm(im,c(2,1,3))
-                ##     class(im) <- "array"
-                ## }
                 
                 plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...,ylim=c(h,1))
                 as.raster(im) %>% rasterImage(1,height(im),width(im),1)
@@ -83,14 +87,18 @@ plot.cimg <- function(im,frame,rescale.color=TRUE,...)
 ##'
 ##' This function combines the output of pixel.grid with the actual values (stored in $value)
 ##' 
-##' @param im an image of class cimg
+##' @param x an image of class cimg
+##' @param ... arguments passed to pixel.grid
 ##' @return a data.frame
 ##' @author Simon Barthelme
+##' @examples
+##' im <- matrix(1:16,4,4) %>% as.cimg
+##' as.data.frame(im) %>% head
 ##' @export
-as.data.frame.cimg <- function(im)
+as.data.frame.cimg <- function(x,...)
     {
-        gr <- pixel.grid(im)
-        gr$value <- c(im)
+        gr <- pixel.grid(x,...)
+        gr$value <- c(x)
         gr
     }
 
@@ -98,15 +106,17 @@ as.data.frame.cimg <- function(im)
 ##' Convert a cimg object to a raster object
 ##'
 ##' raster objects are used by R's base graphics for plotting
-##' @param im a cimg object 
+##' @param x an image (of class cimg)
 ##' @param frames which frames to extract (in case depth > 1)
 ##' @param rescale.color rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE
+##' @param ... ignored
 ##' @return a raster object
 ##' @seealso plot.cimg, rasterImage
 ##' @author Simon Barthelme
 ##' @export
-as.raster.cimg <- function(im,frames,rescale.color=TRUE)
+as.raster.cimg <- function(x,frames,rescale.color=TRUE,...)
     {
+        im <- x
         w <- width(im)
         h <- height(im)
 
@@ -134,27 +144,31 @@ as.raster.cimg <- function(im,frames,rescale.color=TRUE)
     }
 
 ##' @export
-print.cimg <- function(im)
+print.cimg <- function(x,...)
     {
-        d <- dim(im)
-        msg <- sprintf("Image. Width: %i pix Height %i pix Depth %i Colour channels %i\n",d[1],d[2],d[3],d[4])
+        d <- dim(x)
+        msg <- sprintf("Image. Width: %i pix Height %i pix Depth %i Colour channels %i",d[1],d[2],d[3],d[4])
         print(msg)
     }
 
+##' Image dimensions
+##' @name cimg.dimensions
+##' @param im an image
+NULL
 
-
+##' @describeIn cimg.dimensions Width of the image (in pixels)
 ##' @export
 width <- function(im) dim(im)[1]
 
-
+##' @describeIn cimg.dimensions Height of the image (in pixels)
 ##' @export
 height <- function(im) dim(im)[2]
 
-
+##' @describeIn cimg.dimensions Number of colour channels
 ##' @export
 spectrum <- function(im) dim(im)[4]
 
-
+##' @describeIn cimg.dimensions Depth of the image/number of frames in a video
 ##' @export
 depth <- function(im) dim(im)[3]
 
@@ -185,16 +199,14 @@ frames <- function(im,index,drop=FALSE)
         names(res) <- nm
         if (drop)
             {
-                res <- llply(res,. %>% as.array %>% squeeze)
+                res <- llply(res,function(v)  as.array(v) %>% squeeze)
             }
         res
     }
 
 ##' Extract one frame out of a 4D image/video
 ##'
-##' @param im an image
-##' @param index frame index 
-##' @return an image (class cimg)
+##' @describeIn cimg.extract
 ##' @author Simon Barthelme
 ##' @export
 frame <- function(im,index)
@@ -222,31 +234,28 @@ channels <- function(im,index,drop=FALSE)
         names(res) <- nm
         if (drop)
             {
-                res <- llply(res,. %>% as.array %>% squeeze)
+                res <- llply(res,function(v) { as.array(v) %>% squeeze})
             }
         res
     }
 
-##' Extract an image channel
-##' @param im an image (cimg object)
+##' @describeIn cimg.extract Extract an image channel
+##' @param ind channel index
 ##' @export
 channel <- function(im,ind)
     {
         im[,,,ind] 
     }
 
-##' Extract red channel
-##' @param im an image (cimg object)
+##' @describeIn cimg.extract Extract red channel
 ##' @export
 R <- function(im) { channel(im,1) }
 
-##' Extract green channel
-##' @param im an image (cimg object)
+##' @describeIn cimg.extract Extract green channel
 ##' @export
 G <- function(im) { channel(im,2) }
 
-##' Extract blue
-##' @param im an image (cimg object)
+##' @describeIn cimg.extract Extract blue channel
 ##' @export
 B <- function(im) { channel(im,3) }
 
@@ -298,8 +307,8 @@ all.names <- function(cl)
 ##'
 ##' subim selects an image part based on coordinates: it allows you to select a subset of rows, columns, frames etc. Refer to the examples to see how it works
 ##' 
-##' @param im 
-##' @param ... 
+##' @param im an image
+##' @param ... various conditions defining a rectangular image region
 ##' @return an image with some parts cut out
 ##' @author Simon Barthelme
 ##' @examples
@@ -392,8 +401,9 @@ subs <- function(im,cl,consts)
 ##' @param file path to file
 ##' @return an object of class 'cimg'
 ##' @examples
-##' fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') #Path to example file from package
-##' im <- load.image(fpath)
+##' #Find path to example file from package
+##' fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') 
+##' im <- load.image(fpath) 
 ##' plot(im)
 ##' @export
 load.image <- function(file)
@@ -405,14 +415,14 @@ load.image <- function(file)
             }
         else
             {
-                ftype <- str_match(file,"\\.(.+)$")[1,2]
+                ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
                 if (ftype == "png")
                     {
                         load.png(file)
                     }
                 else if (ftype == "jpeg" | ftype == "jpg")
                     {
-                        load.jpg(file)
+                        load.jpeg(file)
                     }
                 else
                     {
@@ -439,12 +449,12 @@ convert.im.fromPNG <- function(A)
 
 load.png <- function(file)
     {
-        readPNG(file) %>% convert.im.fromPNG
+        png::readPNG(file) %>% convert.im.fromPNG
     }
 
 load.jpeg <- function(file)
     {
-        readJPEG(file) %>% convert.im.fromPNG
+        jpeg::readJPEG(file) %>% convert.im.fromPNG
     }
 
 
@@ -466,14 +476,14 @@ save.image <- function(im,file)
             }
         else
             {
-                ftype <- str_match(file,"\\.(.+)$")[1,2]
+                ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
                 if (ftype == "png")
                     {
                         save.png(im,file)
                     }
                 else if (ftype == "jpeg" | ftype == "jpg")
                     {
-                        save.jpg(im,file)
+                        save.jpeg(im,file)
                     }
                 else
                     {
@@ -484,12 +494,12 @@ save.image <- function(im,file)
 
 save.png <- function(im,file)
     {
-        convert.im.toPNG(im) %>% writePNG(file) 
+        convert.im.toPNG(im) %>% png::writePNG(file) 
     }
 
 save.jpeg <- function(im,file)
     {
-        convert.im.toPNG(im) %>% writeJPEG(file)
+        convert.im.toPNG(im) %>% jpeg::writeJPEG(file)
     }
 
 convert.im.toPNG <- function(A)
@@ -511,45 +521,68 @@ convert.im.toPNG <- function(A)
 ##' 
 ##' @param im an image
 ##' @param standardise. If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
+##' @param drop.unused if TRUE ignore empty dimensions, if FALSE include them anyway (default TRUE)
 ##' @return a data.frame
+##' @examples
+##' im <- as.cimg(array(0,c(10,10))) #A 10x10 image
+##' pixel.grid(im) %>% head
+##' pixel.grid(im,standardise=TRUE) %>% head
+##' pixel.grid(im,drop.unused=FALSE) %>% head
 ##' @export
-pixel.grid <- function(im,standardise=FALSE)
+pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE)
     {
         if (standardise)
             {
                 dy <- height(im)/width(im)
                 dz <- depth(im)/width(im)
-                expand.grid(x=seq(-.5,.5,l=width(im)),y=seq(dy/2,-dy/2,l=height(im)),z=seq(-dz/2,dz/2,l=depth(im)),cc=1:spectrum(im))
+                res <- expand.grid(x=seq(-.5,.5,l=width(im)),y=seq(dy/2,-dy/2,l=height(im)),z=seq(-dz/2,dz/2,l=depth(im)),cc=1:spectrum(im))
             }
         else
             {
-                expand.grid(x=1:width(im),y=1:height(im),z=1:depth(im),cc=1:spectrum(im))
+                res <- expand.grid(x=1:width(im),y=1:height(im),z=1:depth(im),cc=1:spectrum(im))
+            }
+        if (drop.unused)
+            {
+                res[,dim(im) > 1]
+            }
+        else
+            {
+                res
             }
     }
 
+##' Convert to cimg object
+##'
+##' Imager implements various converters that turn your data into cimg objects
+##' 
+##' @param obj an object
+##' @param ... optional arguments
+##' @seealso as.cimg.array, as.cimg.function, as.cimg.data.frame
 ##' @export
-as.cimg <- function(x,...) UseMethod("as.cimg")
+as.cimg <- function(obj,...) UseMethod("as.cimg")
 
 
 ##' Create an image by sampling a function
 ##'
-##' Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluate the input function at these values. 
+##' Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluates the input function at these values. 
 ##' 
-##' @param fun a function with arguments (x,y) or (x,y,z). Must be vectorised. 
+##' @param obj a function with arguments (x,y) or (x,y,z). Must be vectorised. 
 ##' @param width width of the image (in pixels)
 ##' @param height height of the image (in pixels)
 ##' @param depth depth of the image (in pixels)
 ##' @param normalise.coord coordinates are normalised so that x,y,z are in (0,1) (default FALSE)
+##' @param ... ignored
 ##' @return an object of class cimg
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @examples
 ##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100)
 ##' plot(im)
 ##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100,normalise.coord=TRUE)
 ##' plot(im)
 ##' @export
-as.cimg.function <- function(fun,width,height,depth=1,normalise.coord=FALSE)
+as.cimg.function <- function(obj,width,height,depth=1,normalise.coord=FALSE,...)
     {
+        fun <- obj
         args <- formals(fun) %>% names
         if (depth == 1)
             {
@@ -598,30 +631,31 @@ as.cimg.function <- function(fun,width,height,depth=1,normalise.coord=FALSE)
 ##' If the array has two dimensions, we assume it's a grayscale image. If it has three dimensions we assume it's a video, unless the third dimension has a depth of 3, in which case we assume it's a colour image,
 ##' 
 ##' @export
-##' @param X an array
-as.cimg.array <- function(X)
+##' @param obj an array
+##' @param ... ignored
+as.cimg.array <- function(obj,...)
     {
-        d <- dim(X)
+        d <- dim(obj)
         if (length(d)==4)
             {
-                cimg(X)
+                cimg(obj)
             }
         else if (length(d) == 2)
             {
-                as.cimg.matrix(X)
+                as.cimg.matrix(obj)
             }
         else if (length(d) == 3)
         {
             if (d[3] == 3)
                     {
                         warning('Assuming third dimension corresponds to colour')
-                        dim(X) <- c(d[1:2],1,d[3])
-                        cimg(X)
+                        dim(obj) <- c(d[1:2],1,d[3])
+                        cimg(obj)
                     }
             else {
                 warning('Assuming third dimension corresponds to time/depth')
-                dim(X) <- c(d,1)
-                cimg(X)
+                dim(obj) <- c(d,1)
+                cimg(obj)
             }
         }
         else
@@ -631,7 +665,7 @@ as.cimg.array <- function(X)
     }
 
 ##' @export
-as.array.cimg <- function(x) {
+as.array.cimg <- function(x,...) {
     class(x) <- "array"
     x
 }
@@ -649,7 +683,7 @@ squeeze <- function(x) {
 }
 
 ##' @export
-as.matrix.cimg <- function(x) {
+as.matrix.cimg <- function(x,...) {
     d <- dim(x)
     if (sum(d==1) == 2)
         {
@@ -719,24 +753,33 @@ pad <- function(im,nPix,axis,pos=0,val=0)
   library.dynam.unload("imager", libpath)
 }
 
+##' @describeIn as.cimg
 ##' @export
-as.cimg.matrix <- function(X)
+as.cimg.matrix <- function(obj,...)
     {
-        dim(X) <- c(dim(X),1,1)
-        cimg(X)
+        dim(obj) <- c(dim(obj),1,1)
+        cimg(obj)
     }
 
 ##' Create an image from a data.frame
 ##'
 ##' The data frame must be of the form (x,y,value) or (x,y,z,value), or (x,y,z,cc,value). The coordinates must be valid image coordinates (i.e., positive integers). 
 ##' 
-##' @param df a data.frame
+##' @param obj a data.frame
 ##' @param v.name name of the variable to extract pixel values from (default "value")
-##' @param dims a vector of length 4 corresponding to image dimensions. If missing, a guess will be made. 
+##' @param dims a vector of length 4 corresponding to image dimensions. If missing, a guess will be made.
+##' @param ... ignored
 ##' @return an object of class cimg
+##' @examples
+##' #Create a data.frame with columns x,y and value
+##' df <- expand.grid(x=1:10,y=1:10) %>% mutate(value=x*y)
+##' #Convert to cimg object (2D, grayscale image of size 10*10
+##' #For some reason the following line works fine in
+##' #interactive sessions but not when checking the package
+##' #as.cimg(df,dims=c(10,10,1,1)) %>% plot
 ##' @author Simon Barthelme
 ##' @export
-as.cimg.data.frame <- function(df,v.name="value",dims)
+as.cimg.data.frame <- function(obj,v.name="value",dims,...)
     {
         which.v <- (names(df) == v.name) %>% which
         col.coord <- (names(df) %in% names.coords) %>% which
@@ -777,20 +820,27 @@ as.cimg.data.frame <- function(df,v.name="value",dims)
 ##' @export
 cimg2im <- function(img,W=NULL)
     {
-        require(spatstat)
-        if (depth(img) > 1)
+        
+        if (requireNamespace("spatstat",quietly=TRUE))
             {
-                l <- ilply(img,axis="z",cimg2im,W=W)
-                l
-            }
-        else if (spectrum(img) > 1)
-            {
-                l <- ilply(img,axis="c",cimg2im,W=W)
-                l
+                if (depth(img) > 1)
+                    {
+                        l <- ilply(img,axis="z",cimg2im,W=W)
+                        l
+                    }
+                else if (spectrum(img) > 1)
+                    {
+                        l <- ilply(img,axis="c",cimg2im,W=W)
+                        l
+                    }
+                else
+                    {
+                        imrotate(img,90) %>% as.array %>% squeeze %>% spatstat::as.im(W=W)
+                    }
             }
         else
             {
-                imrotate(img,90) %>% as.array %>% squeeze %>% as.im(W=W)
+                stop("The spatstat package is required")
             }
     }
 
@@ -804,8 +854,14 @@ cimg2im <- function(img,W=NULL)
 ##' @export
 im2cimg <- function(img)
     {
-        require(spatstat)
-        as.matrix(img) %>% as.cimg %>% imrotate(-90) 
+        if (requireNamespace("spatstat",quietly=TRUE))
+            {
+                spatstat::as.matrix.im(img) %>% as.cimg %>% imrotate(-90)
+            }
+        else
+            {
+                stop("The spatstat package is required")
+            }
     }
 
 as.cimg.im <- im2cimg
@@ -820,7 +876,7 @@ as.cimg.im <- im2cimg
 ##' im <- as.cimg(function(x,y) x+y,100,100)
 ##' px <- pixel.index(im,data.frame(x=c(3,3),y=c(1,2)))
 ##' im[px] #Values should be 3+1=4, 3+2=5
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 pixel.index <- function(im,coords)
     {
@@ -923,6 +979,9 @@ get.mask <- function(im,expr)
     }
 
 ##' Center stencil at a location
+##' 
+##' @param stencil a stencil (data.frame with coordinates dx,dy,dz,dc)
+##' @param ... centering locations (e.g. x=4,y=2)
 ##' @export
 center.stencil <- function(stencil,...)
     {
@@ -942,7 +1001,7 @@ center.stencil <- function(stencil,...)
                     }
             }
         nms <- names(stencil)
-        stencil[,!str_detect(nms,"^d.")]
+        stencil[,!stringr::str_detect(nms,"^d.")]
     }
 
 ##' Return pixel values in a neighbourhood defined by a stencil
@@ -1121,7 +1180,7 @@ threshold <- function(im,thr)
     {
         if (is.character(thr))
             {
-                qt <- str_match(thr,"(\\d+)%")[,2] %>% as.numeric
+                qt <- stringr::str_match(thr,"(\\d+)%")[,2] %>% as.numeric
                 thr <- quantile(im,qt/100)
             }
         a <- im > thr
@@ -1161,10 +1220,10 @@ capture.plot <- function()
 ##' Light interface for get_gradient. Refer to get_gradient for details on the computation.
 ##' 
 ##' @param im an image of class cimg
-##' @param axes: direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz")
+##' @param axes direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz")
 ##' @param scheme numerical scheme (default '3')
 ##' @return an image or a list of images, depending on the value of "axes" 
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 imgradient <- function(im,axes,scheme=3)
     {
@@ -1243,14 +1302,16 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
             }
         wf <- llply(out,function(v) array(v,c(dim(im)[1:3],1))) %>% imappend("c")
         mode <- (direction=="forward")*2+(coordinates=="relative")
-        warp(im,wf-1,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary=switch(boundary,dirichlet=0,neumann=1,periodic=2))
+        warp(im,wf-1,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary_conditions=switch(boundary,dirichlet=0,neumann=1,periodic=2))
     }
 
 ##' Apply function to each element of a list, then combine the result as an image by appending along specified axis
 ##'
 ##' This is just a shortcut for llply followed by imappend
 ##' @param lst a list
+##' @param fun function to apply
 ##' @param axis which axis to append along (e.g. "c" for colour)
+##' @param ... further arguments to be passed to fun
 ##' @examples
 ##' build.im <- function(size) as.cimg(function(x,y) (x+y)/size,size,size)
 ##' liply(c(10,50,100),build.im,"y") %>% plot
@@ -1363,7 +1424,7 @@ imsplit <- function(im,axis,nb=-1)
 ##' (im-periodic.part(im)) %>% plot(main="Smooth part")
 ##' 
 ##' @references  L. Moisan, Periodic plus Smooth Image Decomposition,J. Math. Imaging Vision, vol. 39:2, pp. 161-179, 2011
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 periodic.part <- function(im)
     {

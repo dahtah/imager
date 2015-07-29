@@ -2,21 +2,21 @@
 % Please edit documentation in R/RcppExports.R
 \name{convolve}
 \alias{convolve}
-\title{Convolve image by a mask.}
+\title{Convolve image by filter.}
 \usage{
-convolve(im, filter, boundary_conditions = TRUE, is_normalised = FALSE)
+convolve(im, filter, boundary_conditions = TRUE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
+\item{filter}{a filter (another image)}
+
 \item{boundary_conditions}{= the border condition type (0=zero, 1=dirichlet)}
 
-\item{mask}{= the convolution kernel.}
-
-\item{is_normalized}{= enable local normalization.}
+\item{normalise}{= normalise filter (default FALSE)}
 }
 \description{
-The result  res of the convolution of an image img by a mask mask is defined to be:
-      res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*mask(i,j,k)
+The result  res of the convolution of an image img by filter flt is defined to be:
+      \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
 }
 

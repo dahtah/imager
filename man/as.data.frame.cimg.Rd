@@ -4,16 +4,22 @@
 \alias{as.data.frame.cimg}
 \title{Convert a pixel image to a data.frame}
 \usage{
-\method{as.data.frame}{cimg}(im)
+\method{as.data.frame}{cimg}(x, ...)
 }
 \arguments{
-\item{im}{an image of class cimg}
+\item{x}{an image of class cimg}
+
+\item{...}{arguments passed to pixel.grid}
 }
 \value{
 a data.frame
 }
 \description{
 This function combines the output of pixel.grid with the actual values (stored in $value)
+}
+\examples{
+im <- matrix(1:16,4,4) \%>\% as.cimg
+as.data.frame(im) \%>\% head
 }
 \author{
 Simon Barthelme

@@ -3,6 +3,7 @@ using namespace Rcpp;
 using namespace cimg_library;
 
 //' Bucket fill
+//'       @param im an image
 //' @param x X-coordinate of the starting point of the region to fill.
 //' @param y Y-coordinate of the starting point of the region to fill.
 //' @param z Z-coordinate of the starting point of the region to fill.
@@ -24,6 +25,7 @@ NumericVector bucket_fill(NumericVector im,int x,int y,int z,NumericVector color
 //'
 //' The underlying algorithm is the same as the bucket fill (AKA flood fill). Unlike with the bucket fill, the image isn't changed, the function simply returns a binary mask of the selected region
 //'
+//'       @param im an image
 //' @param x X-coordinate of the starting point of the region to fill.
 //' @param y Y-coordinate of the starting point of the region to fill.
 //' @param z Z-coordinate of the starting point of the region to fill.

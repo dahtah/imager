@@ -72,17 +72,6 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// RGBtosRGB
-NumericVector RGBtosRGB(NumericVector im);
-RcppExport SEXP imager_RGBtosRGB(SEXP imSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
-    __result = Rcpp::wrap(RGBtosRGB(im));
-    return __result;
-END_RCPP
-}
 // sRGBtoRGB
 NumericVector sRGBtoRGB(NumericVector im);
 RcppExport SEXP imager_sRGBtoRGB(SEXP imSEXP) {
@@ -246,16 +235,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // isoblur
-NumericVector isoblur(NumericVector im, float sigma, bool boundary_conditions, bool is_gaussian);
-RcppExport SEXP imager_isoblur(SEXP imSEXP, SEXP sigmaSEXP, SEXP boundary_conditionsSEXP, SEXP is_gaussianSEXP) {
+NumericVector isoblur(NumericVector im, float sigma, bool boundary_conditions, bool gaussian);
+RcppExport SEXP imager_isoblur(SEXP imSEXP, SEXP sigmaSEXP, SEXP boundary_conditionsSEXP, SEXP gaussianSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_gaussian(is_gaussianSEXP);
-    __result = Rcpp::wrap(isoblur(im, sigma, boundary_conditions, is_gaussian));
+    Rcpp::traits::input_parameter< bool >::type gaussian(gaussianSEXP);
+    __result = Rcpp::wrap(isoblur(im, sigma, boundary_conditions, gaussian));
     return __result;
 END_RCPP
 }
@@ -300,30 +289,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // correlate
-NumericVector correlate(NumericVector im, NumericVector filter, bool boundary_conditions, bool is_normalised);
-RcppExport SEXP imager_correlate(SEXP imSEXP, SEXP filterSEXP, SEXP boundary_conditionsSEXP, SEXP is_normalisedSEXP) {
+NumericVector correlate(NumericVector im, NumericVector filter, bool boundary_conditions, bool normalise);
+RcppExport SEXP imager_correlate(SEXP imSEXP, SEXP filterSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type filter(filterSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_normalised(is_normalisedSEXP);
-    __result = Rcpp::wrap(correlate(im, filter, boundary_conditions, is_normalised));
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    __result = Rcpp::wrap(correlate(im, filter, boundary_conditions, normalise));
     return __result;
 END_RCPP
 }
 // convolve
-NumericVector convolve(NumericVector im, NumericVector filter, bool boundary_conditions, bool is_normalised);
-RcppExport SEXP imager_convolve(SEXP imSEXP, SEXP filterSEXP, SEXP boundary_conditionsSEXP, SEXP is_normalisedSEXP) {
+NumericVector convolve(NumericVector im, NumericVector filter, bool boundary_conditions, bool normalise);
+RcppExport SEXP imager_convolve(SEXP imSEXP, SEXP filterSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type filter(filterSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_normalised(is_normalisedSEXP);
-    __result = Rcpp::wrap(convolve(im, filter, boundary_conditions, is_normalised));
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    __result = Rcpp::wrap(convolve(im, filter, boundary_conditions, normalise));
     return __result;
 END_RCPP
 }
@@ -552,29 +541,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // label
-NumericVector label(NumericVector im, bool is_high_connectivity, double tolerance);
-RcppExport SEXP imager_label(SEXP imSEXP, SEXP is_high_connectivitySEXP, SEXP toleranceSEXP) {
+NumericVector label(NumericVector im, bool high_connectivity, double tolerance);
+RcppExport SEXP imager_label(SEXP imSEXP, SEXP high_connectivitySEXP, SEXP toleranceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_high_connectivity(is_high_connectivitySEXP);
+    Rcpp::traits::input_parameter< bool >::type high_connectivity(high_connectivitySEXP);
     Rcpp::traits::input_parameter< double >::type tolerance(toleranceSEXP);
-    __result = Rcpp::wrap(label(im, is_high_connectivity, tolerance));
+    __result = Rcpp::wrap(label(im, high_connectivity, tolerance));
     return __result;
 END_RCPP
 }
 // erode
-NumericVector erode(NumericVector im, NumericVector mask, bool boundary_conditions, bool is_normalised);
-RcppExport SEXP imager_erode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP is_normalisedSEXP) {
+NumericVector erode(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
+RcppExport SEXP imager_erode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_normalised(is_normalisedSEXP);
-    __result = Rcpp::wrap(erode(im, mask, boundary_conditions, is_normalised));
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    __result = Rcpp::wrap(erode(im, mask, boundary_conditions, normalise));
     return __result;
 END_RCPP
 }
@@ -605,16 +594,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // dilate
-NumericVector dilate(NumericVector im, NumericVector mask, bool boundary_conditions, bool is_normalised);
-RcppExport SEXP imager_dilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP is_normalisedSEXP) {
+NumericVector dilate(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
+RcppExport SEXP imager_dilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_normalised(is_normalisedSEXP);
-    __result = Rcpp::wrap(dilate(im, mask, boundary_conditions, is_normalised));
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    __result = Rcpp::wrap(dilate(im, mask, boundary_conditions, normalise));
     return __result;
 END_RCPP
 }
@@ -671,16 +660,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // mopening
-NumericVector mopening(NumericVector im, NumericVector mask, bool boundary_conditions, bool is_normalised);
-RcppExport SEXP imager_mopening(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP is_normalisedSEXP) {
+NumericVector mopening(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
+RcppExport SEXP imager_mopening(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_normalised(is_normalisedSEXP);
-    __result = Rcpp::wrap(mopening(im, mask, boundary_conditions, is_normalised));
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    __result = Rcpp::wrap(mopening(im, mask, boundary_conditions, normalise));
     return __result;
 END_RCPP
 }
@@ -709,16 +698,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // mclosing
-NumericVector mclosing(NumericVector im, NumericVector mask, bool boundary_conditions, bool is_normalised);
-RcppExport SEXP imager_mclosing(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP is_normalisedSEXP) {
+NumericVector mclosing(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
+RcppExport SEXP imager_mclosing(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_normalised(is_normalisedSEXP);
-    __result = Rcpp::wrap(mclosing(im, mask, boundary_conditions, is_normalised));
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    __result = Rcpp::wrap(mclosing(im, mask, boundary_conditions, normalise));
     return __result;
 END_RCPP
 }
@@ -750,8 +739,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // rotate_xy
-NumericVector rotate_xy(NumericVector im, float angle, float cx, float cy, float zoom, unsigned int interpolation, unsigned int boundary);
-RcppExport SEXP imager_rotate_xy(SEXP imSEXP, SEXP angleSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP zoomSEXP, SEXP interpolationSEXP, SEXP boundarySEXP) {
+NumericVector rotate_xy(NumericVector im, float angle, float cx, float cy, float zoom, unsigned int interpolation, unsigned int boundary_conditions);
+RcppExport SEXP imager_rotate_xy(SEXP imSEXP, SEXP angleSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP zoomSEXP, SEXP interpolationSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -761,8 +750,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type cy(cySEXP);
     Rcpp::traits::input_parameter< float >::type zoom(zoomSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type interpolation(interpolationSEXP);
-    Rcpp::traits::input_parameter< unsigned int >::type boundary(boundarySEXP);
-    __result = Rcpp::wrap(rotate_xy(im, angle, cx, cy, zoom, interpolation, boundary));
+    Rcpp::traits::input_parameter< unsigned int >::type boundary_conditions(boundary_conditionsSEXP);
+    __result = Rcpp::wrap(rotate_xy(im, angle, cx, cy, zoom, interpolation, boundary_conditions));
     return __result;
 END_RCPP
 }
@@ -922,9 +911,9 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// select_patches
-List select_patches(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
-RcppExport SEXP imager_select_patches(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
+// extract_patches
+List extract_patches(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
+RcppExport SEXP imager_extract_patches(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -933,13 +922,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type cy(cySEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type wx(wxSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type wy(wySEXP);
-    __result = Rcpp::wrap(select_patches(im, cx, cy, wx, wy));
+    __result = Rcpp::wrap(extract_patches(im, cx, cy, wx, wy));
     return __result;
 END_RCPP
 }
-// select_patches3D
-List select_patches3D(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector cz, IntegerVector wx, IntegerVector wy, IntegerVector wz);
-RcppExport SEXP imager_select_patches3D(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP czSEXP, SEXP wxSEXP, SEXP wySEXP, SEXP wzSEXP) {
+// extract_patches3D
+List extract_patches3D(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector cz, IntegerVector wx, IntegerVector wy, IntegerVector wz);
+RcppExport SEXP imager_extract_patches3D(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP czSEXP, SEXP wxSEXP, SEXP wySEXP, SEXP wzSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -950,7 +939,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type wx(wxSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type wy(wySEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type wz(wzSEXP);
-    __result = Rcpp::wrap(select_patches3D(im, cx, cy, cz, wx, wy, wz));
+    __result = Rcpp::wrap(extract_patches3D(im, cx, cy, cz, wx, wy, wz));
     return __result;
 END_RCPP
 }

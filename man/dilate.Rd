@@ -4,14 +4,16 @@
 \alias{dilate}
 \title{Dilate image by a structuring element.}
 \usage{
-dilate(im, mask, boundary_conditions = TRUE, is_normalised = FALSE)
+dilate(im, mask, boundary_conditions = TRUE, normalise = FALSE)
 }
 \arguments{
+\item{im}{an image}
+
 \item{mask}{Structuring element.}
 
 \item{boundary_conditions}{Boundary conditions.}
 
-\item{is_normalized}{Sets if the erosion is locally normalized.}
+\item{normalise}{Normalise mask (default FALSE)}
 }
 \description{
 Dilate image by a structuring element.

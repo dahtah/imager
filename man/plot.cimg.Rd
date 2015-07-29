@@ -4,10 +4,10 @@
 \alias{plot.cimg}
 \title{Display an image using base graphics}
 \usage{
-\method{plot}{cimg}(im, frame, rescale.color = TRUE, ...)
+\method{plot}{cimg}(x, frame, rescale.color = TRUE, ...)
 }
 \arguments{
-\item{im}{the image}
+\item{x}{the image}
 
 \item{frame}{which frame to display, if the image has depth > 1}
 
