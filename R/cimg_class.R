@@ -1416,11 +1416,13 @@ imsplit <- function(im,axis,nb=-1)
 ##' @param im an image
 ##' @return an image
 ##' @examples
-##' im <- load.image(system.file('extdata/parrots.png',package='imager')) %>% subim(x <= 512)
+##' imname <- system.file('extdata/parrots.png',package='imager')
+##' im <- load.image(imname) %>% subim(x <= 512)
 ##' layout(t(1:3))
 ##' plot(im,main="Original image")
 ##' periodic.part(im) %>% plot(main="Periodic part")
-##' #The smooth error is the difference between the original image and its periodic part
+##' #The smooth error is the difference between
+##' #the original image and its periodic part
 ##' (im-periodic.part(im)) %>% plot(main="Smooth part")
 ##' 
 ##' @references  L. Moisan, Periodic plus Smooth Image Decomposition,J. Math. Imaging Vision, vol. 39:2, pp. 161-179, 2011
