@@ -18,11 +18,13 @@ im = periodic + smooth
 where the periodic part shouldn't be too far from the original image. The periodic part can be used in frequency-domain analyses, to reduce the artifacts induced by non-periodicity.
 }
 \examples{
-im <- load.image(system.file('extdata/parrots.png',package='imager')) \%>\% subim(x <= 512)
+imname <- system.file('extdata/parrots.png',package='imager')
+im <- load.image(imname) \%>\% subim(x <= 512)
 layout(t(1:3))
 plot(im,main="Original image")
 periodic.part(im) \%>\% plot(main="Periodic part")
-#The smooth error is the difference between the original image and its periodic part
+#The smooth error is the difference between
+#the original image and its periodic part
 (im-periodic.part(im)) \%>\% plot(main="Smooth part")
 }
 \author{
