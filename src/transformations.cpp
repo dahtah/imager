@@ -91,6 +91,7 @@ NumericVector permute_axes(NumericVector im,std::string perm)
 }
 
 //' @describeIn resize_uniform Double size
+//' @export
 // [[Rcpp::export]]
 NumericVector resize_doubleXY(NumericVector im)
 {
@@ -101,6 +102,7 @@ NumericVector resize_doubleXY(NumericVector im)
 }
 
 //' @describeIn resize_uniform Half size
+//' @export
 // [[Rcpp::export]]
 NumericVector resize_halfXY(NumericVector im)
 {

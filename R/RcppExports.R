@@ -596,11 +596,13 @@ permute_axes <- function(im, perm) {
 }
 
 #' @describeIn resize_uniform Double size
+#' @export
 resize_doubleXY <- function(im) {
     .Call('imager_resize_doubleXY', PACKAGE = 'imager', im)
 }
 
 #' @describeIn resize_uniform Half size
+#' @export
 resize_halfXY <- function(im) {
     .Call('imager_resize_halfXY', PACKAGE = 'imager', im)
 }

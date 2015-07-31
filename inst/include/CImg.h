@@ -2238,7 +2238,7 @@ namespace cimg_library_suffixed {
       \endcode
   **/
 
-  //SB: Changed here to use Rcpp::stop instead of printing to stdout
+  //SB: Changed here to use Rcout instead of printing to stdout
 
   struct CImgException : public std::exception {
 #define _cimg_exception_err(etype,disp_flag) \

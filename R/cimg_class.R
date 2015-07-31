@@ -951,15 +951,16 @@ coord.index <- function(im,index)
             }
         maxIndex <- prod(dim(im))
         V[index >= maxIndex,] <- NA
-        if (nrow(V) == 1) {
-            V <- as.vector(V)
-            names(V) <- c("x","y","z","cc")
-        }
-        else
-            {
+        ## if (nrow(V) == 1) {
+        ##     V <- as.vector(V)
+        ##     names(V) <- c("x","y","z","cc")
+        ##     V <- t(V)
+        ## }
+        ## else
+        ##     {
                 colnames(V) <- c("x","y","z","cc")
-            }
-        
+##            }                           
+     
         
         as.data.frame(V+1)
     }
