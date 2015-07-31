@@ -595,17 +595,17 @@ permute_axes <- function(im, perm) {
     .Call('imager_permute_axes', PACKAGE = 'imager', im, perm)
 }
 
-#' @describeIn imresize Half size
+#' @describeIn resize_uniform Double size
 resize_doubleXY <- function(im) {
     .Call('imager_resize_doubleXY', PACKAGE = 'imager', im)
 }
 
-#' @describeIn imresize Half size
+#' @describeIn resize_uniform Half size
 resize_halfXY <- function(im) {
     .Call('imager_resize_halfXY', PACKAGE = 'imager', im)
 }
 
-#' @describeIn imresize Triple size
+#' @describeIn resize_uniform Triple size
 #' @export
 resize_tripleXY <- function(im) {
     .Call('imager_resize_tripleXY', PACKAGE = 'imager', im)

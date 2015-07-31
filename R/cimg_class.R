@@ -1480,7 +1480,8 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
 ##' Resize image uniformly 
 ##'
 ##' Resize image by a single scale factor. For non-uniform scaling and a wider range of options, see resize. 
-##' 
+##'
+##' @name resize_uniform
 ##' @param im an image
 ##' @param scale a scale factor
 ##' @return an image
@@ -1493,6 +1494,9 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
 ##' imresize(im,1/4) #Quarter size
 ##' liply(2:4,function(ind) imresize(im,1/ind),"x") %>%  plot
 ##' @author Simon Barthelme
+NULL
+
+##' @describeIn resize_uniform resize by scale factor
 ##' @export
 imresize <- function(im,scale=1)
     {
