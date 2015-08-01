@@ -774,21 +774,19 @@ as.cimg.matrix <- function(obj,...)
 ##' #Create a data.frame with columns x,y and value
 ##' df <- expand.grid(x=1:10,y=1:10) %>% mutate(value=x*y)
 ##' #Convert to cimg object (2D, grayscale image of size 10*10
-##' #For some reason the following line works fine in
-##' #interactive sessions but not when checking the package
-##' #as.cimg(df,dims=c(10,10,1,1)) %>% plot
+##' as.cimg(df,dims=c(10,10,1,1)) %>% plot
 ##' @author Simon Barthelme
 ##' @export
 as.cimg.data.frame <- function(obj,v.name="value",dims,...)
     {
-        which.v <- (names(df) == v.name) %>% which
-        col.coord <- (names(df) %in% names.coords) %>% which
-        coords <- names(df)[col.coord]
+        which.v <- (names(obj) == v.name) %>% which
+        col.coord <- (names(obj) %in% names.coords) %>% which
+        coords <- names(obj)[col.coord]
         if (length(which.v) == 0)
             {
                 sprintf("Variable %s is missing",v.name) %>% stop
             }
-        if (any(sapply(df[,-which.v],min) <= 0))
+        if (any(sapply(obj[,-which.v],min) <= 0))
             {
                 stop('Indices must be positive')
             }
@@ -798,12 +796,12 @@ as.cimg.data.frame <- function(obj,v.name="value",dims,...)
                 dims <- rep(1,4)
                 for (n in coords)
                     {
-                        dims[index.coords[[n]]] <- max(df[[n]])
+                        dims[index.coords[[n]]] <- max(obj[[n]])
                     }
             }
         im <- as.cimg(array(0,dims))
-        ind <- pixel.index(im,df[,col.coord])
-        im[ind] <- df[[v.name]]
+        ind <- pixel.index(im,obj[,col.coord])
+        im[ind] <- obj[[v.name]]
         im
     }
 
