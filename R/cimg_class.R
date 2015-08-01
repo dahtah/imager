@@ -1165,22 +1165,34 @@ get.locations <- function(im,condition)
 
 ##' Threshold grayscale image 
 ##'
-##' Thresholding corresponding to setting all values below a threshold to 0, all above to 1. 
+##' Thresholding corresponding to setting all values below a threshold to 0, all above to 1. If you call threshold with a string argument of the form "XX%" (e.g., "98%"), the threshold will be set at percentil XX. Computing quantiles is expensive for large images, so if approx == TRUE threshold will skip pixels if the total number of pixels is above 10,000
+##'
+##'
 ##' 
 ##' @param im the image
 ##' @param thr a threshold, either numeric, or a string with format "XX\%". In the case of the latter, XX will be interpreted as a percentile (set the lower XX\% of the pixels to 0, the rest to 1)
+##' @param approx Skip pixels when computing quantiles in large images (default TRUE)
 ##' @return a thresholded image
 ##' @examples
 ##' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
 ##' grayscale(im) %>% threshold("15%") %>% plot
 ##' @author Simon Barthelme
 ##' @export
-threshold <- function(im,thr)
+threshold <- function(im,thr,approx=TRUE)
     {
         if (is.character(thr))
             {
-                qt <- stringr::str_match(thr,"(\\d+)%")[,2] %>% as.numeric
-                thr <- quantile(im,qt/100)
+                regexp.num <- "\\d+(\\.\\d*)?|\\.\\d+"
+                qt <- stringr::str_match(thr,regexp.num)[,2] %>% as.numeric
+                n <- prod(dim(im))
+                if (n > 1e3 & approx)
+                    {
+                        thr <- quantile(im[round(seq(1,n,l=1e3))],qt/100)
+                    }
+                else
+                    {
+                        thr <- quantile(im,qt/100)
+                    }
             }
         a <- im > thr
         b <- im <= thr
