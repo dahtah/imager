@@ -595,31 +595,19 @@ permute_axes <- function(im, perm) {
     .Call('imager_permute_axes', PACKAGE = 'imager', im, perm)
 }
 
-#' Resize image to double-size, using the Scale2X algorithm.
-#'
-#'Uses an anisotropic upscaling algorithm
-#'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-#' @param im an image
+#' @describeIn resize_uniform Double size
 #' @export
 resize_doubleXY <- function(im) {
     .Call('imager_resize_doubleXY', PACKAGE = 'imager', im)
 }
 
-#' Resize image to half-size, using an optimized filter
-#'
-#'Uses an anisotropic upscaling algorithm
-#'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-#' @param im an image
+#' @describeIn resize_uniform Half size
 #' @export
 resize_halfXY <- function(im) {
     .Call('imager_resize_halfXY', PACKAGE = 'imager', im)
 }
 
-#' Resize image to triple-size, using the Scale2X algorithm.
-#'
-#'Uses an anisotropic upscaling algorithm
-#'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-#' @param im an image
+#' @describeIn resize_uniform Triple size
 #' @export
 resize_tripleXY <- function(im) {
     .Call('imager_resize_tripleXY', PACKAGE = 'imager', im)

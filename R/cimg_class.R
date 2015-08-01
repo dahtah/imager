@@ -951,15 +951,16 @@ coord.index <- function(im,index)
             }
         maxIndex <- prod(dim(im))
         V[index >= maxIndex,] <- NA
-        if (nrow(V) == 1) {
-            V <- as.vector(V)
-            names(V) <- c("x","y","z","cc")
-        }
-        else
-            {
+        ## if (nrow(V) == 1) {
+        ##     V <- as.vector(V)
+        ##     names(V) <- c("x","y","z","cc")
+        ##     V <- t(V)
+        ## }
+        ## else
+        ##     {
                 colnames(V) <- c("x","y","z","cc")
-            }
-        
+##            }                           
+     
         
         as.data.frame(V+1)
     }
@@ -1475,3 +1476,50 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
                 FFT_complex(im.real,im.imag,inverse=inverse)
             }
     }
+
+
+##' Resize image uniformly 
+##'
+##' Resize image by a single scale factor. For non-uniform scaling and a wider range of options, see resize. 
+##'
+##' @name resize_uniform
+##' @param im an image
+##' @param scale a scale factor
+##' @return an image
+##' @references
+##' For double-scale, half-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}.
+##' @seealso resize
+##' @examples
+##' imname <- system.file('extdata/parrots.png',package='imager')
+##' im <- load.image(imname)
+##' imresize(im,1/4) #Quarter size
+##' liply(2:4,function(ind) imresize(im,1/ind),"x") %>%  plot
+##' @author Simon Barthelme
+NULL
+
+##' @describeIn resize_uniform resize by scale factor
+##' @export
+imresize <- function(im,scale=1)
+    {
+        
+        if (depth(im) == 1 & ((1/scale)%%2)==0) #Half-size, quarter-size, etc.
+            {
+                nTimes <- -log2(scale)
+                iterate(resize_halfXY,nTimes)(im)
+            }
+        else if (depth(im) == 1 & ((scale)%%2)==0) #Double-size, Quadruple-size, etc.
+            {
+                nTimes <- log2(scale)
+                iterate(resize_doubleXY,nTimes)(im)
+            }
+        else if (scale == 3)
+            {
+                resize_tripleXY(im)
+            }
+        else
+            {
+                resize(im,-scale*100,-scale*100,-scale*100,interp=3)
+            }
+    }
+
+

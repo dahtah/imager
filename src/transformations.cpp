@@ -90,11 +90,7 @@ NumericVector permute_axes(NumericVector im,std::string perm)
    return wrap(img);
 }
 
-//' Resize image to double-size, using the Scale2X algorithm.
-//'
-//'Uses an anisotropic upscaling algorithm
-//'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-//' @param im an image
+//' @describeIn resize_uniform Double size
 //' @export
 // [[Rcpp::export]]
 NumericVector resize_doubleXY(NumericVector im)
@@ -105,11 +101,7 @@ NumericVector resize_doubleXY(NumericVector im)
    return wrap(out);
 }
 
-//' Resize image to half-size, using an optimized filter
-//'
-//'Uses an anisotropic upscaling algorithm
-//'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-//' @param im an image
+//' @describeIn resize_uniform Half size
 //' @export
 // [[Rcpp::export]]
 NumericVector resize_halfXY(NumericVector im)
@@ -121,12 +113,7 @@ NumericVector resize_halfXY(NumericVector im)
 }
 
 
-
-//' Resize image to triple-size, using the Scale2X algorithm.
-//'
-//'Uses an anisotropic upscaling algorithm
-//'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-//' @param im an image
+//' @describeIn resize_uniform Triple size
 //' @export
 // [[Rcpp::export]]
 NumericVector resize_tripleXY(NumericVector im)
