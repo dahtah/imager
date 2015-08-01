@@ -34,3 +34,4 @@
 
 #R temp files
 .Rhistory
+*.Rcheck

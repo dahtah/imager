@@ -1,7 +1,5 @@
 #define cimg_use_fftw3
-#include "CImg.h"
-#include <Rcpp.h>
-#include "wrappers.h"
+#include <imager.h>
 using namespace Rcpp;
 using namespace cimg_library;
 
@@ -16,7 +14,7 @@ using namespace cimg_library;
 // [[Rcpp::export]]
 NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',bool boundary_conditions=0)
 {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.deriche(sigma,order,axis,boundary_conditions);
   return wrap(img);
 }
@@ -43,7 +41,7 @@ NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',b
 // [[Rcpp::export]]
 NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',bool boundary_conditions=0)
 {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.vanvliet(sigma,order,axis,boundary_conditions);
   return wrap(img);
 }
@@ -53,13 +51,14 @@ NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',
 //' @param im an image
 //' @param sigma Standard deviation of the blur.
 //' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }
+//' @param gaussian Use a Gaussian filter (default FALSE). Default: O-order Deriche filter.
 //' @seealso
 //'  deriche(), vanvliet().
 //' @export
 // [[Rcpp::export]]
-NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true,bool is_gaussian=false) {
-  CImg<double> img = as<CImg<double> >(im);
-  img.blur(sigma,boundary_conditions,is_gaussian);
+NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true,bool gaussian=false) {
+  CId img = as< CId >(im);
+  img.blur(sigma,boundary_conditions,gaussian);
   return wrap(img);
 }
 
@@ -72,7 +71,7 @@ NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true
 //' @export
 // [[Rcpp::export]]
 NumericVector medianblur(NumericVector im,int n, float threshold) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.blur_box(n,threshold);
   return wrap(img);
 }
@@ -85,7 +84,7 @@ NumericVector medianblur(NumericVector im,int n, float threshold) {
 //' @export
 // [[Rcpp::export]]
 NumericVector boxblur(NumericVector im,float sigma,bool boundary_conditions=true) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.blur_box(sigma,boundary_conditions);
   return wrap(img);
 }
@@ -95,58 +94,58 @@ NumericVector boxblur(NumericVector im,float sigma,bool boundary_conditions=true
 //'
 //' This is a recursive algorithm, not depending on the values of the box kernel size.
 //'
-//'       @param im an image
-//'       @param sigma_x Size of the box window, along the X-axis.
-//'       @param sigma_y Size of the box window, along the Y-axis.
+//' @param im an image
+//'       @param sx Size of the box window, along the X-axis.
+//'       @param sy Size of the box window, along the Y-axis.
 //'       @param boundary_conditions Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.
 //'       @seealso blur().
 //'
 //' @export
 // [[Rcpp::export]]
 NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool boundary_conditions=true) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.blur_box(sx,sy,0,boundary_conditions);
   return wrap(img);
 }
 
-//' Correlate image by a mask.
+//' Correlation of image by filter
 //'
-//'  The correlation of the image instance this by the mask mask is defined to be:
-//'  res(x,y,z) = sum_{i,j,k} (*this)(x + i,y + j,z + k)*mask(i,j,k).
+//'  The correlation of image im by filter flt is defined as:
+//'  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
 //'
 //'       @param im an image
-//'       @param mask = the correlation kernel.
+//'       @param filter = the correlation kernel.
 //'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-//'       @param is_normalized = enable local normalization.
+//'       @param normalise  = normalise filter (default FALSE)
 //'      
 //'
 //' @export
 // [[Rcpp::export]]
-NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool is_normalised = false) {
-  CImg<double> img = as<CImg<double> >(im);
-  CImg<double> flt = as<CImg<double> >(filter);
-  img.correlate(flt,boundary_conditions,is_normalised);
+NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool normalise = false) {
+  CId img = as<CId >(im);
+  CId flt = as<CId >(filter);
+  img.correlate(flt,boundary_conditions,normalise);
   return wrap(img);
 }
 
 
-//' Convolve image by a mask.
+//' Convolve image by filter.
 //'
-//'      The result  res of the convolution of an image img by a mask mask is defined to be:
-//'       res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*mask(i,j,k)
+//'      The result  res of the convolution of an image img by filter flt is defined to be:
+//'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
 //'
 //'       @param im an image
-//'       @param mask = the convolution kernel.
+//'       @param filter a filter (another image)
 //'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-//'       @param is_normalized = enable local normalization.
+//'       @param normalise = normalise filter (default FALSE)
 //'
 //'
 //' @export
 // [[Rcpp::export]]
-NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool is_normalised = false) {
-  CImg<double> img = as<CImg<double> >(im);
-  CImg<double> flt = as<CImg<double> >(filter);
-  img.convolve(flt,boundary_conditions,is_normalised);
+NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool normalise = false) {
+  CId img = as<CId >(im);
+  CId flt = as<CId >(filter);
+  img.convolve(flt,boundary_conditions,normalise);
   return wrap(img);
 }
 
@@ -166,7 +165,7 @@ NumericVector imsharpen(NumericVector im,float amplitude,
 		bool sharpen_type = false,float edge = 1,
 		float alpha = 0,float sigma = 0)
  {
-   CImg<double> img = as<CImg<double> >(im);
+   CId img = as<CId >(im);
    img.sharpen(amplitude,sharpen_type,edge,alpha,sigma);
    return wrap(img);
 }
@@ -188,7 +187,7 @@ NumericVector imsharpen(NumericVector im,float amplitude,
 // [[Rcpp::export]]
 List get_gradient(NumericVector im,std::string axes = "",int scheme=3)
 {
-   CImg<double> img = as<CImg<double> >(im);
+   CId img = as<CId >(im);
    CImgList<double> grad = img.get_gradient(axes.c_str(),scheme);
    return wrap(grad);
 }
@@ -200,7 +199,7 @@ List get_gradient(NumericVector im,std::string axes = "",int scheme=3)
 // [[Rcpp::export]]
 List get_hessian(NumericVector im,std::string axes = "")
 {
-   CImg<double> img = as<CImg<double> >(im);
+   CId img = as<CId >(im);
    CImgList<double> hess = img.get_hessian(axes.c_str());
    return wrap(hess);
 }
@@ -220,7 +219,7 @@ NumericVector diffusion_tensors(NumericVector im,
 				float alpha = 0.6,float sigma = 1.1,
 				bool is_sqrt = false) 	
 {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.diffusion_tensors(sharpness,anisotropy,alpha,sigma,is_sqrt);
   return wrap(img);
 }
@@ -228,38 +227,37 @@ NumericVector diffusion_tensors(NumericVector im,
 //' Compute Haar multiscale wavelet transform.
 //'
 //'       @param im an image
-//'       @param axis Axis considered for the transform.
-//'       @param invert Set inverse of direct transform.
+//'       @param inverse Compute inverse transform (default FALSE)
 //'       @param nb_scales Number of scales used for the transform.
 //'
 //' @export
 // [[Rcpp::export]]
 NumericVector haar(NumericVector im,bool inverse=false,int nb_scales=1) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.haar(inverse,nb_scales);
   return wrap(img);
 }
 
 // [[Rcpp::export]]
 List FFT_complex(NumericVector real,NumericVector imag,bool inverse=false,int nb_threads=0) {
-  CImg<double> rl = as<CImg<double> >(real);
-  CImg<double> img = as<CImg<double> >(imag);
+  CId rl = as<CId >(real);
+  CId img = as<CId >(imag);
   rl.FFT(rl,img,inverse,nb_threads);
   return List::create(_["real"] = wrap(rl),_["imag"] = wrap(img));
 }
 
 // [[Rcpp::export]]
 List FFT_realim(NumericVector real,bool inverse=false,int nb_threads=0) {
-  CImg<double> rl = as<CImg<double> >(real);
-  CImg<double> im(rl,"xyzc",0);
+  CId rl = as<CId >(real);
+  CId im(rl,"xyzc",0);
   rl.FFT(rl,im,inverse,nb_threads);
   return List::create(_["real"] = wrap(rl),_["imag"] = wrap(im));
 }
 
 // [[Rcpp::export]]
 NumericVector FFT_realout(NumericVector real,NumericVector imag,bool inverse=false,int nb_threads=0) {
-  CImg<double> rl = as<CImg<double> >(real);
-  CImg<double> img = as<CImg<double> >(imag);
+  CId rl = as<CId >(real);
+  CId img = as<CId >(imag);
   rl.FFT(rl,img,inverse,nb_threads);
   return wrap(rl);
 }
@@ -267,7 +265,8 @@ NumericVector FFT_realout(NumericVector real,NumericVector imag,bool inverse=fal
 
 //' Estimate displacement field between two images.
 //'
-//' @param source Reference image.
+//' @param sourceIm Reference image.
+//' @param destIm Reference image.
 //' @param smoothness Smoothness of estimated displacement field.
 //' @param precision Precision required for algorithm convergence.
 //' @param nb_scales Number of scales used to estimate the displacement field.
@@ -277,15 +276,16 @@ NumericVector FFT_realout(NumericVector real,NumericVector imag,bool inverse=fal
 // [[Rcpp::export]]
 NumericVector displacement(NumericVector sourceIm,NumericVector destIm,float smoothness=0.1, float precision=5.0,unsigned int nb_scales=0, unsigned int iteration_max=10000,bool is_backward=false)
 {
-   CImg<double> src = as<CImg<double> >(sourceIm);
-   CImg<double> dst = as<CImg<double> >(destIm);
-   CImg<double> out(src,false);
+   CId src = as<CId >(sourceIm);
+   CId dst = as<CId >(destIm);
+   CId out(src,false);
    out.displacement(dst,smoothness,precision,nb_scales,iteration_max,is_backward);
    return wrap(out);
 }
 
 
 //' Blur image anisotropically, in an edge-preserving way.
+//' @param im an image
 //' @param amplitude Amplitude of the smoothing.
 //' @param sharpness Sharpness.
 //' @param anisotropy Anisotropy.
@@ -306,7 +306,7 @@ NumericVector displacement(NumericVector sourceIm,NumericVector destIm,float smo
 NumericVector blur_anisotropic(NumericVector im, float amplitude,  float sharpness=0.7,  float anisotropy=0.6,float alpha=0.6,  float sigma=1.1,  float dl=0.8,  float da=30,
                                float gauss_prec=2,  unsigned int interpolation_type=0,
                                bool is_fast_approx=true) {
-  CImg<double> img = as<CImg<double> >(im);
+  CId img = as<CId >(im);
   img.blur_anisotropic(amplitude,sharpness,anisotropy,alpha,sigma,dl,da,gauss_prec,interpolation_type,is_fast_approx);
   return wrap(img);
 }
@@ -314,8 +314,8 @@ NumericVector blur_anisotropic(NumericVector im, float amplitude,  float sharpne
 // [[Rcpp::export]]
 NumericVector periodic_part(NumericVector im)
 {
-  CImg<double> img = as<CImg<double> >(im);
-  CImg<double> D(img,"xyzc",0);
+  CId img = as<CId >(im);
+  CId D(img,"xyzc",0);
   if (img.spectrum() > 1 or img.depth() > 1)
     {
       stop("This function works only on 2D grayscale images");
@@ -338,8 +338,8 @@ NumericVector periodic_part(NumericVector im)
       D(w-1,y) += f;
     }
   //Compute FFT of D 
-  CImg<double> impart(D,"xyzc",0);
-  CImg<double> realpart(D);
+  CId impart(D,"xyzc",0);
+  CId realpart(D);
   double weight=0;
   D.FFT(realpart,impart);
   cimg_forXY(D,x,y)

@@ -1,6 +1,3 @@
-//[[Rcpp::interfaces(cpp)]]
-
-
 /*
  #
  #  File            : CImg.h
@@ -187,7 +184,7 @@
 //
 // Define 'cimg_use_vt100' to allow output of color messages on VT100-compatible terminals.
 #ifndef cimg_verbosity
-#define cimg_verbosity 2
+#define cimg_verbosity 1
 #elif !(cimg_verbosity==0 || cimg_verbosity==1 || cimg_verbosity==2 || cimg_verbosity==3 || cimg_verbosity==4)
 #error CImg Library: Configuration variable 'cimg_verbosity' is badly defined.
 #error (should be { 0=quiet | 1=console | 2=dialog | 3=console+warnings | 4=dialog+warnings }).
@@ -2240,11 +2237,14 @@ namespace cimg_library_suffixed {
         }
       \endcode
   **/
+
+  //SB: Changed here to use Rcout instead of printing to stdout
+
   struct CImgException : public std::exception {
 #define _cimg_exception_err(etype,disp_flag) \
   std::va_list ap; va_start(ap,format); cimg_vsnprintf(_message,16384,format,ap); va_end(ap); \
   if (cimg::exception_mode()) { \
-    std::fprintf(cimg::output(),"\n%s[CImg] *** %s ***%s %s\n",cimg::t_red,etype,cimg::t_normal,_message); \
+    Rcpp::Rcout << _message << "\n";\
     if (cimg_display && disp_flag && !(cimg::exception_mode()%2)) try { cimg::dialog(etype,_message,"Abort"); } \
     catch (CImgException&) {} \
     if (cimg::exception_mode()>=3) cimg_library_suffixed::cimg::info(); \

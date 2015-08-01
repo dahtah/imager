@@ -1,1 +1,2 @@
-PKG_LIBS +=  -lgdi32 $(RCPP_LDFLAGS)
+PKG_CPPFLAGS += -I../inst/include -DCIMG_COMPILING
+PKG_LIBS +=  -lgdi32 -lfftw3 $(RCPP_LDFLAGS)
