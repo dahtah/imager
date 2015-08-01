@@ -9,9 +9,9 @@ pixel.grid(im, standardise = FALSE, drop.unused = TRUE)
 \arguments{
 \item{im}{an image}
 
-\item{drop.unused}{if TRUE ignore empty dimensions, if FALSE include them anyway (default TRUE)}
+\item{standardise}{If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)}
 
-\item{standardise.}{If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)}
+\item{drop.unused}{if TRUE ignore empty dimensions, if FALSE include them anyway (default TRUE)}
 }
 \value{
 a data.frame

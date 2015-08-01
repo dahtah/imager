@@ -177,7 +177,7 @@ vanvliet <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L
 #' @param im an image
 #' @param sigma Standard deviation of the blur.
 #' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }
-#' @param gaussian 
+#' @param gaussian Use a Gaussian filter (default FALSE). Default: O-order Deriche filter.
 #' @seealso
 #'  deriche(), vanvliet().
 #' @export
@@ -595,31 +595,19 @@ permute_axes <- function(im, perm) {
     .Call('imager_permute_axes', PACKAGE = 'imager', im, perm)
 }
 
-#' Resize image to double-size, using the Scale2X algorithm.
-#'
-#'Uses an anisotropic upscaling algorithm
-#'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-#' @param im an image
+#' @describeIn resize_uniform Double size
 #' @export
 resize_doubleXY <- function(im) {
     .Call('imager_resize_doubleXY', PACKAGE = 'imager', im)
 }
 
-#' Resize image to half-size, using an optimized filter
-#'
-#'Uses an anisotropic upscaling algorithm
-#'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-#' @param im an image
+#' @describeIn resize_uniform Half size
 #' @export
 resize_halfXY <- function(im) {
     .Call('imager_resize_halfXY', PACKAGE = 'imager', im)
 }
 
-#' Resize image to triple-size, using the Scale2X algorithm.
-#'
-#'Uses an anisotropic upscaling algorithm
-#'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-#' @param im an image
+#' @describeIn resize_uniform Triple size
 #' @export
 resize_tripleXY <- function(im) {
     .Call('imager_resize_tripleXY', PACKAGE = 'imager', im)
@@ -672,7 +660,6 @@ resize <- function(im, size_x = -100L, size_y = -100L, size_z = -100L, size_c = 
 #' @param im an image
 #' @param warpfield Warping field. The (x,y,z) fields should be stacked along the colour coordinate. 
 #' @param mode Can be { 0=backward-absolute | 1=backward-relative | 2=forward-absolute | 3=forward-relative }
-#' @param is_relative does warping field give absolute or relative warping coordinates?
 #' @param interpolation Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
 #' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann | 2=periodic }</tt>.
 #' @seealso imwarp for a user-friendly interface
@@ -717,18 +704,18 @@ imappend <- function(imlist, axis) {
 #' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
 #'
 #' @param im an image
-#' @param cx: vector of x coordinates for patch centers 
-#' @param cy: vector of y coordinates for patch centers 
-#' @param wx: vector of coordinates for patch width 
-#' @param wy: vector of coordinates for patch height 
+#' @param cx vector of x coordinates for patch centers 
+#' @param cy vector of y coordinates for patch centers 
+#' @param wx vector of coordinates for patch width 
+#' @param wy vector of coordinates for patch height 
 #' @return a list of image patches (cimg objects)
 #' @export
 extract_patches <- function(im, cx, cy, wx, wy) {
     .Call('imager_extract_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)
 }
 
-#' @param cz: vector of z coordinates for patch centers 
-#' @param wz: vector of coordinates for patch depth
+#' @param cz vector of z coordinates for patch centers 
+#' @param wz vector of coordinates for patch depth
 #' @describeIn extract_patches Extract 3D patches
 #' @export
 extract_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {

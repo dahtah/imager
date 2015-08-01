@@ -90,11 +90,7 @@ NumericVector permute_axes(NumericVector im,std::string perm)
    return wrap(img);
 }
 
-//' Resize image to double-size, using the Scale2X algorithm.
-//'
-//'Uses an anisotropic upscaling algorithm
-//'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-//' @param im an image
+//' @describeIn resize_uniform Double size
 //' @export
 // [[Rcpp::export]]
 NumericVector resize_doubleXY(NumericVector im)
@@ -105,11 +101,7 @@ NumericVector resize_doubleXY(NumericVector im)
    return wrap(out);
 }
 
-//' Resize image to half-size, using an optimized filter
-//'
-//'Uses an anisotropic upscaling algorithm
-//'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-//' @param im an image
+//' @describeIn resize_uniform Half size
 //' @export
 // [[Rcpp::export]]
 NumericVector resize_halfXY(NumericVector im)
@@ -121,12 +113,7 @@ NumericVector resize_halfXY(NumericVector im)
 }
 
 
-
-//' Resize image to triple-size, using the Scale2X algorithm.
-//'
-//'Uses an anisotropic upscaling algorithm
-//'       <a href="http://scale2x.sourceforge.net/algorithm.html">described here</a>.
-//' @param im an image
+//' @describeIn resize_uniform Triple size
 //' @export
 // [[Rcpp::export]]
 NumericVector resize_tripleXY(NumericVector im)
@@ -203,7 +190,6 @@ NumericVector resize(NumericVector im, int size_x=-100,  int size_y=-100,
 //' @param im an image
 //' @param warpfield Warping field. The (x,y,z) fields should be stacked along the colour coordinate. 
 //' @param mode Can be { 0=backward-absolute | 1=backward-relative | 2=forward-absolute | 3=forward-relative }
-//' @param is_relative does warping field give absolute or relative warping coordinates?
 //' @param interpolation Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
 //' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann | 2=periodic }</tt>.
 //' @seealso imwarp for a user-friendly interface

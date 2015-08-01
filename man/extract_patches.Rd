@@ -12,17 +12,17 @@ extract_patches3D(im, cx, cy, cz, wx, wy, wz)
 \arguments{
 \item{im}{an image}
 
-\item{cx:}{vector of x coordinates for patch centers}
+\item{cx}{vector of x coordinates for patch centers}
 
-\item{cy:}{vector of y coordinates for patch centers}
+\item{cy}{vector of y coordinates for patch centers}
 
-\item{wx:}{vector of coordinates for patch width}
+\item{wx}{vector of coordinates for patch width}
 
-\item{wy:}{vector of coordinates for patch height}
+\item{wy}{vector of coordinates for patch height}
 
-\item{cz:}{vector of z coordinates for patch centers}
+\item{cz}{vector of z coordinates for patch centers}
 
-\item{wz:}{vector of coordinates for patch depth}
+\item{wz}{vector of coordinates for patch depth}
 }
 \value{
 a list of image patches (cimg objects)

@@ -13,7 +13,7 @@ isoblur(im, sigma, boundary_conditions = TRUE, gaussian = FALSE)
 
 \item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }}
 
-\item{gaussian}{}
+\item{gaussian}{Use a Gaussian filter (default FALSE). Default: O-order Deriche filter.}
 }
 \description{
 Blur image isotropically.

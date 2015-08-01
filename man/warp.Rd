@@ -17,8 +17,6 @@ warp(im, warpfield, mode = 0L, interpolation = 1L,
 \item{interpolation}{Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.}
 
 \item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann | 2=periodic }</tt>.}
-
-\item{is_relative}{does warping field give absolute or relative warping coordinates?}
 }
 \description{
 Warp image

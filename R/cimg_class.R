@@ -520,7 +520,7 @@ convert.im.toPNG <- function(A)
 ##'
 ##' 
 ##' @param im an image
-##' @param standardise. If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
+##' @param standardise If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
 ##' @param drop.unused if TRUE ignore empty dimensions, if FALSE include them anyway (default TRUE)
 ##' @return a data.frame
 ##' @examples
@@ -774,21 +774,19 @@ as.cimg.matrix <- function(obj,...)
 ##' #Create a data.frame with columns x,y and value
 ##' df <- expand.grid(x=1:10,y=1:10) %>% mutate(value=x*y)
 ##' #Convert to cimg object (2D, grayscale image of size 10*10
-##' #For some reason the following line works fine in
-##' #interactive sessions but not when checking the package
-##' #as.cimg(df,dims=c(10,10,1,1)) %>% plot
+##' as.cimg(df,dims=c(10,10,1,1)) %>% plot
 ##' @author Simon Barthelme
 ##' @export
 as.cimg.data.frame <- function(obj,v.name="value",dims,...)
     {
-        which.v <- (names(df) == v.name) %>% which
-        col.coord <- (names(df) %in% names.coords) %>% which
-        coords <- names(df)[col.coord]
+        which.v <- (names(obj) == v.name) %>% which
+        col.coord <- (names(obj) %in% names.coords) %>% which
+        coords <- names(obj)[col.coord]
         if (length(which.v) == 0)
             {
                 sprintf("Variable %s is missing",v.name) %>% stop
             }
-        if (any(sapply(df[,-which.v],min) <= 0))
+        if (any(sapply(obj[,-which.v],min) <= 0))
             {
                 stop('Indices must be positive')
             }
@@ -798,12 +796,12 @@ as.cimg.data.frame <- function(obj,v.name="value",dims,...)
                 dims <- rep(1,4)
                 for (n in coords)
                     {
-                        dims[index.coords[[n]]] <- max(df[[n]])
+                        dims[index.coords[[n]]] <- max(obj[[n]])
                     }
             }
         im <- as.cimg(array(0,dims))
-        ind <- pixel.index(im,df[,col.coord])
-        im[ind] <- df[[v.name]]
+        ind <- pixel.index(im,obj[,col.coord])
+        im[ind] <- obj[[v.name]]
         im
     }
 
@@ -951,15 +949,16 @@ coord.index <- function(im,index)
             }
         maxIndex <- prod(dim(im))
         V[index >= maxIndex,] <- NA
-        if (nrow(V) == 1) {
-            V <- as.vector(V)
-            names(V) <- c("x","y","z","cc")
-        }
-        else
-            {
+        ## if (nrow(V) == 1) {
+        ##     V <- as.vector(V)
+        ##     names(V) <- c("x","y","z","cc")
+        ##     V <- t(V)
+        ## }
+        ## else
+        ##     {
                 colnames(V) <- c("x","y","z","cc")
-            }
-        
+##            }                           
+     
         
         as.data.frame(V+1)
     }
@@ -1416,11 +1415,13 @@ imsplit <- function(im,axis,nb=-1)
 ##' @param im an image
 ##' @return an image
 ##' @examples
-##' im <- load.image(system.file('extdata/parrots.png',package='imager')) %>% subim(x <= 512)
+##' imname <- system.file('extdata/parrots.png',package='imager')
+##' im <- load.image(imname) %>% subim(x <= 512)
 ##' layout(t(1:3))
 ##' plot(im,main="Original image")
 ##' periodic.part(im) %>% plot(main="Periodic part")
-##' #The smooth error is the difference between the original image and its periodic part
+##' #The smooth error is the difference between
+##' #the original image and its periodic part
 ##' (im-periodic.part(im)) %>% plot(main="Smooth part")
 ##' 
 ##' @references  L. Moisan, Periodic plus Smooth Image Decomposition,J. Math. Imaging Vision, vol. 39:2, pp. 161-179, 2011
@@ -1473,3 +1474,50 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
                 FFT_complex(im.real,im.imag,inverse=inverse)
             }
     }
+
+
+##' Resize image uniformly 
+##'
+##' Resize image by a single scale factor. For non-uniform scaling and a wider range of options, see resize. 
+##'
+##' @name resize_uniform
+##' @param im an image
+##' @param scale a scale factor
+##' @return an image
+##' @references
+##' For double-scale, half-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}.
+##' @seealso resize
+##' @examples
+##' imname <- system.file('extdata/parrots.png',package='imager')
+##' im <- load.image(imname)
+##' imresize(im,1/4) #Quarter size
+##' liply(2:4,function(ind) imresize(im,1/ind),"x") %>%  plot
+##' @author Simon Barthelme
+NULL
+
+##' @describeIn resize_uniform resize by scale factor
+##' @export
+imresize <- function(im,scale=1)
+    {
+        
+        if (depth(im) == 1 & ((1/scale)%%2)==0) #Half-size, quarter-size, etc.
+            {
+                nTimes <- -log2(scale)
+                iterate(resize_halfXY,nTimes)(im)
+            }
+        else if (depth(im) == 1 & ((scale)%%2)==0) #Double-size, Quadruple-size, etc.
+            {
+                nTimes <- log2(scale)
+                iterate(resize_doubleXY,nTimes)(im)
+            }
+        else if (scale == 3)
+            {
+                resize_tripleXY(im)
+            }
+        else
+            {
+                resize(im,-scale*100,-scale*100,-scale*100,interp=3)
+            }
+    }
+
+
