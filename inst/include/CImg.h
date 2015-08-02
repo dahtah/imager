@@ -2238,13 +2238,12 @@ namespace cimg_library_suffixed {
       \endcode
   **/
 
-  //SB: Changed here to use Rcout instead of printing to stdout
+  //SB: removed stderr output
 
   struct CImgException : public std::exception {
 #define _cimg_exception_err(etype,disp_flag) \
   std::va_list ap; va_start(ap,format); cimg_vsnprintf(_message,16384,format,ap); va_end(ap); \
   if (cimg::exception_mode()) { \
-    Rcpp::Rcout << _message << "\n";\
     if (cimg_display && disp_flag && !(cimg::exception_mode()%2)) try { cimg::dialog(etype,_message,"Abort"); } \
     catch (CImgException&) {} \
     if (cimg::exception_mode()>=3) cimg_library_suffixed::cimg::info(); \
