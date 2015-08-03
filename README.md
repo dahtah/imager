@@ -10,6 +10,8 @@ Install the devtools package if you haven't already. Then run:
 	install_github("dahtah/imager")
 
 So far the package is only available as source code, so you'll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11 and libfftw3.
+	sudo apt-get install libfftw3-dev libX11-dev
+
 
 ### External dependencies
 
@@ -33,10 +35,9 @@ All images are stored as standard R numeric vectors (i.e., double-precision), me
 (400x300) x (25x120) x 3
 values, corresponding to (space)x(time)x(colour). In addition, each value costs 8 bytes of storage, for a grand total of 8GB of memory.
 
-Future versions of imager will have facilities for out-of-memory storage of video data, but in the meantime don't try to load large videos.
+For out-of-memory processing of videos, see the experimental package [imagerstreams](https://github.com/dahtah/imagerstreams). 
 
 
 ## Current status
 
-- Most CImg functions for filtering, morphology and colourspace conversions have R interfaces. The function calls and documentation is mostly verbatim copy from the original C++ API.
-- There isn't a whole lot of argument checking so you might crash your session if you try something unexpected. Please report it if that happens.
+Imager is fully functional but still young, so the API might change. Open an issue on Github or email me if you've found a bug or would like to suggest a feature.
