@@ -1,0 +1,6 @@
+Add more convenient functions for replacing image parts
+Write imhessian function
+Add functions for image loops
+    - filters
+    - summaries? 
+More flexible splitting/appending, e.g. quadtrees? 

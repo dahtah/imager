@@ -1528,7 +1528,7 @@ imresize <- function(im,scale=1)
             }
         else
             {
-                resize(im,-scale*100,-scale*100,-scale*100,interp=3)
+                resize(im,-scale*100,-scale*100,-scale*100,interpolation_type=3)
             }
     }
 
