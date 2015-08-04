@@ -1579,3 +1579,26 @@ imhessian <- function(im,axes=c("xx","xy","yy"))
                 l
             }
     }
+
+
+imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
+    {
+        if (spectrum(im) == 3 & (spectrum(sprite)==1))
+            {
+                warning("Converting sprite to colour image")
+                sprite <- add.colour(sprite)
+            }
+        else if (spectrum(sprite) == 3 & (spectrum(im)==1))
+            {
+                warning("Converting image to colour")
+                im <- add.colour(im)
+            }
+        if (spectrum(sprite) != spectrum(im))
+            {
+                stop("Image and sprite have incompatible spectra")
+            }
+        else
+            {
+                draw_image(im,sprite,x-1,y-1,z-1,opacity=opacity)
+            }
+    }

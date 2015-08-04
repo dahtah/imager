@@ -721,3 +721,8 @@ extract_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {
     .Call('imager_extract_patches3D', PACKAGE = 'imager', im, cx, cy, cz, wx, wy, wz)
 }
 
+#' @export
+draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
+    .Call('imager_draw_image', PACKAGE = 'imager', im, sprite, x, y, z, opacity)
+}
+

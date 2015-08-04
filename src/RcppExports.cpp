@@ -954,3 +954,19 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// draw_image
+NumericVector draw_image(NumericVector im, NumericVector sprite, int x, int y, int z, float opacity);
+RcppExport SEXP imager_draw_image(SEXP imSEXP, SEXP spriteSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP opacitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type sprite(spriteSEXP);
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type z(zSEXP);
+    Rcpp::traits::input_parameter< float >::type opacity(opacitySEXP);
+    __result = Rcpp::wrap(draw_image(im, sprite, x, y, z, opacity));
+    return __result;
+END_RCPP
+}
