@@ -287,7 +287,6 @@ get_gradient <- function(im, axes = "", scheme = 3L) {
 #' Return image hessian.
 #' @param im an image
 #' @param axes Axes considered for the hessian computation, as a character string (e.g "xy").
-#' @export
 get_hessian <- function(im, axes = "") {
     .Call('imager_get_hessian', PACKAGE = 'imager', im, axes)
 }

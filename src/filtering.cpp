@@ -195,12 +195,13 @@ List get_gradient(NumericVector im,std::string axes = "",int scheme=3)
 //' Return image hessian.
 //' @param im an image
 //' @param axes Axes considered for the hessian computation, as a character string (e.g "xy").
-//' @export
 // [[Rcpp::export]]
 List get_hessian(NumericVector im,std::string axes = "")
 {
    CId img = as<CId >(im);
    CImgList<double> hess = img.get_hessian(axes.c_str());
+   //CId out(im);
+   //out = img.get_hessian(axes.c_str());
    return wrap(hess);
 }
 

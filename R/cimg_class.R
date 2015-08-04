@@ -626,6 +626,33 @@ as.cimg.function <- function(obj,width,height,depth=1,normalise.coord=FALSE,...)
         
     }
 
+##' Create an image of custom size by filling in repeated values
+##'
+##' This is a convenience function for quickly creating blank images, or images filled with a specific colour. See examples. 
+##' 
+##' @param x width (default 1)
+##' @param y height (default 1)
+##' @param z depth (default 1)
+##' @param val fill-in values. Either a single value (for grayscale), or RGB values for colour
+##' @return an image object (class cimg)
+##' @examples
+##' imfill(20,20) %>% plot #Blank image of size 20x20
+##' imfill(20,20,val=c(1,0,0)) %>% plot #All red image
+##' @author simon
+##' @export
+imfill <- function(x=1,y=1,z=1,val=0)
+    {
+        if (length(val) == 1)
+            {
+                array(val,c(x,y,z,1)) %>% cimg
+            }
+        else
+            {
+                llply(val,function(v) imfill(x,y,z,v)) %>% imappend("c")
+            }
+    }
+
+
 ##' Turn an numeric array into a cimg object
 ##'
 ##' If the array has two dimensions, we assume it's a grayscale image. If it has three dimensions we assume it's a video, unless the third dimension has a depth of 3, in which case we assume it's a colour image,
@@ -1245,6 +1272,7 @@ imgradient <- function(im,axes,scheme=3)
             }
         else
             {
+                names(gr) <- str_split(axes,"")[[1]]
                 gr
             }
     }
@@ -1532,4 +1560,22 @@ imresize <- function(im,scale=1)
             }
     }
 
-
+#' Compute image hessian.
+#' @param im an image
+#' @param axes Axes considered for the hessian computation, as a character string (e.g "xy" corresponds to d/(dx*dy)). Can be a list of axes. Default: xx,xy,yy
+#' @return an image, or a list of images
+#' @export
+imhessian <- function(im,axes=c("xx","xy","yy"))
+    {
+        pax <- paste0(axes,collapse="")
+        if (length(axes)==1)
+            {
+                get_hessian(im,axes)[[1]]
+            }
+        else
+            {
+                l <- get_hessian(im,pax)
+                names(l) <- axes
+                l
+            }
+    }

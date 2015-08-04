@@ -33,5 +33,5 @@
 .\#*
 
 #R temp files
-.Rhistory
+*.Rhistory
 *.Rcheck
