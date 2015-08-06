@@ -97,7 +97,7 @@ List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,Intege
   return out;
 }
 
-//' @export
+// [[Rcpp::export]]
 NumericVector draw_image(NumericVector im,NumericVector sprite,int x=0,int y = 0, int z = 0,float opacity = 1)
 {
   CId img = as<CId >(im);

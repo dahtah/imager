@@ -1446,6 +1446,33 @@ imsplit <- function(im,axis,nb=-1)
     }
 
 
+imsplit.recur <- function(im,spl,nb=-1)
+    {
+        if (length(spl) > 1)
+            {
+                imsplit.recur(im,spl[[1]]) %>% llply(imsplit.recur,spl=spl[-1])
+            }
+        else
+            {
+                l <- imager:::im_split(im,axis,nb)
+                d.ind <- index.coords[[axis]]
+                d <- dim(im)
+                if (nb!=-1)
+                    {
+                        b.end <- laply(l,function(v) dim(v)[d.ind]) %>% cumsum
+                        b.start <- c(1,b.end[-length(l)]+1)
+                        b.str <- sprintf("= %i - %i",b.start,b.end)
+                        names(l) <- paste(axis,b.str)
+                    }
+                else
+                    {
+                        names(l) <- paste(axis,1:length(l),sep=" = ")
+                    }
+                l
+            }
+    }
+
+
 ##' Compute the periodic part of an image, using the periodic/smooth decomposition of Moisan (2009)
 ##'
 ##' Moisan (2009) defines an additive image decomposition
