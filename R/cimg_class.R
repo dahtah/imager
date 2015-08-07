@@ -1454,7 +1454,7 @@ imsplit.recur <- function(im,spl,nb=-1)
             }
         else
             {
-                l <- imager:::im_split(im,axis,nb)
+                l <- im_split(im,axis,nb)
                 d.ind <- index.coords[[axis]]
                 d <- dim(im)
                 if (nb!=-1)

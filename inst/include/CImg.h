@@ -19847,7 +19847,7 @@ namespace cimg_library_suffixed {
         const Tfloat
           val = (Tfloat)*ptr,
           nval = (val<0?0:val>255?255:val)/255,
-          sval = (Tfloat)(nval<=0.0031308f?nval*12.92f:1.055f*std::pow(nval,0.416667f)-0.055f);
+          sval = (Tfloat)(nval<=0.0031308f?nval*12.92f:1.055f*std::pow((float) nval,0.416667f)-0.055f);
         *ptr = (T)(sval*255);
       }
       return *this;
