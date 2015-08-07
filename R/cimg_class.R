@@ -11,7 +11,7 @@ NULL
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
-#' @importFrom stringr str_match
+#' @importFrom stringr str_match str_split
 #' @importFrom Rcpp sourceCpp
 #' @importFrom magrittr "%>%"
 NULL
@@ -63,7 +63,7 @@ plot.cimg <- function(x,frame,rescale.color=TRUE,...)
         im <- x
         w <- width(im)
         h <- height(im)
-        if (rescale.color & !all(im==0))  im <- (im-min(im))/diff(range(im))
+        if (rescale.color & (diff(range(im)) > 0))  im <- (im-min(im))/diff(range(im))
         if (dim(im)[3] == 1) #Single image (depth=1)
             {
                 
