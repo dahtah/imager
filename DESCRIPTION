@@ -9,5 +9,6 @@ Description: Fast image processing for images in up to 4 dimensions (two spatial
 License: LGPL
 Imports: Rcpp (>= 0.11.5)
 Depends: plyr,magrittr,stringr,grDevices,png,jpeg
+SystemRequirements: fftw3
 Enhances: spatstat
 LinkingTo: Rcpp

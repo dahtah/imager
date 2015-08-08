@@ -1,15 +1,34 @@
 Imager is an image/video processing package for R, based on [CImg](http://cimg.eu/), a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for applications like video processing/hyperspectral imaging/MRI.
 
-## How to install
+## Installing the package
 
-### The package
+Install the devtools package if you haven't already. On Linux or OS X run:
 
-Install the devtools package if you haven't already. Then run:
+	devtools::install_github("dahtah/imager")
 
-	library(devtools)
-	install_github("dahtah/imager")
+If that doesn't work then you're probably missing a build environment or a library, see below.
 
-So far the package is only available as source code, so you'll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11 and libfftw3.
+On Windows you can grab a binary package (it's possibly outdated, see below)
+
+	devtools::install_url("https://github.com/dahtah/imager/releases/download/snapshot_080815/imager_win.zip")
+
+
+
+### OS X
+
+You'll need Xcode (OS X's development environment) to compile source packages. The FFTW library is needed, and the easiest way to install it is via [Homebrew](http://brew.sh/). Install Homebrew, then run:
+	brew install fftw
+
+### Windows
+
+Building R packages on Windows is a bit of a pain so you're probably better off with the binary package (which may not be up-to-date). If you need the latest version of imager, you'll have to:
+
+- Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/index.html)
+- Install [additional libraries](http://www.stats.ox.ac.uk/pub/Rtools/libs.html) for Rtools. You want the package that's called "local tree". Put those libraries somewhere gcc can find them. 
+
+
+
+To build under Linux make sure you have the headers for libX11 and libfftw3.
 	sudo apt-get install libfftw3-dev libX11-dev
 
 
@@ -41,3 +60,7 @@ For out-of-memory processing of videos, see the experimental package [imagerstre
 ## Current status
 
 Imager is fully functional but still young, so the API might change. Open an issue on Github or email me if you've found a bug or would like to suggest a feature.
+
+## Test pictures
+
+Imager ships with two test pictures and a video. One is a picture of parrots that comes from the [Kodak set](http://r0k.us/graphics/kodak/). Another is a sketch of birds by Leonardo, from Wikimedia. The test video comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
