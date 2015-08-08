@@ -19830,7 +19830,7 @@ namespace cimg_library_suffixed {
         const Tfloat
           sval = (Tfloat)*ptr,
           nsval = (sval<0?0:sval>255?255:sval)/255,
-          val = (Tfloat)(nsval<=0.04045f?nsval/12.92f:std::pow((nsval + 0.055f)/(1.055f),2.4f));
+          val = (Tfloat)(nsval<=0.04045f?nsval/12.92f:std::pow((float) (nsval + 0.055f)/(1.055f),2.4f));
         *ptr = (T)(val*255);
       }
       return *this;
