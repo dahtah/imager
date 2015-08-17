@@ -12,7 +12,7 @@ using namespace cimg_library;
 void display(NumericVector im)
 {
    CId img = as<CId >(im);
-   img.display();
+   img.display("",false);
    return;
 }
 
