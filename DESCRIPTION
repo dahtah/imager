@@ -1,7 +1,7 @@
 Package: imager
 Type: Package
 Title: Image Processing Library Based on CImg
-Version: 0.1
+Version: 0.12
 Date: 2015-08-18
 Author: Simon Barthelme [aut, cre], 
     Antoine Cecchi [ctb]

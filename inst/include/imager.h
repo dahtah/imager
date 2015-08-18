@@ -7,7 +7,7 @@
 #error "The file 'Rcpp.h' should not be included. Please correct to include only 'imager.h'."
 #endif
 
-
+#include <R.h>
 #include "CImg.h"
 #include <Rcpp.h>
 #include "wrappers.h"

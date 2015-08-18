@@ -345,7 +345,7 @@ NumericVector periodic_part(NumericVector im)
   D.FFT(realpart,impart);
   cimg_forXY(D,x,y)
     {
-      weight = 2*cos(2*PI*x/w)+2*cos(2*PI*y/h) - 4;
+      weight = 2*cos(2*cimg::PI*x/w)+2*cos(2*cimg::PI*y/h) - 4;
       impart(x,y) /= weight;
       realpart(x,y) /= weight;
     }

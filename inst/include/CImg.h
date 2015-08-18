@@ -3887,7 +3887,11 @@ namespace cimg_library_suffixed {
     **/
     inline std::FILE* output(std::FILE *file) {
       cimg::mutex(1);
+#ifndef cimg_rmode
       static std::FILE *res = stderr;
+#else
+      static std::FILE *res;
+#endif
       if (file) res = file;
       cimg::mutex(1,0);
       return res;
@@ -3941,7 +3945,11 @@ namespace cimg_library_suffixed {
 #ifdef cimg_strict_warnings
         throw CImgWarningException(message);
 #else
+#ifdef cimg_rmode
+	Rprintf("\n%s[CImg] *** Warning ***%s%s",cimg::t_red,cimg::t_normal,message);
+#else
         std::fprintf(cimg::output(),"\n%s[CImg] *** Warning ***%s%s",cimg::t_red,cimg::t_normal,message);
+#endif
 #endif
         delete[] message;
       }
@@ -4701,6 +4709,7 @@ namespace cimg_library_suffixed {
         throw CImgArgumentException("cimg::fopen(): File '%s', specified mode is (null).",
                                     path);
       std::FILE *res = 0;
+      #ifndef cimg_rmode
       if (*path=='-' && (!path[1] || path[1]=='.')) {
         res = (*mode=='r')?stdin:stdout;
 #if cimg_OS==2
@@ -4709,6 +4718,9 @@ namespace cimg_library_suffixed {
         }
 #endif
       } else res = std::fopen(path,mode);
+      #else
+      res = std::fopen(path,mode);
+      #endif
       if (!res) throw CImgIOException("cimg::fopen(): Failed to open file '%s' with mode '%s'.",
                                       path,mode);
       return res;
@@ -4723,7 +4735,9 @@ namespace cimg_library_suffixed {
     **/
     inline int fclose(std::FILE *file) {
       if (!file) warn("cimg::fclose(): Specified file is (null).");
+#ifndef cimg_rmode
       if (!file || file==stdin || file==stdout) return 0;
+#endif
       const int errn = std::fclose(file);
       if (errn!=0) warn("cimg::fclose(): Error code %d returned during file closing.",
                         errn);
@@ -41621,7 +41635,9 @@ namespace cimg_library_suffixed {
       disp.show().flush();
 
       const CImg<char> dtitle = CImg<char>::string(disp.title());
+      #ifndef cimg_rmode
       if (display_info) print(dtitle);
+      #endif
 
       CImg<T> zoom;
       for (bool reset_view = true, resize_disp = false, is_first_select = true; !key && !disp.is_closed(); ) {
@@ -48626,7 +48642,9 @@ namespace cimg_library_suffixed {
         if (!title) disp.set_title("CImgList<%s> (%u)",pixel_type(),_width);
       } else if (title) disp.set_title("%s",title);
       const CImg<char> dtitle = CImg<char>::string(disp.title());
+      #ifndef cimg_rmode
       if (display_info) print(disp.title());
+      #endif
       disp.show().flush();
 
       if (_width==1) {
@@ -48743,7 +48761,11 @@ namespace cimg_library_suffixed {
       else if (!cimg::strcasecmp(ext,"gz")) return save_gzip_external(fn);
       else {
         if (_width==1) _data[0].save(fn,-1);
+	#ifndef cimg_rmode
         else cimglist_for(*this,l) { _data[l].save(fn,is_stdout?-1:l); if (is_stdout) std::fputc(EOF,stdout); }
+	#else 
+	else cimglist_for(*this,l) { _data[l].save(fn,is_stdout?-1:l); }
+	#endif
       }
       return *this;
     }
