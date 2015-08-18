@@ -1212,7 +1212,7 @@ threshold <- function(im,thr,approx=TRUE)
         if (is.character(thr))
             {
                 regexp.num <- "\\d+(\\.\\d*)?|\\.\\d+"
-                qt <- stringr::str_match(thr,regexp.num)[,2] %>% as.numeric
+                qt <- stringr::str_match(thr,regexp.num)[,1] %>% as.numeric
                 n <- prod(dim(im))
                 if (n > 1e3 & approx)
                     {
