@@ -970,3 +970,17 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// xyloop
+NumericVector xyloop(NumericVector im, Function f, int nx, int ny);
+RcppExport SEXP imager_xyloop(SEXP imSEXP, SEXP fSEXP, SEXP nxSEXP, SEXP nySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< Function >::type f(fSEXP);
+    Rcpp::traits::input_parameter< int >::type nx(nxSEXP);
+    Rcpp::traits::input_parameter< int >::type ny(nySEXP);
+    __result = Rcpp::wrap(xyloop(im, f, nx, ny));
+    return __result;
+END_RCPP
+}

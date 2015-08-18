@@ -725,3 +725,7 @@ draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
     .Call('imager_draw_image', PACKAGE = 'imager', im, sprite, x, y, z, opacity)
 }
 
+xyloop <- function(im, f, nx, ny) {
+    .Call('imager_xyloop', PACKAGE = 'imager', im, f, nx, ny)
+}
+

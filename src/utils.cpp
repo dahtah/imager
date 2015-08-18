@@ -105,3 +105,25 @@ NumericVector draw_image(NumericVector im,NumericVector sprite,int x=0,int y = 0
   img.draw_image(x,y,z,spr,opacity);
   return wrap(img);
 }
+
+
+// [[Rcpp::export]]
+NumericVector xyloop(NumericVector im,Function f,int nx, int ny)
+{
+  CId img = as<CId >(im);
+  CId out(img.width() - nx*2,img.height() - ny*2);
+  int xmax = img.width() - nx - 1;
+  int ymax = img.height() - ny - 1;
+  double res=0;
+  for (int x = nx;x <= xmax; x++)
+    {
+      for (int y = ny;y <= ymax; y++)
+	{
+	  //	  Rcout << "x:" << x << "y: " << y << std::endl;
+	  res = as<double> (f(img.get_crop(x-nx,y-ny,x+nx,y+ny)));
+	  //Rcout << "res:" << res << std::endl;
+	  out(x-nx,y-ny) = res;
+	}
+    }
+  return wrap(out);
+}
