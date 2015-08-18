@@ -4198,7 +4198,8 @@ namespace cimg_library_suffixed {
     // at the same time!
 #ifdef cimg_use_rng
 
-#include <stdint.h>
+    //SB: removed stdint.h because of header incompatibility
+    //#include <stdint.h>
 
     // Use a custom RNG.
     inline unsigned int _rand(const unsigned int seed=0, const bool set_seed=false) {
