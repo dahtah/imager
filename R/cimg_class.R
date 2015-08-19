@@ -281,6 +281,16 @@ at <- function(im,x,y,z=1,cc=1)
         as.array(im)[x,y,z,cc]
     }
 
+
+##' @describeIn at return value of all colour channels at a location
+##' @examples
+##' color.at(boats,x=10,y=10)
+##' @export
+color.at <- function(im,x,y,z=1)
+    {
+        at(im,x,y,z,cc=1:spectrum(im))
+    }
+
 all.names <- function(cl)
     {
         if (length(cl) == 0)

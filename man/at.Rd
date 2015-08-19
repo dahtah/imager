@@ -2,9 +2,12 @@
 % Please edit documentation in R/cimg_class.R
 \name{at}
 \alias{at}
+\alias{color.at}
 \title{Return pixel value at coordinates}
 \usage{
 at(im, x, y, z = 1, cc = 1)
+
+color.at(im, x, y, z = 1)
 }
 \arguments{
 \item{im}{an image (cimg object)}
@@ -23,11 +26,16 @@ pixel values
 \description{
 Return pixel value at coordinates
 }
+\section{Functions}{
+\itemize{
+\item \code{color.at}: return value of all colour channels at a location
+}}
 \examples{
 im <- as.cimg(function(x,y) x+y,50,50)
 at(im,10,1)
 at(im,10:12,1)
 at(im,10:12,1:3)
+color.at(boats,x=10,y=10)
 }
 \author{
 Simon Barthelme

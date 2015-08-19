@@ -110,33 +110,12 @@ play <- function(vid, loop = FALSE, delay = 30L) {
     invisible(.Call('imager_play', PACKAGE = 'imager', vid, loop, delay))
 }
 
-#' Bucket fill
-#'       @param im an image
-#' @param x X-coordinate of the starting point of the region to fill.
-#' @param y Y-coordinate of the starting point of the region to fill.
-#' @param z Z-coordinate of the starting point of the region to fill.
-#' @param color Pointer to spectrum() consecutive values, defining the drawing color.
-#' @param sigma Tolerance concerning neighborhood values.
-#' @param opacity Opacity of the drawing.
-#' @param is_high_connexity Use 8-connexity (only for 2d images).
-#' @export
-bucket_fill <- function(im, x, y, z, color, opacity = 1, sigma = 0, is_high_connexity = FALSE) {
-    .Call('imager_bucket_fill', PACKAGE = 'imager', im, x, y, z, color, opacity, sigma, is_high_connexity)
+bucket_fill <- function(im, x, y, z, color, opacity = 1, sigma = 0, high_connexity = FALSE) {
+    .Call('imager_bucket_fill', PACKAGE = 'imager', im, x, y, z, color, opacity, sigma, high_connexity)
 }
 
-#' Select a region of homogeneous colour 
-#'
-#' The underlying algorithm is the same as the bucket fill (AKA flood fill). Unlike with the bucket fill, the image isn't changed, the function simply returns a binary mask of the selected region
-#'
-#'       @param im an image
-#' @param x X-coordinate of the starting point of the region to fill.
-#' @param y Y-coordinate of the starting point of the region to fill.
-#' @param z Z-coordinate of the starting point of the region to fill.
-#' @param sigma Tolerance concerning neighborhood values.
-#' @param is_high_connexity Use 8-connexity (only for 2d images).
-#' @export
-bucket_select <- function(im, x, y, z, sigma = 0, is_high_connexity = FALSE) {
-    .Call('imager_bucket_select', PACKAGE = 'imager', im, x, y, z, sigma, is_high_connexity)
+bucket_select <- function(im, x, y, z, sigma = 0, high_connexity = FALSE) {
+    .Call('imager_bucket_select', PACKAGE = 'imager', im, x, y, z, sigma, high_connexity)
 }
 
 #' Apply recursive Deriche filter.
