@@ -63,4 +63,4 @@ Imager is fully functional but still young, so the API might change. Open an iss
 
 ## Test pictures
 
-Imager ships with two test pictures and a video. One is a picture of parrots that comes from the [Kodak set](http://r0k.us/graphics/kodak/). Another is a sketch of birds by Leonardo, from Wikimedia. The test video comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
+Imager ships with three test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another is a sketch of birds by Leonardo, from Wikimedia. The test video comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
