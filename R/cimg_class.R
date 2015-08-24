@@ -1735,6 +1735,7 @@ imhessian <- function(im,axes=c("xx","xy","yy"))
 ##' #I'm aware the result is somewhat ugly 
 ##' imdraw(im,boats.small,x=400,y=10,opacity=.7) %>% plot
 ##' @export
+##' @seealso imager.combine, for different ways of combining images
 imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
     {
         if (spectrum(im) == 3 & (spectrum(sprite)==1))
@@ -1761,6 +1762,7 @@ imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
 ##'
 ##' These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
 ##' @name imager.combine
+##' @param x a list of images
 ##' @examples
 ##' im1 <- as.cimg(function(x,y) x,100,100)
 ##' im2 <- as.cimg(function(x,y) y,100,100)

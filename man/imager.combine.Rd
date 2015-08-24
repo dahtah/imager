@@ -19,6 +19,9 @@ parmax(x)
 
 parmin(x)
 }
+\arguments{
+\item{x}{a list of images}
+}
 \description{
 These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
 }

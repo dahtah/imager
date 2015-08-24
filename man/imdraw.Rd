@@ -32,4 +32,7 @@ imdraw(im,boats.small,x=400,y=10,opacity=.7) \%>\% plot
 \author{
 Simon Barthelme
 }
+\seealso{
+imager.combine, for different ways of combining images
+}
 
