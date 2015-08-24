@@ -11,9 +11,17 @@ medianblur(im, n, threshold)
 
 \item{n}{Size of the median filter.}
 
-\item{threshold}{Threshold used to discard pixels too far from the current pixel value in the median computation.}
+\item{threshold}{Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing.}
 }
 \description{
 Blur image with the median filter.
+}
+\examples{
+medianblur(boats,10,Inf) \%>\% plot(main="Median blur, 10 pixels")
+medianblur(boats,30,Inf) \%>\% plot(main="Median blur, 30 pixels")
+medianblur(boats,30,10) \%>\% plot(main="Median blur, 30 pixels, threshold = 10")
+}
+\seealso{
+isoblur, boxblur
 }
 

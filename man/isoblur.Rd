@@ -18,7 +18,13 @@ isoblur(im, sigma, boundary_conditions = TRUE, gaussian = FALSE)
 \description{
 Blur image isotropically.
 }
+\examples{
+isoblur(boats,3) \%>\% plot(main="Isotropic blur, sigma=3")
+isoblur(boats,3) \%>\% plot(main="Isotropic blur, sigma=10")
+}
 \seealso{
-deriche(), vanvliet().
+deriche
+
+medianblur
 }
 

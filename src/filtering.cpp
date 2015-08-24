@@ -11,6 +11,11 @@ using namespace cimg_library;
 //' @param axis Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
 //' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
 //' @export
+//' @examples
+//' deriche(boats,sigma=2,order=0) %>% plot("Zeroth-order Deriche along x")
+//' deriche(boats,sigma=2,order=1) %>% plot("First-order Deriche along x")
+//' deriche(boats,sigma=2,order=1) %>% plot("Second-order Deriche along x")
+//' deriche(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Deriche along y")
 // [[Rcpp::export]]
 NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',bool boundary_conditions=0)
 {
@@ -37,6 +42,11 @@ NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',b
 //'       @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
 //'       @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
 //'       (Dirichlet boundary condition has a strange behavior)
+//' @examples
+//' vanvliet(boats,sigma=2,order=0) %>% plot("Zeroth-order Vanvliet along x")
+//' vanvliet(boats,sigma=2,order=1) %>% plot("First-order Vanvliet along x")
+//' vanvliet(boats,sigma=2,order=1) %>% plot("Second-order Vanvliet along x")
+//' vanvliet(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Vanvliet along y")
 //' @export
 // [[Rcpp::export]]
 NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',bool boundary_conditions=0)
@@ -52,9 +62,12 @@ NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',
 //' @param sigma Standard deviation of the blur.
 //' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }
 //' @param gaussian Use a Gaussian filter (default FALSE). Default: O-order Deriche filter.
-//' @seealso
-//'  deriche(), vanvliet().
+//' @seealso deriche
 //' @export
+//' @examples
+//' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=3")
+//' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=10")
+//' @seealso medianblur
 // [[Rcpp::export]]
 NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true,bool gaussian=false) {
   CId img = as< CId >(im);
@@ -67,20 +80,28 @@ NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true
 //'    
 //' @param im an image
 //'  @param n Size of the median filter.
-//'  @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation.
+//'  @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. 
 //' @export
+//' @examples
+//' medianblur(boats,10,Inf) %>% plot(main="Median blur, 10 pixels")
+//' medianblur(boats,30,Inf) %>% plot(main="Median blur, 30 pixels")
+//' medianblur(boats,30,10) %>% plot(main="Median blur, 30 pixels, threshold = 10")
+//' @seealso isoblur, boxblur
 // [[Rcpp::export]]
 NumericVector medianblur(NumericVector im,int n, float threshold) {
   CId img = as<CId >(im);
-  img.blur_box(n,threshold);
+  img.blur_median(n,threshold);
   return wrap(img);
 }
 
-//' Blur image with a box filter.
+//' Blur image with a box filter (square window)
 //' @param im an image
 //' @param sigma Size of the box window.
-//' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.a
+//' @param boundary_conditions Boundary conditions. FALSE: Dirichlet TRUE: Neumann.
 //' @seealso deriche(), vanvliet().
+//' @examples
+//' boxblur(boats,5) %>% plot(main="Dirichlet boundary")
+//' boxblur(boats,5,TRUE) %>% plot(main="Neumann boundary")
 //' @export
 // [[Rcpp::export]]
 NumericVector boxblur(NumericVector im,float sigma,bool boundary_conditions=true) {
@@ -101,6 +122,8 @@ NumericVector boxblur(NumericVector im,float sigma,bool boundary_conditions=true
 //'       @seealso blur().
 //'
 //' @export
+//' @examples
+//' boxblur_xy(boats,20,5) %>% plot(main="Anisotropic blur")
 // [[Rcpp::export]]
 NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool boundary_conditions=true) {
   CId img = as<CId >(im);
@@ -120,6 +143,13 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool boundary_condit
 //'      
 //'
 //' @export
+//' @examples
+//' #Edge filter
+//' filter <- as.cimg(function(x,y) sign(x-5),10,10) 
+//' layout(t(1:2))
+//' #Convolution vs. correlation 
+//' correlate(boats,filter) %>% plot(main="Correlation")
+//' convolve(boats,filter) %>% plot(main="Convolution")
 // [[Rcpp::export]]
 NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
@@ -141,6 +171,14 @@ NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_con
 //'
 //'
 //' @export
+//' @seealso correlate
+//' @examples
+//' #Edge filter
+//' filter <- as.cimg(function(x,y) sign(x-5),10,10) 
+//' layout(t(1:2))
+//' #Convolution vs. correlation 
+//' correlate(boats,filter) %>% plot(main="Correlation")
+//' convolve(boats,filter) %>% plot(main="Convolution")
 // [[Rcpp::export]]
 NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
@@ -160,6 +198,11 @@ NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_cond
 //'       @param sigma Tensor smoothness (shock filters only).
 //'
 //' @export
+//' @examples
+//' layout(t(1:2))
+//' plot(boats,main="Original")
+//' imsharpen(boats,150)  %>% plot(main="Sharpened")
+//' 
 // [[Rcpp::export]]
 NumericVector imsharpen(NumericVector im,float amplitude,
 		bool sharpen_type = false,float edge = 1,
@@ -184,6 +227,7 @@ NumericVector imsharpen(NumericVector im,float amplitude,
 //'       5 = Using Van Vliet recursive filter.
 //' @return a list of images (corresponding to the different directions)
 //' @export
+//' @seealso imgradient
 // [[Rcpp::export]]
 List get_gradient(NumericVector im,std::string axes = "",int scheme=3)
 {
@@ -232,6 +276,13 @@ NumericVector diffusion_tensors(NumericVector im,
 //'       @param nb_scales Number of scales used for the transform.
 //'
 //' @export
+//' @examples
+//' #Image compression: set small Haar coefficients to 0
+//' hr <- haar(boats,nb=3) 
+//' mask.low <- threshold(abs(hr),"75%")
+//' mask.high <- threshold(abs(hr),"95%")
+//' haar(hr*mask.low,inverse=TRUE,nb=3) %>% plot(main="75% compression")
+//' haar(hr*mask.high,inverse=TRUE,nb=3) %>% plot(main="95% compression")
 // [[Rcpp::export]]
 NumericVector haar(NumericVector im,bool inverse=false,int nb_scales=1) {
   CId img = as<CId >(im);

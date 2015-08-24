@@ -19,4 +19,12 @@ correlate(im, filter, boundary_conditions = TRUE, normalise = FALSE)
 The correlation of image im by filter flt is defined as:
  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
 }
+\examples{
+#Edge filter
+filter <- as.cimg(function(x,y) sign(x-5),10,10)
+layout(t(1:2))
+#Convolution vs. correlation
+correlate(boats,filter) \%>\% plot(main="Correlation")
+convolve(boats,filter) \%>\% plot(main="Convolution")
+}
 

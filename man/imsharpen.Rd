@@ -23,4 +23,9 @@ imsharpen(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0,
 \description{
 Sharpen image.
 }
+\examples{
+layout(t(1:2))
+plot(boats,main="Original")
+imsharpen(boats,150)  \%>\% plot(main="Sharpened")
+}
 

@@ -20,4 +20,10 @@ deriche(im, sigma, order = 0L, axis = "x", boundary_conditions = 0L)
 \description{
 Apply recursive Deriche filter.
 }
+\examples{
+deriche(boats,sigma=2,order=0) \%>\% plot("Zeroth-order Deriche along x")
+deriche(boats,sigma=2,order=1) \%>\% plot("First-order Deriche along x")
+deriche(boats,sigma=2,order=1) \%>\% plot("Second-order Deriche along x")
+deriche(boats,sigma=2,order=1,axis="y") \%>\% plot("Second-order Deriche along y")
+}
 

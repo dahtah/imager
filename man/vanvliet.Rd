@@ -29,4 +29,10 @@ Boundary conditions (only for order 0) using Triggs matrix, from
       recursive filtering. IEEE Trans. Signal Processing,
       vol. 54, pp. 2365-2367, 2006.
 }
+\examples{
+vanvliet(boats,sigma=2,order=0) \%>\% plot("Zeroth-order Vanvliet along x")
+vanvliet(boats,sigma=2,order=1) \%>\% plot("First-order Vanvliet along x")
+vanvliet(boats,sigma=2,order=1) \%>\% plot("Second-order Vanvliet along x")
+vanvliet(boats,sigma=2,order=1,axis="y") \%>\% plot("Second-order Vanvliet along y")
+}
 

@@ -26,4 +26,7 @@ a list of images (corresponding to the different directions)
 \description{
 Compute image gradient.
 }
+\seealso{
+imgradient
+}
 

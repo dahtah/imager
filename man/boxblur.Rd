@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{boxblur}
 \alias{boxblur}
-\title{Blur image with a box filter.}
+\title{Blur image with a box filter (square window)}
 \usage{
 boxblur(im, sigma, boundary_conditions = TRUE)
 }
@@ -11,10 +11,14 @@ boxblur(im, sigma, boundary_conditions = TRUE)
 
 \item{sigma}{Size of the box window.}
 
-\item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.a}
+\item{boundary_conditions}{Boundary conditions. FALSE: Dirichlet TRUE: Neumann.}
 }
 \description{
-Blur image with a box filter.
+Blur image with a box filter (square window)
+}
+\examples{
+boxblur(boats,5) \%>\% plot(main="Dirichlet boundary")
+boxblur(boats,5,TRUE) \%>\% plot(main="Neumann boundary")
 }
 \seealso{
 deriche(), vanvliet().

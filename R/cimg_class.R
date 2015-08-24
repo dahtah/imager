@@ -1370,6 +1370,9 @@ capture.plot <- function()
 ##' @return an image or a list of images, depending on the value of "axes" 
 ##' @author Simon Barthelme
 ##' @export
+##' @examples
+##' grayscale(boats) %>% imgradient("x") %>% plot
+##' imgradient(boats,"xy") #Returns a list 
 imgradient <- function(im,axes,scheme=3)
     {
         gr <- get_gradient(im,axes,scheme)
@@ -1698,6 +1701,8 @@ imresize <- function(im,scale=1)
 #' @param im an image
 #' @param axes Axes considered for the hessian computation, as a character string (e.g "xy" corresponds to d/(dx*dy)). Can be a list of axes. Default: xx,xy,yy
 #' @return an image, or a list of images
+#' @examples
+#' imhessian(boats,"xy") %>% plot(main="Second-derivative, d/(dx*dy)")
 #' @export
 imhessian <- function(im,axes=c("xx","xy","yy"))
     {
