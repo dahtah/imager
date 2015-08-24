@@ -52,6 +52,6 @@ llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% average \%>\% plot
 Simon Barthelme
 }
 \seealso{
-imsplit
+imsplit,Reduce
 }
 

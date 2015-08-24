@@ -1719,7 +1719,22 @@ imhessian <- function(im,axes=c("xx","xy","yy"))
             }
     }
 
-
+##' Draw image on another image
+##'
+##' @param im background image
+##' @param sprite sprite to draw on background image
+##' @param x location 
+##' @param y location 
+##' @param z location 
+##' @param opacity transparency level (default 1)
+##' @author Simon Barthelme
+##' @examples
+##' imname <- system.file('extdata/parrots.png',package='imager')
+##' im <- load.image(imname)
+##' boats.small <- imresize(boats,.5)
+##' #I'm aware the result is somewhat ugly 
+##' imdraw(im,boats.small,x=400,y=10,opacity=.7) %>% plot
+##' @export
 imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
     {
         if (spectrum(im) == 3 & (spectrum(sprite)==1))
@@ -1760,7 +1775,7 @@ imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% parmin %>% plot
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% average %>% plot
 ##' @author Simon Barthelme
-##' @seealso imsplit
+##' @seealso imsplit,Reduce
 NULL
 
 ##' @describeIn imager.combine
