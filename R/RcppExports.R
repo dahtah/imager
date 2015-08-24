@@ -425,11 +425,21 @@ interp_xyc <- function(inp, ix, iy, z, ic, cubic = FALSE) {
 #'       in 2d case, and between 6(false)- or 26(true)-connectivity in 3d case. Default FALSE
 #' @param tolerance Tolerance used to determine if two neighboring pixels belong to the same region.
 #' @export
+#' @examples
+#' imname <- system.file('extdata/parrots.png',package='imager')
+#' im <- load.image(imname) %>% grayscale
+#' #Thresholding yields different discrete regions of high intensity
+#' regions <- isoblur(im,10) %>% threshold("97%") 
+#' labels <- label(regions)
+#' layout(t(1:2))
+#' plot(regions,"Regions")
+#' plot(labels,"Labels")
+#' 
 label <- function(im, high_connectivity = FALSE, tolerance = 0) {
     .Call('imager_label', PACKAGE = 'imager', im, high_connectivity, tolerance)
 }
 
-#' Erode image by a structuring element.
+#' Erode/dilate image by a structuring element.
 #'
 #' @param im an image
 #' @param mask Structuring element.
@@ -437,23 +447,32 @@ label <- function(im, high_connectivity = FALSE, tolerance = 0) {
 #' @param normalise Determines if the closing is locally normalised (default FALSE)
 #'
 #' @export
+#' @examples
+#' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
+#' im <- load.image(fname) %>% grayscale
+#' outline <- threshold(-im,"95%")
+#' plot(outline)
+#' mask <- imfill(5,10,val=1) #Rectangular mask
+#' plot(erode(outline,mask))
+#' plot(erode_rect(outline,5,10)) #Same thing
+#' plot(erode_square(outline,5)) 
+#' plot(dilate(outline,mask))
+#' plot(dilate_rect(outline,5,10))
+#' plot(dilate_square(outline,5)) 
 erode <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
     .Call('imager_erode', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
-#' Erode image by a rectangular structuring element of specified size.
-#' @param im an image
+#' @describeIn erode Erode image by a rectangular structuring element of specified size.
 #'       @param sx Width of the structuring element.
 #'       @param sy Height of the structuring element.
 #'       @param sz Depth of the structuring element.
-#'
-#'
 #' @export
 erode_rect <- function(im, sx, sy, sz = 1L) {
     .Call('imager_erode_rect', PACKAGE = 'imager', im, sx, sy, sz)
 }
 
-#' Erode image by a  square structuring element of specified size.
+#' @describeIn erode Erode image by a square structuring element of specified size.
 #' @param im an image
 #'       @param size size of the structuring element.
 #'
@@ -462,29 +481,19 @@ erode_square <- function(im, size) {
     .Call('imager_erode_square', PACKAGE = 'imager', im, size)
 }
 
-#' Dilate image by a structuring element.
-#' @param im an image
-#'      @param mask Structuring element.
-#'       @param boundary_conditions Boundary conditions.
-#'       @param normalise  Normalise mask (default FALSE)
+#' @describeIn erode Dilate image by a structuring element.
 #' @export
 dilate <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
     .Call('imager_dilate', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
-#' Dilate image by a rectangular structuring element of specified size.
-#'
-#' @param im an image
-#'       @param sx Width of the structuring element.
-#'       @param sy Height of the structuring element.
-#'       @param sz Depth of the structuring element.
+#' @describeIn erode Dilate image by a rectangular structuring element of specified size
 #' @export
 dilate_rect <- function(im, sx, sy, sz = 1L) {
     .Call('imager_dilate_rect', PACKAGE = 'imager', im, sx, sy, sz)
 }
 
-#' Dilate image by a square structuring element of specified size.
-#'
+#' @describeIn erode Dilate image by a square structuring element of specified size
 #' @param im an image
 #'       @param size Size of the structuring element.
 #' @export
@@ -494,12 +503,21 @@ dilate_square <- function(im, size) {
 
 #' Compute watershed transform.
 #'
-#'       Non-zero values are propagated to zero-valued ones according to
-#'       the priority map.
+#' The watershed transform is a label propagation algorithm. The value of non-zero pixels will get propagated to their zero-value neighbours. The propagation is controlled by a priority map. See examples. 
 #' @param im an image
 #'       @param priority Priority map.
 #'       @param fill_lines Sets if watershed lines must be filled or not.
-#'
+#' @examples
+#' #In our initial image we'll place three seeds (non-zero pixels) at various locations, with values 1, 2 and 3. 
+#' #We'll use the watershed algorithm to propagate these values
+#' imd <- function(x,y) imdirac(c(100,100,1,1),x,y)
+#' im <- imd(20,20)+2*imd(40,40)+3*imd(80,80)
+#' layout(t(1:3))
+#' plot(im,main="Seed image")
+#' #Now we build an priority map: neighbours of our seeds should get high priority. We'll use a distance map for that
+#' p <- 1-distance_transform(sign(im),1) 
+#' plot(p,main="Priority map")
+#' watershed(im,p) %>% plot(main="Watershed transform")
 #' @export
 watershed <- function(im, priority, fill_lines = TRUE) {
     .Call('imager_watershed', PACKAGE = 'imager', im, priority, fill_lines)
@@ -517,49 +535,36 @@ watershed <- function(im, priority, fill_lines = TRUE) {
 #' @param value Reference value.
 #' @param metric Type of metric. Can be <tt>{ 0=Chebyshev | 1=Manhattan | 2=Euclidean | 3=Squared-euclidean }</tt>.
 #' @export
+#' @examples
+#' imd <- function(x,y) imdirac(c(100,100,1,1),x,y)
+#' #Image is three white dots
+#' im <- imd(20,20)+imd(40,40)+imd(80,80)
+#' plot(im)
+#' #How far are we from the nearest white dot? 
+#' distance_transform(im,1) %>% plot
 distance_transform <- function(im, value, metric = 2L) {
     .Call('imager_distance_transform', PACKAGE = 'imager', im, value, metric)
 }
 
-#' Morphological opening (erosion followed by dilation)
-#'
-#' @param im an image
-#' @param mask Structuring element.
-#' @param boundary_conditions Boundary conditions.
-#' @param normalise Determines if the closing is locally normalised (default FALSE)
-#'
+#' @describeIn erode Morphological opening (erosion followed by dilation)
 #' @export
 mopening <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
     .Call('imager_mopening', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
-#' Morphological opening by a square element (erosion followed by dilation)
-#'
-#' @param im an image
-#' @param size size of the square element
-#'
+#' @describeIn erode Morphological opening by a square element (erosion followed by dilation)
 #' @export
 mopening_square <- function(im, size) {
     .Call('imager_mopening_square', PACKAGE = 'imager', im, size)
 }
 
-#' Morphological closing by a square element (dilation followed by erosion)
-#'
-#' @param im an image
-#' @param size size of the square element
-#'
+#' @describeIn erode Morphological closing by a square element (dilation followed by erosion)
 #' @export
 mclosing_square <- function(im, size) {
     .Call('imager_mclosing_square', PACKAGE = 'imager', im, size)
 }
 
-#' Morphological closing (dilation followed by erosion)
-#'
-#' @param im an image
-#' @param mask Structuring element.
-#' @param boundary_conditions Boundary conditions.
-#' @param normalise Determines if the closing is locally normalised (default FALSE)
-#'
+#' @describeIn erode Morphological closing (dilation followed by erosion)
 #' @export
 mclosing <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
     .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)

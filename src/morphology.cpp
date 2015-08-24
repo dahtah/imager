@@ -14,6 +14,16 @@ using namespace cimg_library;
 //'       in 2d case, and between 6(false)- or 26(true)-connectivity in 3d case. Default FALSE
 //' @param tolerance Tolerance used to determine if two neighboring pixels belong to the same region.
 //' @export
+//' @examples
+//' imname <- system.file('extdata/parrots.png',package='imager')
+//' im <- load.image(imname) %>% grayscale
+//' #Thresholding yields different discrete regions of high intensity
+//' regions <- isoblur(im,10) %>% threshold("97%") 
+//' labels <- label(regions)
+//' layout(t(1:2))
+//' plot(regions,"Regions")
+//' plot(labels,"Labels")
+//' 
 // [[Rcpp::export]]
 NumericVector label(NumericVector im,bool high_connectivity=false,
 double tolerance=0)
@@ -23,7 +33,7 @@ double tolerance=0)
   return wrap(img);
 }
 
-//' Erode image by a structuring element.
+//' Erode/dilate image by a structuring element.
 //'
 //' @param im an image
 //' @param mask Structuring element.
@@ -31,6 +41,18 @@ double tolerance=0)
 //' @param normalise Determines if the closing is locally normalised (default FALSE)
 //'
 //' @export
+//' @examples
+//' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
+//' im <- load.image(fname) %>% grayscale
+//' outline <- threshold(-im,"95%")
+//' plot(outline)
+//' mask <- imfill(5,10,val=1) #Rectangular mask
+//' plot(erode(outline,mask))
+//' plot(erode_rect(outline,5,10)) #Same thing
+//' plot(erode_square(outline,5)) 
+//' plot(dilate(outline,mask))
+//' plot(dilate_rect(outline,5,10))
+//' plot(dilate_square(outline,5)) 
 // [[Rcpp::export]]
 NumericVector erode(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
@@ -39,13 +61,10 @@ NumericVector erode(NumericVector im,NumericVector mask, bool boundary_condition
   return wrap(img);
 }
 
-//' Erode image by a rectangular structuring element of specified size.
-//' @param im an image
+//' @describeIn erode Erode image by a rectangular structuring element of specified size.
 //'       @param sx Width of the structuring element.
 //'       @param sy Height of the structuring element.
 //'       @param sz Depth of the structuring element.
-//'
-//'
 //' @export
 // [[Rcpp::export]]
 NumericVector erode_rect(NumericVector im,int sx,int sy,int sz=1) {
@@ -54,7 +73,7 @@ NumericVector erode_rect(NumericVector im,int sx,int sy,int sz=1) {
   return wrap(img);
 }
 
-//' Erode image by a  square structuring element of specified size.
+//' @describeIn erode Erode image by a square structuring element of specified size.
 //' @param im an image
 //'       @param size size of the structuring element.
 //'
@@ -66,11 +85,7 @@ NumericVector erode_square(NumericVector im,int size) {
   return wrap(img);
 }
 
-//' Dilate image by a structuring element.
-//' @param im an image
-//'      @param mask Structuring element.
-//'       @param boundary_conditions Boundary conditions.
-//'       @param normalise  Normalise mask (default FALSE)
+//' @describeIn erode Dilate image by a structuring element.
 //' @export
 // [[Rcpp::export]]
 NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
@@ -80,12 +95,7 @@ NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditio
   return wrap(img);
 }
 
-//' Dilate image by a rectangular structuring element of specified size.
-//'
-//' @param im an image
-//'       @param sx Width of the structuring element.
-//'       @param sy Height of the structuring element.
-//'       @param sz Depth of the structuring element.
+//' @describeIn erode Dilate image by a rectangular structuring element of specified size
 //' @export
 // [[Rcpp::export]]
 NumericVector dilate_rect(NumericVector im,int sx,int sy,int sz=1) {
@@ -94,8 +104,7 @@ NumericVector dilate_rect(NumericVector im,int sx,int sy,int sz=1) {
   return wrap(img);
 }
 
-//' Dilate image by a square structuring element of specified size.
-//'
+//' @describeIn erode Dilate image by a square structuring element of specified size
 //' @param im an image
 //'       @param size Size of the structuring element.
 //' @export
@@ -108,12 +117,21 @@ NumericVector dilate_square(NumericVector im,int size) {
 
 //' Compute watershed transform.
 //'
-//'       Non-zero values are propagated to zero-valued ones according to
-//'       the priority map.
+//' The watershed transform is a label propagation algorithm. The value of non-zero pixels will get propagated to their zero-value neighbours. The propagation is controlled by a priority map. See examples. 
 //' @param im an image
 //'       @param priority Priority map.
 //'       @param fill_lines Sets if watershed lines must be filled or not.
-//'
+//' @examples
+//' #In our initial image we'll place three seeds (non-zero pixels) at various locations, with values 1, 2 and 3. 
+//' #We'll use the watershed algorithm to propagate these values
+//' imd <- function(x,y) imdirac(c(100,100,1,1),x,y)
+//' im <- imd(20,20)+2*imd(40,40)+3*imd(80,80)
+//' layout(t(1:3))
+//' plot(im,main="Seed image")
+//' #Now we build an priority map: neighbours of our seeds should get high priority. We'll use a distance map for that
+//' p <- 1-distance_transform(sign(im),1) 
+//' plot(p,main="Priority map")
+//' watershed(im,p) %>% plot(main="Watershed transform")
 //' @export
 // [[Rcpp::export]]
 NumericVector watershed(NumericVector im,NumericVector priority, bool fill_lines=true) {
@@ -136,6 +154,13 @@ NumericVector watershed(NumericVector im,NumericVector priority, bool fill_lines
 //' @param value Reference value.
 //' @param metric Type of metric. Can be <tt>{ 0=Chebyshev | 1=Manhattan | 2=Euclidean | 3=Squared-euclidean }</tt>.
 //' @export
+//' @examples
+//' imd <- function(x,y) imdirac(c(100,100,1,1),x,y)
+//' #Image is three white dots
+//' im <- imd(20,20)+imd(40,40)+imd(80,80)
+//' plot(im)
+//' #How far are we from the nearest white dot? 
+//' distance_transform(im,1) %>% plot
 // [[Rcpp::export]]
 NumericVector distance_transform(NumericVector im,double value,unsigned int metric=2)
 {
@@ -145,13 +170,7 @@ NumericVector distance_transform(NumericVector im,double value,unsigned int metr
 }
 
 
-//' Morphological opening (erosion followed by dilation)
-//'
-//' @param im an image
-//' @param mask Structuring element.
-//' @param boundary_conditions Boundary conditions.
-//' @param normalise Determines if the closing is locally normalised (default FALSE)
-//'
+//' @describeIn erode Morphological opening (erosion followed by dilation)
 //' @export
 // [[Rcpp::export]]
 NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
@@ -162,11 +181,7 @@ NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_condit
 }
 
 
-//' Morphological opening by a square element (erosion followed by dilation)
-//'
-//' @param im an image
-//' @param size size of the square element
-//'
+//' @describeIn erode Morphological opening by a square element (erosion followed by dilation)
 //' @export
 // [[Rcpp::export]]
 NumericVector mopening_square(NumericVector im,int size) {
@@ -175,11 +190,7 @@ NumericVector mopening_square(NumericVector im,int size) {
   return wrap(img);
 }
 
-//' Morphological closing by a square element (dilation followed by erosion)
-//'
-//' @param im an image
-//' @param size size of the square element
-//'
+//' @describeIn erode Morphological closing by a square element (dilation followed by erosion)
 //' @export
 // [[Rcpp::export]]
 NumericVector mclosing_square(NumericVector im,int size) {
@@ -188,13 +199,7 @@ NumericVector mclosing_square(NumericVector im,int size) {
   return wrap(img);
 }
 
-//' Morphological closing (dilation followed by erosion)
-//'
-//' @param im an image
-//' @param mask Structuring element.
-//' @param boundary_conditions Boundary conditions.
-//' @param normalise Determines if the closing is locally normalised (default FALSE)
-//'
+//' @describeIn erode Morphological closing (dilation followed by erosion)
 //' @export
 // [[Rcpp::export]]
 NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {

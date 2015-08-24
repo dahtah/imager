@@ -21,4 +21,12 @@ The distance transform implementation has been submitted by A. Meijster, and imp
                     J. Goutsias, L. Vincent, and D.S. Bloomberg (eds.), Kluwer, 2000, pp. 331-340.'
         The submitted code has then been modified to fit CImg coding style and constraints.
 }
+\examples{
+imd <- function(x,y) imdirac(c(100,100,1,1),x,y)
+#Image is three white dots
+im <- imd(20,20)+imd(40,40)+imd(80,80)
+plot(im)
+#How far are we from the nearest white dot?
+distance_transform(im,1) \%>\% plot
+}
 

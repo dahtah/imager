@@ -20,4 +20,14 @@ by A. Meijster, according to the publication:
 'W.H. Hesselink, A. Meijster, C. Bron, "Concurrent Determination of Connected Components.",
       In: Science of Computer Programming 41 (2001), pp. 173--194'.
 }
+\examples{
+imname <- system.file('extdata/parrots.png',package='imager')
+im <- load.image(imname) \%>\% grayscale
+#Thresholding yields different discrete regions of high intensity
+regions <- isoblur(im,10) \%>\% threshold("97\%")
+labels <- label(regions)
+layout(t(1:2))
+plot(regions,"Regions")
+plot(labels,"Labels")
+}
 
