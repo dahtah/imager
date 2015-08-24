@@ -14,7 +14,7 @@ as.cimg(obj, ...)
 
 \method{as.cimg}{double}(obj, ...)
 
-\method{as.cimg}{vector}(obj, x = NA, y = NA, z = NA, cc = NA)
+\method{as.cimg}{vector}(obj, x = NA, y = NA, z = NA, cc = NA, ...)
 
 \method{as.cimg}{matrix}(obj, ...)
 }

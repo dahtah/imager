@@ -597,7 +597,7 @@ as.cimg.double <- function(obj,...) as.cimg.vector(obj,...)
 
 ##' @describeIn as.cimg convert vector
 ##' @export
-as.cimg.vector <- function(obj,x=NA,y=NA,z=NA,cc=NA)
+as.cimg.vector <- function(obj,x=NA,y=NA,z=NA,cc=NA,...)
     {
         args <- list(x=x,y=y,z=z,cc=cc)
         if (any(!is.na(args)))
@@ -1741,3 +1741,44 @@ imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
                 draw_image(im,sprite,x-1,y-1,z-1,opacity=opacity)
             }
     }
+
+##' Combining images
+##'
+##' These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
+##' @name imager.combine
+##' @examples
+##' im1 <- as.cimg(function(x,y) x,100,100)
+##' im2 <- as.cimg(function(x,y) y,100,100)
+##' im3 <- as.cimg(function(x,y) cos(x/10),100,100)
+##' l <- list(im1,im2,im3)
+##' add(l) %>% plot #Add the images
+##' average(l) %>% plot #Average the images
+##' mult(l) %>% plot #Multiply
+##' parmax(l) %>% plot #Parallel max
+##' parmin(l) %>% plot #Parallel min
+##' #Pseudo-artistic effects
+##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% parmin %>% plot
+##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% average %>% plot
+##' @author Simon Barthelme
+##' @seealso imsplit
+NULL
+
+##' @describeIn imager.combine
+##' @export
+add <- function(x) Reduce("+", x)
+
+##' @describeIn imager.combine
+##' @export
+average <- function(x) Reduce("+", x)/length(x)
+
+##' @describeIn imager.combine
+##' @export
+mult <- function(x) Reduce("*", x)
+
+##' @describeIn imager.combine
+##' @export
+parmax <- function(x) Reduce(pmax, x)
+
+##' @describeIn imager.combine
+##' @export
+parmin <- function(x) Reduce(pmin, x)
