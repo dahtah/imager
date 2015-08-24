@@ -174,6 +174,9 @@ spectrum <- function(im) dim(im)[4]
 ##' @export
 depth <- function(im) dim(im)[3]
 
+##' @describeIn cimg.dimensions Total number of pixels (prod(dim(im)))
+##' @export
+nPix <- function(im) prod(dim(im))
 
 rn <- function(x) (x-min(x))/diff(range(x))
 
@@ -565,13 +568,85 @@ pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE)
 
 ##' Convert to cimg object
 ##'
-##' Imager implements various converters that turn your data into cimg objects
+##' Imager implements various converters that turn your data into cimg objects. If you convert from a vector (which only has a length, and no dimension), either specify dimensions explicitly or some guesswork will be involved. See examples for clarifications. 
 ##' 
 ##' @param obj an object
+##' @param x width
+##' @param y height
+##' @param z depth
+##' @param cc spectrum
 ##' @param ... optional arguments
 ##' @seealso as.cimg.array, as.cimg.function, as.cimg.data.frame
 ##' @export
+##' @examples
+##' as.cimg(1:100,x=10,y=10) #10x10, grayscale image
+##' as.cimg(rep(1:100,3),x=10,y=10,cc=3) #10x10 RGB
+##' as.cimg(1:100) #Guesses dimensions, warning is issued
+##' as.cimg(rep(1:100,3)) #Guesses dimensions, warning is issued
+##' @author Simon Barthelme
 as.cimg <- function(obj,...) UseMethod("as.cimg")
+
+
+##' @describeIn as.cimg convert numeric
+##' @export
+as.cimg.numeric <- function(obj,...) as.cimg.vector(obj,...)
+
+##' @describeIn as.cimg convert double
+##' @export
+as.cimg.double <- function(obj,...) as.cimg.vector(obj,...)
+
+##' @describeIn as.cimg convert vector
+##' @export
+as.cimg.vector <- function(obj,x=NA,y=NA,z=NA,cc=NA)
+    {
+        args <- list(x=x,y=y,z=z,cc=cc)
+        if (any(!is.na(args)))
+            {
+                args[is.na(args)] <- 1
+                d <- do.call("c",args)
+                if (prod(d)==length(obj))
+                    {
+                        array(obj,d)%>% cimg
+                    }
+                else
+                    {
+                        stop("Dimensions are incompatible with input length")
+                    }
+            }
+        else
+            {
+                l <- length(obj)
+                is.whole <- function(v) isTRUE(all.equal(round(v), v))
+                if (is.whole(sqrt(l)))
+                    {
+                        warning("Guessing input is a square 2D image")
+                        d <- sqrt(l)
+                        array(obj,c(d,d,1,1)) %>% cimg
+                    }
+                else if (is.whole(sqrt(l/3)))
+                    {
+                        warning("Guessing input is a square 2D RGB image")
+                        d <- sqrt(l/3)
+                        array(obj,c(d,d,1,3))%>% cimg
+                    }
+                else if (is.whole((l)^(1/3))) 
+                    {
+                        warning("Guessing input is a cubic 3D image")
+                        d <- l^(1/3)
+                        array(obj,c(d,d,d,1))%>% cimg
+                    }
+                else if (is.whole((l/3)^(1/3))) 
+                    {
+                        warning("Guessing input is a cubic 3D RGB image")
+                        d <- (l/3)^(1/3)
+                        array(obj,c(d,d,d,3))%>% cimg
+                    }
+                else
+                    {
+                        stop("Please provide image dimensions")
+                    }
+            }
+    }
 
 
 ##' Create an image by sampling a function
@@ -664,6 +739,26 @@ imfill <- function(x=1,y=1,z=1,val=0)
             }
     }
 
+##' Generate (Gaussian) white-noise image
+##'
+##' A white-noise image is an image where all pixel values are drawn IID from a certain distribution. Here they are drawn from a Gaussian.
+##' 
+##' @param x width
+##' @param y height
+##' @param z depth
+##' @param cc spectrum
+##' @param mean mean pixel value (default 0)
+##' @param sd std. deviation of pixel values (default 1)
+##' @return a cimg object
+##' @examples
+##' imnoise(100,100,cc=3) %>% plot(main="White noise in RGB")
+##' imnoise(100,100,cc=3) %>% isoblur(5) %>% plot(main="Filtered (non-white) noise")
+##' @author Simon Barthelme
+##' @export
+imnoise <- function(x=1,y=1,z=1,cc=1,mean=0,sd=1)
+    {
+        rnorm(x*y*z*cc,mean=mean,sd=sd) %>% array(dim=c(x,y,z,cc)) %>% cimg
+    }
 
 ##' Turn an numeric array into a cimg object
 ##'

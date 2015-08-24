@@ -4,6 +4,7 @@
 \alias{cimg.dimensions}
 \alias{depth}
 \alias{height}
+\alias{nPix}
 \alias{spectrum}
 \alias{width}
 \title{Image dimensions}
@@ -15,6 +16,8 @@ height(im)
 spectrum(im)
 
 depth(im)
+
+nPix(im)
 }
 \arguments{
 \item{im}{an image}
@@ -31,5 +34,7 @@ Image dimensions
 \item \code{spectrum}: Number of colour channels
 
 \item \code{depth}: Depth of the image/number of frames in a video
+
+\item \code{nPix}: Total number of pixels (prod(dim(im)))
 }}
 
