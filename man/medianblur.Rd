@@ -17,9 +17,9 @@ medianblur(im, n, threshold)
 Blur image with the median filter.
 }
 \examples{
+medianblur(boats,5,Inf) \%>\% plot(main="Median blur, 5 pixels")
 medianblur(boats,10,Inf) \%>\% plot(main="Median blur, 10 pixels")
-medianblur(boats,30,Inf) \%>\% plot(main="Median blur, 30 pixels")
-medianblur(boats,30,10) \%>\% plot(main="Median blur, 30 pixels, threshold = 10")
+medianblur(boats,10,8) \%>\% plot(main="Median blur, 10 pixels, threshold = 8")
 }
 \seealso{
 isoblur, boxblur

@@ -19,6 +19,11 @@ a list of channels
 \description{
 Split a colour image into a list of separate channels
 }
+\examples{
+channels(boats)
+channels(boats,1:2)
+channels(boats,1:2,drop=TRUE) \%>\% str #A list of 2D arrays
+}
 \seealso{
 frames
 }

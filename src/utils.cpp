@@ -64,6 +64,9 @@ NumericVector imappend(List imlist,char axis)
 //' @param wy vector of coordinates for patch height 
 //' @return a list of image patches (cimg objects)
 //' @export
+//' @examples
+//' #2 patches of size 5x5 located at (10,10) and (10,20)
+//' extract_patches(boats,c(10,10),c(10,20),rep(5,2),rep(5,2)) 
 // [[Rcpp::export]]
 List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
 {

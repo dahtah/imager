@@ -18,6 +18,9 @@ Images have up to 4 dimensions, labelled x,y,z,c. x and y are the usual spatial 
 A colour image is just three R,G,B channels in succession. A sequence of N images is encoded as R1,R2,....,RN,G1,...,GN,B1,...,BN where R_i is the red channel of frame i.
 The number of pixels along the x,y,z, and c axes is called (in that order), width, height, depth and spectrum.
 }
+\examples{
+cimg(array(1,c(10,10,5,3)))
+}
 \author{
 Simon Barthelme
 }

@@ -88,7 +88,7 @@ grayscale <- function(im) {
 #' Press escape or close the window to exit.
 #'
 #' @param im an image (cimg object)
-#' @param normalise: if true pixel values are rescaled to 0...255 (default TRUE)
+#' @param normalise if true pixel values are rescaled to 0...255 (default TRUE)
 #' @export
 #' @examples
 #' ##Not run: interactive only 
@@ -114,7 +114,7 @@ display_list <- function(imlist) {
 #' @param vid A cimg object, to be played as video
 #' @param loop loop the video (default false)
 #' @param delay delay between frames, in ms. Default 30.
-#' @param normalise: if true pixel values are rescaled to 0...255 (default TRUE). The normalisation is based on the *first frame*. If you don't want the default behaviour you can normalise by hand. Default TRUE.
+#' @param normalise if true pixel values are rescaled to 0...255 (default TRUE). The normalisation is based on the *first frame*. If you don't want the default behaviour you can normalise by hand. Default TRUE.
 #' @export
 play <- function(vid, loop = FALSE, delay = 30L, normalise = TRUE) {
     invisible(.Call('imager_play', PACKAGE = 'imager', vid, loop, delay, normalise))
@@ -194,9 +194,9 @@ isoblur <- function(im, sigma, boundary_conditions = TRUE, gaussian = FALSE) {
 #'  @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. 
 #' @export
 #' @examples
+#' medianblur(boats,5,Inf) %>% plot(main="Median blur, 5 pixels")
 #' medianblur(boats,10,Inf) %>% plot(main="Median blur, 10 pixels")
-#' medianblur(boats,30,Inf) %>% plot(main="Median blur, 30 pixels")
-#' medianblur(boats,30,10) %>% plot(main="Median blur, 30 pixels, threshold = 10")
+#' medianblur(boats,10,8) %>% plot(main="Median blur, 10 pixels, threshold = 8")
 #' @seealso isoblur, boxblur
 medianblur <- function(im, n, threshold) {
     .Call('imager_medianblur', PACKAGE = 'imager', im, n, threshold)
@@ -452,6 +452,7 @@ label <- function(im, high_connectivity = FALSE, tolerance = 0) {
 #' Erode/dilate image by a structuring element.
 #'
 #' @param im an image
+#'       @param size size of the structuring element.
 #' @param mask Structuring element.
 #'       @param boundary_conditions Boundary conditions.
 #' @param normalise Determines if the closing is locally normalised (default FALSE)
@@ -483,8 +484,6 @@ erode_rect <- function(im, sx, sy, sz = 1L) {
 }
 
 #' @describeIn erode Erode image by a square structuring element of specified size.
-#' @param im an image
-#'       @param size size of the structuring element.
 #'
 #' @export
 erode_square <- function(im, size) {
@@ -504,8 +503,6 @@ dilate_rect <- function(im, sx, sy, sz = 1L) {
 }
 
 #' @describeIn erode Dilate image by a square structuring element of specified size
-#' @param im an image
-#'       @param size Size of the structuring element.
 #' @export
 dilate_square <- function(im, size) {
     .Call('imager_dilate_square', PACKAGE = 'imager', im, size)
@@ -518,13 +515,16 @@ dilate_square <- function(im, size) {
 #'       @param priority Priority map.
 #'       @param fill_lines Sets if watershed lines must be filled or not.
 #' @examples
-#' #In our initial image we'll place three seeds (non-zero pixels) at various locations, with values 1, 2 and 3. 
+#' #In our initial image we'll place three seeds 
+#' #(non-zero pixels) at various locations, with values 1, 2 and 3. 
 #' #We'll use the watershed algorithm to propagate these values
 #' imd <- function(x,y) imdirac(c(100,100,1,1),x,y)
 #' im <- imd(20,20)+2*imd(40,40)+3*imd(80,80)
 #' layout(t(1:3))
 #' plot(im,main="Seed image")
-#' #Now we build an priority map: neighbours of our seeds should get high priority. We'll use a distance map for that
+#' #Now we build an priority map: neighbours of our seeds 
+#' #should get high priority. 
+#' #We'll use a distance map for that
 #' p <- 1-distance_transform(sign(im),1) 
 #' plot(p,main="Priority map")
 #' watershed(im,p) %>% plot(main="Watershed transform")
@@ -754,6 +754,9 @@ imappend <- function(imlist, axis) {
 #' @param wy vector of coordinates for patch height 
 #' @return a list of image patches (cimg objects)
 #' @export
+#' @examples
+#' #2 patches of size 5x5 located at (10,10) and (10,20)
+#' extract_patches(boats,c(10,10),c(10,20),rep(5,2),rep(5,2)) 
 extract_patches <- function(im, cx, cy, wx, wy) {
     .Call('imager_extract_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)
 }

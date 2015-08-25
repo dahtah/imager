@@ -13,7 +13,7 @@ NULL
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
-#' @importFrom stringr str_match str_split
+#' @importFrom stringr str_match str_split str_sub
 #' @importFrom Rcpp sourceCpp
 #' @importFrom magrittr "%>%"
 NULL
@@ -31,6 +31,8 @@ utils::globalVariables(c(".", "%>%"))
 ##' @param X a four-dimensional numeric array
 ##' @return an object of class cimg
 ##' @author Simon Barthelme
+##' @examples
+##' cimg(array(1,c(10,10,5,3)))
 ##' @export
 cimg <- function(X)
     {
@@ -226,7 +228,11 @@ frame <- function(im,index)
 ##' @param index which channels to extract (default all)
 ##' @param drop if TRUE drop extra dimensions, returning normal arrays and not cimg objects
 ##' @seealso frames
-##' @return a list of channels 
+##' @return a list of channels
+##' @examples
+##' channels(boats)
+##' channels(boats,1:2)
+##' channels(boats,1:2,drop=TRUE) %>% str #A list of 2D arrays
 ##' @export
 channels <- function(im,index,drop=FALSE)
     {
@@ -1288,6 +1294,11 @@ stencil.cross <- function(z=FALSE,cc=FALSE,origin=FALSE)
 ##' imdirac(c(50,50),20,20) %>% isoblur(sigma=2)  %>% plot
 ##' #Impulse response of the first-order Deriche filter
 ##' imdirac(c(50,50),20,20) %>% deriche(sigma=2,order=1,axis="x")  %>% plot
+##' ##NOT RUN, interactive only
+##' ##Impulse response of the blur filter in space-time
+##' ##resp <- imdirac(c(50,50,100),x=25,y=25,z=50)  %>%  isoblur(16)
+##' ###Normalise to 0...255 and play as video
+##' ##renorm(resp) %>% play(normalise=FALSE)
 ##' @author Simon Barthelme
 ##' @export
 imdirac <- function(dims,x,y,z=1,cc=1)
@@ -1317,7 +1328,7 @@ imdirac <- function(dims,x,y,z=1,cc=1)
             }
         else
             {
-                error("dims should a vector of image dimensions or a cimg object")
+                stop("dims should a vector of image dimensions or a cimg object")
             }
         A <- array(0,dims)
         A<-as.cimg(A)

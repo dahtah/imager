@@ -49,12 +49,6 @@ mclosing(im, mask, boundary_conditions = TRUE, normalise = FALSE)
 \item{sz}{Depth of the structuring element.}
 
 \item{size}{size of the structuring element.}
-
-\item{im}{an image}
-
-\item{im}{an image}
-
-\item{size}{Size of the structuring element.}
 }
 \description{
 Erode/dilate image by a structuring element.

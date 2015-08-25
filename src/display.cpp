@@ -9,7 +9,7 @@ using namespace cimg_library;
 //' Press escape or close the window to exit.
 //'
 //' @param im an image (cimg object)
-//' @param normalise: if true pixel values are rescaled to 0...255 (default TRUE)
+//' @param normalise if true pixel values are rescaled to 0...255 (default TRUE)
 //' @export
 //' @examples
 //' ##Not run: interactive only 
@@ -61,7 +61,7 @@ void display_list(List imlist)
 //' @param vid A cimg object, to be played as video
 //' @param loop loop the video (default false)
 //' @param delay delay between frames, in ms. Default 30.
-//' @param normalise: if true pixel values are rescaled to 0...255 (default TRUE). The normalisation is based on the *first frame*. If you don't want the default behaviour you can normalise by hand. Default TRUE.
+//' @param normalise if true pixel values are rescaled to 0...255 (default TRUE). The normalisation is based on the *first frame*. If you don't want the default behaviour you can normalise by hand. Default TRUE.
 //' @export
 // [[Rcpp::export]]
 void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalise=true)
