@@ -9,7 +9,7 @@ NULL
 #' @useDynLib imager
 #' @importFrom grDevices as.raster col2rgb dev.capture
 #' @importFrom graphics axis plot rasterImage
-#' @importFrom stats quantile
+#' @importFrom stats quantile rnorm
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
