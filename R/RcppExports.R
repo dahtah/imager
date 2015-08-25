@@ -586,6 +586,12 @@ mclosing <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
 #' @param color Color used for the crop. If  0, color is guessed.
 #' @param axes Axes used for the crop.
 #' @export
+#' @examples
+#' #Add pointless padding
+#' padded <- pad(boats,30,"xy")
+#' plot(padded)
+#' #Remove padding
+#' autocrop(padded,color=c(0,0,0)) %>% plot
 autocrop <- function(im, color, axes = "zyx") {
     .Call('imager_autocrop', PACKAGE = 'imager', im, color, axes)
 }
@@ -611,8 +617,10 @@ imrotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
 #'       @param cy Y-coordinate of the rotation center.
 #'       @param zoom Zoom factor.
 #'       @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
-#'       @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
-#'
+#' @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
+#' @examples
+#' rotate_xy(boats,30,200,400) %>% plot
+#' rotate_xy(boats,30,200,400,boundary=2) %>% plot
 #' @export
 rotate_xy <- function(im, angle, cx, cy, zoom = 1, interpolation = 1L, boundary_conditions = 0L) {
     .Call('imager_rotate_xy', PACKAGE = 'imager', im, angle, cx, cy, zoom, interpolation, boundary_conditions)
@@ -622,6 +630,9 @@ rotate_xy <- function(im, angle, cx, cy, zoom = 1, interpolation = 1L, boundary_
 #' @param im an image
 #'       @param axis Mirror axis ("x","y","z","c")
 #' @export
+#' @examples
+#' mirror(boats,"x") %>% plot
+#' mirror(boats,"y") %>% plot
 mirror <- function(im, axis) {
     .Call('imager_mirror', PACKAGE = 'imager', im, axis)
 }
@@ -669,6 +680,8 @@ resize_tripleXY <- function(im) {
 #'          - 1: Nearest neighbors (Neumann).
 #'          - 2: Repeat Pattern (Fourier style).
 #' @export
+#' @examples
+#' imshift(boats,10,50) %>% plot
 imshift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, boundary_conditions = 0L) {
     .Call('imager_imshift', PACKAGE = 'imager', im, delta_x, delta_y, delta_z, delta_c, boundary_conditions)
 }
@@ -706,8 +719,14 @@ resize <- function(im, size_x = -100L, size_y = -100L, size_z = -100L, size_c = 
 #' @param mode Can be { 0=backward-absolute | 1=backward-relative | 2=forward-absolute | 3=forward-relative }
 #' @param interpolation Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
 #' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann | 2=periodic }</tt>.
-#' @seealso imwarp for a user-friendly interface
+#' @seealso imwarp for a user-friendly interface 
 #' @export
+#' @examples
+#' #Shift image via warp
+#' warp.x <- imfill(width(boats),height(boats),val=5)
+#' warp.y <- imfill(width(boats),height(boats),val=20)
+#' warpfield <- list(warp.x,warp.y) %>% imappend("c")
+#' warp(boats,warpfield,mode=1) %>% plot
 warp <- function(im, warpfield, mode = 0L, interpolation = 1L, boundary_conditions = 0L) {
     .Call('imager_warp', PACKAGE = 'imager', im, warpfield, mode, interpolation, boundary_conditions)
 }

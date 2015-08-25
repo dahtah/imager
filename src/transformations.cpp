@@ -8,6 +8,12 @@ using namespace cimg_library;
 //' @param color Color used for the crop. If  0, color is guessed.
 //' @param axes Axes used for the crop.
 //' @export
+//' @examples
+//' #Add pointless padding
+//' padded <- pad(boats,30,"xy")
+//' plot(padded)
+//' #Remove padding
+//' autocrop(padded,color=c(0,0,0)) %>% plot
 // [[Rcpp::export]]
 NumericVector autocrop(NumericVector im,NumericVector color,std::string axes = "zyx")
 {
@@ -45,8 +51,10 @@ NumericVector imrotate(NumericVector im,float  	angle,
 //'       @param cy Y-coordinate of the rotation center.
 //'       @param zoom Zoom factor.
 //'       @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
-//'       @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
-//'
+//' @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
+//' @examples
+//' rotate_xy(boats,30,200,400) %>% plot
+//' rotate_xy(boats,30,200,400,boundary=2) %>% plot
 //' @export
 // [[Rcpp::export]]
 NumericVector rotate_xy(NumericVector im,
@@ -65,6 +73,9 @@ NumericVector rotate_xy(NumericVector im,
 //' @param im an image
 //'       @param axis Mirror axis ("x","y","z","c")
 //' @export
+//' @examples
+//' mirror(boats,"x") %>% plot
+//' mirror(boats,"y") %>% plot
 // [[Rcpp::export]]
 NumericVector mirror(NumericVector im,char axis)
 {
@@ -139,6 +150,8 @@ NumericVector resize_tripleXY(NumericVector im)
 //'          - 1: Nearest neighbors (Neumann).
 //'          - 2: Repeat Pattern (Fourier style).
 //' @export
+//' @examples
+//' imshift(boats,10,50) %>% plot
 // [[Rcpp::export]]
 NumericVector imshift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_z=0,  int delta_c=0,
                     int boundary_conditions=0)
@@ -192,8 +205,14 @@ NumericVector resize(NumericVector im, int size_x=-100,  int size_y=-100,
 //' @param mode Can be { 0=backward-absolute | 1=backward-relative | 2=forward-absolute | 3=forward-relative }
 //' @param interpolation Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
 //' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann | 2=periodic }</tt>.
-//' @seealso imwarp for a user-friendly interface
+//' @seealso imwarp for a user-friendly interface 
 //' @export
+//' @examples
+//' #Shift image via warp
+//' warp.x <- imfill(width(boats),height(boats),val=5)
+//' warp.y <- imfill(width(boats),height(boats),val=20)
+//' warpfield <- list(warp.x,warp.y) %>% imappend("c")
+//' warp(boats,warpfield,mode=1) %>% plot
 // [[Rcpp::export]]
 NumericVector warp(NumericVector im,NumericVector warpfield, 
 		   unsigned int mode=0,
@@ -212,9 +231,3 @@ NumericVector warp(NumericVector im,NumericVector warpfield,
 
 
 
-// NumericVector mirror(NumericVector im,std::string axes)
-// {
-//    CId img = as<CId >(im);
-//    img.mirror(axes.c_str());
-//    return wrap(img);
-// }

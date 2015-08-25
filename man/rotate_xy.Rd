@@ -25,4 +25,8 @@ rotate_xy(im, angle, cx, cy, zoom = 1, interpolation = 1L,
 \description{
 Rotate image by an arbitrary angle, around a center point.
 }
+\examples{
+rotate_xy(boats,30,200,400) \%>\% plot
+rotate_xy(boats,30,200,400,boundary=2) \%>\% plot
+}
 

@@ -26,4 +26,7 @@ imshift(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L,
 \description{
 Shift image content.
 }
+\examples{
+imshift(boats,10,50) \%>\% plot
+}
 

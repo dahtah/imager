@@ -21,6 +21,13 @@ warp(im, warpfield, mode = 0L, interpolation = 1L,
 \description{
 Warp image
 }
+\examples{
+#Shift image via warp
+warp.x <- imfill(width(boats),height(boats),val=5)
+warp.y <- imfill(width(boats),height(boats),val=20)
+warpfield <- list(warp.x,warp.y) \%>\% imappend("c")
+warp(boats,warpfield,mode=1) \%>\% plot
+}
 \seealso{
 imwarp for a user-friendly interface
 }

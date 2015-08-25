@@ -16,4 +16,11 @@ autocrop(im, color, axes = "zyx")
 \description{
 Autocrop image region
 }
+\examples{
+#Add pointless padding
+padded <- pad(boats,30,"xy")
+plot(padded)
+#Remove padding
+autocrop(padded,color=c(0,0,0)) \%>\% plot
+}
 

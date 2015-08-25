@@ -14,4 +14,8 @@ mirror(im, axis)
 \description{
 Mirror image content along specified axis
 }
+\examples{
+mirror(boats,"x") \%>\% plot
+mirror(boats,"y") \%>\% plot
+}
 
