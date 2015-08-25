@@ -834,13 +834,24 @@ as.matrix.cimg <- function(x,...) {
 ##' Add colour channels to an grayscale image
 ##'
 ##' @param im a grayscale image
+##' @param simple if TRUE just stack three copies of the grayscale image, if FALSE treat the image as the L channel in an HSL representation. Default TRUE.
 ##' @return an image of class cimg
 ##' @author Simon Barthelme
+##' @examples
+##' grayscale(boats) #No more colour channels
+##' add.colour(grayscale(boats)) #Image has depth = 3 (but contains only grays)
 ##' @export
-add.colour <- function(im)
+add.colour <- function(im,simple=TRUE)
 {
     if (spectrum(im)!=1) stop('Image already has colour channels')
-    imappend(list(0*im,0*im,im),"c") %>% HSLtoRGB
+    if (simple)
+        {
+            imappend(list(im,im,im),"c")
+        }
+    else
+        {
+            imappend(list(0*im,0*im,im),"c") %>% HSLtoRGB
+        }
 }
 
 inda <- list('x'=1,'y'=2,'z'=3,'c'=4)

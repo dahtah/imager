@@ -4,16 +4,22 @@
 \alias{add.colour}
 \title{Add colour channels to an grayscale image}
 \usage{
-add.colour(im)
+add.colour(im, simple = TRUE)
 }
 \arguments{
 \item{im}{a grayscale image}
+
+\item{simple}{if TRUE just stack three copies of the grayscale image, if FALSE treat the image as the L channel in an HSL representation. Default TRUE.}
 }
 \value{
 an image of class cimg
 }
 \description{
 Add colour channels to an grayscale image
+}
+\examples{
+grayscale(boats) #No more colour channels
+add.colour(grayscale(boats)) #Image has depth = 3 (but contains only grays)
 }
 \author{
 Simon Barthelme
