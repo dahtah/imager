@@ -1856,3 +1856,39 @@ parmax <- function(x) Reduce(pmax, x)
 ##' @describeIn imager.combine
 ##' @export
 parmin <- function(x) Reduce(pmin, x)
+
+
+##' Renormalise image 
+##'
+##' Pixel data is usually expressed on a 0...255 scale for displaying. This function performs a linear renormalisation to range min...max 
+##' @param x numeric data
+##' @param min min of the range
+##' @param max max of the range
+##' @author Simon Barthelme
+##' @export
+##' @examples
+##' renorm(0:10)
+##' renorm(-5:5) #Same as above
+renorm <- function(x,min=0,max=255)
+    {
+        r <- diff(range(x))
+        if (r!=0)
+            {
+                min+(max-min)*(x-min(x))/diff(range(x))
+            }
+        else
+            {
+                if (x[1] > max)
+                    {
+                        x*0 + max
+                    }
+                else if (x[1] < min)
+                    {
+                        x*0 + min
+                    }
+                else
+                    {
+                        x
+                    }
+            }
+    }
