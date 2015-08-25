@@ -767,6 +767,10 @@ imnoise <- function(x=1,y=1,z=1,cc=1,mean=0,sd=1)
 ##' @export
 ##' @param obj an array
 ##' @param ... ignored
+##' @examples
+##' as.cimg(array(1:9,c(3,3)))
+##' as.cimg(array(1,c(10,10,3))) #Guesses colour image
+##' as.cimg(array(1:9,c(10,10,4))) #Guesses video
 as.cimg.array <- function(obj,...)
     {
         d <- dim(obj)
@@ -810,6 +814,9 @@ as.array.cimg <- function(x,...) {
 ##' 
 ##' @param x an array
 ##' @export
+##' @examples
+##' A <- array(1:9,c(3,1,3)) #3D array with one flat dimension
+##' A %>% squeeze #flat dimension removed
 squeeze <- function(x) {
     d <- dim(x)
     dim(x) <- d[d>1]
@@ -861,34 +868,43 @@ inda <- list('x'=1,'y'=2,'z'=3,'c'=4)
 ##' 
 ##' @param im the input image
 ##' @param nPix how many pixels to pad with 
-##' @param axis which axis to pad along 
+##' @param axes which axes to pad along 
 ##' @param pos -1: prepend 0: center 1: append
 ##' @param val value to fill the padding with (default 0)
 ##' @return a padded image
 ##' @author Simon Barthelme
+##' @examples
+##' pad(boats,20,"xy") %>% plot
+##' pad(boats,20,pos=-1,"xy") %>% plot
+##' pad(boats,20,pos=1,"xy") %>% plot
 ##' @export
-pad <- function(im,nPix,axis,pos=0,val=0)
+pad <- function(im,nPix,axes,pos=0,val=0)
     {
+        if (nchar(axes) > 1)
+            {
+                im <- pad(im,nPix,str_sub(axes,2),pos,val)
+                axes <- str_sub(axes,1,1)
+            }
         if (pos==0)
             {
                 d <- rep(1,4)
-                d[inda[[axis]]] <- round(nPix/2)
+                d[inda[[axes]]] <- round(nPix/2)
                 pdIm <- cimg(array(val,d))
-                imappend(list(pdIm,im,pdIm),axis)
+                imappend(list(pdIm,im,pdIm),axes)
             }
         else if (pos == -1)
             {
                 d <- rep(1,4)
-                d[inda[[axis]]] <- nPix
+                d[inda[[axes]]] <- nPix
                 pdIm <- cimg(array(val,d))
-                imappend(list(pdIm,im),axis)
+                imappend(list(pdIm,im),axes)
             }
         else if (pos == 1)
             {
                 d <- rep(1,4)
-                d[inda[[axis]]] <- nPix
+                d[inda[[axes]]] <- nPix
                 pdIm <- cimg(array(val,d))
-                imappend(list(im,pdIm),axis)
+                imappend(list(im,pdIm),axes)
             }
         
     }
@@ -1126,6 +1142,9 @@ get.mask <- function(im,expr)
 ##' 
 ##' @param stencil a stencil (data.frame with coordinates dx,dy,dz,dc)
 ##' @param ... centering locations (e.g. x=4,y=2)
+##' @examples
+##' stencil <- data.frame(dx=seq(-2,2,1),dy=seq(-2,2,1))
+##' center.stencil(stencil,x=10,y=20)
 ##' @export
 center.stencil <- function(stencil,...)
     {
@@ -1253,17 +1272,22 @@ stencil.cross <- function(z=FALSE,cc=FALSE,origin=FALSE)
 ##'
 ##' This small utility is useful to examine the impulse response of a filter
 ##' 
-##' @param dims a vector of image dimensions, or an image whose dimensions will be used 
+##' @param dims a vector of image dimensions, or an image whose dimensions will be used. If dims has length < 4 some guesswork will be used (see examples and ?as.cimg.array)
 ##' @param x where to put the dirac (x coordinate)
 ##' @param y y coordinate
 ##' @param z  z coordinate (default 1)
 ##' @param cc colour coordinate (default 1)
 ##' @return an image
 ##' @examples
+##' #Explicit settings of all dimensions 
+##' imdirac(c(50,50,1,1),20,20) 
+##' imdirac(c(50,50),20,20) #Implicit
+##' imdirac(c(50,50,3),20,20,cc=2) #RGB
+##' imdirac(c(50,50,7),20,20,z=2) #50x50 video with 7 frames
 ##' #Impulse response of the blur filter
-##' imdirac(c(50,50,1,1),20,20) %>% isoblur(sigma=2)  %>% plot
+##' imdirac(c(50,50),20,20) %>% isoblur(sigma=2)  %>% plot
 ##' #Impulse response of the first-order Deriche filter
-##' imdirac(c(50,50,1,1),20,20) %>% deriche(sigma=2,order=1,axis="x")  %>% plot
+##' imdirac(c(50,50),20,20) %>% deriche(sigma=2,order=1,axis="x")  %>% plot
 ##' @author Simon Barthelme
 ##' @export
 imdirac <- function(dims,x,y,z=1,cc=1)
@@ -1271,8 +1295,30 @@ imdirac <- function(dims,x,y,z=1,cc=1)
         if (class(dims) == "cimg")
             {
                 dims <- dim(dims)
-        }
-        
+            }
+        else if (is.numeric(dims))
+            {
+                if (length(dims) == 2)
+                    {
+                        dims <- c(dims,1,1)
+                    }
+                if (length(dims) == 3)
+                    {
+                        if (dims[3] == 3)
+                            {
+                                warning('Guessing you want an RGB image')
+                                dims <- c(dims[1:2],1,dims[3])
+                            }
+                        else
+                            {
+                                dims <- c(dims,1)
+                            }
+                    }
+            }
+        else
+            {
+                error("dims should a vector of image dimensions or a cimg object")
+            }
         A <- array(0,dims)
         A<-as.cimg(A)
         if(x>0 && y>0 && z>0 && cc>0) {
@@ -1280,7 +1326,7 @@ imdirac <- function(dims,x,y,z=1,cc=1)
             A
         }
         else{
-            stop("dirac coordonates must be positive integers ")
+            stop("dirac coordinates must be positive integers ")
         }
   }
 

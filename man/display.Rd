@@ -4,12 +4,21 @@
 \alias{display}
 \title{Display image using CImg library}
 \usage{
-display(im)
+display(im, normalise = TRUE)
 }
 \arguments{
 \item{im}{an image (cimg object)}
+
+\item{normalise:}{if true pixel values are rescaled to 0...255 (default TRUE)}
 }
 \description{
-Display image using CImg library
+Press escape or close the window to exit.
+}
+\examples{
+##Not run: interactive only
+##display(boats,TRUE) #Normalisation on
+##display(boats/2,TRUE) #Normalisation on, so same as above
+##display(boats,FALSE) #Normalisation off
+##display(boats/2,FALSE) #Normalisation off, so different from above
 }
 

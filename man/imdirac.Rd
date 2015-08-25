@@ -7,7 +7,7 @@
 imdirac(dims, x, y, z = 1, cc = 1)
 }
 \arguments{
-\item{dims}{a vector of image dimensions, or an image whose dimensions will be used}
+\item{dims}{a vector of image dimensions, or an image whose dimensions will be used. If dims has length < 4 some guesswork will be used (see examples and ?as.cimg.array)}
 
 \item{x}{where to put the dirac (x coordinate)}
 
@@ -24,10 +24,15 @@ an image
 This small utility is useful to examine the impulse response of a filter
 }
 \examples{
+#Explicit settings of all dimensions
+imdirac(c(50,50,1,1),20,20)
+imdirac(c(50,50),20,20) #Implicit
+imdirac(c(50,50,3),20,20,cc=2) #RGB
+imdirac(c(50,50,7),20,20,z=2) #50x50 video with 7 frames
 #Impulse response of the blur filter
-imdirac(c(50,50,1,1),20,20) \%>\% isoblur(sigma=2)  \%>\% plot
+imdirac(c(50,50),20,20) \%>\% isoblur(sigma=2)  \%>\% plot
 #Impulse response of the first-order Deriche filter
-imdirac(c(50,50,1,1),20,20) \%>\% deriche(sigma=2,order=1,axis="x")  \%>\% plot
+imdirac(c(50,50),20,20) \%>\% deriche(sigma=2,order=1,axis="x")  \%>\% plot
 }
 \author{
 Simon Barthelme

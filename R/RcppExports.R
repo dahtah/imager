@@ -85,10 +85,19 @@ grayscale <- function(im) {
 
 #' Display image using CImg library
 #'
+#' Press escape or close the window to exit.
+#'
 #' @param im an image (cimg object)
+#' @param normalise: if true pixel values are rescaled to 0...255 (default TRUE)
 #' @export
-display <- function(im) {
-    invisible(.Call('imager_display', PACKAGE = 'imager', im))
+#' @examples
+#' ##Not run: interactive only 
+#' ##display(boats,TRUE) #Normalisation on 
+#' ##display(boats/2,TRUE) #Normalisation on, so same as above
+#' ##display(boats,FALSE) #Normalisation off
+#' ##display(boats/2,FALSE) #Normalisation off, so different from above
+display <- function(im, normalise = TRUE) {
+    invisible(.Call('imager_display', PACKAGE = 'imager', im, normalise))
 }
 
 #' Display image list using CImg library
@@ -104,10 +113,11 @@ display_list <- function(imlist) {
 #' A very basic video player. Press the space bar to pause and ESC to close. 
 #' @param vid A cimg object, to be played as video
 #' @param loop loop the video (default false)
-#' @param delay delay between frames, in ms. Default 30. 
+#' @param delay delay between frames, in ms. Default 30.
+#' @param normalise: if true pixel values are rescaled to 0...255 (default TRUE). The normalisation is based on the *first frame*. If you don't want the default behaviour you can normalise by hand. Default TRUE.
 #' @export
-play <- function(vid, loop = FALSE, delay = 30L) {
-    invisible(.Call('imager_play', PACKAGE = 'imager', vid, loop, delay))
+play <- function(vid, loop = FALSE, delay = 30L, normalise = TRUE) {
+    invisible(.Call('imager_play', PACKAGE = 'imager', vid, loop, delay, normalise))
 }
 
 bucket_fill <- function(im, x, y, z, color, opacity = 1, sigma = 0, high_connexity = FALSE) {

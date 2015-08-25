@@ -14,4 +14,9 @@
 \description{
 If the array has two dimensions, we assume it's a grayscale image. If it has three dimensions we assume it's a video, unless the third dimension has a depth of 3, in which case we assume it's a colour image,
 }
+\examples{
+as.cimg(array(1:9,c(3,3)))
+as.cimg(array(1,c(10,10,3))) #Guesses colour image
+as.cimg(array(1:9,c(10,10,4))) #Guesses video
+}
 

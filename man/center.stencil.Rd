@@ -14,4 +14,8 @@ center.stencil(stencil, ...)
 \description{
 Center stencil at a location
 }
+\examples{
+stencil <- data.frame(dx=seq(-2,2,1),dy=seq(-2,2,1))
+center.stencil(stencil,x=10,y=20)
+}
 

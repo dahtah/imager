@@ -4,7 +4,7 @@
 \alias{play}
 \title{Play a video}
 \usage{
-play(vid, loop = FALSE, delay = 30L)
+play(vid, loop = FALSE, delay = 30L, normalise = TRUE)
 }
 \arguments{
 \item{vid}{A cimg object, to be played as video}
@@ -12,6 +12,8 @@ play(vid, loop = FALSE, delay = 30L)
 \item{loop}{loop the video (default false)}
 
 \item{delay}{delay between frames, in ms. Default 30.}
+
+\item{normalise:}{if true pixel values are rescaled to 0...255 (default TRUE). The normalisation is based on the *first frame*. If you don't want the default behaviour you can normalise by hand. Default TRUE.}
 }
 \description{
 A very basic video player. Press the space bar to pause and ESC to close.

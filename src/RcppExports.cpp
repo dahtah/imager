@@ -150,12 +150,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // display
-void display(NumericVector im);
-RcppExport SEXP imager_display(SEXP imSEXP) {
+void display(NumericVector im, bool normalise);
+RcppExport SEXP imager_display(SEXP imSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
-    display(im);
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    display(im, normalise);
     return R_NilValue;
 END_RCPP
 }
@@ -170,14 +171,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // play
-void play(NumericVector vid, bool loop, unsigned long delay);
-RcppExport SEXP imager_play(SEXP vidSEXP, SEXP loopSEXP, SEXP delaySEXP) {
+void play(NumericVector vid, bool loop, unsigned long delay, bool normalise);
+RcppExport SEXP imager_play(SEXP vidSEXP, SEXP loopSEXP, SEXP delaySEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type vid(vidSEXP);
     Rcpp::traits::input_parameter< bool >::type loop(loopSEXP);
     Rcpp::traits::input_parameter< unsigned long >::type delay(delaySEXP);
-    play(vid, loop, delay);
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    play(vid, loop, delay, normalise);
     return R_NilValue;
 END_RCPP
 }
