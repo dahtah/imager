@@ -10,9 +10,7 @@ If that doesn't work then you're probably missing a build environment or a libra
 
 On Windows you can grab a binary package (it's possibly outdated, see below)
 
-	devtools::install_url("https://github.com/dahtah/imager/releases/download/snapshot_080815/imager_win.zip")
-
-
+	devtools::install_url("https://github.com/dahtah/imager/releases/download/0.1.3/imager_0.13.zip")
 
 ### OS X
 
