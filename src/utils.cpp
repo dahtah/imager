@@ -41,9 +41,15 @@ List im_split(NumericVector im,char axis,int nb=-1)
 //' All images will be concatenated along the x,y,z, or c axis.
 //' 
 //' @param imlist a list of images (all elements must be of class cimg) 
-//' @param axis the axis along which to split (for example 'c')
+//' @param axis the axis along which to concatenate (for example 'c')
 //' @seealso imsplit (the reverse operation)
 //' @export
+//' @examples
+//' imappend(list(boats,boats),"x") %>% plot
+//' imappend(list(boats,boats),"y") %>% plot
+//' plyr::rlply(3,imnoise(100,100)) %>% imappend("c") %>% plot
+//' boats.gs <- grayscale(boats)
+//' plyr::llply(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) %>% imappend("c") %>% plot
 // [[Rcpp::export]]
 NumericVector imappend(List imlist,char axis)
 {
