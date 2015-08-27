@@ -1,3 +1,2 @@
-#Winbuilder's version of libfftw doesn't do threads, so we disable that
 PKG_CPPFLAGS += -I../inst/include -DSTRICT_R_HEADERS -DCIMG_COMPILING -Dcimg_use_fftw3_singlethread  -Dcimg_use_rng -fpermissive -I$(LIB_FFTW)/include 
 PKG_LIBS += -L$(LIB_FFTW)/lib -lgdi32 -lfftw3-3 $(RCPP_LDFLAGS)
