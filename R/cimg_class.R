@@ -416,9 +416,9 @@ subs <- function(im,cl,consts)
 
 
 
-##' Load image from file
+##' Load image from file or URL
 ##'
-##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
+##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s). 
 ##' 
 ##' @param file path to file
 ##' @return an object of class 'cimg'
@@ -433,7 +433,14 @@ load.image <- function(file)
         has.magick <- Sys.which("convert") %>% { length(.) > 0 }
         if (has.magick)
             {
-                path.expand(file) %>% load_image
+                if (grepl("^(http|ftp)s?://", file)) #URL, regex from libXML2 package
+                    {
+                        load_image(file)
+                    }
+                else
+                    {
+                        normalizePath(file,mustWork=TRUE) %>% load_image
+                    }
             }
         else
             {

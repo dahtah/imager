@@ -1,1 +1,5 @@
-- 0.1 Initial release 
+- 0.14 Minor update
+  - Build system now uses configure
+  - Fixed paths in Makevars
+  - Hopeful bugfix in load.image for Windows 7 users 
+- 0.13 Initial release on CRAN
