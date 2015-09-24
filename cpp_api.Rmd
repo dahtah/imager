@@ -14,7 +14,7 @@ If R isn't fast enough for your needs, it may be worth using the CImg C++ API di
 
 Here's a basic example: we define a C++ function inline, call cppFunction, and the function becomes magically accessible.
 
-```{r example_inline,warning=FALSE}
+```{r example_inline,warning=FALSE,cache=TRUE}
 library(imager)
 library(Rcpp)
 
@@ -28,7 +28,7 @@ NumericVector foo(NumericVector inp)
     return wrap(img);
 } "
 
-#Compile the function. The compiler may issue a number of warnings which you cann all ignore
+#Compile the function. The compiler may issue a number of warnings which you can all ignore
 cppFunction(foo.inline,depends="imager")
 
 

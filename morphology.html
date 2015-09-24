@@ -83,12 +83,12 @@ threshold(im.g,&quot;10%&quot;) %&gt;% plot</code></pre>
 <p>The problem is that there is a luminance trend in the image (it is noticeably lighter at the bottom), so that a fixed threshold doesn’t work very well. Fortunately we can remove that trend using a linear model. We’re going to use R’s built-in lm function. The first step is to convert the image data to a data.frame, then fit a model:</p>
 <pre class="r"><code>df &lt;- as.data.frame(im.g)
 head(df,5) </code></pre>
-<pre><code>##   x y z cc     value
-## 1 1 1 1  1 0.3960784
-## 2 2 1 1  1 0.4784314
-## 3 3 1 1  1 0.4490196
-## 4 4 1 1  1 0.4843137
-## 5 5 1 1  1 0.4764706</code></pre>
+<pre><code>##   x y     value
+## 1 1 1 0.3960784
+## 2 2 1 0.4784314
+## 3 3 1 0.4490196
+## 4 4 1 0.4843137
+## 5 5 1 0.4764706</code></pre>
 <pre class="r"><code>m &lt;- lm(value ~ x + y,data=df) #linear trend
 summary(m)</code></pre>
 <pre><code>## 

@@ -89,19 +89,15 @@ imager: an R package for image processing
 <li>morphological operations</li>
 </ul>
 </div>
-<div id="how-to-install" class="section level2">
-<h2>How to install</h2>
-<div id="the-package" class="section level3">
-<h3>The package</h3>
-<p>Install the devtools package if you haven’t already. Then run:</p>
-<pre><code>library(devtools)
-install_github(&quot;dahtah/imager&quot;)</code></pre>
-<p>So far the package is only available as source code, so you’ll need a functional R build environment (Rtools on Windows, XCode on OS X). To build under Linux make sure you have the headers for libX11.</p>
+<div id="installing-the-package" class="section level2">
+<h2>Installing the package</h2>
+<p>Imager is now on CRAN, so</p>
+<pre><code>install.packages(&quot;imager&quot;)</code></pre>
+<p>should to the trick. If you prefer the latest development version, see our <a href="https://www.github.com/dahtah/imager">Github page</a>.</p>
 </div>
-<div id="dependencies" class="section level3">
-<h3>Dependencies</h3>
-<p>You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to be able to import and save images.</p>
-</div>
+<div id="dependencies" class="section level2">
+<h2>Dependencies</h2>
+<p>You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to work with videos, or import and save images in formats other than PNG and JPEG. On Linux these should be available from standard repositories (ie. “sudo apt-get install ffmpeg” should work). On OS X they are available via brew: “brew install imagemagick ffmpeg”.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
@@ -112,15 +108,16 @@ deriche(tennis,10,axis=&quot;z&quot;) %&gt;% play</code></pre>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
-<p>At the moment you’ll find</p>
+<p>At the moment we have:</p>
 <ul>
 <li>a <a href="image_stats.html">tutorial</a> on natural image statistics using imager</li>
 <li>another (incomplete) tutorial on <a href="morphology.html">morphology and detrending</a></li>
+<li>a <a href="foreground_background.html">tutorial</a> on <a href="http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/">foreground/background segmentation</a></li>
 <li>information on <a href="cpp_api.html">accessing the CImg API using Rcpp</a></li>
 <li>general package <a href="imager.html">documentation</a></li>
-<li>a <a href="imager.pdf">list of all functions</a> with examples</li>
+<li>a <a href="https://cran.r-project.org/web/packages/imager/imager.pdf">list of all functions</a> with examples</li>
 </ul>
-<p>You might find <a href="http://cimg.sourceforge.net/">CImg</a>’s doc useful as well.</p>
+<p>You might find <a href="http://cimg.eu/">CImg</a>’s doc useful as well.</p>
 </div>
 
 

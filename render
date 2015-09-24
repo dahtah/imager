@@ -1,8 +1,10 @@
-#!/usr/bin/Rscript 
+#!/usr/bin/Rscript
 args <- commandArgs(trailingOnly = TRUE)
+library(methods)
 library(knitr)
+library(plyr)
 library(rmarkdown)
 library(imager)
 library(Rcpp)
 opts_knit$set(dev="svg")
-render(args[1])
+rmarkdown::render(args[1])

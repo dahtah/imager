@@ -59,6 +59,53 @@ In an interactive session you can run play(combined) to view the results.
 imsplit(combined,"z") %>% l_ply(plot)
 ```
 
+# Loading and saving
+
+Use load.image and save.image. imager supports PNG and JPEG natively. If you need to access images in other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) for images, and [ffmpeg](http://ffmpeg.org/download.html) for videos. 
+
+```{r load_save}
+file <- system.file('extdata/parrots.png',package='imager')
+parrots <- load.image(file)
+#The file format is defined by the extension. Here we save as JPEG
+imager::save.image(parrots,"/tmp/parrots.jpeg")
+#We call imager::save.image to avoid ambiguity, as base R already has a save.image function 
+```
+
+You can load files from your hard drive or from a URL. Loading from URLs is useful when scraping web pages, for example. The following piece of code searches for pictures of parrots (using the rvest package), then loads the first one it finds 
+
+```{r loading_parrots}
+library(rvest)
+#Run a search query (returning html content)
+search <- html("https://www.google.com/search?site=&tbm=isch&q=parrot")
+
+#Grab all <img> tags, get their "src" attribute, a URL to an image
+urls <- search %>% html_nodes("img") %>% html_attr("src") #Get urls of parrot pictures
+
+#Load the first one
+load.image(urls[1]) %>% plot()
+```
+
+# Displaying images and videos 
+
+To get a standard R plot use the plot function:
+
+```{r plotting}
+plot(parrots)
+plot(tennis,frame=1) 
+```
+
+In addition imager provides display() (for images) and play() (for videos), which are much faster C++ functions for quickly viewing your results. 
+If you'd like to use an external viewer, you can save the image to a temporary file:
+
+```{r tmp_file,cache=TRUE}
+tmp <- tempfile(fileext=".png") #Open temp. file
+imager::save.image(boats,tmp) #Save image to temp. file
+#Call "eog [temp file]" to open in external viewer (Linux only)
+paste("eog",tmp) %>% system
+#On a mac: try system(paste("open",tmp))
+unlink(tmp) #Delete temp. file
+```
+
 
 # How images are represented
 
@@ -140,23 +187,6 @@ By default as.cimg.data.frame will try to guess image size from the input. You c
 mutate(df,value=cos(sin(x+y)^2)) %>% as.cimg(dims=c(10,10,1,1))
 ```
 
-
-## Displaying images and videos 
-
-To get a standard R plot use the plot function:
-
-```{r plotting}
-plot(parrots)
-plot(tennis,frame=1) 
-```
-
-In addition imager provides display() (for images) and play() (for videos), which are much faster C++ functions for quickly viewing your results. 
-
-
-# Loading and saving
-
-Use load.image and save.image. You'll most likely need imagemagick on your path somewhere for images, and ffmpeg for videos. CImg supports very few formats natively. 
-
 # Splitting and concatenating images
 
 One often needs to perform separate computations on each channel of an image, or on each frame, each line, etc. This can be achieved using a loop or more conveniently using imsplit:
@@ -184,12 +214,24 @@ Often what one wants to do is to split the image along a certain axis (e.g. colo
 iiply(parrots,"c",function(v) v/max(v))  %>% plot
 
 #Same thing but longer:
-#imsplit(parrots,"c") %>% llply(function(v) v/max(v)
+#imsplit(parrots,"c") %>% llply(function(v) v/max(v) %>% imappend("c") %>% plot
 ```
 
 The code above separates colour channels, applies a normalisation and recombines the result into an image.
 Following the same convention used by plyr, imager also defines ilply (which splits, applies and returns a list), idply (which splits, applies and returns a data.frame) and liply (which applies, combines and returns an image). 
 
+Another way to combine after a split is to take the mean result, or a product, etc (the same way layers are combined in an image editing program). You can do this using shortcuts defined by imager:
+
+```{r add_average_etc,cache=TRUE}
+imsplit(parrots,"c") %>% add %>% plot(main="Adding colour channels")
+
+#Use different levels of blur on the same image
+blur.layers <- llply(seq(1,15,l=5),function(v) isoblur(parrots,v))
+
+blur.layers %>% parmin %>% plot(main="Min across blur levels")
+blur.layers %>% parmax %>% plot(main="Max across blur levels")
+blur.layers %>% average %>% plot(main="Average across blur levels")
+```
 
 # Sub-images, pixel neighbourhoods, etc.
 
@@ -279,14 +321,14 @@ imshift(parrots,100,100,boundary=2) %>% plot(main="Shifting (circular)")
 You can pad an image using "pad":
 
 ```{r pad}
-pad(parrots,axis="y",140) %>% plot
-pad(parrots,axis="y",140,pos=-1) %>% plot
+pad(parrots,axes="y",140) %>% plot
+pad(parrots,axes="y",140,pos=-1) %>% plot
 ```
 
 autocrop will remove any extra padding:
 ```{r autocrop}
 #The argument to autocrop is the colour of the background it needs to remove
-pad(parrots,axis="y",140,pos=-1) %>% autocrop(c(0,0,0)) %>% plot
+pad(parrots,axes="y",140,pos=-1) %>% autocrop(c(0,0,0)) %>% plot
 
 ```
 
@@ -354,7 +396,7 @@ To compute the difference between successive images in a video, you can use the 
 
 FFTs can be computed via the FFT function:
 
-```{r FFT}
+```{r FFT,cache=TRUE}
 im <- as.cimg(function(x,y) sin(x/5)+cos(x/4)*sin(y/2),128,128)
 ff <- FFT(im)
 plot(ff$real,main="Real part of the transform")
@@ -364,7 +406,7 @@ sqrt(ff$real^2+ff$imag^2) %>% plot(main="Power spectrum")
 
 If you want to use CImg's FFT on images of arbitrary size you should enable FFTW3 support. Install FFTW3 on your system, then run install_github("dahtah/imager",ref="fftw"). As a workaround you can also use R's native fft:
 
-```{r FFT_nativeR}
+```{r FFT_nativeR,cache=TRUE}
 rff <- as.matrix(im) %>% fft
 Re(rff) %>% as.cimg %>% plot(main="Real part of the transform (R's native code)")
 ```
@@ -373,20 +415,10 @@ Important: both FFT and fft will attempt to perform a multi-dimensional FFT of t
 
 The FFT works best for periodic signals. One way of making signals periodic is via zero-padding (use the pad function), another is to use the periodic-smooth decomposition of Moisan (2011):
 
-```{r periodicsmooth,fig.width=12}
+```{r periodicsmooth,fig.width=12,cache=TRUE}
 layout(t(1:2))
 periodic.part(parrots) %>% plot(main="Periodic part of parrots")
 (parrots- periodic.part(parrots)) %>% plot(main="Smooth residual of parrots")
 ```
 
 See ?periodic.smooth for details.
-<!-- # Using the CImg API directly -->
-
-<!-- Warning: this feature is only available in the experimental branch of imager for now. -->
-
-<!-- If you need fast operations or tighter control over memory usage, you can implement your processing algorithms in C++ and call them from R. Example: -->
-
-<!-- ```{r} -->
-
-
-<!-- ``` -->
