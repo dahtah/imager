@@ -1,4 +1,4 @@
-##' Returns the pixel grid for an image
+##' Return the pixel grid for an image
 ##'
 ##' The pixel grid for image im gives the (x,y,z,c) coordinates of each successive pixel as a data.frame. The c coordinate has been renamed 'cc' to avoid conflicts with R's c function.
 ##' NB: coordinates start at (x=1,y=1), corresponding to the top left corner of the image, unless standardise == TRUE, in which case we use the usual Cartesian coordinates with origin at the center of the image and scaled such that x varies between -.5 and .5, and a y arrow pointing up
@@ -7,28 +7,51 @@
 ##' @param im an image
 ##' @param standardise If TRUE use a centered, scaled coordinate system. If FALSE use standard image coordinates (default FALSE)
 ##' @param drop.unused if TRUE ignore empty dimensions, if FALSE include them anyway (default TRUE)
+##' @param dim a vector of image dimensions (optional, may be used instead of "im")
 ##' @return a data.frame
 ##' @examples
 ##' im <- as.cimg(array(0,c(10,10))) #A 10x10 image
 ##' pixel.grid(im) %>% head
+##' pixel.grid(dim=dim(im)) %>% head #Same as above
+##' pixel.grid(dim=c(10,10,3,2)) %>% head 
 ##' pixel.grid(im,standardise=TRUE) %>% head
 ##' pixel.grid(im,drop.unused=FALSE) %>% head
 ##' @export
-pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE)
+pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE,dim=NULL)
     {
+        if (!missing(im))
+            {
+                d <- dim(im)
+
+            }
+        else if (!is.null(dim))
+        {
+            if (!is.vector(dim) | length(dim) != 4)
+                {
+                    stop('Argument dim must be a vector of length 4')
+                }
+            else
+            {
+                d <- dim
+            }
+        }
+        else
+        {
+            stop('You must provide either an image or a vector of dimensions')
+        }
         if (standardise)
             {
-                dy <- height(im)/width(im)
-                dz <- depth(im)/width(im)
-                res <- expand.grid(x=seq(-.5,.5,l=width(im)),y=seq(dy/2,-dy/2,l=height(im)),z=seq(-dz/2,dz/2,l=depth(im)),cc=1:spectrum(im))
+                dy <- d[2]/d[1]
+                dz <- d[3]/d[1]
+                res <- expand.grid(x=seq(-.5,.5,l=d[1]),y=seq(dy/2,-dy/2,l=d[2]),z=seq(-dz/2,dz/2,l=d[3]),cc=1:spectrum(im))
             }
         else
             {
-                res <- expand.grid(x=1:width(im),y=1:height(im),z=1:depth(im),cc=1:spectrum(im))
+                res <- expand.grid(x=1:d[1],y=1:d[2],z=1:d[3],cc=1:d[4])
             }
         if (drop.unused)
             {
-                res[,dim(im) > 1]
+                res[,d > 1]
             }
         else
             {

@@ -487,52 +487,7 @@ convert.im.toPNG <- function(A)
 
 
 
-##' Create an image of custom size by filling in repeated values
-##'
-##' This is a convenience function for quickly creating blank images, or images filled with a specific colour. See examples. 
-##' 
-##' @param x width (default 1)
-##' @param y height (default 1)
-##' @param z depth (default 1)
-##' @param val fill-in values. Either a single value (for grayscale), or RGB values for colour
-##' @return an image object (class cimg)
-##' @examples
-##' imfill(20,20) %>% plot #Blank image of size 20x20
-##' imfill(20,20,val=c(1,0,0)) %>% plot #All red image
-##' @author simon
-##' @export
-imfill <- function(x=1,y=1,z=1,val=0)
-    {
-        if (length(val) == 1)
-            {
-                array(val,c(x,y,z,1)) %>% cimg
-            }
-        else
-            {
-                llply(val,function(v) imfill(x,y,z,v)) %>% imappend("c")
-            }
-    }
 
-##' Generate (Gaussian) white-noise image
-##'
-##' A white-noise image is an image where all pixel values are drawn IID from a certain distribution. Here they are drawn from a Gaussian.
-##' 
-##' @param x width
-##' @param y height
-##' @param z depth
-##' @param cc spectrum
-##' @param mean mean pixel value (default 0)
-##' @param sd std. deviation of pixel values (default 1)
-##' @return a cimg object
-##' @examples
-##' imnoise(100,100,cc=3) %>% plot(main="White noise in RGB")
-##' imnoise(100,100,cc=3) %>% isoblur(5) %>% plot(main="Filtered (non-white) noise")
-##' @author Simon Barthelme
-##' @export
-imnoise <- function(x=1,y=1,z=1,cc=1,mean=0,sd=1)
-    {
-        rnorm(x*y*z*cc,mean=mean,sd=sd) %>% array(dim=c(x,y,z,cc)) %>% cimg
-    }
 
 
 ##' Remove empty dimensions from an array
@@ -550,20 +505,6 @@ squeeze <- function(x) {
     x
 }
 
-##' @export
-as.matrix.cimg <- function(x,...) {
-    d <- dim(x)
-    if (sum(d==1) == 2)
-        {
-            x <- squeeze(x)
-            class(x) <- "matrix"
-            x
-        }
-    else
-        {
-            stop("Too many non-empty dimensions")
-        }
-}
 
 ##' Add colour channels to an grayscale image
 ##'
@@ -727,7 +668,7 @@ capture.plot <- function()
         }
     }
 
-
+is.cimg <- function(a) is(a,"cimg")
 
 
 

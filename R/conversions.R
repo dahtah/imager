@@ -199,69 +199,6 @@ as.cimg.vector <- function(obj,x=NA,y=NA,z=NA,cc=NA,...)
     }
 
 
-##' Create an image by sampling a function
-##'
-##' Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluates the input function at these values. 
-##' 
-##' @param obj a function with arguments (x,y) or (x,y,z). Must be vectorised. 
-##' @param width width of the image (in pixels)
-##' @param height height of the image (in pixels)
-##' @param depth depth of the image (in pixels)
-##' @param normalise.coord coordinates are normalised so that x,y,z are in (0,1) (default FALSE)
-##' @param ... ignored
-##' @return an object of class cimg
-##' @author Simon Barthelme
-##' @examples
-##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100)
-##' plot(im)
-##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100,normalise.coord=TRUE)
-##' plot(im)
-##' @export
-as.cimg.function <- function(obj,width,height,depth=1,normalise.coord=FALSE,...)
-    {
-        fun <- obj
-        args <- formals(fun) %>% names
-        if (depth == 1)
-            {
-                if (!setequal(args,c("x","y")))
-                    {
-                        stop("Input must be a function with arguments x,y")
-                    }
-                if (normalise.coord)
-                    {
-                        gr <- expand.grid(x=seq(0,1,l=width),y=seq(0,1,l=height))
-                    }
-                else
-                    {
-                        gr <- expand.grid(x=1:width,y=1:height)
-                    }
-               
-                z <- fun(x=gr$x,y=gr$y)
-
-                dim(z) <- c(width,height,1,1)
-                cimg(z)
-            }
-        else 
-            {
-                if (!setequal(args,c("x","y","z")))
-                    {
-                        stop("Input must be a function with arguments x,y,z")
-                    }
-                if (normalise.coord)
-                    {
-                         gr <- expand.grid(x=seq(0,1,l=width),y=seq(0,1,l=height),z=seq(0,1,l=depth))
-                    }
-                else
-                    {
-                        gr <- expand.grid(x=1:width,y=1:height,z=1:depth)
-                    }
-               
-                val <- fun(x=gr$x,y=gr$y,z=gr$z)
-                dim(val) <- c(width,height,depth,1)
-                cimg(val)
-            }
-        
-    }
 
 ##' Turn an numeric array into a cimg object
 ##'
@@ -361,3 +298,18 @@ as.cimg.data.frame <- function(obj,v.name="value",dims,...)
         im[ind] <- obj[[v.name]]
         im
     }
+
+##' @export
+as.matrix.cimg <- function(x,...) {
+    d <- dim(x)
+    if (sum(d==1) == 2)
+        {
+            x <- squeeze(x)
+            class(x) <- "matrix"
+            x
+        }
+    else
+        {
+            stop("Too many non-empty dimensions")
+        }
+}
