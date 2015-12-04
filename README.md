@@ -1,3 +1,6 @@
+[![Linux Build Status](https://travis-ci.org/dahtah/imager.png?branch=master)](https://travis-ci.org/dahtah/imager)
+[![CRAN Version](http://www.r-pkg.org/badges/version/imager)](http://cran.rstudio.com/web/packages/imager)
+
 Imager is an image/video processing package for R, based on [CImg](http://cimg.eu/), a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for applications like video processing/hyperspectral imaging/MRI.
 
 ## Installing the package

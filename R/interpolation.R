@@ -20,7 +20,13 @@ interp <- function(im,locations,cubic=FALSE)
         {
             stop('Second argument must be a data.frame')
         }
-    nms <- names(locations)
+    if (any(names(locations) == "cc"))
+    {
+        locations <- plyr::rename(locations,c("cc"="c")) 
+    }
+
+    nms <- intersect(names(locations),c("x","y","z","c"))
+
     if (setequal(nms,c("x","y")))
         {
             if (depth(im) == 1 & spectrum(im) ==1)
@@ -40,7 +46,7 @@ interp <- function(im,locations,cubic=FALSE)
         {
             if (spectrum(im) ==1)
                 {
-                    interp_xyz(im,locations$x-1,locations$y-1,locations$z + 1,cubic=cubic)
+                    interp_xyz(im,locations$x-1,locations$y-1,locations$z - 1,cubic=cubic)
                 }
             else
                 {
@@ -58,7 +64,7 @@ interp <- function(im,locations,cubic=FALSE)
                       frames(im) %>% llply(interp,locations=locations,cubic=cubic)
                 }
         }
-    else if (setequal(nms,c("x","y","z","c")))
+    else if (all(c("x","y","z","c") %in% nms))
         {
             interp_xyzc(im,ix=locations$x-1,iy=locations$y-1,iz=locations$z-1,ic=locations$c-1,cubic=cubic)
         }
@@ -70,19 +76,23 @@ interp <- function(im,locations,cubic=FALSE)
 
 
 check.inside <- function(im,locations)
+{
+    if (any(names(locations) == "cc"))
     {
-        check <- list(x = function(x) { (x >= 1) & (x <= width(im)) },
-                     y = function(y) { (y >= 1) & (y <= height(im)) },
-                     z = function(z) { (z >= 1) & (z <= depth(im)) },
-                     c = function(c) { (c >= 1) & (c <= spectrum(im)) })
-        nms <- names(locations)
-        if (!all(nms %in% c("x","y","z","c")))
-            {
-                stop('Unrecognised coordinates (use x,y,z,c to index the locations)')
-            }
-        else
-            {
-                A <- laply(nms,function(nm) check[[nm]](locations[[nm]]))
-                all(A)
-            }
+        locations <- plyr::rename(locations,c("cc"="c")) 
     }
+    check <- list(x = function(x) { (x >= 1) & (x <= width(im)) },
+                  y = function(y) { (y >= 1) & (y <= height(im)) },
+                  z = function(z) { (z >= 1) & (z <= depth(im)) },
+                  c = function(c) { (c >= 1) & (c <= spectrum(im)) })
+    nms <- intersect(names(locations),c("x","y","z","c"))
+    ## if (!all(c("x","y","z","c") %in% nms))
+    ## {
+    ##     stop('Unrecognised coordinates (use x,y,z,c to index the locations)')
+    ## }
+    ##     else
+    ##     {
+    A <- laply(nms,function(nm) check[[nm]](locations[[nm]]))
+    all(A)
+##        }                               
+}
