@@ -14,7 +14,7 @@ init:
         Import-Module '..\appveyor-tool.ps1'
 
 install:
- - ps: Bootstrap
+
 
 #This bit is taken from https://raw.githubusercontent.com/clMathLibraries/clFFT/master/appveyor.yml
  - echo Installing FFTW
@@ -27,7 +27,7 @@ install:
   - ps: lib /machine:x64 /def:libfftw3-3.def
   - ps: lib /machine:x64 /def:libfftw3f-3.def
   - ps: lib /machine:x64 /def:libfftw3l-3.def
-
+ - ps: Bootstrap
 
 build_script:
   - travis-tool.sh install_deps
