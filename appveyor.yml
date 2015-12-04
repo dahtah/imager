@@ -1,3 +1,5 @@
+#uses code from https://raw.githubusercontent.com/clMathLibraries/clFFT/master/appveyor.yml
+
 # DO NOT CHANGE the "init" and "install" sections below
 platform:
   - x64
@@ -14,6 +16,8 @@ init:
         Import-Module '..\appveyor-tool.ps1'
 
 install:
+  - ps: mkdir lib
+  - ps: pushd lib
   - ps: echo Installing FFTW
   - ps: mkdir $env:LIB_FFTW
   - ps: pushd $env:LIB_FFTW
