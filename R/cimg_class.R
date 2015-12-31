@@ -672,5 +672,98 @@ is.cimg <- function(a) is(a,"cimg")
 
 
 
+##' Replace part of an image with another
+##'
+##' These replacement functions let you modify part of an image (for example, only the red channel).
+##' Note that cimg objects can also be treated as regular arrays and modified using the usual [] operator. 
+##' @name imager.replace
+##' @param x an image to be modified 
+##' @param value the image to insert
+##' @param ind an index
+##' @seealso imdraw
+##' @examples
+##' boats.cp <- boats
+##' #Set the green channel in the boats image to 0
+##' G(boats.cp) <- 0
+##' #Same thing, more verbose
+##' channel(boats.cp,2) <- 0
+##' #Replace the red channel with noise
+##' R(boats.cp) <- imnoise(width(boats),height(boats))
+##' #A new image with 5 frames
+##' tmp <- imfill(10,10,5)
+##' #Fill the third frame with noise
+##' frame(tmp,3) <- imnoise(10,10)
+NULL
+
+##' @describeIn imager.replace Replace image channel
+##' @export
+`channel<-` <- function(x, ind,value) {
+    if (ind <= spectrum(x))
+    {
+        if (length(value)==1)
+        {
+            x[,,,ind] <- value
+            x
+        }
+        else
+        {
+            if (all(dim(value)[1:3] == dim(x)[1:3]) & spectrum(value) == 1)
+            {
+                x[,,,ind] <- value
+                x
+            }
+            else
+            {
+                stop("Dimensions are incompatible")
+            }
+        }
+    }
+    else
+    {
+        spectrum(x) %>% sprintf('Image only has %i channel(s)',.) %>% stop()
+    }
+}
 
 
+##' @describeIn imager.replace Replace red channel
+##' @export
+`R<-` <- function(x, value) {
+    channel(x,1) <- value
+    x
+}
+
+
+##' @describeIn imager.replace Replace green channel
+##' @export
+`G<-` <- function(x, value) {
+    channel(x,2) <- value
+    x
+}
+
+##' @describeIn imager.replace Replace blue channel
+##' @export
+`B<-` <- function(x, value) {
+    channel(x,3) <- value
+    x
+}
+
+##' @describeIn imager.replace Replace image frame
+##' @export
+`frame<-` <- function(x, ind,value) {
+    if (ind <= depth(x))
+    {
+        if (length(value) == 1)
+        {
+            x[,,ind,] <- value
+            x
+        }
+        else
+        {
+            imdraw(x,value,z=ind)
+        }
+    }
+        else
+        {
+            depth(x) %>% sprintf('Image only has %i frame(s)',.) %>% stop()
+        }
+}
