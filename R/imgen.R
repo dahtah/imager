@@ -75,40 +75,63 @@ imnoise <- function(x=1,y=1,z=1,cc=1,mean=0,sd=1,dim=NULL)
 ##' @examples
 ##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100)
 ##' plot(im)
-##' im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100,normalise.coord=TRUE)
+##' #The following is just a rectangle at the center of the image 
+##' im = as.cimg(function(x,y) (abs(x) < .1)*(abs(y) < .1) ,100,100,standardise=TRUE)
 ##' plot(im)
+##' #Since coordinates are standardised the rectangle scales with the size of the image
+##' im = as.cimg(function(x,y) (abs(x) < .1)*(abs(y) < .1) ,200,200,standardise=TRUE)
+##' plot(im)
+##' #A Gaussian mask around the center
+##' im = as.cimg(function(x,y) dnorm(x,sd=.1)*dnorm(y,sd=.3) ,dim=dim(boats),standardise=TRUE)
+##' im = im/max(im)
+##' 
+##' plot(im*boats)
+##' #A Gaussian mask for just the red channel
+##' im = as.cimg(function(x,y,cc) ifelse(cc==1,dnorm(x,sd=.1)*dnorm(y,sd=.3),0) ,dim=dim(boats),standardise=TRUE)
+##' plot(im*boats)
+##' 
 ##' @export
-as.cimg.function <- function(obj,width,height,depth=1,standardise=FALSE,dim=NULL,...)
+as.cimg.function <- function(obj,width,height,depth=1,spectrum=1,standardise=FALSE,dim=NULL,...)
     {
         if (!is.null(dim))
         {
             width <- dim[1]
             height <- dim[2]
             depth <- dim[3]
+            spectrum <- dim[4]
         }
         fun <- obj
         args <- formals(fun) %>% names
+        gr <- pixel.grid(dim=c(width,height,depth,spectrum),standardise=standardise,drop.unused=TRUE)
         if (depth == 1)
             {
-                if (!setequal(args,c("x","y")))
-                    {
-                        stop("Input must be a function with arguments x,y")
-                    }
-                gr <- pixel.grid(dim=c(width,height,1,1),standardise=standardise,drop.unused=TRUE)
-                z <- fun(x=gr$x,y=gr$y)
-                dim(z) <- c(width,height,1,1)
-                cimg(z)
+                if (setequal(args,c("x","y")))
+                {
+                    val <- fun(x=gr$x,y=gr$y)
+                }
+                else if (setequal(args,c("x","y","cc")))
+                {
+                    val <- fun(x=gr$x,y=gr$y,cc=gr$cc)
+                }
+                else{
+                    stop("Input must be a function with arguments (x,y) or (x,y,cc)")
+                }
             }
         else 
             {
-                if (!setequal(args,c("x","y","z")))
-                    {
-                        stop("Input must be a function with arguments x,y,z")
-                    }
-                gr <- pixel.grid(dim=c(width,height,depth,1),standardise=standardise,drop.unused=TRUE)
-                val <- fun(x=gr$x,y=gr$y,z=gr$z)
-                dim(val) <- c(width,height,depth,1)
-                cimg(val)
+                if (setequal(args,c("x","y","z")))
+                {
+                    val <- fun(x=gr$x,y=gr$y,z=gr$z)
+                }
+                else if (setequal(args,c("x","y","z","cc")))
+                {
+                    val <- fun(x=gr$x,y=gr$y,z=gr$z,cc=gr$cc)
+                }
+                else{
+                    stop("Input must be a function with arguments (x,y,z) or (x,y,z,cc)")
+                }
             }
+        dim(val) <- c(width,height,depth,spectrum)
+        cimg(val)
         
     }

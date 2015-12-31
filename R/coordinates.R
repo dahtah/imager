@@ -43,7 +43,7 @@ pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE,dim=NULL)
             {
                 dy <- d[2]/d[1]
                 dz <- d[3]/d[1]
-                res <- expand.grid(x=seq(-.5,.5,l=d[1]),y=seq(dy/2,-dy/2,l=d[2]),z=seq(-dz/2,dz/2,l=d[3]),cc=1:spectrum(im))
+                res <- expand.grid(x=seq(-.5,.5,l=d[1]),y=seq(dy/2,-dy/2,l=d[2]),z=seq(-dz/2,dz/2,l=d[3]),cc=1:d[4])
             }
         else
             {

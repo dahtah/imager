@@ -4,7 +4,7 @@
 \alias{as.cimg.function}
 \title{Create an image by sampling a function}
 \usage{
-\method{as.cimg}{function}(obj, width, height, depth = 1,
+\method{as.cimg}{function}(obj, width, height, depth = 1, spectrum = 1,
   standardise = FALSE, dim = NULL, ...)
 }
 \arguments{
@@ -29,8 +29,21 @@ Similar to as.im.function from the spatstat package, but simpler. Creates a grid
 \examples{
 im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100)
 plot(im)
-im = as.cimg(function(x,y) cos(sin(x*y/100)),100,100,normalise.coord=TRUE)
+#The following is just a rectangle at the center of the image 
+im = as.cimg(function(x,y) (abs(x) < .1)*(abs(y) < .1) ,100,100,standardise=TRUE)
 plot(im)
+#Since coordinates are standardised the rectangle scales with the size of the image
+im = as.cimg(function(x,y) (abs(x) < .1)*(abs(y) < .1) ,200,200,standardise=TRUE)
+plot(im)
+#A Gaussian mask around the center
+im = as.cimg(function(x,y) dnorm(x,sd=.1)*dnorm(y,sd=.3) ,dim=dim(boats),standardise=TRUE)
+im = im/max(im)
+
+plot(im*boats)
+#A Gaussian mask for just the red channel
+im = as.cimg(function(x,y,cc) ifelse(cc==1,dnorm(x,sd=.1)*dnorm(y,sd=.3),0) ,dim=dim(boats),standardise=TRUE)
+plot(im*boats)
+
 }
 \author{
 Simon Barthelme
