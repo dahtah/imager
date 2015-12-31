@@ -8,12 +8,17 @@ rotate_xy(im, angle, cx, cy, zoom = 1, interpolation = 1L,
   boundary_conditions = 0L)
 }
 \arguments{
-\item{im}{an image
-@param angle Rotation angle, in degrees.
-@param cx X-coordinate of the rotation center.
-@param cy Y-coordinate of the rotation center.
-@param zoom Zoom factor.
-@param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic}
+\item{im}{an image}
+
+\item{angle}{Rotation angle, in degrees.}
+
+\item{cx}{X-coordinate of the rotation center.}
+
+\item{cy}{Y-coordinate of the rotation center.}
+
+\item{zoom}{Zoom factor.}
+
+\item{interpolation}{Interpolation type. 0=nearest | 1=linear | 2=cubic}
 
 \item{boundary_conditions}{Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic}
 }

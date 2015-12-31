@@ -6,15 +6,18 @@
 \usage{
 correlate(im, filter, boundary_conditions = TRUE, normalise = FALSE)
 }
+\arguments{
+\item{im}{an image}
+
+\item{filter}{= the correlation kernel.}
+
+\item{boundary_conditions}{= the border condition type (0=zero, 1=dirichlet)}
+
+\item{normalise}{= normalise filter (default FALSE)}
+}
 \description{
 The correlation of image im by filter flt is defined as:
  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
-}
-\details{
-@param im an image
-      @param filter = the correlation kernel.
-      @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-      @param normalise  = normalise filter (default FALSE)
 }
 \examples{
 #Edge filter

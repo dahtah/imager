@@ -7,9 +7,11 @@
 medianblur(im, n, threshold)
 }
 \arguments{
-\item{im}{an image
-@param n Size of the median filter.
-@param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing.}
+\item{im}{an image}
+
+\item{n}{Size of the median filter.}
+
+\item{threshold}{Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing.}
 }
 \description{
 Blur image with the median filter.

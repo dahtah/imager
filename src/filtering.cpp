@@ -25,7 +25,7 @@ NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',b
 }
 
 
-//' Van Vliet recursive Gaussian filter.
+//' Young-Van Vliet recursive Gaussian filter.
 //'
 //'       From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
 //'       IEEE Trans. Sig. Proc., vol. 50, pp. 2799-2805, 2002.
@@ -36,17 +36,17 @@ NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',b
 //'       recursive filtering. IEEE Trans. Signal Processing,
 //'       vol. 54, pp. 2365-2367, 2006.
 //'
-//'       @param im an image
-//'       @param sigma standard deviation of the Gaussian filter
-//'       @param order the order of the filter 0,1,2,3
-//'       @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
-//'       @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
+//' @param im an image
+//' @param sigma standard deviation of the Gaussian filter
+//' @param order the order of the filter 0,1,2,3
+//' @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
+//' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
 //'       (Dirichlet boundary condition has a strange behavior)
 //' @examples
-//' vanvliet(boats,sigma=2,order=0) %>% plot("Zeroth-order Vanvliet along x")
-//' vanvliet(boats,sigma=2,order=1) %>% plot("First-order Vanvliet along x")
-//' vanvliet(boats,sigma=2,order=1) %>% plot("Second-order Vanvliet along x")
-//' vanvliet(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Vanvliet along y")
+//' vanvliet(boats,sigma=2,order=0) %>% plot("Zeroth-order Young-van Vliet along x")
+//' vanvliet(boats,sigma=2,order=1) %>% plot("First-order Young-van Vliet along x")
+//' vanvliet(boats,sigma=2,order=1) %>% plot("Second-order Young-van Vliet along x")
+//' vanvliet(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Young-van Vliet along y")
 //' @export
 // [[Rcpp::export]]
 NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',bool boundary_conditions=0)
@@ -79,8 +79,8 @@ NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true
 //' Blur image with the median filter.
 //'    
 //' @param im an image
-//'  @param n Size of the median filter.
-//'  @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. 
+//' @param n Size of the median filter.
+//' @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. 
 //' @export
 //' @examples
 //' medianblur(boats,5,Inf) %>% plot(main="Median blur, 5 pixels")
@@ -116,10 +116,10 @@ NumericVector boxblur(NumericVector im,float sigma,bool boundary_conditions=true
 //' This is a recursive algorithm, not depending on the values of the box kernel size.
 //'
 //' @param im an image
-//'       @param sx Size of the box window, along the X-axis.
-//'       @param sy Size of the box window, along the Y-axis.
-//'       @param boundary_conditions Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.
-//'       @seealso blur().
+//' @param sx Size of the box window, along the X-axis.
+//' @param sy Size of the box window, along the Y-axis.
+//' @param boundary_conditions Boundary conditions. FALSE=Dirichlet, TRUE=Neumann.
+//' @seealso blur().
 //'
 //' @export
 //' @examples
@@ -136,10 +136,10 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool boundary_condit
 //'  The correlation of image im by filter flt is defined as:
 //'  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
 //'
-//'       @param im an image
-//'       @param filter = the correlation kernel.
-//'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-//'       @param normalise  = normalise filter (default FALSE)
+//' @param im an image
+//' @param filter = the correlation kernel.
+//' @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
+//' @param normalise  = normalise filter (default FALSE)
 //'      
 //'
 //' @export
@@ -164,12 +164,10 @@ NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_con
 //'      The result  res of the convolution of an image img by filter flt is defined to be:
 //'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
 //'
-//'       @param im an image
-//'       @param filter a filter (another image)
-//'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-//'       @param normalise = normalise filter (default FALSE)
-//'
-//'
+//' @param im an image
+//' @param filter a filter (another image)
+//' @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
+//' @param normalise = normalise filter (default FALSE)
 //' @export
 //' @seealso correlate
 //' @examples
@@ -190,12 +188,12 @@ NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_cond
 
 //' Sharpen image.
 //'
-//'       @param im an image
-//'       @param amplitude Sharpening amplitude
-//'       @param sharpen_type Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.
-//'       @param edge Edge threshold (shock filters only).
-//'       @param alpha Gradient smoothness (shock filters only).
-//'       @param sigma Tensor smoothness (shock filters only).
+//' @param im an image
+//' @param amplitude Sharpening amplitude
+//' @param sharpen_type Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.
+//' @param edge Edge threshold (shock filters only).
+//' @param alpha Gradient smoothness (shock filters only).
+//' @param sigma Tensor smoothness (shock filters only).
 //'
 //' @export
 //' @examples
@@ -251,12 +249,12 @@ List get_hessian(NumericVector im,std::string axes = "")
 
 //' Compute field of diffusion tensors for edge-preserving smoothing.
 //'
-//'       @param im an image
-//'       @param sharpness Sharpness
-//'       @param anisotropy Anisotropy
-//'       @param alpha Standard deviation of the gradient blur.
-//'       @param sigma Standard deviation of the structure tensor blur.
-//'       @param is_sqrt Tells if the square root of the tensor field is computed instead.
+//' @param im an image
+//' @param sharpness Sharpness
+//' @param anisotropy Anisotropy
+//' @param alpha Standard deviation of the gradient blur.
+//' @param sigma Standard deviation of the structure tensor blur.
+//' @param is_sqrt Tells if the square root of the tensor field is computed instead.
 //' @export
 // [[Rcpp::export]]
 NumericVector diffusion_tensors(NumericVector im,
@@ -271,10 +269,9 @@ NumericVector diffusion_tensors(NumericVector im,
 
 //' Compute Haar multiscale wavelet transform.
 //'
-//'       @param im an image
-//'       @param inverse Compute inverse transform (default FALSE)
-//'       @param nb_scales Number of scales used for the transform.
-//'
+//' @param im an image
+//' @param inverse Compute inverse transform (default FALSE)
+//' @param nb_scales Number of scales used for the transform.
 //' @export
 //' @examples
 //' #Image compression: set small Haar coefficients to 0

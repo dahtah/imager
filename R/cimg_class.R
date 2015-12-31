@@ -157,7 +157,7 @@ frames <- function(im,index,drop=FALSE)
 
 ##' Extract one frame out of a 4D image/video
 ##'
-##' @describeIn cimg.extract
+##' @describeIn cimg.extract Extract frame
 ##' @author Simon Barthelme
 ##' @export
 frame <- function(im,index)

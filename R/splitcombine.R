@@ -148,23 +148,23 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' @seealso imsplit,Reduce
 NULL
 
-##' @describeIn imager.combine
+##' @describeIn imager.combine Add images
 ##' @export
 add <- function(x) Reduce("+", x)
 
-##' @describeIn imager.combine
+##' @describeIn imager.combine Average images
 ##' @export
 average <- function(x) Reduce("+", x)/length(x)
 
-##' @describeIn imager.combine
+##' @describeIn imager.combine Multiply images (pointwise)
 ##' @export
 mult <- function(x) Reduce("*", x)
 
-##' @describeIn imager.combine
+##' @describeIn imager.combine Parallel max over images 
 ##' @export
 parmax <- function(x) Reduce(pmax, x)
 
-##' @describeIn imager.combine
+##' @describeIn imager.combine Parallel min over images 
 ##' @export
 parmin <- function(x) Reduce(pmin, x)
 

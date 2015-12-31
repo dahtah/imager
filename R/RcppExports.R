@@ -145,7 +145,7 @@ deriche <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L)
     .Call('imager_deriche', PACKAGE = 'imager', im, sigma, order, axis, boundary_conditions)
 }
 
-#' Van Vliet recursive Gaussian filter.
+#' Young-Van Vliet recursive Gaussian filter.
 #'
 #'       From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
 #'       IEEE Trans. Sig. Proc., vol. 50, pp. 2799-2805, 2002.
@@ -156,17 +156,17 @@ deriche <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L)
 #'       recursive filtering. IEEE Trans. Signal Processing,
 #'       vol. 54, pp. 2365-2367, 2006.
 #'
-#'       @param im an image
-#'       @param sigma standard deviation of the Gaussian filter
-#'       @param order the order of the filter 0,1,2,3
-#'       @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
-#'       @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
+#' @param im an image
+#' @param sigma standard deviation of the Gaussian filter
+#' @param order the order of the filter 0,1,2,3
+#' @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
+#' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
 #'       (Dirichlet boundary condition has a strange behavior)
 #' @examples
-#' vanvliet(boats,sigma=2,order=0) %>% plot("Zeroth-order Vanvliet along x")
-#' vanvliet(boats,sigma=2,order=1) %>% plot("First-order Vanvliet along x")
-#' vanvliet(boats,sigma=2,order=1) %>% plot("Second-order Vanvliet along x")
-#' vanvliet(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Vanvliet along y")
+#' vanvliet(boats,sigma=2,order=0) %>% plot("Zeroth-order Young-van Vliet along x")
+#' vanvliet(boats,sigma=2,order=1) %>% plot("First-order Young-van Vliet along x")
+#' vanvliet(boats,sigma=2,order=1) %>% plot("Second-order Young-van Vliet along x")
+#' vanvliet(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Young-van Vliet along y")
 #' @export
 vanvliet <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L) {
     .Call('imager_vanvliet', PACKAGE = 'imager', im, sigma, order, axis, boundary_conditions)
@@ -190,8 +190,8 @@ isoblur <- function(im, sigma, boundary_conditions = TRUE, gaussian = FALSE) {
 #' Blur image with the median filter.
 #'    
 #' @param im an image
-#'  @param n Size of the median filter.
-#'  @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. 
+#' @param n Size of the median filter.
+#' @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. 
 #' @export
 #' @examples
 #' medianblur(boats,5,Inf) %>% plot(main="Median blur, 5 pixels")
@@ -220,10 +220,10 @@ boxblur <- function(im, sigma, boundary_conditions = TRUE) {
 #' This is a recursive algorithm, not depending on the values of the box kernel size.
 #'
 #' @param im an image
-#'       @param sx Size of the box window, along the X-axis.
-#'       @param sy Size of the box window, along the Y-axis.
-#'       @param boundary_conditions Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.
-#'       @seealso blur().
+#' @param sx Size of the box window, along the X-axis.
+#' @param sy Size of the box window, along the Y-axis.
+#' @param boundary_conditions Boundary conditions. FALSE=Dirichlet, TRUE=Neumann.
+#' @seealso blur().
 #'
 #' @export
 #' @examples
@@ -237,10 +237,10 @@ boxblur_xy <- function(im, sx, sy, boundary_conditions = TRUE) {
 #'  The correlation of image im by filter flt is defined as:
 #'  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
 #'
-#'       @param im an image
-#'       @param filter = the correlation kernel.
-#'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-#'       @param normalise  = normalise filter (default FALSE)
+#' @param im an image
+#' @param filter = the correlation kernel.
+#' @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
+#' @param normalise  = normalise filter (default FALSE)
 #'      
 #'
 #' @export
@@ -260,12 +260,10 @@ correlate <- function(im, filter, boundary_conditions = TRUE, normalise = FALSE)
 #'      The result  res of the convolution of an image img by filter flt is defined to be:
 #'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
 #'
-#'       @param im an image
-#'       @param filter a filter (another image)
-#'       @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-#'       @param normalise = normalise filter (default FALSE)
-#'
-#'
+#' @param im an image
+#' @param filter a filter (another image)
+#' @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
+#' @param normalise = normalise filter (default FALSE)
 #' @export
 #' @seealso correlate
 #' @examples
@@ -281,12 +279,12 @@ convolve <- function(im, filter, boundary_conditions = TRUE, normalise = FALSE) 
 
 #' Sharpen image.
 #'
-#'       @param im an image
-#'       @param amplitude Sharpening amplitude
-#'       @param sharpen_type Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.
-#'       @param edge Edge threshold (shock filters only).
-#'       @param alpha Gradient smoothness (shock filters only).
-#'       @param sigma Tensor smoothness (shock filters only).
+#' @param im an image
+#' @param amplitude Sharpening amplitude
+#' @param sharpen_type Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.
+#' @param edge Edge threshold (shock filters only).
+#' @param alpha Gradient smoothness (shock filters only).
+#' @param sigma Tensor smoothness (shock filters only).
 #'
 #' @export
 #' @examples
@@ -326,12 +324,12 @@ get_hessian <- function(im, axes = "") {
 
 #' Compute field of diffusion tensors for edge-preserving smoothing.
 #'
-#'       @param im an image
-#'       @param sharpness Sharpness
-#'       @param anisotropy Anisotropy
-#'       @param alpha Standard deviation of the gradient blur.
-#'       @param sigma Standard deviation of the structure tensor blur.
-#'       @param is_sqrt Tells if the square root of the tensor field is computed instead.
+#' @param im an image
+#' @param sharpness Sharpness
+#' @param anisotropy Anisotropy
+#' @param alpha Standard deviation of the gradient blur.
+#' @param sigma Standard deviation of the structure tensor blur.
+#' @param is_sqrt Tells if the square root of the tensor field is computed instead.
 #' @export
 diffusion_tensors <- function(im, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, is_sqrt = FALSE) {
     .Call('imager_diffusion_tensors', PACKAGE = 'imager', im, sharpness, anisotropy, alpha, sigma, is_sqrt)
@@ -339,10 +337,9 @@ diffusion_tensors <- function(im, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6
 
 #' Compute Haar multiscale wavelet transform.
 #'
-#'       @param im an image
-#'       @param inverse Compute inverse transform (default FALSE)
-#'       @param nb_scales Number of scales used for the transform.
-#'
+#' @param im an image
+#' @param inverse Compute inverse transform (default FALSE)
+#' @param nb_scales Number of scales used for the transform.
 #' @export
 #' @examples
 #' #Image compression: set small Haar coefficients to 0
@@ -452,11 +449,10 @@ label <- function(im, high_connectivity = FALSE, tolerance = 0) {
 #' Erode/dilate image by a structuring element.
 #'
 #' @param im an image
-#'       @param size size of the structuring element.
+#' @param size size of the structuring element.
 #' @param mask Structuring element.
-#'       @param boundary_conditions Boundary conditions.
+#' @param boundary_conditions Boundary conditions.
 #' @param normalise Determines if the closing is locally normalised (default FALSE)
-#'
 #' @export
 #' @examples
 #' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
@@ -475,9 +471,9 @@ erode <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
 }
 
 #' @describeIn erode Erode image by a rectangular structuring element of specified size.
-#'       @param sx Width of the structuring element.
-#'       @param sy Height of the structuring element.
-#'       @param sz Depth of the structuring element.
+#' @param sx Width of the structuring element.
+#' @param sy Height of the structuring element.
+#' @param sz Depth of the structuring element.
 #' @export
 erode_rect <- function(im, sx, sy, sz = 1L) {
     .Call('imager_erode_rect', PACKAGE = 'imager', im, sx, sy, sz)
@@ -512,8 +508,8 @@ dilate_square <- function(im, size) {
 #'
 #' The watershed transform is a label propagation algorithm. The value of non-zero pixels will get propagated to their zero-value neighbours. The propagation is controlled by a priority map. See examples. 
 #' @param im an image
-#'       @param priority Priority map.
-#'       @param fill_lines Sets if watershed lines must be filled or not.
+#' @param priority Priority map.
+#' @param fill_lines Sets if watershed lines must be filled or not.
 #' @examples
 #' #In our initial image we'll place three seeds 
 #' #(non-zero pixels) at various locations, with values 1, 2 and 3. 
@@ -612,11 +608,11 @@ imrotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
 #' Rotate image by an arbitrary angle, around a center point.
 #'
 #' @param im an image
-#'       @param angle Rotation angle, in degrees.
-#'       @param cx X-coordinate of the rotation center.
-#'       @param cy Y-coordinate of the rotation center.
-#'       @param zoom Zoom factor.
-#'       @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
+#' @param angle Rotation angle, in degrees.
+#' @param cx X-coordinate of the rotation center.
+#' @param cy Y-coordinate of the rotation center.
+#' @param zoom Zoom factor.
+#' @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
 #' @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
 #' @examples
 #' rotate_xy(boats,30,200,400) %>% plot
@@ -628,7 +624,7 @@ rotate_xy <- function(im, angle, cx, cy, zoom = 1, interpolation = 1L, boundary_
 
 #' Mirror image content along specified axis 
 #' @param im an image
-#'       @param axis Mirror axis ("x","y","z","c")
+#' @param axis Mirror axis ("x","y","z","c")
 #' @export
 #' @examples
 #' mirror(boats,"x") %>% plot
@@ -671,11 +667,11 @@ resize_tripleXY <- function(im) {
 #' Shift image content.
 #'
 #' @param im an image
-#'       @param delta_x Amount of displacement along the X-axis.
-#'       @param delta_y Amount of displacement along the Y-axis.
-#'       @param delta_z Amount of displacement along the Z-axis.
-#'       @param delta_c Amount of displacement along the C-axis.
-#'       @param boundary_conditions can be:
+#' @param delta_x Amount of displacement along the X-axis.
+#' @param delta_y Amount of displacement along the Y-axis.
+#' @param delta_z Amount of displacement along the Z-axis.
+#' @param delta_c Amount of displacement along the C-axis.
+#' @param boundary_conditions can be:
 #'          - 0: Zero border condition (Dirichlet).
 #'          - 1: Nearest neighbors (Neumann).
 #'          - 2: Repeat Pattern (Fourier style).

@@ -33,6 +33,6 @@ imnoise(100,100,cc=3) \%>\% isoblur(5) \%>\% plot(main="Filtered (non-white) noi
 imnoise(dim=dim(boats)) #Noise image of the same size as the boats image
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 

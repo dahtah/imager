@@ -6,15 +6,18 @@
 \usage{
 convolve(im, filter, boundary_conditions = TRUE, normalise = FALSE)
 }
+\arguments{
+\item{im}{an image}
+
+\item{filter}{a filter (another image)}
+
+\item{boundary_conditions}{= the border condition type (0=zero, 1=dirichlet)}
+
+\item{normalise}{= normalise filter (default FALSE)}
+}
 \description{
 The result  res of the convolution of an image img by filter flt is defined to be:
       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
-}
-\details{
-@param im an image
-      @param filter a filter (another image)
-      @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-      @param normalise = normalise filter (default FALSE)
 }
 \examples{
 #Edge filter

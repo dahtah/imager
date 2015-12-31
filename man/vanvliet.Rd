@@ -2,9 +2,21 @@
 % Please edit documentation in R/RcppExports.R
 \name{vanvliet}
 \alias{vanvliet}
-\title{Van Vliet recursive Gaussian filter.}
+\title{Young-Van Vliet recursive Gaussian filter.}
 \usage{
 vanvliet(im, sigma, order = 0L, axis = "x", boundary_conditions = 0L)
+}
+\arguments{
+\item{im}{an image}
+
+\item{sigma}{standard deviation of the Gaussian filter}
+
+\item{order}{the order of the filter 0,1,2,3}
+
+\item{axis}{Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.}
+
+\item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
+(Dirichlet boundary condition has a strange behavior)}
 }
 \description{
 From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
@@ -16,18 +28,11 @@ Boundary conditions (only for order 0) using Triggs matrix, from
       B. Triggs and M. Sdika. Boundary conditions for Young-van Vliet
       recursive filtering. IEEE Trans. Signal Processing,
       vol. 54, pp. 2365-2367, 2006.
-
-@param im an image
-      @param sigma standard deviation of the Gaussian filter
-      @param order the order of the filter 0,1,2,3
-      @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
-      @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
-      (Dirichlet boundary condition has a strange behavior)
 }
 \examples{
-vanvliet(boats,sigma=2,order=0) \%>\% plot("Zeroth-order Vanvliet along x")
-vanvliet(boats,sigma=2,order=1) \%>\% plot("First-order Vanvliet along x")
-vanvliet(boats,sigma=2,order=1) \%>\% plot("Second-order Vanvliet along x")
-vanvliet(boats,sigma=2,order=1,axis="y") \%>\% plot("Second-order Vanvliet along y")
+vanvliet(boats,sigma=2,order=0) \%>\% plot("Zeroth-order Young-van Vliet along x")
+vanvliet(boats,sigma=2,order=1) \%>\% plot("First-order Young-van Vliet along x")
+vanvliet(boats,sigma=2,order=1) \%>\% plot("Second-order Young-van Vliet along x")
+vanvliet(boats,sigma=2,order=1,axis="y") \%>\% plot("Second-order Young-van Vliet along y")
 }
 

@@ -7,16 +7,21 @@
 boxblur_xy(im, sx, sy, boundary_conditions = TRUE)
 }
 \arguments{
-\item{im}{an image
-@param sx Size of the box window, along the X-axis.
-@param sy Size of the box window, along the Y-axis.
-@param boundary_conditions Boundary conditions. Can be <tt>{ false=dirichlet | true=neumann }</tt>.
-@seealso blur().}
+\item{im}{an image}
+
+\item{sx}{Size of the box window, along the X-axis.}
+
+\item{sy}{Size of the box window, along the Y-axis.}
+
+\item{boundary_conditions}{Boundary conditions. FALSE=Dirichlet, TRUE=Neumann.}
 }
 \description{
 This is a recursive algorithm, not depending on the values of the box kernel size.
 }
 \examples{
 boxblur_xy(boats,20,5) \%>\% plot(main="Anisotropic blur")
+}
+\seealso{
+blur().
 }
 

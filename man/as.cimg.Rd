@@ -3,6 +3,7 @@
 \name{as.cimg}
 \alias{as.cimg}
 \alias{as.cimg.double}
+\alias{as.cimg.matrix}
 \alias{as.cimg.numeric}
 \alias{as.cimg.vector}
 \title{Convert to cimg object}
@@ -14,6 +15,8 @@ as.cimg(obj, ...)
 \method{as.cimg}{double}(obj, ...)
 
 \method{as.cimg}{vector}(obj, x = NA, y = NA, z = NA, cc = NA, ...)
+
+\method{as.cimg}{matrix}(obj, ...)
 }
 \arguments{
 \item{obj}{an object}
@@ -38,6 +41,8 @@ Imager implements various converters that turn your data into cimg objects. If y
 \item \code{double}: convert double
 
 \item \code{vector}: convert vector
+
+\item \code{matrix}: Convert to matrix
 }}
 \examples{
 as.cimg(1:100,x=10,y=10) #10x10, grayscale image

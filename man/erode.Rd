@@ -34,13 +34,21 @@ mclosing_square(im, size)
 mclosing(im, mask, boundary_conditions = TRUE, normalise = FALSE)
 }
 \arguments{
-\item{im}{an image
-@param size size of the structuring element.}
+\item{im}{an image}
 
-\item{mask}{Structuring element.
-@param boundary_conditions Boundary conditions.}
+\item{mask}{Structuring element.}
+
+\item{boundary_conditions}{Boundary conditions.}
 
 \item{normalise}{Determines if the closing is locally normalised (default FALSE)}
+
+\item{sx}{Width of the structuring element.}
+
+\item{sy}{Height of the structuring element.}
+
+\item{sz}{Depth of the structuring element.}
+
+\item{size}{size of the structuring element.}
 }
 \description{
 Erode/dilate image by a structuring element.
@@ -48,9 +56,6 @@ Erode/dilate image by a structuring element.
 \section{Functions}{
 \itemize{
 \item \code{erode_rect}: Erode image by a rectangular structuring element of specified size.
-@param sx Width of the structuring element.
-@param sy Height of the structuring element.
-@param sz Depth of the structuring element.
 
 \item \code{erode_square}: Erode image by a square structuring element of specified size.
 

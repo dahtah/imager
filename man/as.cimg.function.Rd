@@ -8,15 +8,19 @@
   standardise = FALSE, dim = NULL, ...)
 }
 \arguments{
-\item{obj}{a function with arguments (x,y) or (x,y,z). Must be vectorised.}
+\item{obj}{a function with arguments (x,y), or (x,y,cc), or (x,y,z), etc. Must be vectorised; see examples.}
 
 \item{width}{width of the image (in pixels)}
 
 \item{height}{height of the image (in pixels)}
 
-\item{depth}{depth of the image (in pixels)}
+\item{depth}{depth of the image (in pixels). Default 1.}
+
+\item{spectrum}{number of colour channels. Defaut 1.}
 
 \item{standardise}{coordinates are scaled and centered (see doc for pixel.grid)}
+
+\item{dim}{a vector of image dimensions (can be used instead of width, height, etc.)}
 
 \item{...}{ignored}
 }
@@ -41,7 +45,8 @@ im = im/max(im)
 
 plot(im*boats)
 #A Gaussian mask for just the red channel
-im = as.cimg(function(x,y,cc) ifelse(cc==1,dnorm(x,sd=.1)*dnorm(y,sd=.3),0) ,dim=dim(boats),standardise=TRUE)
+fun = function(x,y,cc) ifelse(cc==1,dnorm(x,sd=.1)*dnorm(y,sd=.3),0)
+im = as.cimg(fun,dim=dim(boats),standardise=TRUE)
 plot(im*boats)
 
 }

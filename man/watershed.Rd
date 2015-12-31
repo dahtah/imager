@@ -7,9 +7,11 @@
 watershed(im, priority, fill_lines = TRUE)
 }
 \arguments{
-\item{im}{an image
-@param priority Priority map.
-@param fill_lines Sets if watershed lines must be filled or not.}
+\item{im}{an image}
+
+\item{priority}{Priority map.}
+
+\item{fill_lines}{Sets if watershed lines must be filled or not.}
 }
 \description{
 The watershed transform is a label propagation algorithm. The value of non-zero pixels will get propagated to their zero-value neighbours. The propagation is controlled by a priority map. See examples.

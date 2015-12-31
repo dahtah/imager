@@ -30,6 +30,6 @@ imfill(20,20,val=c(1,0,0)) \%>\% plot #All red image
 imfill(dim=dim(boats)) #Blank image of the same size as the boats image
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 

@@ -46,11 +46,11 @@ NumericVector imrotate(NumericVector im,float  	angle,
 //' Rotate image by an arbitrary angle, around a center point.
 //'
 //' @param im an image
-//'       @param angle Rotation angle, in degrees.
-//'       @param cx X-coordinate of the rotation center.
-//'       @param cy Y-coordinate of the rotation center.
-//'       @param zoom Zoom factor.
-//'       @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
+//' @param angle Rotation angle, in degrees.
+//' @param cx X-coordinate of the rotation center.
+//' @param cy Y-coordinate of the rotation center.
+//' @param zoom Zoom factor.
+//' @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
 //' @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
 //' @examples
 //' rotate_xy(boats,30,200,400) %>% plot
@@ -71,7 +71,7 @@ NumericVector rotate_xy(NumericVector im,
 
 //' Mirror image content along specified axis 
 //' @param im an image
-//'       @param axis Mirror axis ("x","y","z","c")
+//' @param axis Mirror axis ("x","y","z","c")
 //' @export
 //' @examples
 //' mirror(boats,"x") %>% plot
@@ -141,11 +141,11 @@ NumericVector resize_tripleXY(NumericVector im)
 //' Shift image content.
 //'
 //' @param im an image
-//'       @param delta_x Amount of displacement along the X-axis.
-//'       @param delta_y Amount of displacement along the Y-axis.
-//'       @param delta_z Amount of displacement along the Z-axis.
-//'       @param delta_c Amount of displacement along the C-axis.
-//'       @param boundary_conditions can be:
+//' @param delta_x Amount of displacement along the X-axis.
+//' @param delta_y Amount of displacement along the Y-axis.
+//' @param delta_z Amount of displacement along the Z-axis.
+//' @param delta_c Amount of displacement along the C-axis.
+//' @param boundary_conditions can be:
 //'          - 0: Zero border condition (Dirichlet).
 //'          - 1: Nearest neighbors (Neumann).
 //'          - 2: Repeat Pattern (Fourier style).

@@ -6,8 +6,11 @@
 \alias{R}
 \alias{channel}
 \alias{cimg.extract}
+\alias{frame}
 \title{Various shortcuts for extracting colour channels, frames, etc}
 \usage{
+frame(im, index)
+
 channel(im, ind)
 
 R(im)
@@ -19,15 +22,19 @@ B(im)
 \arguments{
 \item{im}{an image}
 
-\item{ind}{channel index}
-
 \item{index}{frame index}
+
+\item{ind}{channel index}
 }
 \description{
 Various shortcuts for extracting colour channels, frames, etc
+
+Extract one frame out of a 4D image/video
 }
 \section{Functions}{
 \itemize{
+\item \code{frame}: Extract frame
+
 \item \code{channel}: Extract an image channel
 
 \item \code{R}: Extract red channel
@@ -36,4 +43,7 @@ Various shortcuts for extracting colour channels, frames, etc
 
 \item \code{B}: Extract blue channel
 }}
+\author{
+Simon Barthelme
+}
 

@@ -7,13 +7,21 @@
 imsharpen(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0,
   sigma = 0)
 }
+\arguments{
+\item{im}{an image}
+
+\item{amplitude}{Sharpening amplitude}
+
+\item{sharpen_type}{Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.}
+
+\item{edge}{Edge threshold (shock filters only).}
+
+\item{alpha}{Gradient smoothness (shock filters only).}
+
+\item{sigma}{Tensor smoothness (shock filters only).}
+}
 \description{
-@param im an image
-      @param amplitude Sharpening amplitude
-      @param sharpen_type Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.
-      @param edge Edge threshold (shock filters only).
-      @param alpha Gradient smoothness (shock filters only).
-      @param sigma Tensor smoothness (shock filters only).
+Sharpen image.
 }
 \examples{
 layout(t(1:2))

@@ -15,7 +15,7 @@
 ##' imfill(20,20) %>% plot #Blank image of size 20x20
 ##' imfill(20,20,val=c(1,0,0)) %>% plot #All red image
 ##' imfill(dim=dim(boats)) #Blank image of the same size as the boats image
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 imfill <- function(x=1,y=1,z=1,val=0,dim=NULL)
     {
@@ -49,7 +49,7 @@ imfill <- function(x=1,y=1,z=1,val=0,dim=NULL)
 ##' imnoise(100,100,cc=3) %>% plot(main="White noise in RGB")
 ##' imnoise(100,100,cc=3) %>% isoblur(5) %>% plot(main="Filtered (non-white) noise")
 ##' imnoise(dim=dim(boats)) #Noise image of the same size as the boats image
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 imnoise <- function(x=1,y=1,z=1,cc=1,mean=0,sd=1,dim=NULL)
     {
@@ -64,10 +64,12 @@ imnoise <- function(x=1,y=1,z=1,cc=1,mean=0,sd=1,dim=NULL)
 ##'
 ##' Similar to as.im.function from the spatstat package, but simpler. Creates a grid of pixel coordinates x=1:width,y=1:height and (optional) z=1:depth, and evaluates the input function at these values. 
 ##' 
-##' @param obj a function with arguments (x,y) or (x,y,z). Must be vectorised. 
-##' @param width width of the image (in pixels)
+##' @param obj a function with arguments (x,y), or (x,y,cc), or (x,y,z), etc. Must be vectorised; see examples.
+##' @param width width of the image (in pixels) 
 ##' @param height height of the image (in pixels)
-##' @param depth depth of the image (in pixels)
+##' @param depth depth of the image (in pixels). Default 1. 
+##' @param spectrum number of colour channels. Defaut 1.
+##' @param dim a vector of image dimensions (can be used instead of width, height, etc.) 
 ##' @param standardise coordinates are scaled and centered (see doc for pixel.grid)
 ##' @param ... ignored
 ##' @return an object of class cimg
@@ -87,7 +89,8 @@ imnoise <- function(x=1,y=1,z=1,cc=1,mean=0,sd=1,dim=NULL)
 ##' 
 ##' plot(im*boats)
 ##' #A Gaussian mask for just the red channel
-##' im = as.cimg(function(x,y,cc) ifelse(cc==1,dnorm(x,sd=.1)*dnorm(y,sd=.3),0) ,dim=dim(boats),standardise=TRUE)
+##' fun = function(x,y,cc) ifelse(cc==1,dnorm(x,sd=.1)*dnorm(y,sd=.3),0)
+##' im = as.cimg(fun,dim=dim(boats),standardise=TRUE)
 ##' plot(im*boats)
 ##' 
 ##' @export

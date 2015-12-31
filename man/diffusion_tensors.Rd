@@ -7,12 +7,20 @@
 diffusion_tensors(im, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6,
   sigma = 1.1, is_sqrt = FALSE)
 }
+\arguments{
+\item{im}{an image}
+
+\item{sharpness}{Sharpness}
+
+\item{anisotropy}{Anisotropy}
+
+\item{alpha}{Standard deviation of the gradient blur.}
+
+\item{sigma}{Standard deviation of the structure tensor blur.}
+
+\item{is_sqrt}{Tells if the square root of the tensor field is computed instead.}
+}
 \description{
-@param im an image
-      @param sharpness Sharpness
-      @param anisotropy Anisotropy
-      @param alpha Standard deviation of the gradient blur.
-      @param sigma Standard deviation of the structure tensor blur.
-      @param is_sqrt Tells if the square root of the tensor field is computed instead.
+Compute field of diffusion tensors for edge-preserving smoothing.
 }
 

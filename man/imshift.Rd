@@ -8,15 +8,20 @@ imshift(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L,
   boundary_conditions = 0L)
 }
 \arguments{
-\item{im}{an image
-@param delta_x Amount of displacement along the X-axis.
-@param delta_y Amount of displacement along the Y-axis.
-@param delta_z Amount of displacement along the Z-axis.
-@param delta_c Amount of displacement along the C-axis.
-@param boundary_conditions can be:
-   - 0: Zero border condition (Dirichlet).
-   - 1: Nearest neighbors (Neumann).
-   - 2: Repeat Pattern (Fourier style).}
+\item{im}{an image}
+
+\item{delta_x}{Amount of displacement along the X-axis.}
+
+\item{delta_y}{Amount of displacement along the Y-axis.}
+
+\item{delta_z}{Amount of displacement along the Z-axis.}
+
+\item{delta_c}{Amount of displacement along the C-axis.}
+
+\item{boundary_conditions}{can be:
+- 0: Zero border condition (Dirichlet).
+- 1: Nearest neighbors (Neumann).
+- 2: Repeat Pattern (Fourier style).}
 }
 \description{
 Shift image content.

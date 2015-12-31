@@ -36,11 +36,10 @@ double tolerance=0)
 //' Erode/dilate image by a structuring element.
 //'
 //' @param im an image
-//'       @param size size of the structuring element.
+//' @param size size of the structuring element.
 //' @param mask Structuring element.
-//'       @param boundary_conditions Boundary conditions.
+//' @param boundary_conditions Boundary conditions.
 //' @param normalise Determines if the closing is locally normalised (default FALSE)
-//'
 //' @export
 //' @examples
 //' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
@@ -63,9 +62,9 @@ NumericVector erode(NumericVector im,NumericVector mask, bool boundary_condition
 }
 
 //' @describeIn erode Erode image by a rectangular structuring element of specified size.
-//'       @param sx Width of the structuring element.
-//'       @param sy Height of the structuring element.
-//'       @param sz Depth of the structuring element.
+//' @param sx Width of the structuring element.
+//' @param sy Height of the structuring element.
+//' @param sz Depth of the structuring element.
 //' @export
 // [[Rcpp::export]]
 NumericVector erode_rect(NumericVector im,int sx,int sy,int sz=1) {
@@ -116,8 +115,8 @@ NumericVector dilate_square(NumericVector im,int size) {
 //'
 //' The watershed transform is a label propagation algorithm. The value of non-zero pixels will get propagated to their zero-value neighbours. The propagation is controlled by a priority map. See examples. 
 //' @param im an image
-//'       @param priority Priority map.
-//'       @param fill_lines Sets if watershed lines must be filled or not.
+//' @param priority Priority map.
+//' @param fill_lines Sets if watershed lines must be filled or not.
 //' @examples
 //' #In our initial image we'll place three seeds 
 //' #(non-zero pixels) at various locations, with values 1, 2 and 3. 

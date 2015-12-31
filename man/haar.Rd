@@ -6,10 +6,15 @@
 \usage{
 haar(im, inverse = FALSE, nb_scales = 1L)
 }
+\arguments{
+\item{im}{an image}
+
+\item{inverse}{Compute inverse transform (default FALSE)}
+
+\item{nb_scales}{Number of scales used for the transform.}
+}
 \description{
-@param im an image
-      @param inverse Compute inverse transform (default FALSE)
-      @param nb_scales Number of scales used for the transform.
+Compute Haar multiscale wavelet transform.
 }
 \examples{
 #Image compression: set small Haar coefficients to 0

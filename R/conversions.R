@@ -247,7 +247,7 @@ as.array.cimg <- function(x,...) {
     class(x) <- "array"
     x
 }
-##' @describeIn as.cimg
+##' @describeIn as.cimg Convert to matrix
 ##' @export
 as.cimg.matrix <- function(obj,...)
     {
