@@ -1,5 +1,6 @@
 - 0.15 Substantial update
-  - User-visible changes:	
+  - User-visible changes:
+    - the threshold function now supports auto-thresholding (based on k-means)
     - new accessor functions: imrow, imcol
     - new replacement functions: channel(im,1) <-, R(im) <- , etc.
     - new reduction function: enorm (Euclidean norm of a list of images)

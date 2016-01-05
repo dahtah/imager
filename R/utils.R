@@ -385,3 +385,62 @@ imdirac <- function(dims,x,y,z=1,cc=1)
         }
   }
 
+
+
+##' Threshold grayscale image 
+##'
+##' Thresholding corresponding to setting all values below a threshold to 0, all above to 1.
+##' If you call threshold with thr="auto" a threshold will be computed automatically using kmeans (ie., using a variant of Otsu's method).
+##' This works well if the pixel values have a clear bimodal distribution. If you call threshold with a string argument of the form "XX\%" (e.g., "98\%"), the threshold will be set at percentile XX.
+##' Computing quantiles or running kmeans is expensive for large images, so if approx == TRUE threshold will skip pixels if the total number of pixels is above 10,000. Note that thresholding a colour image will threshold all the colour channels jointly, which may not be the desired behaviour! Use iiply(im,"c",threshold) to find optimal values for each channel separately. 
+##' 
+##' @param im the image
+##' @param thr a threshold, either numeric, or "auto", or a string for quantiles 
+##' @param approx Skip pixels when computing quantiles in large images (default TRUE)
+##' @return a thresholded image
+##' @examples
+##' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
+##' im.g <- grayscale(im)
+##' threshold(im.g,"15%") %>% plot
+##' threshold(im.g,"auto") %>% plot
+##' threshold(im.g,.1) %>% plot
+##' @author Simon Barthelme
+##' @export
+threshold <- function(im,thr="auto",approx=TRUE)
+    {
+        if (is.character(thr))
+        {
+            if (nPix(im) > 1e3 & approx)
+            {
+                v <- im[round(seq(1,nPix(im),l=1e3))]
+            }
+            else
+            {
+                v <- im
+            }
+            
+            if (thr=="auto")
+            {
+                thr <- cut.kmeans(c(v))
+            }
+                else
+                {
+                    regexp.num <- "\\d+(\\.\\d*)?|\\.\\d+"
+                    qt <- stringr::str_match(thr,regexp.num)[,1] %>% as.numeric
+                    thr <- quantile(v,qt/100)
+                }
+        }
+        a <- im > thr
+        b <- im <= thr
+        im[a] <- 1
+        im[b] <- 0
+        im
+    }
+
+#Find a cut-off point for a bimodal distribution using kmeans (similar to Otsu's method)
+cut.kmeans <- function(x)
+{
+    km <- kmeans(x,2)
+    m <- which.min(km$center)
+    max(x[km$cluster==m])
+}
