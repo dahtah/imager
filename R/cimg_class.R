@@ -46,6 +46,16 @@ cimg <- function(X)
 ##' @param im an image
 ##' @param index frame index 
 ##' @name cimg.extract
+##' @examples
+##' #Extract the red channel from the boats image, then the first row, plot
+##' rw <- R(boats) %>% imrow(10)
+##' plot(rw,type="l",xlab="x",ylab="Pixel value")
+##' #Note that R(boats) returns an image
+##' R(boats)
+##' #while imrow returns a vector or a list
+##' R(boats) %>% imrow(1) %>% str
+##' imrow(boats,1) %>% str
+##'
 NULL
 
 ##' Colour space conversions in imager
@@ -193,6 +203,53 @@ channels <- function(im,index,drop=FALSE)
             }
         res
     }
+
+##' @describeIn cimg.extract Extract a particular column from an image
+##' @param x x coordinate of the row
+##' @export
+imcol <- function(im,x)
+{
+    if (x > width(im) | x < 1)
+    {
+        stop('Invalid index')
+    }
+    else if (depth(im) > 1)
+    {
+        frames(im) %>% llply(function(v) imcol(v,x))
+    }
+    else if (spectrum(im) > 1)
+    {
+        channels(im) %>% llply(function(v) imcol(v,x))
+    }
+    else
+    {
+        im[x,,1,1] %>% c
+    }
+}
+
+##' @describeIn cimg.extract Extract a particular row from an image
+##' @param y y coordinate of the row
+##' @export
+imrow <- function(im,y)
+{
+    if (y > height(im) | y < 1)
+    {
+        stop('Invalid index')
+    }
+    else if (depth(im) > 1)
+    {
+        frames(im) %>% llply(function(v) imrow(v,y))
+    }
+    else if (spectrum(im) > 1)
+    {
+        channels(im) %>% llply(function(v) imrow(v,y))
+    }
+    else
+    {
+        im[,y,1,1] %>% c
+    }
+}
+
 
 ##' @describeIn cimg.extract Extract an image channel
 ##' @param ind channel index

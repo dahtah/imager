@@ -7,9 +7,15 @@
 \alias{channel}
 \alias{cimg.extract}
 \alias{frame}
+\alias{imcol}
+\alias{imrow}
 \title{Various shortcuts for extracting colour channels, frames, etc}
 \usage{
 frame(im, index)
+
+imcol(im, x)
+
+imrow(im, y)
 
 channel(im, ind)
 
@@ -24,6 +30,10 @@ B(im)
 
 \item{index}{frame index}
 
+\item{x}{x coordinate of the row}
+
+\item{y}{y coordinate of the row}
+
 \item{ind}{channel index}
 }
 \description{
@@ -35,6 +45,10 @@ Extract one frame out of a 4D image/video
 \itemize{
 \item \code{frame}: Extract frame
 
+\item \code{imcol}: Extract a particular column from an image
+
+\item \code{imrow}: Extract a particular row from an image
+
 \item \code{channel}: Extract an image channel
 
 \item \code{R}: Extract red channel
@@ -43,6 +57,17 @@ Extract one frame out of a 4D image/video
 
 \item \code{B}: Extract blue channel
 }}
+\examples{
+#Extract the red channel from the boats image, then the first row, plot
+rw <- R(boats) \%>\% imrow(10)
+plot(rw,type="l",xlab="x",ylab="Pixel value")
+#Note that R(boats) returns an image
+R(boats)
+#while imrow returns a vector or a list
+R(boats) \%>\% imrow(1) \%>\% str
+imrow(boats,1) \%>\% str
+
+}
 \author{
 Simon Barthelme
 }
