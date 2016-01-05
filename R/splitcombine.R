@@ -142,7 +142,7 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' parmax(l) %>% plot #Parallel max
 ##' parmin(l) %>% plot #Parallel min
 ##' #Edge detection
-##' imgradient(boats,"xy") %>% enorm %>% display
+##' imgradient(boats,"xy") %>% enorm %>% plot
 ##' #Pseudo-artistic effects
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% parmin %>% plot
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% average %>% plot
