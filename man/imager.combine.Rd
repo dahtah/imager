@@ -20,7 +20,7 @@ parmax(x)
 
 parmin(x)
 
-enorm(L)
+enorm(x)
 }
 \arguments{
 \item{x}{a list of images}
@@ -53,7 +53,7 @@ mult(l) \%>\% plot #Multiply
 parmax(l) \%>\% plot #Parallel max
 parmin(l) \%>\% plot #Parallel min
 #Edge detection
-imgradient(boats,"xy") \%>\% enorm \%>\% display
+imgradient(boats,"xy") \%>\% enorm \%>\% plot
 #Pseudo-artistic effects
 llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% parmin \%>\% plot
 llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% average \%>\% plot
