@@ -1,7 +1,8 @@
-- 0.15 Minor update
+- 0.15 Substantial update
   - User-visible changes:	
     - new accessor functions: imrow, imcol
     - new replacement functions: channel(im,1) <-, R(im) <- , etc.
+    - new reduction function: enorm (Euclidean norm of a list of images)
     - improved as.cimg.function, pixel.grid
     - subim is now called imsub for greater consistency (imsub still available as alias)
     - improved documentation
