@@ -1,3 +1,12 @@
+- 0.15 Minor update
+  - User-visible changes:	
+    - new accessor functions: imrow, imcol
+    - new replacement functions: channel(im,1) <-, R(im) <- , etc.
+    - improved as.cimg.function, pixel.grid
+    - subim is now called imsub for greater consistency (imsub still available as alias)
+    - improved documentation
+  - Developer-level changes:
+    - Reorganised R code into separate files for clarity
 - 0.14 Minor update
   - Build system now uses configure
   - Fixed paths in Makevars
