@@ -356,6 +356,7 @@ imsub <- function(im,...)
         Reduce(function(a,b) subs(a,b,consts),l,init=im)
     }
 
+##' @describeIn imsub alias for imsub 
 ##' @export
 subim <- imsub
 

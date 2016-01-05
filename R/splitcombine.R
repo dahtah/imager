@@ -141,6 +141,8 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' mult(l) %>% plot #Multiply
 ##' parmax(l) %>% plot #Parallel max
 ##' parmin(l) %>% plot #Parallel min
+##' #Edge detection
+##' imgradient(boats,"xy") %>% enorm %>% display
 ##' #Pseudo-artistic effects
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% parmin %>% plot
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% average %>% plot
@@ -168,3 +170,6 @@ parmax <- function(x) Reduce(pmax, x)
 ##' @export
 parmin <- function(x) Reduce(pmin, x)
 
+##' @describeIn imager.combine Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
+##' @export
+enorm <- function(L) Map(function(v) v^2,L) %>% add %>% sqrt

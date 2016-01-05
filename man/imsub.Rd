@@ -2,9 +2,12 @@
 % Please edit documentation in R/cimg_class.R
 \name{imsub}
 \alias{imsub}
+\alias{subim}
 \title{Select part of an image}
 \usage{
 imsub(im, ...)
+
+subim(im, ...)
 }
 \arguments{
 \item{im}{an image}
@@ -20,6 +23,10 @@ imsub selects an image part based on coordinates: it allows you to select a subs
 \details{
 subim is an alias defined for backward-compatibility.
 }
+\section{Functions}{
+\itemize{
+\item \code{subim}: alias for imsub
+}}
 \examples{
 parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
 imsub(parrots,x < 30) #Only the first 30 columns

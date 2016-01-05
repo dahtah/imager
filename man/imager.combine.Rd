@@ -3,6 +3,7 @@
 \name{imager.combine}
 \alias{add}
 \alias{average}
+\alias{enorm}
 \alias{imager.combine}
 \alias{mult}
 \alias{parmax}
@@ -18,6 +19,8 @@ mult(x)
 parmax(x)
 
 parmin(x)
+
+enorm(L)
 }
 \arguments{
 \item{x}{a list of images}
@@ -36,6 +39,8 @@ These functions take a list of images and combine them by adding, multiplying, t
 \item \code{parmax}: Parallel max over images
 
 \item \code{parmin}: Parallel min over images
+
+\item \code{enorm}: Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
 }}
 \examples{
 im1 <- as.cimg(function(x,y) x,100,100)
@@ -47,6 +52,8 @@ average(l) \%>\% plot #Average the images
 mult(l) \%>\% plot #Multiply
 parmax(l) \%>\% plot #Parallel max
 parmin(l) \%>\% plot #Parallel min
+#Edge detection
+imgradient(boats,"xy") \%>\% enorm \%>\% display
 #Pseudo-artistic effects
 llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% parmin \%>\% plot
 llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% average \%>\% plot
