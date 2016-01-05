@@ -172,4 +172,4 @@ parmin <- function(x) Reduce(pmin, x)
 
 ##' @describeIn imager.combine Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
 ##' @export
-enorm <- function(L) Map(function(v) v^2,L) %>% add %>% sqrt
+enorm <- function(x) Map(function(v) v^2,x) %>% add %>% sqrt
