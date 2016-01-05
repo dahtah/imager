@@ -325,9 +325,12 @@ all.names <- function(cl)
             }
     }
 
+
 ##' Select part of an image
 ##'
-##' subim selects an image part based on coordinates: it allows you to select a subset of rows, columns, frames etc. Refer to the examples to see how it works
+##' imsub selects an image part based on coordinates: it allows you to select a subset of rows, columns, frames etc. Refer to the examples to see how it works
+##'
+##' subim is an alias defined for backward-compatibility.
 ##' 
 ##' @param im an image
 ##' @param ... various conditions defining a rectangular image region
@@ -335,23 +338,26 @@ all.names <- function(cl)
 ##' @author Simon Barthelme
 ##' @examples
 ##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
-##' subim(parrots,x < 30) #Only the first 30 columns
-##' subim(parrots,y < 30) #Only the first 30 rows
-##' subim(parrots,x < 30,y < 30) #First 30 columns and rows
-##' subim(parrots, sqrt(x) > 8) #Can use arbitrary expressions
-##' subim(parrots,x > height/2,y > width/2)  #height and width are defined based on the image
-##' subim(parrots,cc==1) #Colour axis is "cc" not "c" here because "c" is an important R function
+##' imsub(parrots,x < 30) #Only the first 30 columns
+##' imsub(parrots,y < 30) #Only the first 30 rows
+##' imsub(parrots,x < 30,y < 30) #First 30 columns and rows
+##' imsub(parrots, sqrt(x) > 8) #Can use arbitrary expressions
+##' imsub(parrots,x > height/2,y > width/2)  #height and width are defined based on the image
+##' imsub(parrots,cc==1) #Colour axis is "cc" not "c" here because "c" is an important R function
 ##' ##Not run
-##' ##subim(parrots,x+y==1)
+##' ##imsub(parrots,x+y==1)
 ##' ##can't have expressions involving interactions between variables (domain might not be square)
 ##' @export
-subim <- function(im,...)
+imsub <- function(im,...)
     {
         l <- as.list(substitute(list(...))[-1])
         consts <- data.frame(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
         consts <- mutate(consts,cx=width/2,cy=height/2,cz=depth/2)
         Reduce(function(a,b) subs(a,b,consts),l,init=im)
     }
+
+##' @export
+subim <- imsub
 
 subs <- function(im,cl,consts)
     {
