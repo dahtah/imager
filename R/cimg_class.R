@@ -10,10 +10,11 @@ NULL
 #' @useDynLib imager
 #' @importFrom grDevices as.raster col2rgb dev.capture
 #' @importFrom graphics axis plot rasterImage
-#' @importFrom stats quantile rnorm
+#' @importFrom stats quantile rnorm kmeans
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
+#' @importFrom methods is
 #' @importFrom stringr str_match str_split str_sub
 #' @importFrom Rcpp sourceCpp
 #' @importFrom magrittr "%>%"
