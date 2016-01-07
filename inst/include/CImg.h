@@ -4671,6 +4671,16 @@ namespace cimg_library_suffixed {
     }
 
     // Return a random filename.
+    #ifdef cimg_rmode
+    // CRAN doesn't like calls to srand, use tmpnam instead
+    inline const char* filenamerand() {
+      cimg::mutex(6);
+      static char *randomid;
+      randomid = tmpnam(NULL);
+      cimg::mutex(6,0);
+      return randomid;
+    }
+    #else
     inline const char* filenamerand() {
       cimg::mutex(6);
       static char randomid[9] = { 0 };
@@ -4682,6 +4692,7 @@ namespace cimg_library_suffixed {
       cimg::mutex(6,0);
       return randomid;
     }
+    #endif 
 
     // Convert filename as a Windows-style filename (short path name).
     inline void winformat_string(char *const str) {
