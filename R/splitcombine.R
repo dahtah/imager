@@ -129,6 +129,8 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' Combining images
 ##'
 ##' These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
+##' The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign. 
+##' 
 ##' @name imager.combine
 ##' @param x a list of images
 ##' @examples
@@ -146,6 +148,7 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' #Pseudo-artistic effects
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% parmin %>% plot
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% average %>% plot
+##'
 ##' @author Simon Barthelme
 ##' @seealso imsplit,Reduce
 NULL
@@ -166,6 +169,16 @@ mult <- function(x) Reduce("*", x)
 ##' @export
 parmax <- function(x) Reduce(pmax, x)
 
+##' @describeIn imager.combine Parallel max in absolute value over images, 
+##' @export
+parmax.abs <- function(x) maxmin.abs(x,TRUE)
+    
+
+##' @describeIn imager.combine Parallel max in absolute value over images, 
+##' @export
+parmin.abs <- function(x) maxmin.abs(x,FALSE)
+
+
 ##' @describeIn imager.combine Parallel min over images 
 ##' @export
 parmin <- function(x) Reduce(pmin, x)
@@ -173,3 +186,57 @@ parmin <- function(x) Reduce(pmin, x)
 ##' @describeIn imager.combine Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
 ##' @export
 enorm <- function(x) Map(function(v) v^2,x) %>% add %>% sqrt
+
+##' @describeIn imager.combine index of parallel maxima
+##' @export
+which.parmax <- function(L) maxmin.ind(L,max=TRUE)
+
+##' @describeIn imager.combine index of parallel minima
+##' @export
+which.parmin <- function(L) maxmin.ind(L,max=FALSE)
+
+
+
+maxmin.abs <- function(L,max=TRUE)
+{
+    n <- length(L)
+    cmax <- abs(L[[1]])
+    out <- L[[1]]
+    for (ind in 2:n)
+    {
+        aL <- abs(L[[ind]])
+        if (max)
+        {
+            v <- aL > cmax
+        }
+        else
+        {
+            v <- aL < cmax
+        }
+        out[v] <- L[[ind]][v]
+        cmax[v] <- aL[v]
+    }
+    out
+}
+
+
+maxmin.ind <- function(L,max=TRUE)
+{
+    n <- length(L)
+    pind <- L[[1]]*0 + 1
+    cmax <- L[[1]]
+    for (ind in 2:n)
+    {
+        if (max)
+        {
+            v <- L[[ind]] > cmax
+        }
+        else
+        {
+            v <- L[[ind]] < cmax
+        }
+        pind[v] <- ind
+        cmax[v] <- L[[ind]][v]
+    }
+    pind
+}
