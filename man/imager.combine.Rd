@@ -7,7 +7,11 @@
 \alias{imager.combine}
 \alias{mult}
 \alias{parmax}
+\alias{parmax.abs}
 \alias{parmin}
+\alias{parmin.abs}
+\alias{which.parmax}
+\alias{which.parmin}
 \title{Combining images}
 \usage{
 add(x)
@@ -18,15 +22,24 @@ mult(x)
 
 parmax(x)
 
+parmax.abs(x)
+
+parmin.abs(x)
+
 parmin(x)
 
 enorm(x)
+
+which.parmax(L)
+
+which.parmin(L)
 }
 \arguments{
 \item{x}{a list of images}
 }
 \description{
 These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
+The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign.
 }
 \section{Functions}{
 \itemize{
@@ -38,9 +51,17 @@ These functions take a list of images and combine them by adding, multiplying, t
 
 \item \code{parmax}: Parallel max over images
 
+\item \code{parmax.abs}: Parallel max in absolute value over images,
+
+\item \code{parmin.abs}: Parallel max in absolute value over images,
+
 \item \code{parmin}: Parallel min over images
 
 \item \code{enorm}: Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
+
+\item \code{which.parmax}: index of parallel maxima
+
+\item \code{which.parmin}: index of parallel minima
 }}
 \examples{
 im1 <- as.cimg(function(x,y) x,100,100)
@@ -57,6 +78,7 @@ imgradient(boats,"xy") \%>\% enorm \%>\% plot
 #Pseudo-artistic effects
 llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% parmin \%>\% plot
 llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% average \%>\% plot
+
 }
 \author{
 Simon Barthelme

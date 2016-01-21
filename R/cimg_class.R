@@ -438,7 +438,8 @@ subs <- function(im,cl,consts)
 ##' @export
 load.image <- function(file)
     {
-        has.magick <- Sys.which("convert") %>% { length(.) > 0 }
+        test.magick <- c('conjure','montage') %>% Sys.which %>% Filter(function(v) nchar(v) > 0,.) %>% length
+        has.magick <- test.magick == 2        
         if (has.magick)
             {
                 if (grepl("^(http|ftp)s?://", file)) #URL, regex from libXML2 package
