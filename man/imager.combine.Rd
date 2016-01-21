@@ -30,9 +30,9 @@ parmin(x)
 
 enorm(x)
 
-which.parmax(L)
+which.parmax(x)
 
-which.parmin(L)
+which.parmin(x)
 }
 \arguments{
 \item{x}{a list of images}
@@ -78,6 +78,9 @@ imgradient(boats,"xy") \%>\% enorm \%>\% plot
 #Pseudo-artistic effects
 llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% parmin \%>\% plot
 llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% average \%>\% plot
+
+#At each pixel, which colour channel has the maximum value?
+imsplit(boats,"c") \%>\% which.parmax \%>\% table
 
 }
 \author{
