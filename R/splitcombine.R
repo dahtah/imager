@@ -149,6 +149,9 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% parmin %>% plot
 ##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% average %>% plot
 ##'
+##' #At each pixel, which colour channel has the maximum value?
+##' imsplit(boats,"c") %>% which.parmax %>% table
+##' 
 ##' @author Simon Barthelme
 ##' @seealso imsplit,Reduce
 NULL
@@ -189,11 +192,11 @@ enorm <- function(x) Map(function(v) v^2,x) %>% add %>% sqrt
 
 ##' @describeIn imager.combine index of parallel maxima
 ##' @export
-which.parmax <- function(L) maxmin.ind(L,max=TRUE)
+which.parmax <- function(x) maxmin.ind(x,max=TRUE)
 
 ##' @describeIn imager.combine index of parallel minima
 ##' @export
-which.parmin <- function(L) maxmin.ind(L,max=FALSE)
+which.parmin <- function(x) maxmin.ind(x,max=FALSE)
 
 
 
