@@ -16,7 +16,7 @@ License: LGPL
 Imports:
     Rcpp (>= 0.11.5),methods
 Depends:
-    R (>= 2.10.0),plyr,magrittr,stringr,grDevices,png,jpeg
+    R (>= 2.10.0),plyr,magrittr,stringr,grDevices,png,jpeg,readbitmap
 SystemRequirements: fftw3
 Enhances: spatstat
 LinkingTo: Rcpp

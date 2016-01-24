@@ -7,18 +7,20 @@
 load.image(file)
 }
 \arguments{
-\item{file}{path to file}
+\item{file}{path to file or URL}
 }
 \value{
 an object of class 'cimg'
 }
 \description{
-You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s).
+PNG, JPEG and BMP are supported via the readbitmap package. You'll need to install ImageMagick for other formats. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s).
 }
 \examples{
 #Find path to example file from package
 fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') 
-im <- load.image(fpath) 
+im <- load.image(fpath)
 plot(im)
+#Load the R logo directly from the CRAN webpage
+load.image("https://cran.r-project.org/Rlogo.jpg") \%>\% plot
 }
 

@@ -426,48 +426,61 @@ subs <- function(im,cl,consts)
 
 ##' Load image from file or URL
 ##'
-##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s). 
+##'
+##' PNG, JPEG and BMP are supported via the readbitmap package. You'll need to install ImageMagick for other formats. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s). 
 ##' 
-##' @param file path to file
+##' @param file path to file or URL
 ##' @return an object of class 'cimg'
 ##' @examples
 ##' #Find path to example file from package
 ##' fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') 
-##' im <- load.image(fpath) 
+##' im <- load.image(fpath)
 ##' plot(im)
+##' #Load the R logo directly from the CRAN webpage
+##' load.image("https://cran.r-project.org/Rlogo.jpg") %>% plot
 ##' @export
 load.image <- function(file)
     {
+        is.url <- grepl("^(http|ftp)s?://", file)
         test.magick <- c('conjure','montage') %>% Sys.which %>% Filter(function(v) nchar(v) > 0,.) %>% length
-        has.magick <- test.magick == 2        
-        if (has.magick)
+        has.magick <- test.magick == 2
+        if (!file_test("-f",file) & !is.url)
+        {
+            stop("File not found")
+        }
+        bmp <- try(read.bitmap(file),silent=TRUE)
+        if (class(bmp) != "try-error") #Loaded succesfully
+        {
+            if (length(dim(bmp)) == 3) #Has colour
             {
-                if (grepl("^(http|ftp)s?://", file)) #URL, regex from libXML2 package
-                    {
-                        load_image(file)
-                    }
-                else
-                    {
-                        normalizePath(file,mustWork=TRUE) %>% load_image
-                    }
+                dim(bmp) <- c(dim(bmp)[1:2],1,dim(bmp)[3]) #Make array 4D
             }
-        else
+            else 
             {
-                ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
-                if (ftype == "png")
-                    {
-                        load.png(file)
-                    }
-                else if (ftype == "jpeg" | ftype == "jpg")
-                    {
-                        load.jpeg(file)
-                    }
-                else
-                    {
-                        stop("Unsupported file format. Please convert to jpg/png or install image magick")
-                    }
+                dim(bmp) <- c(dim(bmp),1,1)
             }
-
+            bmp <- cimg(bmp) %>% mirror("x") %>% imrotate(-90)
+            bmp
+        }
+        else #Loading with read.bitmap has failed, try with ImageMagick
+        {
+            if (has.magick)
+            {
+                if (is.url)
+                {
+                    imager:::load_image(file)
+                }
+                else
+                {
+                    file <- normalizePath(file,mustWork=TRUE)
+                    imager:::load_image(file)
+                }
+            }
+            else
+            {
+                stop("Unsupported file format. Please convert to jpeg/png/bmp or install image magick")
+            }
+        }
     }
 
 convert.im.fromPNG <- function(A)
