@@ -41,7 +41,7 @@ To build under Linux make sure you have the headers for libX11 and libfftw3. On 
 
 ### External dependencies
 
-On its own imager only supports JPEG and PNG formats. If you need support for other file types install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php).
+On its own imager only supports JPEG, PNG and BMP formats. If you need support for other file types install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php).
 To load videos you'll need [ffmpeg](http://ffmpeg.org/download.html), no file formats are supported natively.
 
 
