@@ -14,6 +14,7 @@ NULL
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
+#' @importFrom readbitmap read.bitmap
 #' @importFrom methods is
 #' @importFrom stringr str_match str_split str_sub
 #' @importFrom Rcpp sourceCpp
@@ -466,12 +467,12 @@ load.image <- function(file)
             {
                 if (is.url)
                 {
-                    imager:::load_image(file)
+                    load_image(file)
                 }
                 else
                 {
                     file <- normalizePath(file,mustWork=TRUE)
-                    imager:::load_image(file)
+                    load_image(file)
                 }
             }
             else
