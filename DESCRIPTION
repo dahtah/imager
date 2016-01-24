@@ -14,9 +14,9 @@ Description: Fast image processing for images in up to 4 dimensions (two spatial
     etc.) as well as various functions for easily analysing image data using R.
 License: LGPL
 Imports:
-    Rcpp (>= 0.11.5),methods
+    Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices
 Depends:
-    R (>= 2.10.0),plyr,magrittr,stringr,grDevices,png,jpeg,readbitmap
+    R (>= 2.10.0),plyr,magrittr
 SystemRequirements: fftw3
 Enhances: spatstat
 LinkingTo: Rcpp
