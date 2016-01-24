@@ -442,8 +442,6 @@ subs <- function(im,cl,consts)
 load.image <- function(file)
     {
         is.url <- grepl("^(http|ftp)s?://", file)
-        test.magick <- c('conjure','montage') %>% Sys.which %>% Filter(function(v) nchar(v) > 0,.) %>% length
-        has.magick <- test.magick == 2
         if (!file_test("-f",file) & !is.url)
         {
             stop("File not found")
@@ -464,7 +462,7 @@ load.image <- function(file)
         }
         else #Loading with read.bitmap has failed, try with ImageMagick
         {
-            if (has.magick)
+            if (has.magick())
             {
                 if (is.url)
                 {
@@ -482,6 +480,12 @@ load.image <- function(file)
             }
         }
     }
+
+has.magick <- function()
+{
+    test.magick <- c('conjure','montage') %>% Sys.which %>% Filter(function(v) nchar(v) > 0,.) %>% length
+    test.magick == 2
+}
 
 convert.im.fromPNG <- function(A)
     {
@@ -518,29 +522,35 @@ load.jpeg <- function(file)
 ##' @param file path to file. The format is determined by the file's name
 ##' @return nothing
 ##' @export
+##' @examples
+##' #Create temporary file
+##' tmpF <- tempfile(fileext=".png")
+##' #Save boats image
+##' save.image(boats,tmpF)
+##' #Read back and display
+##' load.image(tmpF) %>% plot
 save.image <- function(im,file)
     {
-        has.magick <- Sys.which("convert") %>% { length(.) > 0 }
-        if (has.magick)
+        ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
+        if (ftype == "png")
+        {
+            save.png(im,file)
+        }
+        else if (ftype == "jpeg" | ftype == "jpg")
+        {
+            save.jpeg(im,file)
+        }
+        else
+        {
+            if (has.magick())
             {
                 save_image(im,path.expand(file))
             }
-        else
+            else
             {
-                ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
-                if (ftype == "png")
-                    {
-                        save.png(im,file)
-                    }
-                else if (ftype == "jpeg" | ftype == "jpg")
-                    {
-                        save.jpeg(im,file)
-                    }
-                else
-                    {
-                        stop("Unsupported file format. Please convert to jpg/png or install image magick")
-                    }
+                stop("Unsupported output file format. Use jpg/png or install ImageMagick")
             }
+        }
     }
 
 save.png <- function(im,file)

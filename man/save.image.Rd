@@ -17,4 +17,12 @@ nothing
 \description{
 You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
 }
+\examples{
+#Create temporary file
+tmpF <- tempfile(fileext=".png")
+#Save boats image
+save.image(boats,tmpF)
+#Read back and display
+load.image(tmpF) \%>\% plot
+}
 
