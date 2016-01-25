@@ -438,7 +438,7 @@ subs <- function(im,cl,consts)
 ##' im <- load.image(fpath)
 ##' plot(im)
 ##' #Load the R logo directly from the CRAN webpage
-##' load.image("https://cran.r-project.org/Rlogo.jpg") %>% plot
+##' #load.image("https://cran.r-project.org/Rlogo.jpg") %>% plot
 ##' @export
 load.image <- function(file)
     {
