@@ -1,4 +1,5 @@
 - 0.16 Bugfix + minor features
+  - load.image now uses readbitmap by default (should work better on Windows) 
   - Made the test for ImageMagick more stringent, which fixes a bug in load.image on certain machines
   - Added new reductions which.parmax, which.parmin 
 - 0.15 Substantial update
