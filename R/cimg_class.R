@@ -158,7 +158,7 @@ frames <- function(im,index,drop=FALSE)
                 index <- 1:depth(im)
             }
         res <- imsplit(im[,,index,],"z")
-        nm <- paste('Frame',index)
+        nm <- paste('d.',index,sep=".")
         names(res) <- nm
         if (drop)
             {
@@ -197,7 +197,7 @@ channels <- function(im,index,drop=FALSE)
                 index <- 1:spectrum(im)
             }
         res <- imsplit(im[,,,index],"c")
-        nm <- paste('Channel ',index)
+        nm <- paste('c',index,sep=".")
         names(res) <- nm
         if (drop)
             {

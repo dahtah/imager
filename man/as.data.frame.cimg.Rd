@@ -4,12 +4,14 @@
 \alias{as.data.frame.cimg}
 \title{Convert a pixel image to a data.frame}
 \usage{
-\method{as.data.frame}{cimg}(x, ...)
+\method{as.data.frame}{cimg}(x, ..., wide = c(FALSE, "c", "d"))
 }
 \arguments{
 \item{x}{an image of class cimg}
 
 \item{...}{arguments passed to pixel.grid}
+
+\item{wide}{if "c" or "d" return a data.frame that is wide along colour or depth (for example with rgb values along columns). The default is FALSE, with each pixel forming a seperate entry.}
 }
 \value{
 a data.frame
@@ -18,8 +20,11 @@ a data.frame
 This function combines the output of pixel.grid with the actual values (stored in $value)
 }
 \examples{
-im <- matrix(1:16,4,4) \%>\% as.cimg
-as.data.frame(im) \%>\% head
+
+#First five pixels
+as.data.frame(boats) \%>\% head(5)
+#Wide format along colour axis
+as.data.frame(boats,wide="c") \%>\% head(5)
 }
 \author{
 Simon Barthelme

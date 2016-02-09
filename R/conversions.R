@@ -6,18 +6,41 @@
 ##' 
 ##' @param x an image of class cimg
 ##' @param ... arguments passed to pixel.grid
+##' @param wide if "c" or "d" return a data.frame that is wide along colour or depth (for example with rgb values along columns). The default is FALSE, with each pixel forming a seperate entry. 
 ##' @return a data.frame
 ##' @author Simon Barthelme
 ##' @examples
-##' im <- matrix(1:16,4,4) %>% as.cimg
-##' as.data.frame(im) %>% head
+##'
+##' #First five pixels
+##' as.data.frame(boats) %>% head(5)
+##' #Wide format along colour axis
+##' as.data.frame(boats,wide="c") %>% head(5)
 ##' @export
-as.data.frame.cimg <- function(x,...)
+as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
+{
+    wide <- match.arg(wide)
+    if (wide=="c")
     {
-        gr <- pixel.grid(x,...)
+        gr <- pixel.grid(R(x),...)
+        cc <- channels(x) %>% do.call('cbind',.)
+        cbind(gr,cc)
+    }
+    else if (wide=="d")
+    {
+        gr <- pixel.grid(frame(x,1),...)
+        ff <- frames(x) %>% do.call('cbind',.)
+        cbind(gr,ff)
+    }
+    else
+    {
+        gr <- pixel.grid(x, ...)
         gr$value <- c(x)
         gr
     }
+}
+
+
+
 ##' Convert a cimg object to a raster object
 ##'
 ##' raster objects are used by R's base graphics for plotting

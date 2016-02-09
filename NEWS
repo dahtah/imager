@@ -1,4 +1,5 @@
 - 0.16 Bugfix + minor features
+  - as.data.frame.cimg now has optional "wide" formats
   - load.image now uses readbitmap by default (should work better on Windows) 
   - Made the test for ImageMagick more stringent, which fixes a bug in load.image on certain machines
   - Added new reductions which.parmax, which.parmin 
