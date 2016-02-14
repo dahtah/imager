@@ -404,6 +404,26 @@ periodic_part <- function(im) {
     .Call('imager_periodic_part', PACKAGE = 'imager', im)
 }
 
+#' Denoising by non-local means 
+#' 
+#' Performs denoising by averaging over image neighbourhoods defined by patch similarity. The algorithm can work very well but it is extremely slow for large patch size. You should set the "sampling" parameter to a high value if you're going to use large patches. 
+#' This function wraps a CImg plugin by Jerome Boulanger. 
+#' @param patch_size Patch size (in pixels, default: 1)
+#' @param lambda Bandwidth (default: -1, auto)
+#' @param sigma Noise standard deviation (default: -1, auto)
+#' @param sampling Ignore some proportion of the pixels in the patch, e.g. sampling = 2 uses only every other pixel, sampling = 3 every third, etc. 
+#' @citation Buades, A.; Coll, B.; Morel, J.-M.: A non-local algorithm for image denoising. IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2005. CVPR 2005.
+#' @examples
+#' layout(t(1:2))
+#' bts <- grayscale(boats)
+#' bts.noisy <- bts+imnoise(dim=dim(bts))*.1
+#' plot(bts.noisy,main="Original")
+#' nlmeans(bts.noisy,patch=1) %>% plot(main="Denoising by nlmeans")
+#' @export
+nlmeans <- function(im, patch_size = 1L, lambda = -1, sigma = -1, alpha = 3L, sampling = 1L) {
+    .Call('imager_nlmeans', PACKAGE = 'imager', im, patch_size, lambda, sigma, alpha, sampling)
+}
+
 interp_xy <- function(inp, ix, iy, z = 0L, c = 0L, cubic = FALSE) {
     .Call('imager_interp_xy', PACKAGE = 'imager', inp, ix, iy, z, c, cubic)
 }

@@ -489,6 +489,22 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// nlmeans
+NumericVector nlmeans(NumericVector im, int patch_size, float lambda, double sigma, int alpha, int sampling);
+RcppExport SEXP imager_nlmeans(SEXP imSEXP, SEXP patch_sizeSEXP, SEXP lambdaSEXP, SEXP sigmaSEXP, SEXP alphaSEXP, SEXP samplingSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type patch_size(patch_sizeSEXP);
+    Rcpp::traits::input_parameter< float >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< int >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< int >::type sampling(samplingSEXP);
+    __result = Rcpp::wrap(nlmeans(im, patch_size, lambda, sigma, alpha, sampling));
+    return __result;
+END_RCPP
+}
 // interp_xy
 NumericVector interp_xy(NumericVector inp, NumericVector ix, NumericVector iy, int z, int c, bool cubic);
 RcppExport SEXP imager_interp_xy(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP zSEXP, SEXP cSEXP, SEXP cubicSEXP) {
