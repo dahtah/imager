@@ -19934,7 +19934,7 @@ namespace cimg_library_suffixed {
       T *p1 = data(0,0,0,0), *p2 = data(0,0,0,1), *p3 = data(0,0,0,2);
       for (unsigned long N = (unsigned long)_width*_height*_depth; N; --N) {
         Tfloat
-          H = cimg::mod((Tfloat)*p1,360.0),
+          H = cimg::mod((Tfloat)*p1,(Tfloat) 360.0),
           S = (Tfloat)*p2,
           V = (Tfloat)*p3,
           R = 0, G = 0, B = 0;
@@ -20021,7 +20021,7 @@ namespace cimg_library_suffixed {
       T *p1 = data(0,0,0,0), *p2 = data(0,0,0,1), *p3 = data(0,0,0,2);
       for (unsigned long N = (unsigned long)_width*_height*_depth; N; --N) {
         const Tfloat
-          H = cimg::mod((Tfloat)*p1,360.0),
+          H = cimg::mod((Tfloat)*p1,(Tfloat) 360.0),
           S = (Tfloat)*p2,
           L = (Tfloat)*p3,
           q = 2*L<1?L*(1 + S):(L + S - L*S),
@@ -20094,7 +20094,7 @@ namespace cimg_library_suffixed {
       T *p1 = data(0,0,0,0), *p2 = data(0,0,0,1), *p3 = data(0,0,0,2);
       for (unsigned long N = (unsigned long)_width*_height*_depth; N; --N) {
         Tfloat
-          H = cimg::mod((Tfloat)*p1,360.0),
+          H = cimg::mod((Tfloat)*p1,(Tfloat) 360.0),
           S = (Tfloat)*p2,
           I = (Tfloat)*p3,
           a = I*(1-S),
