@@ -157,7 +157,7 @@ frames <- function(im,index,drop=FALSE)
             {
                 index <- 1:depth(im)
             }
-        res <- imsplit(im[,,index,],"z")
+        res <- imsplit(im[,,index,,drop=FALSE],"z")
         nm <- paste('d.',index,sep=".")
         names(res) <- nm
         if (drop)
@@ -174,7 +174,7 @@ frames <- function(im,index,drop=FALSE)
 ##' @export
 frame <- function(im,index)
     {
-        im[,,index,]
+        im[,,index,drop=FALSE]
     }
 
 
@@ -196,7 +196,7 @@ channels <- function(im,index,drop=FALSE)
             {
                 index <- 1:spectrum(im)
             }
-        res <- imsplit(im[,,,index],"c")
+        res <- imsplit(im[,,,index,drop=FALSE],"c")
         nm <- paste('c',index,sep=".")
         names(res) <- nm
         if (drop)
@@ -258,7 +258,7 @@ imrow <- function(im,y)
 ##' @export
 channel <- function(im,ind)
     {
-        im[,,,ind] 
+        im[,,,ind,drop=FALSE] 
     }
 
 ##' @describeIn cimg.extract Extract red channel
@@ -399,27 +399,6 @@ subs <- function(im,cl,consts)
                     {
                         (as.array(im)[,,,inds,drop=FALSE]) %>% cimg
                     }
-            }
-    }
-
-##' Array subset operator for cimg objects
-##'
-##' Works mostly just like the regular array version of x[...], the only difference being that it returns cimg objects when it makes sense to do so. For example im[,,,1] is just like as.array(im)[,,,1] except it returns a cimg object (containing only the first colour channel)
-##' 
-##' @param x an image (cimg object)
-##' @param ... subsetting arguments
-##' @seealso imsub, which provides a more convenient interface, crop
-##' @export
-`[.cimg` <- function(x,...)
-    {
-        y <- NextMethod("[",drop=FALSE)
-        if (is.vector(y))
-            {
-                y
-            }
-        else
-            {
-                cimg(y)
             }
     }
 
@@ -818,4 +797,79 @@ NULL
         {
             depth(x) %>% sprintf('Image only has %i frame(s)',.) %>% stop()
         }
+}
+
+##' Array subset operator for cimg objects
+##'
+##' Works mostly just like the regular array version of x[...], the only difference being that it returns cimg objects when it makes sense to do so. For example im[,,,1] is just like as.array(im)[,,,1] except it returns a cimg object (containing only the first colour channel)
+##' 
+##' @param x an image (cimg object)
+##' @param ... subsetting arguments
+##' @seealso imsub, which provides a more convenient interface, crop
+##' @export
+"[.cimg" <- function(x,...) {
+    args <- as.list(substitute(list(...)))[-1L];
+    drop <- TRUE
+    hasdrop <- ("drop"%in%names(args))
+    if (hasdrop)
+    {
+        drop <- args$drop
+    }
+    l <- length(args) -hasdrop
+                browser()
+    #Call default method for arrays
+    if (l==1)
+    {
+        arg <- eval.parent(args[[1]])
+        if (is.matrix(arg) | is.numeric(arg))
+        {
+
+            out <- NextMethod()
+        }
+        else if (is.data.frame(arg))
+        {
+           out <- .subset(x,pixel.index(x,arg))
+        }
+        else
+        {
+            stop('Unrecognised argument type')
+        }
+    }
+    else if (l == 4 )
+    {
+        out <- NextMethod()
+#        do.call('.subset',c(list(x),c(args)),quote=TRUE)  %>% cimg
+    }
+    else if (l<=4)
+    {
+        d <- dim(x)
+        
+        ar <- list(1,1,1,1)
+        nsd <- which(dim(x) > 1)
+        if (l == length(nsd))
+        {
+            ar[nsd] <- args[1:length(nsd)]
+            if (!drop) ar$drop <- FALSE
+            out <- do.call('.subset',c(list(x),c(ar)),quote=TRUE)
+        }
+        else
+        {
+            stop('Ambiguous call to .subset')
+        }
+    }
+    else
+    {
+        stop('Too many arguments')
+    }
+    if (hasdrop)
+    {
+        if (!args$drop)
+        {
+            cimg(out)
+        }
+    }
+    else
+    {
+        out
+    }
 }

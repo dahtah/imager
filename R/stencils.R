@@ -53,7 +53,8 @@ center.stencil <- function(stencil,...)
 ##' @export
 get.stencil <- function(im,stencil,...)
     {
-        center.stencil(stencil,...) %>% pixel.index(im,.) %>% im[.]
+        d <- center.stencil(stencil,...) %>% pixel.index(im,.)
+        im[d]
     }
 
 check.x <- function(im,x)
