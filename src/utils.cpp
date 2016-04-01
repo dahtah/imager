@@ -1,3 +1,4 @@
+#define cimg_plugin "plugins/patchmatch.h"
 #include <imager.h>
 #include "wrappers_cimglist.h"
 using namespace Rcpp;
@@ -113,4 +114,16 @@ NumericVector draw_image(NumericVector im,NumericVector sprite,int x=0,int y = 0
   CId spr = as<CId >(sprite);
   img.draw_image(x,y,z,spr,opacity);
   return wrap(img);
+}
+
+
+// [[Rcpp::export]]
+NumericVector patchmatch(NumericVector im1,NumericVector im2,int P=7,int N=5)
+{
+  CId img1 = as<CId >(im1);  CId img2 = as<CId >(im2);
+  CImg<int> map;
+  CImgDisplay *disp = 0;
+  map.patchMatch(img1, img2, P, N, disp);
+  CImg<double> out(map);
+  return wrap(out);
 }

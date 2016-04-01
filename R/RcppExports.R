@@ -814,3 +814,7 @@ draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
     .Call('imager_draw_image', PACKAGE = 'imager', im, sprite, x, y, z, opacity)
 }
 
+patchmatch <- function(im1, im2, P = 7L, N = 5L) {
+    .Call('imager_patchmatch', PACKAGE = 'imager', im1, im2, P, N)
+}
+

@@ -44,6 +44,7 @@
 #ifndef cimg_plugin_patchmatch
 #define cimg_plugin_patchmatch
 
+#ifndef cimg_rmode
 // Visualize optical flow maps with HSV color coding.
 CImg<float> get_vizFlow(const float cutVal = 0) const {
   CImg<float> res(width(),height(),1,3);
@@ -68,6 +69,7 @@ CImg<float> get_vizFlow(const float cutVal = 0) const {
 
   return res.HSVtoRGB();
 }
+#endif
 
 // Distance between two patches
 static T distPatch(const CImg<T> &img0, const CImg<T> &img1,
@@ -135,8 +137,9 @@ CImg<T>& patchMatch(const CImg<Tt> &img0, const CImg<Tt> &img1,
 
   int xStart, yStart, xFinish, yFinish, inc;
   for (int n = 0; n < nIter; ++n) {
+#ifndef cimg_rmode
     std::fprintf(stderr,"Iteration %d\n",n + 1);
-
+#endif
     // at odd iterations, reverse scan order
     if (!(n%2)) { xStart = yStart = inc = 1; xFinish = w0; yFinish = h0; }
     else { xStart = w0 - 2; yStart = h0 - 2; xFinish = yFinish = inc = -1; }
@@ -191,6 +194,7 @@ CImg<T>& patchMatch(const CImg<Tt> &img0, const CImg<Tt> &img1,
         // If a pointer to a CImgDisplay is passed as the last argument
         // the output of the algorithm is displayed as an animation
         // !! It slows down the algorithm a lot !!
+	#ifndef cimg_rmode
         if (disp) {
           if (x%(w0 - 1)==0)
             disp->display((visu0,
@@ -199,6 +203,7 @@ CImg<T>& patchMatch(const CImg<Tt> &img0, const CImg<Tt> &img1,
                            visu1)).set_title("Iteration %d",n + 1);
           if (disp->is_resized()) disp->resize();
         }
+	#endif
       }
   }
   return off.move_to(*this);

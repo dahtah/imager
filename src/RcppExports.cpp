@@ -988,3 +988,17 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// patchmatch
+NumericVector patchmatch(NumericVector im1, NumericVector im2, int P, int N);
+RcppExport SEXP imager_patchmatch(SEXP im1SEXP, SEXP im2SEXP, SEXP PSEXP, SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im1(im1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im2(im2SEXP);
+    Rcpp::traits::input_parameter< int >::type P(PSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    __result = Rcpp::wrap(patchmatch(im1, im2, P, N));
+    return __result;
+END_RCPP
+}
