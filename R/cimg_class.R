@@ -816,23 +816,19 @@ NULL
         drop <- args$drop
     }
     l <- length(args) -hasdrop
-                browser()
-    #Call default method for arrays
+
+
+        #Call default method for arrays
     if (l==1)
     {
         arg <- eval.parent(args[[1]])
-        if (is.matrix(arg) | is.numeric(arg))
-        {
-
-            out <- NextMethod()
-        }
-        else if (is.data.frame(arg))
+        if  (is.data.frame(arg))
         {
            out <- .subset(x,pixel.index(x,arg))
         }
         else
         {
-            stop('Unrecognised argument type')
+            out <- NextMethod()
         }
     }
     else if (l == 4 )
