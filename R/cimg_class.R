@@ -869,3 +869,53 @@ NULL
         out
     }
 }
+
+
+"[<-.cimg" <- function(x,...) {
+    args <- as.list(substitute(list(...)))[-1L];
+    drop <- TRUE
+    l <- length(args) -1
+
+        #Call default method for arrays
+    if (l==1)
+    {
+        arg <- eval.parent(args[[1]])
+        if  (is.data.frame(arg))
+        {
+           out <- `[<-`(x,pixel.index,arg$value)
+        }
+        else
+        {
+            out <- NextMethod()
+        }
+    }
+    else if (l == 4 )
+    {
+        out <- NextMethod()
+#        do.call('.subset',c(list(x),c(args)),quote=TRUE)  %>% cimg
+    }
+    else if (l<=4)
+    {
+        d <- dim(x)
+        
+        ar <- list(1,1,1,1)
+        nsd <- which(dim(x) > 1)
+        if (l == length(nsd))
+        {
+            ar[nsd] <- args[1:length(nsd)]
+            ar$value <- args$value
+            if (!drop) ar$drop <- FALSE
+#            browser()
+            out <- do.call('[<-',c(list(x),c(ar)))
+        }
+        else
+        {
+            stop('Ambiguous call to .subset')
+        }
+    }
+    else
+    {
+        stop('Too many arguments')
+    }
+    cimg(out)
+}
