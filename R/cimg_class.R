@@ -801,15 +801,29 @@ NULL
 
 ##' Array subset operator for cimg objects
 ##'
-##' Works mostly just like the regular array version of x[...], the only difference being that it returns cimg objects when it makes sense to do so. For example im[,,,1] is just like as.array(im)[,,,1] except it returns a cimg object (containing only the first colour channel)
-##' 
+##' Internally cimg objects are 4D arrays (stored in x,y,z,c mode) but often one doesn't need all dimensions. This is the case for instance when working on grayscale images, which use only two. The array subset operator works like the regular array [] operator, but it won't force you to use all dimensions. ##' There are easier ways of accessing image data, for example imsub, channels, R, G, B, and the like. 
 ##' @param x an image (cimg object)
+##' @param drop if true return an array, otherwise return an image object (default FALSE)
 ##' @param ... subsetting arguments
-##' @seealso imsub, which provides a more convenient interface, crop
+##' @name imager.subset
+##' @seealso imsub, which provides a more convenient interface, crop. imdraw
+##' @examples
+##' im <- imfill(4,4)
+##' dim(im) #4 dimensional, but the last two ones are singletons
+##' im[,1,,] <- 1:4 #Assignment the standard way
+##' im[,1] <- 1:4 #Shortcut
+##' as.matrix(im)
+##' im[1:2,]
+##' dim(boats)
+##' #Arguments will be recycled, as in normal array operations
+##' boats[1:2,1:3,] <- imnoise(2,3) #The same noise array is replicated over the three channels
+NULL
+
 ##' @export
-"[.cimg" <- function(x,...) {
+`[.cimg` <- function(x,...) {
     args <- as.list(substitute(list(...)))[-1L];
     drop <- TRUE
+    
     hasdrop <- ("drop"%in%names(args))
     if (hasdrop)
     {
@@ -819,22 +833,9 @@ NULL
 
 
         #Call default method for arrays
-    if (l==1)
-    {
-        arg <- eval.parent(args[[1]])
-        if  (is.data.frame(arg))
-        {
-           out <- .subset(x,pixel.index(x,arg))
-        }
-        else
-        {
-            out <- NextMethod()
-        }
-    }
-    else if (l == 4 )
+    if (l==1 | l ==4)
     {
         out <- NextMethod()
-#        do.call('.subset',c(list(x),c(args)),quote=TRUE)  %>% cimg
     }
     else if (l<=4)
     {
@@ -846,7 +847,7 @@ NULL
         {
             ar[nsd] <- args[1:length(nsd)]
             if (!drop) ar$drop <- FALSE
-            out <- do.call('.subset',c(list(x),c(ar)),quote=TRUE)
+            out <- do.call('[',c(list(x),c(ar)))
         }
         else
         {
@@ -870,29 +871,16 @@ NULL
     }
 }
 
-
-"[<-.cimg" <- function(x,...) {
+##' @export
+`[<-.cimg` <- function(x,...) {
     args <- as.list(substitute(list(...)))[-1L];
     drop <- TRUE
     l <- length(args) -1
 
-        #Call default method for arrays
-    if (l==1)
+    #Call default method for arrays
+    if (l==1 | l ==4)
     {
-        arg <- eval.parent(args[[1]])
-        if  (is.data.frame(arg))
-        {
-           out <- `[<-`(x,pixel.index,arg$value)
-        }
-        else
-        {
             out <- NextMethod()
-        }
-    }
-    else if (l == 4 )
-    {
-        out <- NextMethod()
-#        do.call('.subset',c(list(x),c(args)),quote=TRUE)  %>% cimg
     }
     else if (l<=4)
     {
