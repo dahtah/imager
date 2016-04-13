@@ -458,7 +458,7 @@ cut.kmeans <- function(x)
 ##' #Get info on all files, as a data frame
 ##' info <- plyr::ldply(someFiles,function(v) iminfo(v) %>% as.data.frame) 
 ##'}
-
+##' @export
 iminfo <- function(fname)
 {
     if (!is.character(fname))

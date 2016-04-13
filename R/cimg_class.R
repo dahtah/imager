@@ -78,13 +78,11 @@ NULL
 plot.cimg <- function(x,frame,rescale.color=TRUE,...)
     {
         im <- x
-        w <- width(im)
-        h <- height(im)
-        if (rescale.color & (diff(range(im)) > 0))  im <- (im-min(im))/diff(range(im))
         if (dim(im)[3] == 1) #Single image (depth=1)
             {
-                
-                
+                w <- width(im)
+                h <- height(im)
+                if (rescale.color & (diff(range(im)) > 0))  im <- (im-min(im))/diff(range(im))
                 plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...,ylim=c(h,1))
                 as.raster(im) %>% rasterImage(1,height(im),width(im),1)
 #                rasterImage(im,1,1,w,h)
@@ -96,7 +94,7 @@ plot.cimg <- function(x,frame,rescale.color=TRUE,...)
                         warning("Showing first frame")
                         frame <- 1
                     }
-                plot.cimg(im[,,frame,],rescale.color=rescale.color,...)
+                plot.cimg(frame(im,frame),rescale.color=rescale.color,...)
             }
     }
 
@@ -174,7 +172,7 @@ frames <- function(im,index,drop=FALSE)
 ##' @export
 frame <- function(im,index)
     {
-        im[,,index,drop=FALSE]
+        im[,,index,,drop=FALSE]
     }
 
 
@@ -801,12 +799,13 @@ NULL
 
 ##' Array subset operator for cimg objects
 ##'
-##' Internally cimg objects are 4D arrays (stored in x,y,z,c mode) but often one doesn't need all dimensions. This is the case for instance when working on grayscale images, which use only two. The array subset operator works like the regular array [] operator, but it won't force you to use all dimensions. ##' There are easier ways of accessing image data, for example imsub, channels, R, G, B, and the like. 
+##' Internally cimg objects are 4D arrays (stored in x,y,z,c mode) but often one doesn't need all dimensions. This is the case for instance when working on grayscale images, which use only two. The array subset operator works like the regular array [] operator, but it won't force you to use all dimensions.
+##' There are easier ways of accessing image data, for example imsub, channels, R, G, B, and the like. 
 ##' @param x an image (cimg object)
 ##' @param drop if true return an array, otherwise return an image object (default FALSE)
 ##' @param ... subsetting arguments
 ##' @name imager.subset
-##' @seealso imsub, which provides a more convenient interface, crop. imdraw
+##' @seealso imsub, which provides a more convenient interface, autocrop, imdraw
 ##' @examples
 ##' im <- imfill(4,4)
 ##' dim(im) #4 dimensional, but the last two ones are singletons

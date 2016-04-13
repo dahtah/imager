@@ -11,7 +11,8 @@
 \item{...}{subsetting arguments}
 }
 \description{
-Internally cimg objects are 4D arrays (stored in x,y,z,c mode) but often one doesn't need all dimensions. This is the case for instance when working on grayscale images, which use only two. The array subset operator works like the regular array [] operator, but it won't force you to use all dimensions. ##' There are easier ways of accessing image data, for example imsub, channels, R, G, B, and the like.
+Internally cimg objects are 4D arrays (stored in x,y,z,c mode) but often one doesn't need all dimensions. This is the case for instance when working on grayscale images, which use only two. The array subset operator works like the regular array [] operator, but it won't force you to use all dimensions.
+There are easier ways of accessing image data, for example imsub, channels, R, G, B, and the like.
 }
 \examples{
 im <- imfill(4,4)
@@ -25,6 +26,6 @@ dim(boats)
 boats[1:2,1:3,] <- imnoise(2,3) #The same noise array is replicated over the three channels
 }
 \seealso{
-imsub, which provides a more convenient interface, crop. imdraw
+imsub, which provides a more convenient interface, autocrop, imdraw
 }
 
