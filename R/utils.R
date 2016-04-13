@@ -444,3 +444,61 @@ cut.kmeans <- function(x)
     m <- which.min(km$center)
     max(x[km$cluster==m])
 }
+
+##' Return information on image file
+##'
+##' This function calls ImageMagick's "identify" utility on an image file to get some information. You need ImageMagick on your path for this to work. 
+##' @param fname path to a file
+##' @return a list with fields name, format, width (pix.), height (pix.), size (bytes)
+##' @author Simon Barthelme
+##' @examples
+##' \dontrun{
+##' someFiles <- dir("*.png") #Find all PNGs in directory
+##' iminfo(someFiles[1])
+##' #Get info on all files, as a data frame
+##' info <- plyr::ldply(someFiles,function(v) iminfo(v) %>% as.data.frame) 
+##'}
+
+iminfo <- function(fname)
+{
+    if (!is.character(fname))
+    {
+        stop('Please provide a filename')
+    }
+    else if (!file.exists(fname))
+    {
+        stop('File does not exist')
+    }
+    
+    if (has.magick())
+    {
+        cmd <- "identify -format  \"%f;%m;%w;%h;%b  \""
+        fname <- paste0("\"",fname,"\"")
+        out <- try(system(paste(cmd,fname),intern=TRUE))
+        if (class(out) != "try-error")
+        {
+            if (length(out) > 0)
+            {
+                dat <- stringr::str_trim(out) %>% stringr::str_split(";")
+                dat <- dat[[1]]
+                names(dat) <- c("name","format","width","height","size")
+            
+                plyr::mutate(as.list(dat),width=as.numeric(width),height=as.numeric(height),size=as.numeric(stringr::str_sub(size,end=-2)))
+            }
+            else
+            {
+                warning("identify failed")
+                NULL
+            }
+        }
+        else
+        {
+            browser()
+            NULL
+        }
+    }
+    else
+    {
+        stop("You don't appear to have ImageMagick on your path. Please install")
+    }
+}
