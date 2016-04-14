@@ -110,7 +110,8 @@ imresize <- function(im,scale=1)
             }
         else
             {
-                resize(im,-scale*100,-scale*100,-scale*100,interpolation_type=3)
+                scale.z <- if (depth(im) > 1) -scale*100 else -100
+                resize(im,-scale*100,-scale*100,scale.z,interpolation_type=3)
             }
     }
 
