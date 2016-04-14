@@ -871,10 +871,9 @@ NULL
 }
 
 ##' @export
-`[<-.cimg` <- function(x,...) {
+`[<-.cimg` <- function(x,value,...) {
     args <- as.list(substitute(list(...)))[-1L];
-    drop <- TRUE
-    l <- length(args) -1
+    l <- length(args) 
 
     #Call default method for arrays
     if (l==1 | l ==4)
@@ -890,8 +889,7 @@ NULL
         if (l == length(nsd))
         {
             ar[nsd] <- args[1:length(nsd)]
-            ar$value <- args$value
-            if (!drop) ar$drop <- FALSE
+            ar$value <- value
 #            browser()
             out <- do.call('[<-',c(list(x),c(ar)))
         }
