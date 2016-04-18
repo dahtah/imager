@@ -148,12 +148,14 @@ as.cimg.im <- im2cimg
 ##' @param y height
 ##' @param z depth
 ##' @param cc spectrum
+##' @param dim a vector of dimensions (optional, use instead of xyzcc)
 ##' @param ... optional arguments
 ##' @seealso as.cimg.array, as.cimg.function, as.cimg.data.frame
 ##' @export
 ##' @examples
 ##' as.cimg(1:100,x=10,y=10) #10x10, grayscale image
 ##' as.cimg(rep(1:100,3),x=10,y=10,cc=3) #10x10 RGB
+##' as.cimg(1:100,dim=c(10,10,1,1))
 ##' as.cimg(1:100) #Guesses dimensions, warning is issued
 ##' as.cimg(rep(1:100,3)) #Guesses dimensions, warning is issued
 ##' @author Simon Barthelme
@@ -170,8 +172,12 @@ as.cimg.double <- function(obj,...) as.cimg.vector(obj,...)
 
 ##' @describeIn as.cimg convert vector
 ##' @export
-as.cimg.vector <- function(obj,x=NA,y=NA,z=NA,cc=NA,...)
+as.cimg.vector <- function(obj,x=NA,y=NA,z=NA,cc=NA,dim=NULL,...)
     {
+        if (!is.null(dim))
+        {
+            x <- dim[1];y <- dim[2];z <- dim[3];cc <- dim[4]
+        }
         args <- list(x=x,y=y,z=z,cc=cc)
         if (any(!is.na(args)))
             {

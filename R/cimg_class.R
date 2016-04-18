@@ -105,8 +105,9 @@ plot.cimg <- function(x,frame,rescale.color=TRUE,...)
 print.cimg <- function(x,...)
     {
         d <- dim(x)
-        msg <- sprintf("Image. Width: %i pix Height %i pix Depth %i Colour channels %i",d[1],d[2],d[3],d[4])
-        print(msg)
+        msg <- sprintf("Image. Width: %i pix Height: %i pix Depth: %i Colour channels: %i \n",d[1],d[2],d[3],d[4])
+        cat(msg)
+        invisible(x)
     }
 
 ##' Image dimensions

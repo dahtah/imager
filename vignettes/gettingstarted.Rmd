@@ -1,0 +1,175 @@
+---
+title: "Getting started with imager"
+author: "Simon Barthelmé"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+imager contains a large array of functions for working with image data, with most of these functions coming from the CImg library by David Tschumperlé. This vignette only aims at getting you started, you'll find more information and examples on the website. Each function in the package is documented and comes with examples, so have a look at package documentation as well.
+
+## Plotting and loading images
+
+imager comes with an example picture of boats. Let's have a look:
+
+```{r fig.width=5, fig.height=7,message=FALSE}
+library(imager)
+plot(boats)
+```
+
+Note the y axis running downwards: the origin is at the top-left corner, which is the traditional coordinate system for images. imager uses this coordinate system consistently. Image data has class "cimg":
+
+```{r}
+class(boats)
+```
+
+and we can get some basic info by typing: 
+
+```{r}
+boats
+```
+
+Width and height should be self-explanatory. Depth is how many frames the image has: if depth > 1 then the image is actually a video. Boats has three colour channels, the usual RGB. A grayscale version of boats would have only one:
+
+```{r}
+grayscale(boats)
+```
+
+An object of class cimg is actually just a thin interface over a regular 4D array:
+
+```{r}
+dim(boats)
+```
+
+We'll see below how images are stored exactly. For most intents and purposes, they behave like regular arrays, meaning the usual arithmetic operations work:
+
+```{r}
+log(boats)+3*sqrt(boats)
+mean(boats)
+sd(boats)
+```
+
+The next thing you'll probably want to be doing is to load an imager, which can be done using load.image. imager ships with another example image, which is stored somewhere in your R library. We find out where using system.file
+
+```{r}
+fpath <- system.file('extdata/parrots.png',package='imager')
+```
+
+We're now ready to load the image:
+
+```{r fig.width=5, fig.height=5}
+parrots <- load.image(fpath)
+plot(parrots)
+```
+
+You can also load images straight from URLs:
+
+```{r fig.width=5, fig.height=5}
+url <- "http://dahtah.github.io/imager/warped_parrots_small.png"
+load.image(url) %>% plot
+```
+
+imager supports JPEG, PNG and BMP natively - for other formats you'll need to install ImageMagick. 
+
+## imager in action: Histogram equalisation
+
+Histogram equalisation is a textbook example of a contrast-enhancing filter. It's also a good topic for an introduction to what you can do with imager.
+
+Image histograms are just histogram of pixel values, which are of course pretty easy to obtain in R: 
+
+```{r fig.width=5, fig.height=2.5}
+grayscale(boats) %>% hist(main="Luminance values in boats picture")
+```
+
+Since images are stored essentially as arrays, here we're just using R's regular hist function, which treats our array as a vector of values. If we wanted to look only at the red channel, we could use:
+
+```{r fig.width=5, fig.height=2.5}
+R(boats) %>% hist(main="Red channel values in boats picture")
+#Equivalently:
+#channel(boats,1) %>% hist(main="Red channel values in boats picture")
+```
+
+Another approach is to turn the image into a data.frame, and use ggplot to view all channels at once:
+
+```{r fig.width=5, fig.height=2.5}
+library(ggplot2)
+bdf <- as.data.frame(boats)
+head(bdf,3)
+bdf <- plyr::mutate(bdf,channel=factor(cc,labels=c('R','G','B')))
+ggplot(bdf,aes(value,col=channel))+geom_histogram(bins=30)+facet_wrap(~ channel)
+```
+
+What we immediately see from these histograms is that the middle values are in a sense over-used: there's very few pixels with high or low values. Histogram equalisation solves the problem by making histograms flat: each pixel's value is replaced by its *rank*, which is equivalent to running the data through their empirical cdf.
+
+As an illustration of what this does, see the following example:
+
+```{r}
+x <- rnorm(100)
+layout(t(1:2))
+hist(x,main="Histogram of x")
+f <- ecdf(x)
+hist(f(x),main="Histogram of ecdf(x)")
+
+```
+
+We can apply it directly to images as follows: 
+
+```{r fig.width=5, fig.height=2.5}
+boats.g <- grayscale(boats)
+f <- ecdf(boats.g)
+plot(f,main="Empirical CDF of luminance values")
+```
+
+Again we're using a standard R function (ecdf), which returns another function corresponding to the ECDF of luminance values in boats.g. 
+
+If we run the pixel data back through f we get a flat histogram:
+
+```{r fig.width=5, fig.height=2.5}
+f(boats.g) %>% hist(main="Transformed luminance values")
+```
+
+Now the only problem is that ecdf is base R, and unaware of our cimg objects. The function f took an image and returned a vector:
+
+```{r}
+f(boats.g) %>% str
+```
+
+If we wish to get an image back we can just use as.cimg:
+
+```{r fig.width=5, fig.height=7}
+f(boats.g) %>% as.cimg(dim=dim(boats.g)) %>% plot(main="With histogram equalisation")
+```
+
+So far we've run this on a grayscale image. If we want to do this on RGB data, we need to run the equalisation separately in each channel. imager enables this using its split-apply-combine tricks:
+
+```{r fig.width=5, fig.height=7}
+#Hist. equalisation for grayscale
+hist.eq <- function(im) as.cimg(ecdf(im)(im),dim=dim(im))
+
+#Split across colour channels, 
+cn <- imsplit(boats,"c")
+cn #we now have a list of images
+cn.eq <- llply(cn,hist.eq) #run hist.eq on each
+imappend(cn.eq,"c") %>% plot(main="All channels equalised") #recombine and plot
+```
+
+There's even a one-liner to do this:
+
+```{r}
+iiply(boats,"c",hist.eq) 
+```
+
+We can use it to check that all channels have been properly normalised:
+
+```{r fig.width=5, fig.height=2.5}
+iiply(boats,"c",hist.eq) %>% as.data.frame %>% ggplot(aes(value))+geom_histogram(bins=30)+facet_wrap(~ cc)
+```
+
+Our trick worked. 
+
+## Learning more
+
+Have a look around the website. 

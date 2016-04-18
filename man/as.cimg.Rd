@@ -14,7 +14,8 @@ as.cimg(obj, ...)
 
 \method{as.cimg}{double}(obj, ...)
 
-\method{as.cimg}{vector}(obj, x = NA, y = NA, z = NA, cc = NA, ...)
+\method{as.cimg}{vector}(obj, x = NA, y = NA, z = NA, cc = NA,
+  dim = NULL, ...)
 
 \method{as.cimg}{matrix}(obj, ...)
 }
@@ -30,6 +31,8 @@ as.cimg(obj, ...)
 \item{z}{depth}
 
 \item{cc}{spectrum}
+
+\item{dim}{a vector of dimensions (optional, use instead of xyzcc)}
 }
 \description{
 Imager implements various converters that turn your data into cimg objects. If you convert from a vector (which only has a length, and no dimension), either specify dimensions explicitly or some guesswork will be involved. See examples for clarifications.
@@ -47,6 +50,7 @@ Imager implements various converters that turn your data into cimg objects. If y
 \examples{
 as.cimg(1:100,x=10,y=10) #10x10, grayscale image
 as.cimg(rep(1:100,3),x=10,y=10,cc=3) #10x10 RGB
+as.cimg(1:100,dim=c(10,10,1,1))
 as.cimg(1:100) #Guesses dimensions, warning is issued
 as.cimg(rep(1:100,3)) #Guesses dimensions, warning is issued
 }

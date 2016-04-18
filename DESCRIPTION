@@ -13,12 +13,15 @@ Description: Fast image processing for images in up to 4 dimensions (two spatial
     traditional image processing tools (filtering, morphology, transformations,
     etc.) as well as various functions for easily analysing image data using R.
 License: LGPL
-Imports:
+Imports: 
     Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices
-Depends:
+Depends: 
     R (>= 2.10.0),plyr,magrittr
 SystemRequirements: fftw3
 Enhances: spatstat
 LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown,ggplot2
+VignetteBuilder: knitr
