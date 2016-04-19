@@ -74,7 +74,7 @@ load.image(url) %>% plot
 
 imager supports JPEG, PNG and BMP natively - for other formats you'll need to install ImageMagick. 
 
-## imager in action: Histogram equalisation
+## Example 1: Histogram equalisation
 
 Histogram equalisation is a textbook example of a contrast-enhancing filter. It's also a good topic for an introduction to what you can do with imager.
 
@@ -168,7 +168,59 @@ We can use it to check that all channels have been properly normalised:
 iiply(boats,"c",hist.eq) %>% as.data.frame %>% ggplot(aes(value))+geom_histogram(bins=30)+facet_wrap(~ cc)
 ```
 
-Our trick worked. 
+Our trick worked.
+
+## Example 2: Edge detection
+
+Edge detection relies on image gradients, which imager returns via:
+
+```{r}
+layout(t(1:2))
+imgradient(boats.g,"x") %>% plot(main="Gradient along x")
+imgradient(boats.g,"y") %>% plot(main="Gradient along y")
+```
+
+To be more specific, noting $I(x,y)$ the image intensity at location $x,y$, what imager returns is an approximation of:
+$$ \frac{\partial}{\partial x}I $$
+in the first panel and:
+$$ \frac{\partial}{\partial y}I $$
+in the second.
+
+The magnitude of the gradients thus tell us how fast the image changes around a certain point. Image edges correspond to abrubt changes in the image, and so it's reasonable to estimate their location based on the norm of the gradient:
+$$ \sqrt \left( \left( \frac{\partial}{\partial x}I \right)^2 +\left( \frac{\partial}{\partial y}I \right)^2 \right) $$
+
+In imager:
+
+```{r}
+dx <- imgradient(boats.g,"x")
+dy <- imgradient(boats.g,"y")
+grad.mag <- sqrt(dx^2+dy^2)
+plot(grad.mag,main="Gradient magnitude")
+```
+
+Here's a handy shortcut:
+
+```{r}
+imgradient(boats.g,"xy") %>% enorm %>% plot(main="Gradient magnitude (again)")
+```
+
+The first function returns a list of images:
+
+```{r}
+l <- imgradient(boats.g,"xy")
+str(l)
+```
+
+And the second takes a list of images and computes the Euclidean norm pixel-wise, i.e.:
+
+```{r}
+enorm(list(3,2))
+sqrt(3^2+2^2)
+```
+
+enorm is an example of a "reduction" function. They're useful for combining pixel values over several images. 
+
+If you take the above line apart you'll see that imgradient returns a list a 
 
 ## Learning more
 
