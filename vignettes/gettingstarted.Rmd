@@ -2,16 +2,24 @@
 title: "Getting started with imager"
 author: "Simon Barthelmé"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  html_document:
+    toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+
 ---
+  
+```{r init,echo=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=TRUE, 
+               comment=NA, verbose=TRUE, fig.width=5, fig.height=5)
+```
+imager contains a large array of functions for working with image data, with most of these functions coming from the CImg library by David Tschumperlé. This vignette is just a short tutorial, you'll find more information and examples on the website. Each function in the package is documented and comes with examples, so have a look at package documentation as well.
 
-imager contains a large array of functions for working with image data, with most of these functions coming from the CImg library by David Tschumperlé. This vignette only aims at getting you started, you'll find more information and examples on the website. Each function in the package is documented and comes with examples, so have a look at package documentation as well.
-
-## Plotting and loading images
+# Plotting and loading images
 
 imager comes with an example picture of boats. Let's have a look:
 
@@ -52,7 +60,7 @@ mean(boats)
 sd(boats)
 ```
 
-The next thing you'll probably want to be doing is to load an imager, which can be done using load.image. imager ships with another example image, which is stored somewhere in your R library. We find out where using system.file
+The next thing you'll probably want to be doing is to load an image, which can be done using load.image. imager ships with another example image, which is stored somewhere in your R library. We find out where using system.file
 
 ```{r}
 fpath <- system.file('extdata/parrots.png',package='imager')
@@ -74,7 +82,7 @@ load.image(url) %>% plot
 
 imager supports JPEG, PNG and BMP natively - for other formats you'll need to install ImageMagick. 
 
-## imager in action: Histogram equalisation
+# imager in action: Histogram equalisation
 
 Histogram equalisation is a textbook example of a contrast-enhancing filter. It's also a good topic for an introduction to what you can do with imager.
 
@@ -106,7 +114,7 @@ What we immediately see from these histograms is that the middle values are in a
 
 As an illustration of what this does, see the following example:
 
-```{r}
+```{r fig.width=5, fig.height=2.5}
 x <- rnorm(100)
 layout(t(1:2))
 hist(x,main="Histogram of x")
@@ -170,6 +178,251 @@ iiply(boats,"c",hist.eq) %>% as.data.frame %>% ggplot(aes(value))+geom_histogram
 
 Our trick worked. 
 
-## Learning more
+# imager and ggplot2
+
+To plot your image data using ggplot2, use as.data.frame and geom_raster:
+
+```{r}
+df <- grayscale(boats) %>% as.data.frame
+p <- ggplot(df,aes(x,y))+geom_raster(aes(fill=value))
+p
+```
+
+We're not quite there, mainly because or y axis is reversed. Here's a fix:
+```{r}
+p + scale_y_continuous(trans=scales::reverse_trans())
+```
+
+The grey margin around the plot should be eliminated as well:
+
+```{r}
+p <- p+scale_x_continuous(expand=c(0,0))+scale_y_continuous(expand=c(0,0),trans=scales::reverse_trans())
+p
+```
+
+Finally, ggplot has a blue colour scale by default, but we might want to keep our original grays:
+
+```{r}
+p+scale_fill_gradient(low="black",high="white")
+```
+
+Colour images are a bit trickier. We could plot each channel separately:
+
+```{r}
+df <- as.data.frame(boats) 
+p <- ggplot(df,aes(x,y))+geom_raster(aes(fill=value))+facet_wrap(~ cc)
+p+scale_y_reverse()
+```
+
+Plotting channels separately may be useful on occasion, but usually we'd want the original colours. We can tell as.data.frame to return a "wide" format:
+
+```{r}
+as.data.frame(boats,wide="c") %>% head
+```
+
+The three colour channels are now stacked along columns, which lets us do the following:
+
+```{r}
+df <- as.data.frame(boats,wide="c") %>% mutate(rgb.val=rgb(c.1/255,c.2/255,c.3/255))
+head(df,3)
+```
+
+We can now plot our image using ggplot's identity scale:
+
+```{r}
+p <- ggplot(df,aes(x,y))+geom_raster(aes(fill=rgb.val))+scale_fill_identity()
+p+scale_y_reverse()
+```
+
+We'll see more interesting uses for ggplot2 later.
+
+# Blob detection/extraction of local maxima, denoising, scale-space
+
+Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for [scikit-image](http://scikit-image.org/docs/dev/auto_examples/plot_blob.html)):
+
+```{r}
+url <- "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/HubbleDeepField.800px.jpg/450px-HubbleDeepField.800px.jpg"
+hub <- load.image(url) %>% grayscale
+plot(hub,main="Hubble Deep Field")
+```
+
+Before we can work with the real image we'll try synthetic data. Here's how to generate an image with a few randomly placed blobs:
+
+```{r fig.width=10}
+layout(t(1:2))
+set.seed(2)
+points <- rbinom(100*100,1,.001) %>% as.cimg
+blobs <- isoblur(points,5)
+plot(points,main="Random points")
+plot(blobs,main="Blobs")
+```
+
+blobs are obtained from random points convolved with a blur kernel of size 5 pixels. Note the shortcut in:
+
+```{r warning=TRUE}
+rbinom(100*100,1,.001) %>% as.cimg
+```
+
+where a vector of length 100^2 is turned into an image of dimension 100x100. That's just a guess on imager's part and it's reported with a warning (we could be dealing with an image of dimension 10x1000, for instance). To get rid of the warning you have to be explicit about the dimensions you want:
+
+```{r}
+rbinom(100*100,1,.001) %>% as.cimg(x=100,y=100)
+```
+
+
+Suppose our task is to find the location of the center of the blobs. There are several way of doing that, but one that's convenient is to go through image hessians. Blobs are local maxima in the image, and local maxima are usually associated with a hessian matrix that's positive definite (the well-known second-order optimality condition). A matrix that's positive definite has positive determinant, which we can compute via:
+
+$$ \mathrm{det}(H) = I_{xx} \times I_{yy} - I_{xy}^2 $$ 
+
+where $I_{xx}$ is the second derivative of the image along x, etc. See wikipedia on [blob detection](https://en.wikipedia.org/wiki/Blob_detection) for more.
+
+In imager we can use:
+
+```{r}
+imhessian(blobs)
+```
+
+to get the derivatives we need, and:
+
+```{r}
+Hdet <- with(imhessian(blobs),(xx*yy - xy^2))
+plot(Hdet,main="Determinant of Hessian")
+```
+
+To get only the pixels with the highest values, we threshold the image:
+
+```{r}
+threshold(Hdet,"99%") %>% plot(main="Determinant: 1% highest values")
+```
+
+The thresholded image now contains discrete image regions, and if we can compute the center of these regions we'll have our locations. The first step is to label these regions:
+
+```{r}
+lab <- threshold(Hdet,"99%") %>% label
+plot(lab,main="Labelled regions")
+```
+
+label is a utility that fills each white region with a unique pixel value (the background stays at 0). We can extract the labelled regions in the form of a data.frame:
+
+```{r}
+df <- as.data.frame(lab) %>% subset(value>0)
+head(df,3)
+unique(df$value) #10 regions
+```
+
+And now all we need to do is to split the data.frame into regions, and compute the mean coordinate values in each. We'll show two solutions, one using plyr, the other using the more recent dplyr variant:
+
+```{r}
+centers <- ddply(df,.(value),summarise,mx=mean(x),my=mean(y))
+centers <- dplyr::group_by(df,value) %>% dplyr::summarise(mx=mean(x),my=mean(y))
+```
+
+As an exercise you can try extracting other summary values for the regions (area, for example, or aspect ratio).
+
+We now overlay the results on the original image:
+
+```{r}
+plot(blobs)
+with(centers,points(mx,my,col="red"))
+```
+
+That's pretty good, but to make things a bit harder we'll add noise to the image:
+
+
+```{r}
+nblobs <- blobs+.001*imnoise(dim=dim(blobs))
+plot(nblobs,main="Noisy blobs")
+```
+
+If we try the same thing again it fails completely:
+
+```{r}
+
+get.centers <- function(im,thr="99%")
+{
+    dt <- imhessian(im) %$% { xx*yy - xy^2 } %>% threshold(thr) %>% label
+    as.data.frame(dt) %>% subset(value>0) %>% dplyr::group_by(value) %>% dplyr::summarise(mx=mean(x),my=mean(y))
+}
+
+plot(nblobs)
+get.centers(nblobs,"99%") %$% points(mx,my,col="red")
+```
+
+We need an extra denoising step. Simple blurring will do here:
+
+```{r}
+nblobs.denoised <- isoblur(nblobs,2)
+plot(nblobs.denoised)
+get.centers(nblobs.denoised,"99%") %$% points(mx,my,col="red")
+
+```
+
+We're ready to move on to the Hubble image. Here's a first naive attempt:
+
+```{r}
+plot(hub)
+get.centers(hub,"99.8%") %$% points(mx,my,col="red")
+
+```
+
+Our detector is mostly picking up small objects. Adding blur results in:
+
+```{r}
+plot(hub)
+isoblur(hub,5) %>% get.centers("99.8%") %$% points(mx,my,col="red")
+
+```
+
+and the detector is now picking up large objects only. What if we want to detect objects at various scale? The solution is to aggregate the results over scale, which is what multiscale approaches do.
+
+```{r}
+ #Compute determinant at scale "scale". 
+hessdet <- function(im,scale=1) isoblur(im,scale) %>% imhessian %$% { scale^2*(xx*yy - xy^2) }
+#Note the scaling (scale^2) factor in the determinant
+plot(hessdet(hub,1),main="Determinant of the Hessian at scale 1")
+```
+
+To view the results at different scales, we can use ggplot:
+
+```{r fig.width=7}
+#Get a data.frame with results at scale 2, 3 and 4
+dat <- ldply(c(2,3,4),function(scale) hessdet(hub,scale) %>% as.data.frame %>% mutate(scale=scale))
+p <- ggplot(dat,aes(x,y))+geom_raster(aes(fill=value))+facet_wrap(~ scale)
+p+scale_x_continuous(expand=c(0,0))+scale_y_continuous(expand=c(0,0),trans=scales::reverse_trans())
+```
+
+Scale-space theory suggests that we look for blobs [across scales](https://en.wikipedia.org/wiki/Blob_detection). It's easy:
+
+```{r}
+scales <- seq(2,20,l=10)
+
+d.max <- llply(scales,function(scale) hessdet(hub,scale)) %>% parmax
+plot(d.max,main="Point-wise maximum across scales")
+```
+
+parmax is another example of a reduction function, one that here takes the maximum value for each pixel across all scales. To find out which scale had the maximum value point-wise, we can use which.parmax:
+
+```{r}
+i.max <- llply(scales,function(scale) hessdet(hub,scale)) %>% which.parmax
+plot(i.max,main="Index of the point-wise maximum across scales")
+```
+
+So far this isn't too informative. It will be once we have labelled regions:
+
+```{r fig.height=10,fig.width=10}
+#Get a data.frame of labelled regions
+labs <- d.max %>% threshold("96%") %>% label %>% as.data.frame
+#Add scale indices
+labs <- mutate(labs,index=as.data.frame(i.max)$value)
+regs <- dplyr::group_by(labs,value) %>% dplyr::summarise(mx=mean(x),my=mean(y),scale.index=mean(index))
+p <- ggplot(as.data.frame(hub),aes(x,y))+geom_raster(aes(fill=value))+geom_point(data=regs,aes(mx,my,size=scale.index),pch=2,col="red")
+p+scale_fill_gradient(low="black",high="white")+scale_x_continuous(expand=c(0,0))+scale_y_continuous(expand=c(0,0),trans=scales::reverse_trans())
+```
+
+The results aren't perfect - there are spurious points (especially along the seamlines), but it's not a bad start given the small amount of code. Note how the scale index follows the scale of the actual objects. 
+
+
+
+# Learning more
 
 Have a look around the website. 

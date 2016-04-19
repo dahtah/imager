@@ -23,5 +23,5 @@ LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 5.0.1
 Suggests: knitr,
-    rmarkdown,ggplot2
+    rmarkdown,ggplot2,dplyr
 VignetteBuilder: knitr
