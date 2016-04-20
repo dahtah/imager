@@ -19,7 +19,7 @@ Locations need to be provided as a data.frame with variables x,y,z, and c (the l
 }
 \examples{
 
-loc <- data.frame(x=runif(10,1,width(im)),y=runif(10,1,height(im))) #Ten random locations
+loc <- data.frame(x=runif(10,1,width(boats)),y=runif(10,1,height(boats))) #Ten random locations
 interp(boats,loc)
 }
 
