@@ -23,8 +23,7 @@ imdraw(im, sprite, x = 1, y = 1, z = 1, opacity = 1)
 Draw image on another image
 }
 \examples{
-imname <- system.file('extdata/parrots.png',package='imager')
-im <- load.image(imname)
+im <- load.example("parrots")
 boats.small <- imresize(boats,.5)
 #I'm aware the result is somewhat ugly 
 imdraw(im,boats.small,x=400,y=10,opacity=.7) \%>\% plot

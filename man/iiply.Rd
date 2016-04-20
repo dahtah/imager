@@ -19,9 +19,8 @@ iiply(im, axis, fun, ...)
 This is just imsplit followed by llply followed by imappend
 }
 \examples{
-parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
-#Normalise colour channels separately, recombine
-iiply(parrots,"c",function(v) (v-mean(v))/sd(v)) \%>\% plot 
+##' #Normalise colour channels separately, recombine
+iiply(boats,"c",function(v) (v-mean(v))/sd(v)) \%>\% plot 
 
 }
 

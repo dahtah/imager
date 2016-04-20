@@ -38,8 +38,7 @@ Resize image by a single scale factor. For non-uniform scaling and a wider range
 \item \code{imresize}: resize by scale factor
 }}
 \examples{
-imname <- system.file('extdata/parrots.png',package='imager')
-im <- load.image(imname)
+im <- load.example("parrots")
 imresize(im,1/4) #Quarter size
 liply(2:4,function(ind) imresize(im,1/ind),"x") \%>\%  plot
 }

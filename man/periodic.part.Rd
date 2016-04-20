@@ -18,8 +18,7 @@ im = periodic + smooth
 where the periodic part shouldn't be too far from the original image. The periodic part can be used in frequency-domain analyses, to reduce the artifacts induced by non-periodicity.
 }
 \examples{
-imname <- system.file('extdata/parrots.png',package='imager')
-im <- load.image(imname) \%>\% subim(x <= 512)
+im <- load.example("parrots") \%>\% subim(x <= 512)
 layout(t(1:3))
 plot(im,main="Original image")
 periodic.part(im) \%>\% plot(main="Periodic part")

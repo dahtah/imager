@@ -19,7 +19,7 @@ ilply(im, axis, fun, ...)
 Shorthand for imsplit followed by llply
 }
 \examples{
-parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+parrots <- load.example("parrots.png")
 ilply(parrots,"c",mean) #mean luminance per colour channel
 }
 

@@ -39,7 +39,7 @@ Note that 3D warps are possible as well.
 The mapping should be specified via the "map" argument, see examples.
 }
 \examples{
-im <- load.image(system.file('extdata/parrots.png',package='imager'))
+im <- load.example("parrots")
 #Shift image
 map.shift <- function(x,y) list(x=x+10,y=y+30)
 imwarp(im,map=map.shift) \%>\% plot

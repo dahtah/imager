@@ -18,8 +18,8 @@ This function provides 2D and 3D (linear or cubic) interpolation for pixel value
 Locations need to be provided as a data.frame with variables x,y,z, and c (the last two are optional).
 }
 \examples{
-im <- load.image(system.file('extdata/parrots.png',package='imager'))
+
 loc <- data.frame(x=runif(10,1,width(im)),y=runif(10,1,height(im))) #Ten random locations
-interp(im,loc)
+interp(boats,loc)
 }
 

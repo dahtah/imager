@@ -19,7 +19,6 @@ idply(im, axis, fun, ...)
 Shorthand for imsplit followed by ldply
 }
 \examples{
-parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
-idply(parrots,"c",mean) #mean luminance per colour channel
+idply(boats,"c",mean) #mean luminance per colour channel
 }
 

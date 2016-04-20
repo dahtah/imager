@@ -28,7 +28,7 @@ subim is an alias defined for backward-compatibility.
 \item \code{subim}: alias for imsub
 }}
 \examples{
-parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+parrots <- load.example("parrots")
 imsub(parrots,x < 30) #Only the first 30 columns
 imsub(parrots,y < 30) #Only the first 30 rows
 imsub(parrots,x < 30,y < 30) #First 30 columns and rows

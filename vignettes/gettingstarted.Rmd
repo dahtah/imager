@@ -73,13 +73,6 @@ parrots <- load.image(fpath)
 plot(parrots)
 ```
 
-You can also load images straight from URLs:
-
-```{r fig.width=5, fig.height=5}
-url <- "http://dahtah.github.io/imager/warped_parrots_small.png"
-load.image(url) %>% plot
-```
-
 imager supports JPEG, PNG and BMP natively - for other formats you'll need to install ImageMagick. 
 
 # Example 1: Histogram equalisation
@@ -293,8 +286,7 @@ We'll see more interesting uses for ggplot2 later.
 Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for [scikit-image](http://scikit-image.org/docs/dev/auto_examples/plot_blob.html)):
 
 ```{r}
-url <- "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/HubbleDeepField.800px.jpg/450px-HubbleDeepField.800px.jpg"
-hub <- load.image(url) %>% grayscale
+hub <- load.example("hubble") %>% grayscale
 plot(hub,main="Hubble Deep Field")
 ```
 
