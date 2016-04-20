@@ -1,7 +1,7 @@
 Package: imager
 Type: Package
 Title: Image Processing Library Based on CImg
-Version: 0.16
+Version: 0.2
 Date: 2016-01-05
 Author: Simon Barthelme [aut, cre],
     Antoine Cecchi [ctb]
@@ -23,5 +23,5 @@ LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 5.0.1
 Suggests: knitr,
-    rmarkdown,ggplot2,dplyr
+    rmarkdown,ggplot2,dplyr,scales
 VignetteBuilder: knitr
