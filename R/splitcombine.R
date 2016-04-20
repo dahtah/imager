@@ -23,7 +23,7 @@ liply <- function(lst,fun,axis,...)
 ##' @param fun function to apply
 ##' @param ... extra arguments for function fun
 ##' @examples
-##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' parrots <- load.example("parrots.png")
 ##' ilply(parrots,"c",mean) #mean luminance per colour channel
 ##' @export
 ilply <- function(im,axis,fun,...)
@@ -38,8 +38,7 @@ ilply <- function(im,axis,fun,...)
 ##' @param fun function to apply
 ##' @param ... extra arguments to function fun
 ##' @examples
-##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
-##' idply(parrots,"c",mean) #mean luminance per colour channel
+##' idply(boats,"c",mean) #mean luminance per colour channel
 ##' @export
 idply <- function(im,axis,fun,...)
     {
@@ -55,9 +54,8 @@ idply <- function(im,axis,fun,...)
 ##' @param fun function to apply
 ##' @param ... extra arguments to function fun
 ##' @examples
-##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
-##' #Normalise colour channels separately, recombine
-##' iiply(parrots,"c",function(v) (v-mean(v))/sd(v)) %>% plot 
+##' ##' #Normalise colour channels separately, recombine
+##' iiply(boats,"c",function(v) (v-mean(v))/sd(v)) %>% plot 
 ##' 
 ##' @export
 iiply <- function(im,axis,fun,...)

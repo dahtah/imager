@@ -9,8 +9,7 @@
 ##' @param im an image
 ##' @return an image
 ##' @examples
-##' imname <- system.file('extdata/parrots.png',package='imager')
-##' im <- load.image(imname) %>% subim(x <= 512)
+##' im <- load.example("parrots") %>% subim(x <= 512)
 ##' layout(t(1:3))
 ##' plot(im,main="Original image")
 ##' periodic.part(im) %>% plot(main="Periodic part")
@@ -82,8 +81,7 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
 ##' For double-scale, half-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}.
 ##' @seealso resize
 ##' @examples
-##' imname <- system.file('extdata/parrots.png',package='imager')
-##' im <- load.image(imname)
+##' im <- load.example("parrots")
 ##' imresize(im,1/4) #Quarter size
 ##' liply(2:4,function(ind) imresize(im,1/ind),"x") %>%  plot
 ##' @author Simon Barthelme
@@ -147,8 +145,7 @@ imhessian <- function(im,axes=c("xx","xy","yy"))
 ##' @param opacity transparency level (default 1)
 ##' @author Simon Barthelme
 ##' @examples
-##' imname <- system.file('extdata/parrots.png',package='imager')
-##' im <- load.image(imname)
+##' im <- load.example("parrots")
 ##' boats.small <- imresize(boats,.5)
 ##' #I'm aware the result is somewhat ugly 
 ##' imdraw(im,boats.small,x=400,y=10,opacity=.7) %>% plot
@@ -274,7 +271,7 @@ imgradient <- function(im,axes,scheme=3)
 ##' @param interpolation "nearest", "linear", "cubic" (default "linear")
 ##' @return a warped image
 ##' @examples
-##' im <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' im <- load.example("parrots")
 ##' #Shift image
 ##' map.shift <- function(x,y) list(x=x+10,y=y+30)
 ##' imwarp(im,map=map.shift) %>% plot
@@ -400,7 +397,7 @@ imdirac <- function(dims,x,y,z=1,cc=1)
 ##' @param approx Skip pixels when computing quantiles in large images (default TRUE)
 ##' @return a thresholded image
 ##' @examples
-##' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
+##' im <- load.example("birds")
 ##' im.g <- grayscale(im)
 ##' threshold(im.g,"15%") %>% plot
 ##' threshold(im.g,"auto") %>% plot
@@ -501,5 +498,40 @@ iminfo <- function(fname)
     else
     {
         stop("You don't appear to have ImageMagick on your path. Please install")
+    }
+}
+
+##' Load example image
+##'
+##' Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another (birds) is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field (hubble).
+##' The test video ("tennis") comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
+##' @param name name of the example
+##' @return 
+##' @author simon
+##' @examples
+##' load.example("hubble") %>% plot
+##' load.example("birds") %>% plot
+##' load.example("parrots") %>% plot
+##' @export
+load.example <- function(name)
+{
+    if (name=="boats")
+    {
+        boats
+    }
+    else
+    {
+        fnames <- list(parrots="parrots.png",hubble="HubbleDeepField.jpg",
+                       tennis="tennis_sif.mpeg",birds="Leonardo_Birds.jpg")
+        if (name %in% names(fnames))
+        {
+            paste0('extdata/',fnames[name]) %>% system.file(package='imager') %>% load.image
+        }
+        else
+        {
+            msg <- 'Unknown example picture. Available: %s'
+            msg <- sprintf(msg,paste(names(fnames),collapse=","))
+            stop(msg)
+        }
     }
 }

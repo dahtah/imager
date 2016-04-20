@@ -338,7 +338,7 @@ all.names <- function(cl)
 ##' @return an image with some parts cut out
 ##' @author Simon Barthelme
 ##' @examples
-##' parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' parrots <- load.example("parrots")
 ##' imsub(parrots,x < 30) #Only the first 30 columns
 ##' imsub(parrots,y < 30) #Only the first 30 rows
 ##' imsub(parrots,x < 30,y < 30) #First 30 columns and rows

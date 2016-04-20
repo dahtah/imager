@@ -6,9 +6,9 @@
 ##' @param locations a data.frame 
 ##' @param cubic if TRUE, use cubic interpolation. If FALSE, use linear (default FALSE)
 ##' @examples
-##' im <- load.image(system.file('extdata/parrots.png',package='imager'))
+##' 
 ##' loc <- data.frame(x=runif(10,1,width(im)),y=runif(10,1,height(im))) #Ten random locations
-##' interp(im,loc)
+##' interp(boats,loc)
 ##' @export
 interp <- function(im,locations,cubic=FALSE)
 {
