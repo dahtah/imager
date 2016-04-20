@@ -23,7 +23,7 @@ liply <- function(lst,fun,axis,...)
 ##' @param fun function to apply
 ##' @param ... extra arguments for function fun
 ##' @examples
-##' parrots <- load.example("parrots.png")
+##' parrots <- load.example("parrots")
 ##' ilply(parrots,"c",mean) #mean luminance per colour channel
 ##' @export
 ilply <- function(im,axis,fun,...)
