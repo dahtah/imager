@@ -9,6 +9,9 @@ load.example(name)
 \arguments{
 \item{name}{name of the example}
 }
+\value{
+an image
+}
 \description{
 Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another (birds) is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field (hubble).
 The test video ("tennis") comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
@@ -19,6 +22,6 @@ load.example("birds") \%>\% plot
 load.example("parrots") \%>\% plot
 }
 \author{
-simon
+Simon Barthelme
 }
 

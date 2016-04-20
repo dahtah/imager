@@ -3,4 +3,3 @@
 ^appveyor\.yml$
 .git
 .gitignore
-Makevars
