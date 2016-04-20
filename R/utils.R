@@ -515,24 +515,16 @@ iminfo <- function(fname)
 ##' @export
 load.example <- function(name)
 {
-    if (name=="boats")
+    fnames <- list(parrots="parrots.png",hubble="HubbleDeepField.jpg",
+                   tennis="tennis_sif.mpeg",birds="Leonardo_Birds.jpg")
+    if (name %in% names(fnames))
     {
-        data(boats)
-        boats
+        paste0('extdata/',fnames[name]) %>% system.file(package='imager') %>% load.image
     }
     else
     {
-        fnames <- list(parrots="parrots.png",hubble="HubbleDeepField.jpg",
-                       tennis="tennis_sif.mpeg",birds="Leonardo_Birds.jpg")
-        if (name %in% names(fnames))
-        {
-            paste0('extdata/',fnames[name]) %>% system.file(package='imager') %>% load.image
-        }
-        else
-        {
-            msg <- 'Unknown example picture. Available: %s'
-            msg <- sprintf(msg,paste(names(fnames),collapse=","))
-            stop(msg)
-        }
+        msg <- 'Unknown example picture. Available: %s'
+        msg <- sprintf(msg,paste(names(fnames),collapse=","))
+        stop(msg)
     }
 }
