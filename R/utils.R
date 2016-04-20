@@ -517,6 +517,7 @@ load.example <- function(name)
 {
     if (name=="boats")
     {
+        data(boats)
         boats
     }
     else
