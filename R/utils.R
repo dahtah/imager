@@ -506,8 +506,8 @@ iminfo <- function(fname)
 ##' Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another (birds) is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field (hubble).
 ##' The test video ("tennis") comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
 ##' @param name name of the example
-##' @return 
-##' @author simon
+##' @return an image
+##' @author Simon Barthelme
 ##' @examples
 ##' load.example("hubble") %>% plot
 ##' load.example("birds") %>% plot
