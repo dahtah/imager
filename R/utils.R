@@ -546,6 +546,7 @@ load.example <- function(name)
 ##' 
 ##' #Filter, keep valid part
 ##' correlate(boats,imfill(3,3)) %>% crop.border(nPix=2)
+##' @export
 crop.borders <- function(im,nx=0,ny=0,nz=0,nPix)
 {
     if (!missing(nPix))
