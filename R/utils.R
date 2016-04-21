@@ -528,3 +528,38 @@ load.example <- function(name)
         stop(msg)
     }
 }
+
+##' Crop the outer margins of an image 
+##'
+##' This function crops pixels on each side of an image. This function is a kind of inverse (centred) padding, and is useful e.g. when you want to get only the valid part of a convolution. 
+##' @param im 
+##' @param nx number of pixels to crop along horizontal axis
+##' @param ny number of pixels to crop along vertical axis
+##' @param nz number of pixels to crop along depth axis
+##' @param nPix optional: crop the same number of pixels along all dimensions
+##' @return 
+##' @author Simon Barthelmé
+##' @examples
+##' #These two versions are equivalent
+##' imfill(10,10) %>% crop.borders(nx=1,ny=1)
+##' imfill(10,10) %>% crop.borders(nPix=1)
+##' 
+##' #Filter, keep valid part
+##' correlate(boats,imfill(3,3)) %>% crop.border(nPix=2)
+crop.borders <- function(im,nx=0,ny=0,nz=0,nPix)
+{
+    if (!missing(nPix))
+    {
+        nx <- nPix
+        ny <- nPix
+        if (depth(im) > 1) nz <- nPix
+    }
+    if (depth(im) > 1)
+    {
+        imsub(im,(x > nx) & (x <= width - nx),(y > ny) & (y <= height - ny),(z > nz) & (z <= depth - nz))
+    }
+    else
+    {
+        imsub(im,(x > nx) & (x <= width - nx),(y > ny) & (y <= height - ny))
+    }
+}

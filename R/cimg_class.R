@@ -352,20 +352,21 @@ all.names <- function(cl)
 imsub <- function(im,...)
     {
         l <- as.list(substitute(list(...))[-1])
-        consts <- data.frame(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
-        consts <- mutate(consts,cx=width/2,cy=height/2,cz=depth/2)
-        Reduce(function(a,b) subs(a,b,consts),l,init=im)
+        consts <- list(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
+        consts <- plyr::mutate(consts,cx=width/2,cy=height/2,cz=depth/2)
+        env <- parent.frame()
+        Reduce(function(a,b) subs(a,b,consts,envir=env),l,init=im)
     }
 
 ##' @describeIn imsub alias for imsub 
 ##' @export
 subim <- imsub
 
-subs <- function(im,cl,consts)
+subs <- function(im,cl,consts,envir=parent.frame())
     {
         if (missing(consts))
             {
-               consts <- data.frame(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
+               consts <- list(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
             }
         vl <- intersect(all.names(cl),c("x","y","z","cc"))
         if (length(vl)>1)
@@ -377,10 +378,8 @@ subs <- function(im,cl,consts)
                 vname <- vl
                 mval <- list(x=width(im),y=height(im),z=depth(im),cc=spectrum(im))
                 maxval <- mval[[vl]]
-                df <- data.frame(v=1:maxval)
-                df <- cbind(df,consts)
-                names(df)[1] <- vname
-                inds <- eval(cl,df)
+                consts[[vname]] <- 1:maxval
+                inds <- eval(cl,list2env(consts,envir))
                 #Should find a better way to implement what follows
                 if (vname == "x")
                     {
@@ -872,7 +871,7 @@ NULL
 }
 
 ##' @export
-`[<-.cimg` <- function(x,value,...) {
+`[<-.cimg` <- function(x,...,value) {
     args <- as.list(substitute(list(...)))[-1L];
     l <- length(args) 
 
