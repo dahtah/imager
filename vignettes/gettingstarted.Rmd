@@ -483,12 +483,7 @@ and a colour image:
 dim(parrots)
 ```
 
-and finally a video:
-
-```{r dim_video,cache=TRUE}
-tennis <- load.example("tennis")
-dim(tennis)
-```
+In a similar vein, a 400x400 colour video of 50 frames will have dimension 400x400x50x3 (which is of course fairly large, beware memory issues when working with videos). 
 
 In order to save you some time, most functions try to have reasonable defaults so that you don't have to specify all dimensions if you're only working with a grayscale picture. For example, you can use the array subset operator as if you only had two dimensions:
 
