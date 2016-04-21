@@ -465,6 +465,51 @@ p+scale_fill_gradient(low="black",high="white")+scale_x_continuous(expand=c(0,0)
 
 The results aren't perfect - there are spurious points (especially along the seamlines), but it's not a bad start given the small amount of code. Note how the scale index follows the scale of the actual objects. 
 
+# How images are represented
+
+It's important to know how imager stores image data, if only to understand the occasional error messages. Images are represented as 4D numeric arrays, which is consistent with CImg's storage standard (it is unfortunately inconsistent with other R libraries, like spatstat, but converting between representations is easy). 
+The four dimensions are labelled x,y,z,c. The first two are the usual spatial dimensions, the third one will usually correspond to depth or time, and the fourth one is colour. Remember the order, it will be used consistently in imager.
+If you only have grayscale images then the two extra dimensions are obviously pointless, but they won't bother you much. Your objects will still be officially 4 dimensional, with two trailing flat dimensions.
+Pixels are stored in the following manner: we scan the image beginning at the upper-left corner, along the x axis. Once we hit the end of the scanline, we move to the next line. Once we hit the end of the screen, we move to the next frame (increasing z) and repeat the process. If we have several colour channels, then once we're done with the first colour channel we move to the next one.
+All in all the different dimensions are represented in the x,y,z,c order. In R the object is represented as a 4D array. Here's an example with a grayscale image:
+```{r dim_gray,cache=TRUE}
+parrots <- load.example("parrots")
+gray.parrots <- grayscale(parrots)
+dim(gray.parrots)
+```
+
+and a colour image:
+```{r dim_colour,cache=TRUE}
+dim(parrots)
+```
+
+and finally a video:
+
+```{r dim_video,cache=TRUE}
+tennis <- load.example("tennis")
+dim(tennis)
+```
+
+In order to save you some time, most functions try to have reasonable defaults so that you don't have to specify all dimensions if you're only working with a grayscale picture. For example, you can use the array subset operator as if you only had two dimensions:
+
+```{r}
+im <- imfill(10,10) 
+dim(im)
+im[,1] <- 1:10 #Change the first *row* in the image - dimensions are x,y,z,c
+im[,1,1,1] <- 1:10 #Same thing, more verbose
+plot(im)
+```
+
+Other functions will try to guess what sort of an image you want:
+
+```{r error=TRUE}
+as.cimg(1:9) #Guesses you want a 3x3 image
+as.cimg(1:10) #Ambiguous, issues an error
+as.cimg(array(1,c(10,10))) #Assumes it's a grayscale image you want
+as.cimg(array(1:9,c(10,10,3))) #Assumes it's a colour image (last dimension 3)
+as.cimg(array(1:9,c(10,10,4))) #Assumes it's a grayscale video with 4 frames (last dimension != 3)
+```
+
 # imager functions by theme
 
 All functions are documented. 
