@@ -7,7 +7,7 @@
 crop.borders(im, nx = 0, ny = 0, nz = 0, nPix)
 }
 \arguments{
-\item{im}{}
+\item{im}{an image}
 
 \item{nx}{number of pixels to crop along horizontal axis}
 
@@ -16,6 +16,9 @@ crop.borders(im, nx = 0, ny = 0, nz = 0, nPix)
 \item{nz}{number of pixels to crop along depth axis}
 
 \item{nPix}{optional: crop the same number of pixels along all dimensions}
+}
+\value{
+an image
 }
 \description{
 This function crops pixels on each side of an image. This function is a kind of inverse (centred) padding, and is useful e.g. when you want to get only the valid part of a convolution.
@@ -29,6 +32,6 @@ imfill(10,10) \%>\% crop.borders(nPix=1)
 correlate(boats,imfill(3,3)) \%>\% crop.borders(nPix=2)
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 

@@ -3,9 +3,10 @@
   * new functions: 
     + iminfo gives you information on an image file (uses ImageMagick)
     + load.example loads test images
+    + crop.borders (self-explanatory)
   * the array subset operator is now more intelligent: you do not have to specify flat dimensions, i.e. 
     `imfill(10,10)[3,1]`   does what you'd expect (i.e., the same as `imfill(10,10)[3,1,1,1]`)
-  * improvements and bugs fixed in print.cimg, as.cimg, imresize, frame, plot.cimg
+  * improvements and bugs fixed in print.cimg, as.cimg, imresize, frame, plot.cimg, subim, as.raster, renorm
   * improved documentation and examples 
 
 # imager 0.16. Bugfix + minor features
