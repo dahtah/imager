@@ -60,7 +60,8 @@ as.raster.cimg <- function(x,frames,rescale.color=TRUE,...)
 
         if (dim(im)[3] == 1)
             {
-                if (rescale.color & !all(im==0))  im <- (im-min(im))/diff(range(im))
+                if (rescale.color) im <- renorm(im,0,1)
+#                if (rescale.color & !all(im==0))  im <- (im-min(im))/diff(range(im))
                 dim(im) <- dim(im)[-3]
                 if (dim(im)[3] == 1) #BW
                     {

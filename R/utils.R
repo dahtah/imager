@@ -186,10 +186,11 @@ imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
 ##' renorm(-5:5) #Same as above
 renorm <- function(x,min=0,max=255)
     {
-        r <- diff(range(x))
-        if (r!=0)
+        rg <- range(x)
+        dr <- diff(rg)
+        if (dr!=0)
             {
-                min+(max-min)*(x-min(x))/diff(range(x))
+                min+(max-min)*(x-rg[1])/dr
             }
         else
             {
