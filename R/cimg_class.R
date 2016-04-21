@@ -9,6 +9,7 @@ NULL
 
 #' @useDynLib imager
 #' @importFrom grDevices as.raster col2rgb dev.capture
+#' @importFrom utils file_test
 #' @importFrom graphics axis plot rasterImage
 #' @importFrom stats quantile rnorm kmeans
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
@@ -23,7 +24,9 @@ NULL
 
 names.coords <- c('x','y','z','c','cc')
 index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
-utils::globalVariables(c(".", "%>%"))
+
+## CRAN sometimes issues spurious warnings about undefined variables
+utils::globalVariables(c(".", "%>%","x","y","z","cc"))
 
 ##' cimg is a class for storing image or video/hyperspectral data.  It is designed to provide easy interaction with the CImg library, but in order to use it you need to be aware of how CImg wants its image data stored. 
 ##' Images have up to 4 dimensions, labelled x,y,z,c. x and y are the usual spatial dimensions, z is a depth dimension (which would correspond to time in a movie), and c is a colour dimension. Images are stored linearly in that order, starting from the top-left pixel and going along *rows* (scanline order).
