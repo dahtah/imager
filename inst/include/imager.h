@@ -9,6 +9,14 @@
 
 #include <R.h>
 #include <Rcpp.h>
+
+#define cimg_use_abort
+#ifdef cimg_use_openmp
+#define cimg_test_abort() if (!omp_get_thread_num()) Rcpp::checkUserInterrupt()
+#else
+#define cimg_test_abort() Rcpp::checkUserInterrupt()
+#endif // #ifdef cimg_use_openmp
+
 #include "CImg.h"
 
 #include "wrappers.h"
