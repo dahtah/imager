@@ -15,6 +15,7 @@
 #define cimg_test_abort() if (!omp_get_thread_num()) Rcpp::checkUserInterrupt()
 #else
 #define cimg_test_abort() Rcpp::checkUserInterrupt()
+#define cimg_test_abort2() Rcpp::checkUserInterrupt()
 #endif // #ifdef cimg_use_openmp
 
 #include "CImg.h"
