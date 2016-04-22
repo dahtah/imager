@@ -8,8 +8,9 @@
 #endif
 
 #include <R.h>
-#include "CImg.h"
 #include <Rcpp.h>
+#include "CImg.h"
+
 #include "wrappers.h"
 
 typedef cimg_library::CImg<double> CId;
