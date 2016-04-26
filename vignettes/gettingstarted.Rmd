@@ -15,7 +15,7 @@ vignette: >
   
 ```{r init,echo=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=TRUE, 
-               comment=NA, verbose=TRUE, fig.width=5, fig.height=5)
+               comment=NA, verbose=TRUE, fig.width=4, fig.height=4,dev='jpeg')
 ```
 imager contains a large array of functions for working with image data, with most of these functions coming from the CImg library by David Tschumperlé. This vignette is just a short tutorial, you'll find more information and examples on the website. Each function in the package is documented and comes with examples, so have a look at package documentation as well.
 
@@ -23,7 +23,7 @@ imager contains a large array of functions for working with image data, with mos
 
 imager comes with an example picture of boats. Let's have a look:
 
-```{r fig.width=5, fig.height=7,message=FALSE}
+```{r fig.width=4, fig.height=6,message=FALSE,dev='jpeg'}
 library(imager)
 plot(boats)
 ```
@@ -68,7 +68,7 @@ fpath <- system.file('extdata/parrots.png',package='imager')
 
 We're now ready to load the image:
 
-```{r fig.width=5, fig.height=5}
+```{r}
 parrots <- load.image(fpath)
 plot(parrots)
 ```
@@ -81,13 +81,13 @@ Histogram equalisation is a textbook example of a contrast-enhancing filter. It'
 
 Image histograms are just histogram of pixel values, which are of course pretty easy to obtain in R: 
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=4, fig.height=2.2}
 grayscale(boats) %>% hist(main="Luminance values in boats picture")
 ```
 
 Since images are stored essentially as arrays, here we're just using R's regular hist function, which treats our array as a vector of values. If we wanted to look only at the red channel, we could use:
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=4, fig.height=2.2}
 R(boats) %>% hist(main="Red channel values in boats picture")
 #Equivalently:
 #channel(boats,1) %>% hist(main="Red channel values in boats picture")
@@ -95,7 +95,7 @@ R(boats) %>% hist(main="Red channel values in boats picture")
 
 Another approach is to turn the image into a data.frame, and use ggplot to view all channels at once:
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=4, fig.height=2.2}
 library(ggplot2)
 bdf <- as.data.frame(boats)
 head(bdf,3)
@@ -107,7 +107,7 @@ What we immediately see from these histograms is that the middle values are in a
 
 As an illustration of what this does, see the following example:
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=4, fig.height=2.2}
 x <- rnorm(100)
 layout(t(1:2))
 hist(x,main="Histogram of x")
@@ -118,7 +118,7 @@ hist(f(x),main="Histogram of ecdf(x)")
 
 We can apply it directly to images as follows: 
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=4, fig.height=2.2}
 boats.g <- grayscale(boats)
 f <- ecdf(boats.g)
 plot(f,main="Empirical CDF of luminance values")
@@ -128,7 +128,7 @@ Again we're using a standard R function (ecdf), which returns another function c
 
 If we run the pixel data back through f we get a flat histogram:
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=4, fig.height=2.2}
 f(boats.g) %>% hist(main="Transformed luminance values")
 ```
 
@@ -140,13 +140,13 @@ f(boats.g) %>% str
 
 If we wish to get an image back we can just use as.cimg:
 
-```{r fig.width=5, fig.height=7}
+```{r fig.width=4, fig.height=6}
 f(boats.g) %>% as.cimg(dim=dim(boats.g)) %>% plot(main="With histogram equalisation")
 ```
 
 So far we've run this on a grayscale image. If we want to do this on RGB data, we need to run the equalisation separately in each channel. imager enables this using its split-apply-combine tricks:
 
-```{r fig.width=5, fig.height=7}
+```{r fig.width=4, fig.height=6}
 #Hist. equalisation for grayscale
 hist.eq <- function(im) as.cimg(ecdf(im)(im),dim=dim(im))
 
@@ -165,7 +165,7 @@ iiply(boats,"c",hist.eq)
 
 We can use it to check that all channels have been properly normalised:
 
-```{r fig.width=5, fig.height=2.5}
+```{r fig.width=4, fig.height=2.3}
 iiply(boats,"c",hist.eq) %>% as.data.frame %>% ggplot(aes(value))+geom_histogram(bins=30)+facet_wrap(~ cc)
 ```
 
@@ -187,8 +187,8 @@ in the first panel and:
 $$ \frac{\partial}{\partial y}I $$
 in the second.
 
-The magnitude of the gradients thus tell us how fast the image changes around a certain point. Image edges correspond to abrubt changes in the image, and so it's reasonable to estimate their location based on the norm of the gradient:
-$$ \sqrt \left( \left( \frac{\partial}{\partial x}I \right)^2 +\left( \frac{\partial}{\partial y}I \right)^2 \right) $$
+The magnitude of the gradients thus tell us how fast the image changes around a certain point. Image edges correspond to abrubt changes in the image, and so it's reasonable to estimate their location based on the norm of the gradient
+$$ \sqrt{\left(\frac{\partial}{\partial x}I\right)^{2}+\left(\frac{\partial}{\partial y}I\right)^{2}} $$
 
 In imager:
 
@@ -292,7 +292,7 @@ plot(hub,main="Hubble Deep Field")
 
 Before we can work with the real image we'll try synthetic data. Here's how to generate an image with a few randomly placed blobs:
 
-```{r fig.width=10}
+```{r fig.width=8,fig.height=4}
 layout(t(1:2))
 set.seed(2)
 points <- rbinom(100*100,1,.001) %>% as.cimg
@@ -453,7 +453,7 @@ plot(i.max,main="Index of the point-wise maximum across scales")
 
 So far this isn't too informative. It will be once we have labelled regions:
 
-```{r fig.height=10,fig.width=10}
+```{r fig.height=7,fig.width=8}
 #Get a data.frame of labelled regions
 labs <- d.max %>% threshold("96%") %>% label %>% as.data.frame
 #Add scale indices
