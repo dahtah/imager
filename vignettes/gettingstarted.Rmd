@@ -14,7 +14,7 @@ vignette: >
 ---
   
 ```{r init,echo=FALSE}
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=TRUE, 
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE, 
                comment=NA, verbose=TRUE, fig.width=4, fig.height=4,dev='jpeg')
 ```
 imager contains a large array of functions for working with image data, with most of these functions coming from the CImg library by David Tschumperlé. This vignette is just a short tutorial, you'll find more information and examples on the website. Each function in the package is documented and comes with examples, so have a look at package documentation as well.
@@ -472,14 +472,14 @@ The four dimensions are labelled x,y,z,c. The first two are the usual spatial di
 If you only have grayscale images then the two extra dimensions are obviously pointless, but they won't bother you much. Your objects will still be officially 4 dimensional, with two trailing flat dimensions.
 Pixels are stored in the following manner: we scan the image beginning at the upper-left corner, along the x axis. Once we hit the end of the scanline, we move to the next line. Once we hit the end of the screen, we move to the next frame (increasing z) and repeat the process. If we have several colour channels, then once we're done with the first colour channel we move to the next one.
 All in all the different dimensions are represented in the x,y,z,c order. In R the object is represented as a 4D array. Here's an example with a grayscale image:
-```{r dim_gray,cache=TRUE}
+```{r dim_gray}
 parrots <- load.example("parrots")
 gray.parrots <- grayscale(parrots)
 dim(gray.parrots)
 ```
 
 and a colour image:
-```{r dim_colour,cache=TRUE}
+```{r dim_colour}
 dim(parrots)
 ```
 
