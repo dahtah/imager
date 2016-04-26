@@ -11,7 +11,7 @@ Imager is now on CRAN, so
 
 should do the trick. You may also want to install ImageMagick and ffmpeg, see "External Dependencies" below. 
 
-The version of CRAN will often lag the one on github. If you'd like to install the latest and newest version, you'll have to build the package from source. 
+The version of CRAN will often lag the one on github. If you'd like to install the latest version, you'll have to build the package from source. 
 
 Install the devtools package if you haven't already. Run:
 
