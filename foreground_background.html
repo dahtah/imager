@@ -72,8 +72,8 @@ img {
 <pre class="r"><code>grad &lt;- imgradient(parrots,&quot;xy&quot;)
 str(grad)</code></pre>
 <pre><code>## List of 2
-##  $ x: cimg [1:768, 1:512, 1, 1:3] 0.354 1.561 0.561 -0.439 0.646 ...
-##  $ y: cimg [1:768, 1:512, 1, 1:3] 2.854 2.354 1.646 0.854 0.732 ...</code></pre>
+##  $ x: cimg [1:768, 1:512, 1, 1:3] 0.00139 0.00612 0.0022 -0.00172 0.00254 ...
+##  $ y: cimg [1:768, 1:512, 1, 1:3] 0.01119 0.00923 0.00646 0.00335 0.00287 ...</code></pre>
 <pre class="r"><code>layout(t(1:2))
 plot(grad$x,main=&quot;Gradient along x&quot;)
 plot(grad$y,main=&quot;Gradient along y&quot;)</code></pre>

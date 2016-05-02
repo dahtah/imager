@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Simon Barthelmé" />
+
+<meta name="date" content="2016-04-26" />
+
+<title>Getting started with imager</title>
+
+<script src="gettingstarted_files/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="gettingstarted_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
+<script src="gettingstarted_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="gettingstarted_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="gettingstarted_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="gettingstarted_files/highlight/default.css"
+      type="text/css" />
+<script src="gettingstarted_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div id="header">
+<h1 class="title">Getting started with imager</h1>
+<h4 class="author"><em>Simon Barthelmé</em></h4>
+<h4 class="date"><em>2016-04-26</em></h4>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#plotting-and-loading-images"><span class="toc-section-number">1</span> Plotting and loading images</a></li>
+<li><a href="#example-1-histogram-equalisation"><span class="toc-section-number">2</span> Example 1: Histogram equalisation</a><ul>
+<li><a href="#example-2-edge-detection"><span class="toc-section-number">2.1</span> Example 2: Edge detection</a></li>
+</ul></li>
+<li><a href="#imager-and-ggplot2"><span class="toc-section-number">3</span> imager and ggplot2</a></li>
+<li><a href="#blob-detectionextraction-of-local-maxima-denoising-scale-space"><span class="toc-section-number">4</span> Blob detection/extraction of local maxima, denoising, scale-space</a></li>
+<li><a href="#how-images-are-represented"><span class="toc-section-number">5</span> How images are represented</a></li>
+<li><a href="#imager-functions-by-theme"><span class="toc-section-number">6</span> imager functions by theme</a><ul>
+<li><a href="#loading-saving-reading-image-information"><span class="toc-section-number">6.1</span> Loading, saving, reading image information</a></li>
+<li><a href="#accessing-image-data-converting-to-and-from-other-data-structures"><span class="toc-section-number">6.2</span> Accessing image data, converting to and from other data structures</a><ul>
+<li><a href="#conversions"><span class="toc-section-number">6.2.1</span> Conversions</a></li>
+<li><a href="#image-parts"><span class="toc-section-number">6.2.2</span> Image parts</a></li>
+<li><a href="#neighbourhoods"><span class="toc-section-number">6.2.3</span> Neighbourhoods</a></li>
+<li><a href="#interpolation"><span class="toc-section-number">6.2.4</span> Interpolation</a></li>
+</ul></li>
+<li><a href="#generating-images"><span class="toc-section-number">6.3</span> Generating images</a></li>
+<li><a href="#modifying-images"><span class="toc-section-number">6.4</span> Modifying images</a></li>
+<li><a href="#filtering-and-ffts"><span class="toc-section-number">6.5</span> Filtering and FFTs</a></li>
+<li><a href="#morphology"><span class="toc-section-number">6.6</span> Morphology</a></li>
+<li><a href="#colour-spaces"><span class="toc-section-number">6.7</span> Colour spaces</a></li>
+<li><a href="#split-apply-combine"><span class="toc-section-number">6.8</span> Split-apply-combine</a></li>
+<li><a href="#reductions"><span class="toc-section-number">6.9</span> Reductions</a></li>
+<li><a href="#misc."><span class="toc-section-number">6.10</span> Misc.</a></li>
+</ul></li>
+<li><a href="#learning-more"><span class="toc-section-number">7</span> Learning more</a></li>
+</ul>
+</div>
+
+<p>imager contains a large array of functions for working with image data, with most of these functions coming from the CImg library by David Tschumperlé. This vignette is just a short tutorial, you’ll find more information and examples on the website. Each function in the package is documented and comes with examples, so have a look at package documentation as well.</p>
+<div id="plotting-and-loading-images" class="section level1">
+<h1><span class="header-section-number">1</span> Plotting and loading images</h1>
+<p>imager comes with an example picture of boats. Let’s have a look:</p>
+<pre class="r"><code>library(imager)
+plot(boats)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-1-1.jpeg" title="" alt="" width="384" /></p>
+<p>Note the y axis running downwards: the origin is at the top-left corner, which is the traditional coordinate system for images. imager uses this coordinate system consistently. Image data has class “cimg”:</p>
+<pre class="r"><code>class(boats)</code></pre>
+<pre><code>[1] &quot;cimg&quot;</code></pre>
+<p>and we can get some basic info by typing:</p>
+<pre class="r"><code>boats</code></pre>
+<pre><code>Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 3 </code></pre>
+<p>Width and height should be self-explanatory. Depth is how many frames the image has: if depth &gt; 1 then the image is actually a video. Boats has three colour channels, the usual RGB. A grayscale version of boats would have only one:</p>
+<pre class="r"><code>grayscale(boats)</code></pre>
+<pre><code>Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 </code></pre>
+<p>An object of class cimg is actually just a thin interface over a regular 4D array:</p>
+<pre class="r"><code>dim(boats)</code></pre>
+<pre><code>[1] 256 384   1   3</code></pre>
+<p>We’ll see below how images are stored exactly. For most intents and purposes, they behave like regular arrays, meaning the usual arithmetic operations work:</p>
+<pre class="r"><code>log(boats)+3*sqrt(boats)</code></pre>
+<pre><code>Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 3 </code></pre>
+<pre class="r"><code>mean(boats)</code></pre>
+<pre><code>[1] 129.7711</code></pre>
+<pre class="r"><code>sd(boats)</code></pre>
+<pre><code>[1] 36.92322</code></pre>
+<p>The next thing you’ll probably want to be doing is to load an image, which can be done using load.image. imager ships with another example image, which is stored somewhere in your R library. We find out where using system.file</p>
+<pre class="r"><code>fpath &lt;- system.file(&#39;extdata/parrots.png&#39;,package=&#39;imager&#39;)</code></pre>
+<p>We’re now ready to load the image:</p>
+<pre class="r"><code>parrots &lt;- load.image(fpath)
+plot(parrots)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-8-1.jpeg" title="" alt="" width="384" /></p>
+<p>imager supports JPEG, PNG and BMP natively - for other formats you’ll need to install ImageMagick.</p>
+</div>
+<div id="example-1-histogram-equalisation" class="section level1">
+<h1><span class="header-section-number">2</span> Example 1: Histogram equalisation</h1>
+<p>Histogram equalisation is a textbook example of a contrast-enhancing filter. It’s also a good topic for an introduction to what you can do with imager.</p>
+<p>Image histograms are just histogram of pixel values, which are of course pretty easy to obtain in R:</p>
+<pre class="r"><code>grayscale(boats) %&gt;% hist(main=&quot;Luminance values in boats picture&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-9-1.jpeg" title="" alt="" width="384" /></p>
+<p>Since images are stored essentially as arrays, here we’re just using R’s regular hist function, which treats our array as a vector of values. If we wanted to look only at the red channel, we could use:</p>
+<pre class="r"><code>R(boats) %&gt;% hist(main=&quot;Red channel values in boats picture&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-10-1.jpeg" title="" alt="" width="384" /></p>
+<pre class="r"><code>#Equivalently:
+#channel(boats,1) %&gt;% hist(main=&quot;Red channel values in boats picture&quot;)</code></pre>
+<p>Another approach is to turn the image into a data.frame, and use ggplot to view all channels at once:</p>
+<pre class="r"><code>library(ggplot2)
+bdf &lt;- as.data.frame(boats)
+head(bdf,3)</code></pre>
+<pre><code>  x y cc    value
+1 1 1  1 99.00000
+2 2 1  1 98.39513
+3 3 1  1 98.15985</code></pre>
+<pre class="r"><code>bdf &lt;- plyr::mutate(bdf,channel=factor(cc,labels=c(&#39;R&#39;,&#39;G&#39;,&#39;B&#39;)))
+ggplot(bdf,aes(value,col=channel))+geom_histogram(bins=30)+facet_wrap(~ channel)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-11-1.jpeg" title="" alt="" width="384" /></p>
+<p>What we immediately see from these histograms is that the middle values are in a sense over-used: there’s very few pixels with high or low values. Histogram equalisation solves the problem by making histograms flat: each pixel’s value is replaced by its <em>rank</em>, which is equivalent to running the data through their empirical cdf.</p>
+<p>As an illustration of what this does, see the following example:</p>
+<pre class="r"><code>x &lt;- rnorm(100)
+layout(t(1:2))
+hist(x,main=&quot;Histogram of x&quot;)
+f &lt;- ecdf(x)
+hist(f(x),main=&quot;Histogram of ecdf(x)&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-12-1.jpeg" title="" alt="" width="384" /></p>
+<p>We can apply it directly to images as follows:</p>
+<pre class="r"><code>boats.g &lt;- grayscale(boats)
+f &lt;- ecdf(boats.g)
+plot(f,main=&quot;Empirical CDF of luminance values&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-13-1.jpeg" title="" alt="" width="384" /></p>
+<p>Again we’re using a standard R function (ecdf), which returns another function corresponding to the ECDF of luminance values in boats.g.</p>
+<p>If we run the pixel data back through f we get a flat histogram:</p>
+<pre class="r"><code>f(boats.g) %&gt;% hist(main=&quot;Transformed luminance values&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-14-1.jpeg" title="" alt="" width="384" /></p>
+<p>Now the only problem is that ecdf is base R, and unaware of our cimg objects. The function f took an image and returned a vector:</p>
+<pre class="r"><code>f(boats.g) %&gt;% str</code></pre>
+<pre><code> num [1:98304] 0.175 0.169 0.168 0.168 0.17 ...</code></pre>
+<p>If we wish to get an image back we can just use as.cimg:</p>
+<pre class="r"><code>f(boats.g) %&gt;% as.cimg(dim=dim(boats.g)) %&gt;% plot(main=&quot;With histogram equalisation&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-16-1.jpeg" title="" alt="" width="384" /></p>
+<p>So far we’ve run this on a grayscale image. If we want to do this on RGB data, we need to run the equalisation separately in each channel. imager enables this using its split-apply-combine tricks:</p>
+<pre class="r"><code>#Hist. equalisation for grayscale
+hist.eq &lt;- function(im) as.cimg(ecdf(im)(im),dim=dim(im))
+
+#Split across colour channels, 
+cn &lt;- imsplit(boats,&quot;c&quot;)
+cn #we now have a list of images</code></pre>
+<pre><code>$`c = 1`
+Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 
+
+$`c = 2`
+Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 
+
+$`c = 3`
+Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 </code></pre>
+<pre class="r"><code>cn.eq &lt;- llply(cn,hist.eq) #run hist.eq on each
+imappend(cn.eq,&quot;c&quot;) %&gt;% plot(main=&quot;All channels equalised&quot;) #recombine and plot</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-17-1.jpeg" title="" alt="" width="384" /></p>
+<p>There’s even a one-liner to do this:</p>
+<pre class="r"><code>iiply(boats,&quot;c&quot;,hist.eq) </code></pre>
+<pre><code>Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 3 </code></pre>
+<p>We can use it to check that all channels have been properly normalised:</p>
+<pre class="r"><code>iiply(boats,&quot;c&quot;,hist.eq) %&gt;% as.data.frame %&gt;% ggplot(aes(value))+geom_histogram(bins=30)+facet_wrap(~ cc)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-19-1.jpeg" title="" alt="" width="384" /></p>
+<p>Our trick worked.</p>
+<div id="example-2-edge-detection" class="section level2">
+<h2><span class="header-section-number">2.1</span> Example 2: Edge detection</h2>
+<p>Edge detection relies on image gradients, which imager returns via:</p>
+<pre class="r"><code>layout(t(1:2))
+imgradient(boats.g,&quot;x&quot;) %&gt;% plot(main=&quot;Gradient along x&quot;)
+imgradient(boats.g,&quot;y&quot;) %&gt;% plot(main=&quot;Gradient along y&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-20-1.jpeg" title="" alt="" width="384" /></p>
+<p>To be more specific, noting <span class="math">\(I(x,y)\)</span> the image intensity at location <span class="math">\(x,y\)</span>, what imager returns is an approximation of: <span class="math">\[ \frac{\partial}{\partial x}I \]</span> in the first panel and: <span class="math">\[ \frac{\partial}{\partial y}I \]</span> in the second.</p>
+<p>The magnitude of the gradients thus tell us how fast the image changes around a certain point. Image edges correspond to abrubt changes in the image, and so it’s reasonable to estimate their location based on the norm of the gradient <span class="math">\[ \sqrt{\left(\frac{\partial}{\partial x}I\right)^{2}+\left(\frac{\partial}{\partial y}I\right)^{2}} \]</span></p>
+<p>In imager:</p>
+<pre class="r"><code>dx &lt;- imgradient(boats.g,&quot;x&quot;)
+dy &lt;- imgradient(boats.g,&quot;y&quot;)
+grad.mag &lt;- sqrt(dx^2+dy^2)
+plot(grad.mag,main=&quot;Gradient magnitude&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-21-1.jpeg" title="" alt="" width="384" /></p>
+<p>Here’s a handy shortcut:</p>
+<pre class="r"><code>imgradient(boats.g,&quot;xy&quot;) %&gt;% enorm %&gt;% plot(main=&quot;Gradient magnitude (again)&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-22-1.jpeg" title="" alt="" width="384" /></p>
+<p>The first function returns a list of images:</p>
+<pre class="r"><code>l &lt;- imgradient(boats.g,&quot;xy&quot;)
+str(l)</code></pre>
+<pre><code>List of 2
+ $ x: cimg [1:256, 1:384, 1, 1] 0.002784 0.002879 -0.000485 -0.000331 0.000134 ...
+ $ y: cimg [1:256, 1:384, 1, 1] 0.00483 0.011 0.01502 0.01439 0.01358 ...</code></pre>
+<p>And the second takes a list of images and computes the Euclidean norm pixel-wise, i.e.:</p>
+<pre class="r"><code>enorm(list(3,2))</code></pre>
+<pre><code>[1] 3.605551</code></pre>
+<pre class="r"><code>sqrt(3^2+2^2)</code></pre>
+<pre><code>[1] 3.605551</code></pre>
+<p>enorm is an example of a “reduction” function. They’re useful for combining pixel values over several images. We’ll see another example below when we look at blob detection.</p>
+</div>
+</div>
+<div id="imager-and-ggplot2" class="section level1">
+<h1><span class="header-section-number">3</span> imager and ggplot2</h1>
+<p>To plot your image data using ggplot2, use as.data.frame and geom_raster:</p>
+<pre class="r"><code>df &lt;- grayscale(boats) %&gt;% as.data.frame
+p &lt;- ggplot(df,aes(x,y))+geom_raster(aes(fill=value))
+p</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-25-1.jpeg" title="" alt="" width="384" /></p>
+<p>We’re not quite there, mainly because or y axis is reversed. Here’s a fix:</p>
+<pre class="r"><code>p + scale_y_continuous(trans=scales::reverse_trans())</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-26-1.jpeg" title="" alt="" width="384" /></p>
+<p>The grey margin around the plot should be eliminated as well:</p>
+<pre class="r"><code>p &lt;- p+scale_x_continuous(expand=c(0,0))+scale_y_continuous(expand=c(0,0),trans=scales::reverse_trans())
+p</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-27-1.jpeg" title="" alt="" width="384" /></p>
+<p>Finally, ggplot has a blue colour scale by default, but we might want to keep our original grays:</p>
+<pre class="r"><code>p+scale_fill_gradient(low=&quot;black&quot;,high=&quot;white&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-28-1.jpeg" title="" alt="" width="384" /></p>
+<p>Colour images are a bit trickier. We could plot each channel separately:</p>
+<pre class="r"><code>df &lt;- as.data.frame(boats) 
+p &lt;- ggplot(df,aes(x,y))+geom_raster(aes(fill=value))+facet_wrap(~ cc)
+p+scale_y_reverse()</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-29-1.jpeg" title="" alt="" width="384" /></p>
+<p>Plotting channels separately may be useful on occasion, but usually we’d want the original colours. We can tell as.data.frame to return a “wide” format:</p>
+<pre class="r"><code>as.data.frame(boats,wide=&quot;c&quot;) %&gt;% head</code></pre>
+<pre><code>  x y      c.1      c.2      c.3
+1 1 1 99.00000 99.00000 99.00000
+2 2 1 98.39513 98.39513 98.39513
+3 3 1 98.15985 98.15985 98.15985
+4 4 1 98.23828 98.23828 98.23828
+5 5 1 98.43990 98.43990 98.43990
+6 6 1 98.31671 98.31671 98.31671</code></pre>
+<p>The three colour channels are now stacked along columns, which lets us do the following:</p>
+<pre class="r"><code>df &lt;- as.data.frame(boats,wide=&quot;c&quot;) %&gt;% mutate(rgb.val=rgb(c.1/255,c.2/255,c.3/255))
+head(df,3)</code></pre>
+<pre><code>  x y      c.1      c.2      c.3 rgb.val
+1 1 1 99.00000 99.00000 99.00000 #636363
+2 2 1 98.39513 98.39513 98.39513 #626262
+3 3 1 98.15985 98.15985 98.15985 #626262</code></pre>
+<p>We can now plot our image using ggplot’s identity scale:</p>
+<pre class="r"><code>p &lt;- ggplot(df,aes(x,y))+geom_raster(aes(fill=rgb.val))+scale_fill_identity()
+p+scale_y_reverse()</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-32-1.jpeg" title="" alt="" width="384" /></p>
+<p>We’ll see more interesting uses for ggplot2 later.</p>
+</div>
+<div id="blob-detectionextraction-of-local-maxima-denoising-scale-space" class="section level1">
+<h1><span class="header-section-number">4</span> Blob detection/extraction of local maxima, denoising, scale-space</h1>
+<p>Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for <a href="http://scikit-image.org/docs/dev/auto_examples/plot_blob.html">scikit-image</a>):</p>
+<pre class="r"><code>hub &lt;- load.example(&quot;hubble&quot;) %&gt;% grayscale
+plot(hub,main=&quot;Hubble Deep Field&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-33-1.jpeg" title="" alt="" width="384" /></p>
+<p>Before we can work with the real image we’ll try synthetic data. Here’s how to generate an image with a few randomly placed blobs:</p>
+<pre class="r"><code>layout(t(1:2))
+set.seed(2)
+points &lt;- rbinom(100*100,1,.001) %&gt;% as.cimg
+blobs &lt;- isoblur(points,5)
+plot(points,main=&quot;Random points&quot;)
+plot(blobs,main=&quot;Blobs&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-34-1.jpeg" title="" alt="" width="768" /></p>
+<p>blobs are obtained from random points convolved with a blur kernel of size 5 pixels. Note the shortcut in:</p>
+<pre class="r"><code>rbinom(100*100,1,.001) %&gt;% as.cimg</code></pre>
+<pre><code>Warning in as.cimg.vector(obj, ...): Guessing input is a square 2D image</code></pre>
+<pre><code>Image. Width: 100 pix Height: 100 pix Depth: 1 Colour channels: 1 </code></pre>
+<p>where a vector of length 100^2 is turned into an image of dimension 100x100. That’s just a guess on imager’s part and it’s reported with a warning (we could be dealing with an image of dimension 10x1000, for instance). To get rid of the warning you have to be explicit about the dimensions you want:</p>
+<pre class="r"><code>rbinom(100*100,1,.001) %&gt;% as.cimg(x=100,y=100)</code></pre>
+<pre><code>Image. Width: 100 pix Height: 100 pix Depth: 1 Colour channels: 1 </code></pre>
+<p>Suppose our task is to find the location of the center of the blobs. There are several way of doing that, but one that’s convenient is to go through image hessians. Blobs are local maxima in the image, and local maxima are usually associated with a hessian matrix that’s positive definite (the well-known second-order optimality condition). A matrix that’s positive definite has positive determinant, which we can compute via:</p>
+<p><span class="math">\[ \mathrm{det}(H) = I_{xx} \times I_{yy} - I_{xy}^2 \]</span></p>
+<p>where <span class="math">\(I_{xx}\)</span> is the second derivative of the image along x, etc. See wikipedia on <a href="https://en.wikipedia.org/wiki/Blob_detection">blob detection</a> for more.</p>
+<p>In imager we can use:</p>
+<pre class="r"><code>imhessian(blobs)</code></pre>
+<pre><code>$xx
+Image. Width: 100 pix Height: 100 pix Depth: 1 Colour channels: 1 
+
+$xy
+Image. Width: 100 pix Height: 100 pix Depth: 1 Colour channels: 1 
+
+$yy
+Image. Width: 100 pix Height: 100 pix Depth: 1 Colour channels: 1 </code></pre>
+<p>to get the derivatives we need, and:</p>
+<pre class="r"><code>Hdet &lt;- with(imhessian(blobs),(xx*yy - xy^2))
+plot(Hdet,main=&quot;Determinant of Hessian&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-38-1.jpeg" title="" alt="" width="384" /></p>
+<p>To get only the pixels with the highest values, we threshold the image:</p>
+<pre class="r"><code>threshold(Hdet,&quot;99%&quot;) %&gt;% plot(main=&quot;Determinant: 1% highest values&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-39-1.jpeg" title="" alt="" width="384" /></p>
+<p>The thresholded image now contains discrete image regions, and if we can compute the center of these regions we’ll have our locations. The first step is to label these regions:</p>
+<pre class="r"><code>lab &lt;- threshold(Hdet,&quot;99%&quot;) %&gt;% label
+plot(lab,main=&quot;Labelled regions&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-40-1.jpeg" title="" alt="" width="384" /></p>
+<p>label is a utility that fills each white region with a unique pixel value (the background stays at 0). We can extract the labelled regions in the form of a data.frame:</p>
+<pre class="r"><code>df &lt;- as.data.frame(lab) %&gt;% subset(value&gt;0)
+head(df,3)</code></pre>
+<pre><code>     x y value
+528 28 6     1
+627 27 7     1
+628 28 7     1</code></pre>
+<pre class="r"><code>unique(df$value) #10 regions</code></pre>
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+<p>And now all we need to do is to split the data.frame into regions, and compute the mean coordinate values in each. We’ll show two solutions, one using plyr, the other using the more recent dplyr variant:</p>
+<pre class="r"><code>centers &lt;- ddply(df,.(value),summarise,mx=mean(x),my=mean(y))
+centers &lt;- dplyr::group_by(df,value) %&gt;% dplyr::summarise(mx=mean(x),my=mean(y))</code></pre>
+<p>As an exercise you can try extracting other summary values for the regions (area, for example, or aspect ratio).</p>
+<p>We now overlay the results on the original image:</p>
+<pre class="r"><code>plot(blobs)
+with(centers,points(mx,my,col=&quot;red&quot;))</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-43-1.jpeg" title="" alt="" width="384" /></p>
+<p>That’s pretty good, but to make things a bit harder we’ll add noise to the image:</p>
+<pre class="r"><code>nblobs &lt;- blobs+.001*imnoise(dim=dim(blobs))
+plot(nblobs,main=&quot;Noisy blobs&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-44-1.jpeg" title="" alt="" width="384" /></p>
+<p>If we try the same thing again it fails completely:</p>
+<pre class="r"><code>get.centers &lt;- function(im,thr=&quot;99%&quot;)
+{
+    dt &lt;- imhessian(im) %$% { xx*yy - xy^2 } %&gt;% threshold(thr) %&gt;% label
+    as.data.frame(dt) %&gt;% subset(value&gt;0) %&gt;% dplyr::group_by(value) %&gt;% dplyr::summarise(mx=mean(x),my=mean(y))
+}
+
+plot(nblobs)
+get.centers(nblobs,&quot;99%&quot;) %$% points(mx,my,col=&quot;red&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-45-1.jpeg" title="" alt="" width="384" /></p>
+<p>We need an extra denoising step. Simple blurring will do here:</p>
+<pre class="r"><code>nblobs.denoised &lt;- isoblur(nblobs,2)
+plot(nblobs.denoised)
+get.centers(nblobs.denoised,&quot;99%&quot;) %$% points(mx,my,col=&quot;red&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-46-1.jpeg" title="" alt="" width="384" /></p>
+<p>We’re ready to move on to the Hubble image. Here’s a first naive attempt:</p>
+<pre class="r"><code>plot(hub)
+get.centers(hub,&quot;99.8%&quot;) %$% points(mx,my,col=&quot;red&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-47-1.jpeg" title="" alt="" width="384" /></p>
+<p>Our detector is mostly picking up small objects. Adding blur results in:</p>
+<pre class="r"><code>plot(hub)
+isoblur(hub,5) %&gt;% get.centers(&quot;99.8%&quot;) %$% points(mx,my,col=&quot;red&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-48-1.jpeg" title="" alt="" width="384" /></p>
+<p>and the detector is now picking up large objects only. What if we want to detect objects at various scale? The solution is to aggregate the results over scale, which is what multiscale approaches do.</p>
+<pre class="r"><code> #Compute determinant at scale &quot;scale&quot;. 
+hessdet &lt;- function(im,scale=1) isoblur(im,scale) %&gt;% imhessian %$% { scale^2*(xx*yy - xy^2) }
+#Note the scaling (scale^2) factor in the determinant
+plot(hessdet(hub,1),main=&quot;Determinant of the Hessian at scale 1&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-49-1.jpeg" title="" alt="" width="384" /></p>
+<p>To view the results at different scales, we can use ggplot:</p>
+<pre class="r"><code>#Get a data.frame with results at scale 2, 3 and 4
+dat &lt;- ldply(c(2,3,4),function(scale) hessdet(hub,scale) %&gt;% as.data.frame %&gt;% mutate(scale=scale))
+p &lt;- ggplot(dat,aes(x,y))+geom_raster(aes(fill=value))+facet_wrap(~ scale)
+p+scale_x_continuous(expand=c(0,0))+scale_y_continuous(expand=c(0,0),trans=scales::reverse_trans())</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-50-1.jpeg" title="" alt="" width="672" /></p>
+<p>Scale-space theory suggests that we look for blobs <a href="https://en.wikipedia.org/wiki/Blob_detection">across scales</a>. It’s easy:</p>
+<pre class="r"><code>scales &lt;- seq(2,20,l=10)
+
+d.max &lt;- llply(scales,function(scale) hessdet(hub,scale)) %&gt;% parmax
+plot(d.max,main=&quot;Point-wise maximum across scales&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-51-1.jpeg" title="" alt="" width="384" /></p>
+<p>parmax is another example of a reduction function, one that here takes the maximum value for each pixel across all scales. To find out which scale had the maximum value point-wise, we can use which.parmax:</p>
+<pre class="r"><code>i.max &lt;- llply(scales,function(scale) hessdet(hub,scale)) %&gt;% which.parmax
+plot(i.max,main=&quot;Index of the point-wise maximum across scales&quot;)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-52-1.jpeg" title="" alt="" width="384" /></p>
+<p>So far this isn’t too informative. It will be once we have labelled regions:</p>
+<pre class="r"><code>#Get a data.frame of labelled regions
+labs &lt;- d.max %&gt;% threshold(&quot;96%&quot;) %&gt;% label %&gt;% as.data.frame
+#Add scale indices
+labs &lt;- mutate(labs,index=as.data.frame(i.max)$value)
+regs &lt;- dplyr::group_by(labs,value) %&gt;% dplyr::summarise(mx=mean(x),my=mean(y),scale.index=mean(index))
+p &lt;- ggplot(as.data.frame(hub),aes(x,y))+geom_raster(aes(fill=value))+geom_point(data=regs,aes(mx,my,size=scale.index),pch=2,col=&quot;red&quot;)
+p+scale_fill_gradient(low=&quot;black&quot;,high=&quot;white&quot;)+scale_x_continuous(expand=c(0,0))+scale_y_continuous(expand=c(0,0),trans=scales::reverse_trans())</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-53-1.jpeg" title="" alt="" width="768" /></p>
+<p>The results aren’t perfect - there are spurious points (especially along the seamlines), but it’s not a bad start given the small amount of code. Note how the scale index follows the scale of the actual objects.</p>
+</div>
+<div id="how-images-are-represented" class="section level1">
+<h1><span class="header-section-number">5</span> How images are represented</h1>
+<p>It’s important to know how imager stores image data, if only to understand the occasional error messages. Images are represented as 4D numeric arrays, which is consistent with CImg’s storage standard (it is unfortunately inconsistent with other R libraries, like spatstat, but converting between representations is easy). The four dimensions are labelled x,y,z,c. The first two are the usual spatial dimensions, the third one will usually correspond to depth or time, and the fourth one is colour. Remember the order, it will be used consistently in imager. If you only have grayscale images then the two extra dimensions are obviously pointless, but they won’t bother you much. Your objects will still be officially 4 dimensional, with two trailing flat dimensions. Pixels are stored in the following manner: we scan the image beginning at the upper-left corner, along the x axis. Once we hit the end of the scanline, we move to the next line. Once we hit the end of the screen, we move to the next frame (increasing z) and repeat the process. If we have several colour channels, then once we’re done with the first colour channel we move to the next one. All in all the different dimensions are represented in the x,y,z,c order. In R the object is represented as a 4D array. Here’s an example with a grayscale image:</p>
+<pre class="r"><code>parrots &lt;- load.example(&quot;parrots&quot;)
+gray.parrots &lt;- grayscale(parrots)
+dim(gray.parrots)</code></pre>
+<pre><code>[1] 768 512   1   1</code></pre>
+<p>and a colour image:</p>
+<pre class="r"><code>dim(parrots)</code></pre>
+<pre><code>[1] 768 512   1   3</code></pre>
+<p>In a similar vein, a 400x400 colour video of 50 frames will have dimension 400x400x50x3 (which is of course fairly large, beware memory issues when working with videos).</p>
+<p>In order to save you some time, most functions try to have reasonable defaults so that you don’t have to specify all dimensions if you’re only working with a grayscale picture. For example, you can use the array subset operator as if you only had two dimensions:</p>
+<pre class="r"><code>im &lt;- imfill(10,10) 
+dim(im)</code></pre>
+<pre><code>[1] 10 10  1  1</code></pre>
+<pre class="r"><code>im[,1] &lt;- 1:10 #Change the first *row* in the image - dimensions are x,y,z,c
+im[,1,1,1] &lt;- 1:10 #Same thing, more verbose
+plot(im)</code></pre>
+<p><img src="gettingstarted_files/figure-html/unnamed-chunk-54-1.jpeg" title="" alt="" width="384" /></p>
+<p>Other functions will try to guess what sort of an image you want:</p>
+<pre class="r"><code>as.cimg(1:9) #Guesses you want a 3x3 image</code></pre>
+<pre><code>Image. Width: 3 pix Height: 3 pix Depth: 1 Colour channels: 1 </code></pre>
+<pre class="r"><code>as.cimg(1:10) #Ambiguous, issues an error</code></pre>
+<pre><code>Error in as.cimg.vector(obj, ...): Please provide image dimensions</code></pre>
+<pre class="r"><code>as.cimg(array(1,c(10,10))) #Assumes it&#39;s a grayscale image you want</code></pre>
+<pre><code>Image. Width: 10 pix Height: 10 pix Depth: 1 Colour channels: 1 </code></pre>
+<pre class="r"><code>as.cimg(array(1:9,c(10,10,3))) #Assumes it&#39;s a colour image (last dimension 3)</code></pre>
+<pre><code>Image. Width: 10 pix Height: 10 pix Depth: 1 Colour channels: 3 </code></pre>
+<pre class="r"><code>as.cimg(array(1:9,c(10,10,4))) #Assumes it&#39;s a grayscale video with 4 frames (last dimension != 3)</code></pre>
+<pre><code>Image. Width: 10 pix Height: 10 pix Depth: 4 Colour channels: 1 </code></pre>
+</div>
+<div id="imager-functions-by-theme" class="section level1">
+<h1><span class="header-section-number">6</span> imager functions by theme</h1>
+<p>All functions are documented.</p>
+<div id="loading-saving-reading-image-information" class="section level2">
+<h2><span class="header-section-number">6.1</span> Loading, saving, reading image information</h2>
+<ul>
+<li>load.image,save.image,iminfo</li>
+<li>plot.cimg, display, display_list, play, renorm</li>
+<li>width, height, depth, spectrum,nPix</li>
+</ul>
+</div>
+<div id="accessing-image-data-converting-to-and-from-other-data-structures" class="section level2">
+<h2><span class="header-section-number">6.2</span> Accessing image data, converting to and from other data structures</h2>
+<div id="conversions" class="section level3">
+<h3><span class="header-section-number">6.2.1</span> Conversions</h3>
+<ul>
+<li>as.data.frame.cimg, as.matrix.cimg, as.array.cimg, squeeze</li>
+<li>as.cimg, cimg</li>
+<li>im2cimg,cimg2im</li>
+</ul>
+</div>
+<div id="image-parts" class="section level3">
+<h3><span class="header-section-number">6.2.2</span> Image parts</h3>
+<ul>
+<li>pixel.grid, pixel.index</li>
+<li>imrow,imcol,at,color.at</li>
+<li>channel, channel&lt;-, channels, R, R&lt;-, G, G&lt;-, B, B&lt;-,</li>
+<li>frame, frame&lt;-, frames</li>
+<li>subim</li>
+</ul>
+</div>
+<div id="neighbourhoods" class="section level3">
+<h3><span class="header-section-number">6.2.3</span> Neighbourhoods</h3>
+<ul>
+<li>center.stencil, get.locations, get.stencil, stencil.cross</li>
+<li>extract_patches,extract_patches3D</li>
+</ul>
+</div>
+<div id="interpolation" class="section level3">
+<h3><span class="header-section-number">6.2.4</span> Interpolation</h3>
+<ul>
+<li>interp</li>
+</ul>
+</div>
+</div>
+<div id="generating-images" class="section level2">
+<h2><span class="header-section-number">6.3</span> Generating images</h2>
+<ul>
+<li>capture.plot</li>
+<li>as.cimg.function</li>
+<li>imnoise,imfill,imdirac</li>
+</ul>
+</div>
+<div id="modifying-images" class="section level2">
+<h2><span class="header-section-number">6.4</span> Modifying images</h2>
+<ul>
+<li>add.colour,grayscale</li>
+<li>imresize,resize,resize,resize_doubleXY,resize_halfXY,resize_tripleXY</li>
+<li>autocrop, pad</li>
+<li>threshold, renorm</li>
+<li>permute_axes</li>
+<li>imshift, imrotate, mirror, rotate_xy, imwarp, warp</li>
+<li>imdraw, selectSimilar, bucketfill</li>
+</ul>
+</div>
+<div id="filtering-and-ffts" class="section level2">
+<h2><span class="header-section-number">6.5</span> Filtering and FFTs</h2>
+<ul>
+<li>imgradient,imhessian,vanvliet,get_gradient,deriche</li>
+<li>correlate, convolve</li>
+<li>medianblur,isoblur,blur_anisotropic,boxblur,boxblur_xy</li>
+<li>imsharpen</li>
+<li>FFT, haar, periodic.part</li>
+</ul>
+</div>
+<div id="morphology" class="section level2">
+<h2><span class="header-section-number">6.6</span> Morphology</h2>
+<ul>
+<li>dilate,dilate_rect,dilate_square</li>
+<li>mopening,mopening_square,mclosing,mclosing_square</li>
+<li>erode, erode_rect, erode_square</li>
+<li>distance_transform, watershed, label</li>
+</ul>
+</div>
+<div id="colour-spaces" class="section level2">
+<h2><span class="header-section-number">6.7</span> Colour spaces</h2>
+<ul>
+<li>YCbCrtoRGB, YUVtoRGB, sRGBtoRGB,HSItoRGB,HSLtoRGB,HSVtoRGB</li>
+<li>RGBtoHSI,RGBtoHSL,RGBtoHSV,RGBtosRGB,RGBtoYCbCr,RGBtoYUV</li>
+</ul>
+</div>
+<div id="split-apply-combine" class="section level2">
+<h2><span class="header-section-number">6.8</span> Split-apply-combine</h2>
+<ul>
+<li>imsplit, imappend,</li>
+<li>liply, iiply, ilply, idply</li>
+</ul>
+</div>
+<div id="reductions" class="section level2">
+<h2><span class="header-section-number">6.9</span> Reductions</h2>
+<ul>
+<li>parmin, parmax, parmax.abs, which.parmax,which.parmin,parmin.abs</li>
+<li>add, mult, enorm</li>
+</ul>
+</div>
+<div id="misc." class="section level2">
+<h2><span class="header-section-number">6.10</span> Misc.</h2>
+<ul>
+<li>displacement, diffusion_tensors</li>
+</ul>
+</div>
+</div>
+<div id="learning-more" class="section level1">
+<h1><span class="header-section-number">7</span> Learning more</h1>
+<p>Have a look around the <a href="http://dahtah.github.io/imager">website</a>.</p>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

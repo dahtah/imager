@@ -83,12 +83,12 @@ threshold(im.g,&quot;10%&quot;) %&gt;% plot</code></pre>
 <p>The problem is that there is a luminance trend in the image (it is noticeably lighter at the bottom), so that a fixed threshold doesn’t work very well. Fortunately we can remove that trend using a linear model. We’re going to use R’s built-in lm function. The first step is to convert the image data to a data.frame, then fit a model:</p>
 <pre class="r"><code>df &lt;- as.data.frame(im.g)
 head(df,5) </code></pre>
-<pre><code>##   x y     value
-## 1 1 1 0.3960784
-## 2 2 1 0.4784314
-## 3 3 1 0.4490196
-## 4 4 1 0.4843137
-## 5 5 1 0.4764706</code></pre>
+<pre><code>##   x y       value
+## 1 1 1 0.001553249
+## 2 2 1 0.001876201
+## 3 3 1 0.001760861
+## 4 4 1 0.001883891
+## 5 5 1 0.001868512</code></pre>
 <pre class="r"><code>m &lt;- lm(value ~ x + y,data=df) #linear trend
 summary(m)</code></pre>
 <pre><code>## 
@@ -96,20 +96,20 @@ summary(m)</code></pre>
 ## lm(formula = value ~ x + y, data = df)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.59376  0.01662  0.07721  0.10761  0.23143 
+##        Min         1Q     Median         3Q        Max 
+## -2.329e-03  6.542e-05  3.030e-04  4.220e-04  9.074e-04 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 3.932e-01  1.077e-03   365.3   &lt;2e-16 ***
-## x           5.251e-04  3.985e-06   131.8   &lt;2e-16 ***
-## y           5.391e-04  2.425e-06   222.3   &lt;2e-16 ***
+## (Intercept) 1.542e-03  4.222e-06   365.3   &lt;2e-16 ***
+## x           2.058e-06  1.563e-08   131.7   &lt;2e-16 ***
+## y           2.114e-06  9.512e-09   222.3   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.1838 on 204737 degrees of freedom
+## Residual standard error: 0.0007207 on 204737 degrees of freedom
 ## Multiple R-squared:  0.2459, Adjusted R-squared:  0.2459 
-## F-statistic: 3.338e+04 on 2 and 204737 DF,  p-value: &lt; 2.2e-16</code></pre>
+## F-statistic: 3.337e+04 on 2 and 204737 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>We can extract fitted values to remove the luminance trend:</p>
 <pre class="r"><code>layout(t(1:2))
 im.f &lt;- im.g-fitted(m)

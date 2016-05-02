@@ -41,20 +41,26 @@ You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases
 
 ## Getting started 
 
-	tennis <- load.image(system.file('extdata/tennis_sif.mpeg',package='imager'))
-	play(tennis)
-	#now filter in the time direction and pipe to play
-	deriche(tennis,10,axis="z") %>% play
+There's a tutorial included in the package:  hit
+
+	vignette("gettingstarted",package="imager")
+
+or [click here](gettingstarted.html).
+
+The tutorial covers basic image manipulation, plotting use base graphics and ggplot2, getting image data in and out, and an example of multiscale blob detection.
 
 ## Documentation
 
-At the moment we have:
+Most functions are described in the general package [documentation](imager.html).
+
+There's also a number of tutorials and case studies:
 
 - a [tutorial](image_stats.html) on natural image statistics using imager
 - another (incomplete) tutorial on [morphology and detrending](morphology.html)
 - a [tutorial](foreground_background.html) on [foreground/background segmentation](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/)
 - information on [accessing the CImg API using Rcpp](cpp_api.html)
-- general package [documentation](imager.html)
 - a [list of all functions](https://cran.r-project.org/web/packages/imager/imager.pdf) with examples
 
 You might find [CImg](http://cimg.eu/)'s doc useful as well. 
+
+Bugs and miscellaneous problems can be reported on the [issues page](https://github.com/dahtah/imager/issues) on Github. 

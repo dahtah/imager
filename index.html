@@ -66,6 +66,7 @@ img {
 <!-- --- -->
 <!-- title: "imager: an R package for image processing" -->
 <!-- --- -->
+
 <div id="header">
 <p>
 <img src="warped_parrots_small.png" style="float: right; margin-left: 20px;" />
@@ -73,9 +74,12 @@ img {
 <h1 class="title">
 imager: an R package for image processing
 </h1>
+
 </div>
 <p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
 <!-- <img src="warped_parrots_small.png" style="float: right; margin-left: 20px;" /> -->
+
+
 <p>R is a bit lacking in the area of image processing, where Matlab is still king. Imager aims to make image processing work in R easier. It is based on <a href="http://cimg.sourceforge.net/">CImg</a>, a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for basic video processing/hyperspectral imaging as well.</p>
 <div id="features" class="section level2">
 <h2>Features</h2>
@@ -101,23 +105,24 @@ imager: an R package for image processing
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
-<pre><code>tennis &lt;- load.image(system.file(&#39;extdata/tennis_sif.mpeg&#39;,package=&#39;imager&#39;))
-play(tennis)
-#now filter in the time direction and pipe to play
-deriche(tennis,10,axis=&quot;z&quot;) %&gt;% play</code></pre>
+<p>There’s a tutorial included in the package: hit</p>
+<pre><code>vignette(&quot;gettingstarted&quot;,package=&quot;imager&quot;)</code></pre>
+<p>or <a href="gettingstarted.html">click here</a>.</p>
+<p>The tutorial covers basic image manipulation, plotting use base graphics and ggplot2, getting image data in and out, and an example of multiscale blob detection.</p>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
-<p>At the moment we have:</p>
+<p>Most functions are described in the general package <a href="imager.html">documentation</a>.</p>
+<p>There’s also a number of tutorials and case studies:</p>
 <ul>
 <li>a <a href="image_stats.html">tutorial</a> on natural image statistics using imager</li>
 <li>another (incomplete) tutorial on <a href="morphology.html">morphology and detrending</a></li>
 <li>a <a href="foreground_background.html">tutorial</a> on <a href="http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/">foreground/background segmentation</a></li>
 <li>information on <a href="cpp_api.html">accessing the CImg API using Rcpp</a></li>
-<li>general package <a href="imager.html">documentation</a></li>
 <li>a <a href="https://cran.r-project.org/web/packages/imager/imager.pdf">list of all functions</a> with examples</li>
 </ul>
 <p>You might find <a href="http://cimg.eu/">CImg</a>’s doc useful as well.</p>
+<p>Bugs and miscellaneous problems can be reported on the <a href="https://github.com/dahtah/imager/issues">issues page</a> on Github.</p>
 </div>
 
 

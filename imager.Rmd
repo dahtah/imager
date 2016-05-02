@@ -6,7 +6,17 @@ output:
     number_sections: true
 ---    
 
+[Simon Barthelmé](http://sites.google.com/site/simonbarthelme) (GIPSA-lab, CNRS)
 
+
+```{r init,echo=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE, 
+               comment=NA, verbose=TRUE,dev='jpeg')
+```
+
+This documentation covers imager version 0.20. Some functions may be unavailable in older versions. Follow imager development on [github](https://github.com/dahtah/imager).
+
+Beginners: have a look at the [tutorial](gettingstarted.html) first. 
 
 # Quick start
 
@@ -38,7 +48,7 @@ deriche(im,2,order=2,axis="x") %>% deriche(2,order=2,axis="y") %>% plot
 layout(matrix(1:2,1,2));
 grayscale(im) %>% get_gradient(axes="xy") %>% l_ply(plot)
 
-#Can load videos as well:
+#If ffmpeg is present, we can load videos as well:
 tennis <- load.image(system.file('extdata/tennis_sif.mpeg',package='imager'))
 
 plot(tennis,frame=1)
@@ -61,7 +71,7 @@ imsplit(combined,"z") %>% l_ply(plot)
 
 # Loading and saving
 
-Use load.image and save.image. imager supports PNG and JPEG natively. If you need to access images in other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) for images, and [ffmpeg](http://ffmpeg.org/download.html) for videos. 
+Use load.image and save.image. imager supports PNG, JPEG and BMP natively. If you need to access images in other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) for images, and [ffmpeg](http://ffmpeg.org/download.html) for videos. 
 
 ```{r load_save}
 file <- system.file('extdata/parrots.png',package='imager')
@@ -76,7 +86,7 @@ You can load files from your hard drive or from a URL. Loading from URLs is usef
 ```{r loading_parrots}
 library(rvest)
 #Run a search query (returning html content)
-search <- html("https://www.google.com/search?site=&tbm=isch&q=parrot")
+search <- read_html("https://www.google.com/search?site=&tbm=isch&q=parrot")
 
 #Grab all <img> tags, get their "src" attribute, a URL to an image
 urls <- search %>% html_nodes("img") %>% html_attr("src") #Get urls of parrot pictures
@@ -115,7 +125,7 @@ If you only have grayscale images then the two extra dimensions are obviously po
 Pixels are stored in the following manner: we scan the image beginning at the upper-left corner, along the x axis. Once we hit the end of the scanline, we move to the next line. Once we hit the end of the screen, we move to the next frame (increasing z) and repeat the process. If we have several colour channels, then once we're done with the first colour channel we move to the next one.
 All in all the different dimensions are represented in the x,y,z,c order. In R the object is represented as a 4D array. Here's an example with a grayscale image:
 ```{r dim_gray,cache=TRUE}
-parrots <- load.image(system.file('extdata/parrots.png',package='imager'))
+parrots <- load.example('parrots')
 gray.parrots <- grayscale(parrots)
 dim(gray.parrots)
 ```
@@ -166,13 +176,22 @@ dim(noise[1:4,,,] )
 
 ```
 
-and you can convert it to a data.frame:
 
-```{r as.df,cache=TRUE}
-head(as.data.frame(parrots))
+which makes life easier if you want to use ggplot2 for plotting (see [tutorial](getting_started.html)).
+
+You can also convert matrices to cimg objects:
+
+```{r}
+matrix(1,10,10) %>% as.cimg
 ```
 
-which makes life easier if you want to use ggplot2 for plotting.
+and vectors:
+
+```{r}
+1:9 %>% as.cimg
+```
+
+which tries to guess what sort of image dimensions you want (see [tutorial](getting_started.html)).
 
 The reverse is possible as well: if you have a data.frame with columns x,y,z,cc,value, you can turn it into a cimg object:
 
@@ -185,6 +204,20 @@ By default as.cimg.data.frame will try to guess image size from the input. You c
 
 ```{r as.cimg.data.frame2}
 mutate(df,value=cos(sin(x+y)^2)) %>% as.cimg(dims=c(10,10,1,1))
+```
+
+The reverse is possible as well: you can convert a cimg object to a data.frame
+
+```{r as.df,cache=TRUE}
+head(as.data.frame(parrots))
+```
+
+or to an array, vector or matrix
+
+```{r}
+head(as.array(parrots))
+head(as.vector(parrots))
+grayscale(parrots) %>% as.matrix %>% dim
 ```
 
 # Splitting and concatenating images
@@ -235,19 +268,64 @@ blur.layers %>% average %>% plot(main="Average across blur levels")
 
 # Sub-images, pixel neighbourhoods, etc.
 
-If you need to select a part of an image, you can use subim, which is best explained by example:
+If you need to select a part of an image, you can use imsub, which is best explained by example:
 
-```{r subim} 
-subim(parrots,x < 30) #Only the first 30 rows
-subim(parrots,y < 30) #Only the first 30 rows
-subim(parrots,x < 30,y < 30) #First 30 columns and rows
-subim(parrots, sqrt(x) > 8) #Can use arbitrary expressions
-subim(parrots,x > height/2,y > width/2)  #height and width are defined based on the image
-subim(parrots,cc==1) #Colour axis is "cc" not "c" here because "c" is an important R function
+```{r imsub} 
+imsub(parrots,x < 30) #Only the first 30 rows
+imsub(parrots,y < 30) #Only the first 30 rows
+imsub(parrots,x < 30,y < 30) #First 30 columns and rows
+imsub(parrots, sqrt(x) > 8) #Can use arbitrary expressions
+imsub(parrots,x > height/2,y > width/2)  #height and width are defined based on the image
+imsub(parrots,cc==1) #Colour axis is "cc" not "c" here because "c" is an important R function
+```
+Pixel neighbourhoods (for example, all nearest neighbours of pixel (x,y,z)) can be selected using stencils. See ?get.stencil and the [vignette](image_statistics.html) on natural image statistics for more.
+
+If you need to access a specific colour channel, use any of the following:
+
+```{r}
+R(parrots) 
+G(parrots)
+B(parrots)
+#R(parrots) is equivalent to channel(parrots,1)
+
+#Set all channels to 0 except red
+parrots.cp <- load.example("parrots")
+G(parrots.cp) <- 0
+B(parrots.cp) <- 0
+plot(parrots.cp)
+```
+
+If you need to access a specific frame, use frame:
+
+```{r}
+frame(tennis,1)
+#Blur frame 1
+frame(tennis,1) <- isoblur(frame(tennis,1),10)
 ```
 
 
-Pixel neighbourhoods (for example, all nearest neighbours of pixel (x,y,z)) can be selected using stencils. See ?get.stencil and the [vignette](image_statistics.html) on natural image statistics for more.
+If you need pixel values along rows and columns use:
+
+```{r}
+imrow(R(parrots),10) %>% plot(main="Red channel along 10th row",type="l")
+imcol(B(parrots),10) %>% plot(main="Blue channel along 10th line",type="l")
+```
+
+Individual pixels can be accessed using *at* and *color.at*:
+
+```{r}
+at(parrots,x=20,y=20,cc=1:3)
+color.at(parrots,x=20,y=20)
+```
+
+Finally all of this is available under the familiar form of the array subset operator, which tries to save you some typing by filling in flat dimensions: 
+
+```{r}
+im <- imfill(4,4)
+dim(im) #4 dimensional, but the last two dimensions are singletons
+im[,1,,] <- 1:4 #Assignment the standard way
+im[,1] <- 1:4 #Shortcut
+```
 
 
 # Denoising
@@ -392,6 +470,58 @@ To compute the difference between successive images in a video, you can use the 
 
 ```
 
+# Filtering
+
+imager has the usual correlate and convolve operations:
+
+```{r }
+flt <- as.cimg(matrix(1,4,4)) #4x4 box filter
+grayscale(parrots) %>% correlate(flt) %>% plot(main="Filtering with box filter")
+
+#Here the filter is symmetrical so convolution and correlation should be the same. Check:
+a <- grayscale(parrots) %>% correlate(flt)
+b <- grayscale(parrots) %>% imager::convolve(flt)
+all.equal(a,b)
+```
+
+CImg includes  fast implementations of Gaussian (and derivative-of-Gaussian) filters. They are available via the "deriche" and "vanvliet" functions.
+
+
+```{r fig.width=12}
+im <- grayscale(parrots)
+layout(t(1:2))
+deriche(im,sigma=4,order=2,axis="y") %>% plot(main="2nd deriv of Gaussian along y")
+vanvliet(im,sigma=4,order=2,axis="y") %>% plot(main="2nd deriv of Gaussian along y")
+```
+
+The Vanvliet-Young filter is typically a better approximation. We can establish this by looking at the impulse response (which should be Gaussian). Here's the one-dimensional case:
+
+```{r}
+n <- 1e3
+xv <- seq(0,1,l=n) #1D Grid
+imp <- imdirac(c(n,1,1,1),n/2,1) #1D signal: Impulse at x = n/2
+sig <- 80
+#impulse response of the Deriche filter
+imp.dr <- deriche(imp,sigma=sig) %>% as.vector
+#impulse response of the Vanvliet-Young filter
+imp.vv <- vanvliet(imp,sigma=sig) %>% as.vector 
+imp.true <- dnorm(xv,sd=sig/n,m=.5) #True impulse response
+plot(xv,imp.true/max(imp.true),type="l",lwd=2,xlab="x",ylab="Impulse response")
+lines(xv,imp.vv/max(imp.vv),col="blue",lwd=2)
+lines(xv,imp.dr/max(imp.dr),col="red",lwd=2)
+```
+
+The ideal filter is in black, the Vanvliet-Young filter in blue, the Deriche filter in red. Vanvliet-Young is clearly more accurate, but slightly slower:
+
+```{r}
+im <- imfill(3e3,3e3)
+system.time(deriche(im,3))
+system.time(vanvliet(im,3))
+```
+
+In both cases computation time is independent of filter bandwidth, which is a very nice feature (the filters are IIR). 
+
+
 # FFTs and the periodic/smooth decomposition 
 
 FFTs can be computed via the FFT function:
@@ -422,3 +552,17 @@ periodic.part(parrots) %>% plot(main="Periodic part of parrots")
 ```
 
 See ?periodic.smooth for details.
+
+# Morphology
+
+The following functions are available:
+
+- dilate (variants: dilate_rect,dilate_square)
+- mopening,mclosing, (variants: mopening_square,mclosing_square)
+- erode (variants: erode_rect, erode_square)
+
+For image segmentation the following functions will be useful:
+
+- distance_transform,watershed, label
+
+See the vignette on  [morphology](morphology.html). 
