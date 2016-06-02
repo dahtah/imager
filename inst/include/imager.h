@@ -1,7 +1,7 @@
 #ifndef IMAGER_H
 #define IMAGER_H
 
-
+#define STRICT_R_HEADERS
 
 #if defined(Rcpp_hpp) && !defined(COMPILING_IMAGER)
 #error "The file 'Rcpp.h' should not be included. Please correct to include only 'imager.h'."
