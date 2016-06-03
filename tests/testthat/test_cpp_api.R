@@ -1,0 +1,16 @@
+library(imager)
+library(Rcpp)
+
+test_that("cpp_plugin",{
+foo.inline <- "
+NumericVector foo(NumericVector inp)
+{
+    CImg<double> img = as<CImg<double> >(inp);
+    img.blur(3).erode(2);
+    return wrap(img);
+} "
+
+cppFunction(foo.inline,depends="imager")
+im <- grayscale(boats)
+expect_equal(im %>% isoblur(3) %>% erode_square(2),foo(im))
+})

@@ -1,6 +1,6 @@
 Package: imager
 Type: Package
-Title: Image Processing Library Based on CImg
+Title: Image Processing Library Based on 'CImg'
 Version: 0.20
 Date: 2016-04-20
 Author: Simon Barthelme [aut, cre],
@@ -11,11 +11,11 @@ Maintainer: Simon Barthelme <simon.barthelme@gipsa-lab.fr>
 Description: Fast image processing for images in up to 4 dimensions (two spatial
     dimensions, one time/depth dimension, one colour dimension). Provides most
     traditional image processing tools (filtering, morphology, transformations,
-    etc.) as well as various functions for easily analysing image data using R.
+    etc.) as well as various functions for easily analysing image data using R. The package wraps CImg, <http://cimg.eu>, a simple, modern C++ library for image processing.
 License: LGPL
-Imports: 
+Imports:
     Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices
-Depends: 
+Depends:
     R (>= 2.10.0),plyr,magrittr
 SystemRequirements: fftw3
 Enhances: spatstat
@@ -23,5 +23,6 @@ LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 5.0.1
 Suggests: knitr,
-    rmarkdown,ggplot2,dplyr,scales
+    rmarkdown,ggplot2,dplyr,scales,
+    testthat
 VignetteBuilder: knitr

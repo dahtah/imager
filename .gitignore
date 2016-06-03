@@ -34,7 +34,6 @@ config.log
 config.status
 Makevars
 inst/doc
-
 #vignettes
 *_cache
 *_files
