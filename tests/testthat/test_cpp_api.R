@@ -10,7 +10,7 @@ NumericVector foo(NumericVector inp)
     img.blur(3).erode(2);
     return wrap(img);
 } "
-    Sys.setenv("R_TESTS" = "")
+    Sys.setenv("R_TESTS" = "") #Workaround for obscure bug in testthat
 cppFunction(foo.inline,depends="imager")
 im <- grayscale(boats)
 expect_equal(im %>% isoblur(3) %>% erode_square(2),foo(im))
