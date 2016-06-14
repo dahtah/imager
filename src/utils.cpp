@@ -114,3 +114,4 @@ NumericVector draw_image(NumericVector im,NumericVector sprite,int x=0,int y = 0
   img.draw_image(x,y,z,spr,opacity);
   return wrap(img);
 }
+

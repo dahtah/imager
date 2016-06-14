@@ -1,11 +1,22 @@
-## autoconf script partly borrowed from rgl package by Duncan Murdoch
 
 
-AC_PREREQ(2.50)
+
+AC_PREREQ(2.62)
+
 
 ## ---[ VERSION ]-------------------------------------------------------------
 
 AC_INIT()
+
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
+fi
+
+RBIN="${R_HOME}/bin/R"
+
+## OS checking borrowed from rgl package by Duncan Murdoch
 ##AC_CONFIG_AUX_DIR(src/build/autoconf)
 if test `uname` = "Darwin" ; then
   darwin="yes"
@@ -44,7 +55,7 @@ fi
 
 
 
-
+# from mwaved package by jrwishart
 # Check if the FFTW Library exists on the system
 AC_MSG_NOTICE([Checking if FFTW3 library is available using pkg-config])
 
@@ -54,29 +65,39 @@ PKG_CHECK_MODULES(FFTW, fftw3, [HAVE_FFTW=TRUE], [HAVE_FFTW=FALSE])
 if test "$HAVE_FFTW" == TRUE
 then
 	AC_MSG_RESULT([FFTW3 found!])
-	dnl # See if all functions exist for correct compilation
-	dnl AC_MSG_NOTICE([Testing all required C level functions])
-	dnl # Insert all the compiler checks
-	dnl AC_CHECK_FUNCS([memset])
-	dnl # Math library checks
-	dnl AC_CHECK_HEADER(math.h)
-	dnl AC_CHECK_LIB([m], [cos])
-	dnl AC_CHECK_LIB([m], [sin])
-	dnl AC_CHECK_LIB([m], [sqrt])
-	dnl AC_CHECK_LIB([m], [floor])
-	dnl # FFTW library checks.
-	dnl AC_CHECK_LIB([fftw3], [fftw_malloc])
-	dnl AC_CHECK_LIB([fftw3], [fftw_free])
-	dnl AC_CHECK_LIB([fftw3], [fftw_execute])
-	dnl AC_CHECK_LIB([fftw3], [fftw_destroy_plan])
-	dnl AC_CHECK_LIB([fftw3], [fftw_plan_many_dft_r2c])
-	dnl AC_CHECK_LIB([fftw3], [fftw_plan_dft_c2r])
-	dnl AC_CHECK_LIB([fftw3], [fftw_plan_dft_r2c_1d])
 else
   # Return message that package requires FFTW3 library
   AC_MSG_RESULT([FFTW library not found, please install fftw3])
 fi
 
+
+
+# Check for OpenMP (from randomForests package)
+AC_OPENMP
+
+RBIN="${R_HOME}/bin/R"
+
+# Since some systems have broken OMP libraries we also check that the
+# actual package will work.
+ac_pkg_openmp=no
+if test -n "${OPENMP_CFLAGS}"; then
+  AC_MSG_CHECKING([whether OpenMP will work in a package])
+  AC_LANG_CONFTEST([AC_LANG_PROGRAM([[#include <omp.h>]], [[ return omp_get_num_threads (); ]])])
+  "$RBIN" CMD SHLIB conftest.c 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD && "$RBIN" --vanilla -q -e "dyn.load(paste('conftest',.Platform\$dynlib.ext,sep=''))" 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD && ac_pkg_openmp=yes
+  AC_MSG_RESULT([${ac_pkg_openmp}])
+fi
+
+# If ${ac_pkg_openmp} = "yes" then we have OMP, otherwise it will be "no".
+if test "${ac_pkg_openmp}" = no; then
+  OPENMP_CFLAGS=''
+  HAVE_OPENMP=''
+  AC_MSG_WARN([OpenMP does NOT appear to be supported on this system.])
+else
+  HAVE_OPENMP='-Dcimg_use_openmp'
+fi
+
+AC_SUBST(OPENMP_CFLAGS)
+AC_SUBST(HAVE_OPENMP)
 
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
