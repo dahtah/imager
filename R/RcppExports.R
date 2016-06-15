@@ -83,6 +83,22 @@ grayscale <- function(im) {
     .Call('imager_grayscale', PACKAGE = 'imager', im)
 }
 
+getXc <- function(x, y, z, c) {
+    .Call('imager_getXc', PACKAGE = 'imager', x, y, z, c)
+}
+
+getYc <- function(x, y, z, c) {
+    .Call('imager_getYc', PACKAGE = 'imager', x, y, z, c)
+}
+
+getZc <- function(x, y, z, c) {
+    .Call('imager_getZc', PACKAGE = 'imager', x, y, z, c)
+}
+
+getCc <- function(x, y, z, c) {
+    .Call('imager_getCc', PACKAGE = 'imager', x, y, z, c)
+}
+
 #' Display image using CImg library
 #'
 #' Press escape or close the window to exit.

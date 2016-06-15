@@ -59,6 +59,46 @@ pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE,dim=NULL)
             }
     }
 
+##' Coordinates as images
+##'
+##' These functions return pixel coordinates for an image, as an image. All is made clear in the examples (hopefully)
+##' @param im an image
+##' @name imcoord
+##' @return another image of the same size, containing pixel coordinates
+##' @seealso as.cimg.function, pixel.grid
+##' @examples
+##' im <- imfill(5,5) #An image
+##' Xc(im) #An image of the same size, containing the x coordinates of each pixel
+##' Xc(im) %>% imrow(1)
+##' Yc(im) %>% imrow(3) #y is constant along rows
+##' Yc(im) %>% imcol(1)
+##' #Mask bits of the boats image:
+##' plot(boats*(Xc(boats) < 100))
+##' plot(boats*(dnorm(Xc(boats),m=100,sd=30))) #Gaussian window
+NULL
+
+##' @describeIn imcoord X coordinates 
+##' @export
+Xc <- function(im) coordImage(im,"x")
+##' @describeIn imcoord Y coordinates 
+##' @export
+Yc <- function(im) coordImage(im,"y")
+##' @describeIn imcoord Z coordinates 
+##' @export
+Zc <- function(im) coordImage(im,"z")
+##' @describeIn imcoord C coordinates 
+##' @export
+Cc <- function(im) coordImage(im,"c")
+
+coordImage <- function(im,channel)
+{
+    d <- dim(im)
+    fun <- list(x=getXc,y=getYc,z=getZc,c=getCc)
+    fun[[channel]](d[1],d[2],d[3],d[4])+1
+}
+
+
+
 
 ##' Linear index in internal vector from pixel coordinates
 ##'

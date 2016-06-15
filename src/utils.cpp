@@ -116,7 +116,7 @@ NumericVector draw_image(NumericVector im,NumericVector sprite,int x=0,int y = 0
 }
 
 // [[Rcpp::export]]
-NumericVector do_patchmatch(NumericVector im1,NumericVector im2,
+List do_patchmatch(NumericVector im1,NumericVector im2,
 			  unsigned int patch_width,
 			  unsigned int patch_height,
 			  unsigned int patch_depth,
@@ -131,7 +131,7 @@ NumericVector do_patchmatch(NumericVector im1,NumericVector im2,
   CImg<int> out = img1.patchmatch(img2,patch_width,patch_height,patch_depth,
 				  nb_iterations,nb_randoms,g,mscore);
   CId outfl(out);
-  return wrap(outfl);
+  return List::create(_["warp"] = wrap(outfl),_["score"] = wrap(mscore));
 }
 
 

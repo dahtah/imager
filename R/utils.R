@@ -565,3 +565,16 @@ crop.borders <- function(im,nx=0,ny=0,nz=0,nPix)
         imsub(im,(x > nx) & (x <= width - nx),(y > ny) & (y <= height - ny))
     }
 }
+
+
+patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
+{
+    if (missing(init))
+    {
+        
+    }
+    else
+    {
+
+    }
+}
