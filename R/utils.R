@@ -313,7 +313,7 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
             }
         wf <- llply(out,function(v) array(v,c(dim(im)[1:3],1))) %>% imappend("c")
         mode <- (direction=="forward")*2+(coordinates=="relative")
-        warp(im,wf-1,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary_conditions=switch(boundary,dirichlet=0,neumann=1,periodic=2))
+        warp(im,wf,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary_conditions=switch(boundary,dirichlet=0,neumann=1,periodic=2))
     }
 
 
@@ -569,12 +569,16 @@ crop.borders <- function(im,nx=0,ny=0,nz=0,nPix)
 
 patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
 {
-    if (missing(init))
+    if (missing(init)) #Initialise to identity mapping
     {
-        
+        if (depth(im1)==1)
+        {
+            init <- list(Xc(im1),Yc(im1)) %>% imappend("c")
+        }
+        else
+        {
+            init <- list(Xc(im1),Yc(im1),Zc(im1)) %>% imappend("c")
+        }
     }
-    else
-    {
-
-    }
+    imager:::do_patchmatch(im1,im2,sx,sy,sz,nIter,nRad,init)
 }

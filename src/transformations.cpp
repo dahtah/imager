@@ -223,8 +223,11 @@ NumericVector warp(NumericVector im,NumericVector warpfield,
   CId wrp = as<CId >(warpfield);
   //CId out(img,false);
 
+  if (mode==0 | mode == 2) //In R coordinates start at 1
+    {
+      wrp--;
+    }
   CId out=img.get_warp(wrp,mode,interpolation,boundary_conditions);
-  //out.warp(wrp,mode,interpolation,boundary_conditions);
   return wrap(out);
 }
 

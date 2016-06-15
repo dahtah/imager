@@ -43,6 +43,7 @@ Yc(im) \%>\% imrow(3) #y is constant along rows
 Yc(im) \%>\% imcol(1)
 #Mask bits of the boats image:
 plot(boats*(Xc(boats) < 100))
+plot(boats*(dnorm(Xc(boats),m=100,sd=30))) #Gaussian window
 }
 \seealso{
 as.cimg.function, pixel.grid
