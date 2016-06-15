@@ -1,3 +1,7 @@
+# imager 0.21 Minor release. 
+  * enabled OpenMP on systems that support it. 
+  * fixed bug in inline plugin, should now work on Windows. 
+
 # imager 0.20. Major release
   * added a tutorial (vignette), which includes a worked-out example of multi-scale blob detection
   * new functions: 

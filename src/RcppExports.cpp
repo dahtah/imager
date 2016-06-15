@@ -972,3 +972,21 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// do_patchmatch
+NumericVector do_patchmatch(NumericVector im1, NumericVector im2, unsigned int patch_width, unsigned int patch_height, unsigned int patch_depth, unsigned int nb_iterations, unsigned int nb_randoms, NumericVector guide);
+RcppExport SEXP imager_do_patchmatch(SEXP im1SEXP, SEXP im2SEXP, SEXP patch_widthSEXP, SEXP patch_heightSEXP, SEXP patch_depthSEXP, SEXP nb_iterationsSEXP, SEXP nb_randomsSEXP, SEXP guideSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im1(im1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type im2(im2SEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type patch_width(patch_widthSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type patch_height(patch_heightSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type patch_depth(patch_depthSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type nb_iterations(nb_iterationsSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type nb_randoms(nb_randomsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type guide(guideSEXP);
+    __result = Rcpp::wrap(do_patchmatch(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide));
+    return __result;
+END_RCPP
+}

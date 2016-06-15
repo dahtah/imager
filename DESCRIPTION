@@ -2,7 +2,7 @@ Package: imager
 Type: Package
 Title: Image Processing Library Based on 'CImg'
 Version: 0.21
-Date: 2016-04-20
+Date: 2016-05-15
 Author: Simon Barthelme [aut, cre],
     Antoine Cecchi [ctb]
 Authors@R: c(person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut","cre")),
@@ -24,5 +24,5 @@ LazyData: true
 RoxygenNote: 5.0.1
 Suggests: knitr,
     rmarkdown,ggplot2,dplyr,scales,
-    testthat
+    testthat,OpenMPController
 VignetteBuilder: knitr

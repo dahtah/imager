@@ -115,3 +115,24 @@ NumericVector draw_image(NumericVector im,NumericVector sprite,int x=0,int y = 0
   return wrap(img);
 }
 
+// [[Rcpp::export]]
+NumericVector do_patchmatch(NumericVector im1,NumericVector im2,
+			  unsigned int patch_width,
+			  unsigned int patch_height,
+			  unsigned int patch_depth,
+			  unsigned int nb_iterations,
+			  unsigned int nb_randoms,
+			  NumericVector guide)
+{
+  CId img1 = as<CId >(im1);
+  CId img2 = as<CId >(im2);
+  CId g = as<CId >(guide);
+  CId mscore(img1,"xyzc");
+  CImg<int> out = img1.patchmatch(img2,patch_width,patch_height,patch_depth,
+				  nb_iterations,nb_randoms,g,mscore);
+  CId outfl(out);
+  return wrap(outfl);
+}
+
+
+

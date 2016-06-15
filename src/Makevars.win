@@ -1,2 +1,2 @@
-PKG_CPPFLAGS += -I../inst/include -DSTRICT_R_HEADERS -Dcimg_r_mode -DCIMG_COMPILING -Dcimg_use_fftw3_singlethread  -Dcimg_use_rng -Dcimg_verbosity=1 -fpermissive -I$(LIB_FFTW)/include 
-PKG_LIBS += -L$(LIB_FFTW)/lib -lgdi32 -lfftw3-3 $(RCPP_LDFLAGS)
+PKG_CPPFLAGS += -I../inst/include -DSTRICT_R_HEADERS -Dcimg_r_mode -DCIMG_COMPILING -Dcimg_use_fftw3_singlethread  -Dcimg_use_rng -Dcimg_verbosity=1 -fpermissive -I$(LIB_FFTW)/include $(SHLIB_OPENMP_CFLAGS)
+PKG_LIBS += -L$(LIB_FFTW)/lib -lgdi32 -lfftw3-3 $(RCPP_LDFLAGS) $(SHLIB_OPENMP_CFLAGS)
