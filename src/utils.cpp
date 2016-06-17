@@ -5,18 +5,29 @@ using namespace cimg_library;
 
 
 
-
 // [[Rcpp::export]]
 NumericVector load_image(std::string fname) {
-  CId image(fname.c_str());
-  return wrap(image);
+  try{
+    CId image(fname.c_str());
+    return wrap(image);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    NumericVector empty;
+    return empty; //won't happen
+  }
 }
 
 
 // [[Rcpp::export]]
 void save_image(NumericVector im, std::string fname) {
-  CId image = as<CId >(im);
-  image.save(fname.c_str());
+  try{
+    CId image = as<CId >(im);
+    image.save(fname.c_str());
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+  }
   return;
 }
 
@@ -30,10 +41,17 @@ void save_image(NumericVector im, std::string fname) {
 // [[Rcpp::export]]
 List im_split(NumericVector im,char axis,int nb=-1)
 {
-   CId img = as<CId >(im);
-   CImgList<double> out;
-   out = img.get_split(axis,nb);
-   return wrap(out);
+  try{
+    CId img = as<CId >(im);
+    CImgList<double> out;
+    out = img.get_split(axis,nb);
+    return wrap(out);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    List empty;
+    return empty; //won't happen
+  }
 }
 
 //' Combine a list of images into a single image 
@@ -53,10 +71,17 @@ List im_split(NumericVector im,char axis,int nb=-1)
 // [[Rcpp::export]]
 NumericVector imappend(List imlist,char axis)
 {
-   CImgList<double> ilist = sharedCImgList(imlist);
-   CId out(ilist.get_append(axis));
-   //   out.display();
-   return wrap(out);
+  try{
+    CImgList<double> ilist = sharedCImgList(imlist);
+    CId out(ilist.get_append(axis));
+    //   out.display();
+    return wrap(out);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    NumericVector empty;
+    return empty;
+  }
 }
 
 //' Return image patches 
@@ -110,10 +135,18 @@ List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,Intege
 NumericVector draw_image(NumericVector im,NumericVector sprite,int x=0,int y = 0, int z = 0,float opacity = 1)
 {
   CId img = as<CId >(im);
-  CId spr = as<CId >(sprite);
-  img.draw_image(x,y,z,spr,opacity);
+
+  try{
+    CId spr = as<CId >(sprite);
+    img.draw_image(x,y,z,spr,opacity);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
+
 
 // [[Rcpp::export]]
 List do_patchmatch(NumericVector im1,NumericVector im2,
@@ -124,14 +157,22 @@ List do_patchmatch(NumericVector im1,NumericVector im2,
 			  unsigned int nb_randoms,
 			  NumericVector guide)
 {
-  CId img1 = as<CId >(im1);
-  CId img2 = as<CId >(im2);
-  CId g = as<CId >(guide);
-  CId mscore(img1,"xyzc");
-  CImg<int> out = img1.patchmatch(img2,patch_width,patch_height,patch_depth,
-				  nb_iterations,nb_randoms,g,mscore);
-  CId outfl(out);
-  return List::create(_["warp"] = wrap(outfl),_["score"] = wrap(mscore));
+  try{
+    CId img1 = as<CId >(im1);
+    CId img2 = as<CId >(im2);
+    CId g = as<CId >(guide);
+    CId mscore(img1,"xyzc");
+    CImg<int> out = img1.patchmatch(img2,patch_width,patch_height,patch_depth,
+				    nb_iterations,nb_randoms,g,mscore);
+    CId outfl(out);
+    return List::create(_["warp"] = wrap(outfl),_["score"] = wrap(mscore));
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    List empty;
+    return empty; //won't happen
+  }
+
 }
 
 

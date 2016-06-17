@@ -17,9 +17,16 @@ using namespace cimg_library;
 // [[Rcpp::export]]
 NumericVector autocrop(NumericVector im,NumericVector color,std::string axes = "zyx")
 {
-   CId img = as<CId >(im);
-   CId out(img,false);
-   out.autocrop(color.begin(),axes.c_str());
+  CId img = as<CId >(im);
+  CId out(img,false);
+
+  try{
+    out.autocrop(color.begin(),axes.c_str());
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(out);
 }
 
@@ -37,9 +44,16 @@ NumericVector imrotate(NumericVector im,float  	angle,
 		     unsigned int interpolation = 1,
 		     unsigned int boundary = 0)
 {
-   CId img = as<CId >(im);
-   CId out(img,false);
-   out.rotate(angle,interpolation,boundary);
+  CId img = as<CId >(im);
+  CId out(img,false);
+
+  try{
+    out.rotate(angle,interpolation,boundary);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(out);
 }
 
@@ -63,9 +77,17 @@ NumericVector rotate_xy(NumericVector im,
 			unsigned int interpolation = 1,
 			unsigned int boundary_conditions = 0)
 {
-   CId img = as<CId >(im);
-   CId out(img,false);
-   out.rotate(angle,cx,cy,zoom,interpolation,boundary_conditions);
+  CId img = as<CId >(im);
+  CId out(img,false);
+
+
+  try{
+    out.rotate(angle,cx,cy,zoom,interpolation,boundary_conditions);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(out);
 }
 
@@ -79,8 +101,15 @@ NumericVector rotate_xy(NumericVector im,
 // [[Rcpp::export]]
 NumericVector mirror(NumericVector im,char axis)
 {
-   CId img = as<CId >(im);
-   img.mirror(axis);
+  CId img = as<CId >(im);
+    
+  try{
+    img.mirror(axis);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(img);
 }
 
@@ -96,8 +125,15 @@ NumericVector mirror(NumericVector im,char axis)
 // [[Rcpp::export]]
 NumericVector permute_axes(NumericVector im,std::string perm)
 {
-   CId img = as<CId >(im);
-   img.permute_axes(perm.c_str());
+  CId img = as<CId >(im);
+  try{
+
+    img.permute_axes(perm.c_str());
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(img);
 }
 
@@ -106,9 +142,16 @@ NumericVector permute_axes(NumericVector im,std::string perm)
 // [[Rcpp::export]]
 NumericVector resize_doubleXY(NumericVector im)
 {
-   CId img = as<CId >(im);
-   CId out(img,false);
-   out.resize_doubleXY();
+  CId img = as<CId >(im);
+  CId out(img,false);
+
+  try{
+    out.resize_doubleXY();
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(out);
 }
 
@@ -117,9 +160,16 @@ NumericVector resize_doubleXY(NumericVector im)
 // [[Rcpp::export]]
 NumericVector resize_halfXY(NumericVector im)
 {
-   CId img = as<CId >(im);
-   CId out(img,false);
-   out.resize_halfXY();
+  CId img = as<CId >(im);
+  CId out(img,false);
+
+  try{
+    out.resize_halfXY();
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(out);
 }
 
@@ -129,9 +179,16 @@ NumericVector resize_halfXY(NumericVector im)
 // [[Rcpp::export]]
 NumericVector resize_tripleXY(NumericVector im)
 {
-   CId img = as<CId >(im);
-   CId out(img,false);
-   out.resize_tripleXY();
+  CId img = as<CId >(im);
+  CId out(img,false);
+
+  try{
+    out.resize_tripleXY();
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(out);
 }
 
@@ -156,8 +213,15 @@ NumericVector resize_tripleXY(NumericVector im)
 NumericVector imshift(NumericVector im, int delta_x=0,  int delta_y=0,  int delta_z=0,  int delta_c=0,
                     int boundary_conditions=0)
 {
-   CId img = as<CId >(im);
-   img.shift(delta_x,delta_y,delta_z,delta_c,boundary_conditions);
+  CId img = as<CId >(im);
+
+  try{
+    img.shift(delta_x,delta_y,delta_z,delta_c,boundary_conditions);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(img);
 }
 
@@ -191,10 +255,16 @@ NumericVector resize(NumericVector im, int size_x=-100,  int size_y=-100,
                      float centering_x = 0,  float centering_y = 0,
                      float centering_z = 0,  float centering_c = 0)
 {
-   CId img = as<CId >(im);
-   CId out(img,false);
-   out.resize(size_x,size_y,size_z,size_c,interpolation_type,boundary_conditions,
-	      centering_x,centering_y,centering_z,centering_c);
+  CId img = as<CId >(im);
+  CId out(img,false);
+  try{
+    out.resize(size_x,size_y,size_z,size_c,interpolation_type,boundary_conditions,
+	       centering_x,centering_y,centering_z,centering_c);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
    return wrap(out);
 }
 
@@ -219,16 +289,20 @@ NumericVector warp(NumericVector im,NumericVector warpfield,
 		   unsigned int interpolation=1, 
 		   unsigned int boundary_conditions=0)
 {
-  CId img = as<CId >(im);
-  CId wrp = as<CId >(warpfield);
-  //CId out(img,false);
-
-  if (mode==0 | mode == 2) //In R coordinates start at 1
-    {
-      wrp--;
+    CId img = as<CId >(im);
+    CId wrp = as<CId >(warpfield);
+    //CId out(img,false);
+    try{
+      if (mode==0 | mode == 2) //In R coordinates start at 1
+	{
+	  wrp--;
+	}
+      img.warp(wrp,mode,interpolation,boundary_conditions);
     }
-  CId out=img.get_warp(wrp,mode,interpolation,boundary_conditions);
-  return wrap(out);
+    catch(CImgException &e){
+      forward_exception_to_r(e);
+    }
+    return wrap(img);
 }
 
 

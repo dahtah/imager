@@ -20,7 +20,14 @@ using namespace cimg_library;
 NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',bool boundary_conditions=0)
 {
   CId img = as<CId >(im);
-  img.deriche(sigma,order,axis,boundary_conditions);
+  try{
+      img.deriche(sigma,order,axis,boundary_conditions);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+
   return wrap(img);
 }
 
@@ -52,7 +59,13 @@ NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',b
 NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',bool boundary_conditions=0)
 {
   CId img = as<CId >(im);
-  img.vanvliet(sigma,order,axis,boundary_conditions);
+  try{
+    img.vanvliet(sigma,order,axis,boundary_conditions);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -71,7 +84,13 @@ NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',
 // [[Rcpp::export]]
 NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true,bool gaussian=false) {
   CId img = as< CId >(im);
-  img.blur(sigma,boundary_conditions,gaussian);
+  try{
+    img.blur(sigma,boundary_conditions,gaussian);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -90,7 +109,13 @@ NumericVector isoblur(NumericVector im,float sigma,bool boundary_conditions=true
 // [[Rcpp::export]]
 NumericVector medianblur(NumericVector im,int n, float threshold) {
   CId img = as<CId >(im);
-  img.blur_median(n,threshold);
+  try{
+    img.blur_median(n,threshold);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -106,7 +131,13 @@ NumericVector medianblur(NumericVector im,int n, float threshold) {
 // [[Rcpp::export]]
 NumericVector boxblur(NumericVector im,float sigma,bool boundary_conditions=true) {
   CId img = as<CId >(im);
-  img.blur_box(sigma,boundary_conditions);
+  try{
+    img.blur_box(sigma,boundary_conditions);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -127,7 +158,13 @@ NumericVector boxblur(NumericVector im,float sigma,bool boundary_conditions=true
 // [[Rcpp::export]]
 NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool boundary_conditions=true) {
   CId img = as<CId >(im);
-  img.blur_box(sx,sy,0,boundary_conditions);
+  try{
+    img.blur_box(sx,sy,0,boundary_conditions);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -154,7 +191,13 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool boundary_condit
 NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
   CId flt = as<CId >(filter);
-  img.correlate(flt,boundary_conditions,normalise);
+  try{
+    img.correlate(flt,boundary_conditions,normalise);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -181,7 +224,13 @@ NumericVector correlate(NumericVector im,NumericVector filter, bool boundary_con
 NumericVector convolve(NumericVector im,NumericVector filter, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
   CId flt = as<CId >(filter);
-  img.convolve(flt,boundary_conditions,normalise);
+  try{
+    img.convolve(flt,boundary_conditions,normalise);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -207,7 +256,13 @@ NumericVector imsharpen(NumericVector im,float amplitude,
 		float alpha = 0,float sigma = 0)
  {
    CId img = as<CId >(im);
-   img.sharpen(amplitude,sharpen_type,edge,alpha,sigma);
+   try{
+     img.sharpen(amplitude,sharpen_type,edge,alpha,sigma);
+     }
+   catch(CImgException &e){
+     forward_exception_to_r(e);
+     
+   }
    return wrap(img);
 }
 
@@ -230,8 +285,17 @@ NumericVector imsharpen(NumericVector im,float amplitude,
 List get_gradient(NumericVector im,std::string axes = "",int scheme=3)
 {
    CId img = as<CId >(im);
-   CImgList<double> grad = img.get_gradient(axes.c_str(),scheme);
-   return wrap(grad);
+   try{
+     CImgList<double> grad = img.get_gradient(axes.c_str(),scheme);
+     return wrap(grad);
+     }
+   catch(CImgException &e){
+     forward_exception_to_r(e);
+     CImgList<double> empty;
+     return wrap(empty);
+   }
+   
+
 }
 
 //' Return image hessian.
@@ -241,10 +305,17 @@ List get_gradient(NumericVector im,std::string axes = "",int scheme=3)
 List get_hessian(NumericVector im,std::string axes = "")
 {
    CId img = as<CId >(im);
-   CImgList<double> hess = img.get_hessian(axes.c_str());
-   //CId out(im);
-   //out = img.get_hessian(axes.c_str());
-   return wrap(hess);
+
+   try{
+     CImgList<double> hess = img.get_hessian(axes.c_str());
+     return wrap(hess);
+     }
+   catch(CImgException &e){
+     forward_exception_to_r(e);
+     CImgList<double> empty;
+     return wrap(empty); //will never reach here
+   }
+   
 }
 
 //' Compute field of diffusion tensors for edge-preserving smoothing.
@@ -263,7 +334,13 @@ NumericVector diffusion_tensors(NumericVector im,
 				bool is_sqrt = false) 	
 {
   CId img = as<CId >(im);
-  img.diffusion_tensors(sharpness,anisotropy,alpha,sigma,is_sqrt);
+  try{
+    img.diffusion_tensors(sharpness,anisotropy,alpha,sigma,is_sqrt);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -283,7 +360,13 @@ NumericVector diffusion_tensors(NumericVector im,
 // [[Rcpp::export]]
 NumericVector haar(NumericVector im,bool inverse=false,int nb_scales=1) {
   CId img = as<CId >(im);
-  img.haar(inverse,nb_scales);
+  try{
+    img.haar(inverse,nb_scales);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -291,7 +374,13 @@ NumericVector haar(NumericVector im,bool inverse=false,int nb_scales=1) {
 List FFT_complex(NumericVector real,NumericVector imag,bool inverse=false,int nb_threads=0) {
   CId rl = as<CId >(real);
   CId img = as<CId >(imag);
-  rl.FFT(rl,img,inverse,nb_threads);
+  try{
+    rl.FFT(rl,img,inverse,nb_threads);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return List::create(_["real"] = wrap(rl),_["imag"] = wrap(img));
 }
 
@@ -299,7 +388,13 @@ List FFT_complex(NumericVector real,NumericVector imag,bool inverse=false,int nb
 List FFT_realim(NumericVector real,bool inverse=false,int nb_threads=0) {
   CId rl = as<CId >(real);
   CId im(rl,"xyzc",0);
-  rl.FFT(rl,im,inverse,nb_threads);
+  try{
+    rl.FFT(rl,im,inverse,nb_threads);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return List::create(_["real"] = wrap(rl),_["imag"] = wrap(im));
 }
 
@@ -307,7 +402,13 @@ List FFT_realim(NumericVector real,bool inverse=false,int nb_threads=0) {
 NumericVector FFT_realout(NumericVector real,NumericVector imag,bool inverse=false,int nb_threads=0) {
   CId rl = as<CId >(real);
   CId img = as<CId >(imag);
-  rl.FFT(rl,img,inverse,nb_threads);
+  try{
+    rl.FFT(rl,img,inverse,nb_threads);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(rl);
 }
 
@@ -328,7 +429,13 @@ NumericVector displacement(NumericVector sourceIm,NumericVector destIm,float smo
    CId src = as<CId >(sourceIm);
    CId dst = as<CId >(destIm);
    CId out(src,false);
-   out.displacement(dst,smoothness,precision,nb_scales,iteration_max,is_backward);
+   try{
+     out.displacement(dst,smoothness,precision,nb_scales,iteration_max,is_backward);
+     }
+   catch(CImgException &e){
+     forward_exception_to_r(e);
+     
+   }
    return wrap(out);
 }
 
@@ -356,7 +463,13 @@ NumericVector blur_anisotropic(NumericVector im, float amplitude,  float sharpne
                                float gauss_prec=2,  unsigned int interpolation_type=0,
                                bool is_fast_approx=true) {
   CId img = as<CId >(im);
-  img.blur_anisotropic(amplitude,sharpness,anisotropy,alpha,sigma,dl,da,gauss_prec,interpolation_type,is_fast_approx);
+  try{
+    img.blur_anisotropic(amplitude,sharpness,anisotropy,alpha,sigma,dl,da,gauss_prec,interpolation_type,is_fast_approx);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 

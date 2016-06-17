@@ -10,6 +10,8 @@ NumericVector interp_xy(NumericVector inp,NumericVector ix,NumericVector iy, int
     double val;
     NumericVector out(n);
 
+  try{
+
     for (int ind = 0; ind < n; ind++)
       {
 	if (cubic)
@@ -23,6 +25,11 @@ NumericVector interp_xy(NumericVector inp,NumericVector ix,NumericVector iy, int
 	out[ind] = val;
       }
     
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
     return wrap(out);
 }
 
@@ -32,7 +39,9 @@ NumericVector interp_xyz(NumericVector inp,NumericVector ix,NumericVector iy,Num
     CId img = as<CId >(inp);
     int n = ix.length();
     double val;
-      NumericVector out(n);
+    NumericVector out(n);
+
+  try{
 
     for (int ind = 0; ind < n; ind++)
       {
@@ -47,6 +56,11 @@ NumericVector interp_xyz(NumericVector inp,NumericVector ix,NumericVector iy,Num
 	out[ind] = val;
       }
     
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
     return wrap(out);
 }
 
@@ -58,6 +72,8 @@ NumericVector interp_xyzc(NumericVector inp,NumericVector ix,NumericVector iy,Nu
     int n = ix.length();
     double val;
     NumericVector out(n);
+
+  try{
     
     for (int ind = 0; ind < n; ind++)
       {
@@ -72,7 +88,12 @@ NumericVector interp_xyzc(NumericVector inp,NumericVector ix,NumericVector iy,Nu
 	out[ind] = val;
       }
     
-    return wrap(out);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(out);
 }
 
 // [[Rcpp::export]]
@@ -82,6 +103,8 @@ NumericVector interp_xyc(NumericVector inp,NumericVector ix,NumericVector iy,int
     int n = ix.length();
     double val;
     NumericVector out(n);
+
+  try{
 
     for (int ind = 0; ind < n; ind++)
       {
@@ -96,5 +119,10 @@ NumericVector interp_xyc(NumericVector inp,NumericVector ix,NumericVector iy,int
 	out[ind] = val;
       }
     
-    return wrap(out);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(out);
 }

@@ -2345,13 +2345,17 @@ namespace cimg_library_suffixed {
   struct CImgException : public std::exception {
 #ifdef cimg_r_mode
 #define _cimg_exception_err(etype,disp_flag) \
-  std::va_list ap; va_start(ap,format); cimg_vsnprintf(_message,16384,format,ap); va_end(ap); \
-  if (cimg::exception_mode()) { \
-    if (cimg_display && disp_flag && !(cimg::exception_mode()%2)) try { cimg::dialog(etype,_message,"Abort"); } \
-    catch (CImgException&) {} \
-    if (cimg::exception_mode()>=3) cimg_library_suffixed::cimg::info(); \
-  }
-#else
+  std::va_list ap, ap2; \
+  va_start(ap,format); va_start(ap2,format); \
+  int size = cimg_vsnprintf(0,0,format,ap2); \
+  if (size++>=0) { \
+    delete[] _message; \
+    _message = new char[size]; \
+    cimg_vsnprintf(_message,size,format,ap); \
+  } \
+  va_end(ap); va_end(ap2); \
+
+#else //not cimg_r_mode
 #define _cimg_exception_err(etype,disp_flag) \
   std::va_list ap, ap2; \
   va_start(ap,format); va_start(ap2,format); \
@@ -2369,7 +2373,7 @@ namespace cimg_library_suffixed {
   } \
   va_end(ap); va_end(ap2); \
   
-#endif
+#endif //not cimg_r_mode
     char *_message;
     CImgException() { _message = new char[1]; *_message = 0; }
     CImgException(const char *const format, ...):_message(0) { _cimg_exception_err("CImgException",true); }
@@ -4138,7 +4142,7 @@ namespace cimg_library_suffixed {
 #ifdef cimg_strict_warnings
         throw CImgWarningException(message);
 #else
-#ifdef cimg_rmode
+#ifdef cimg_r_mode
 	Rprintf("\n%s[CImg] *** Warning ***%s%s",cimg::t_red,cimg::t_normal,message);
 #else
         std::fprintf(cimg::output(),"\n%s[CImg] *** Warning ***%s%s",cimg::t_red,cimg::t_normal,message);

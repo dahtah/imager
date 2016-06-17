@@ -28,8 +28,14 @@ using namespace cimg_library;
 NumericVector label(NumericVector im,bool high_connectivity=false,
 double tolerance=0)
 {
-  CId img = as<CId >(im);
-  img.label(high_connectivity,tolerance);
+    CId img = as<CId >(im);
+  try{
+    img.label(high_connectivity,tolerance);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -56,8 +62,14 @@ double tolerance=0)
 // [[Rcpp::export]]
 NumericVector erode(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
-  CId msk = as<CId >(mask);
-  img.erode(msk,boundary_conditions,normalise);
+  try{
+    CId msk = as<CId >(mask);
+    img.erode(msk,boundary_conditions,normalise);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -69,7 +81,13 @@ NumericVector erode(NumericVector im,NumericVector mask, bool boundary_condition
 // [[Rcpp::export]]
 NumericVector erode_rect(NumericVector im,int sx,int sy,int sz=1) {
   CId img = as<CId >(im);
-  img.erode(sx,sy,sz);
+  try{
+    img.erode(sx,sy,sz);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -79,7 +97,13 @@ NumericVector erode_rect(NumericVector im,int sx,int sy,int sz=1) {
 // [[Rcpp::export]]
 NumericVector erode_square(NumericVector im,int size) {
   CId img = as<CId >(im);
-  img.erode(size);
+  try{
+    img.erode(size);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -89,7 +113,13 @@ NumericVector erode_square(NumericVector im,int size) {
 NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
   CId msk = as<CId >(mask);
-  img.dilate(msk,boundary_conditions,normalise);
+  try{
+    img.dilate(msk,boundary_conditions,normalise);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -98,7 +128,13 @@ NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditio
 // [[Rcpp::export]]
 NumericVector dilate_rect(NumericVector im,int sx,int sy,int sz=1) {
   CId img = as<CId >(im);
-  img.dilate(sx,sy,sz);
+  try{
+    img.dilate(sx,sy,sz);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -107,7 +143,13 @@ NumericVector dilate_rect(NumericVector im,int sx,int sy,int sz=1) {
 // [[Rcpp::export]]
 NumericVector dilate_square(NumericVector im,int size) {
   CId img = as<CId >(im);
-  img.dilate(size);
+  try{
+    img.dilate(size);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -136,7 +178,13 @@ NumericVector dilate_square(NumericVector im,int size) {
 NumericVector watershed(NumericVector im,NumericVector priority, bool fill_lines=true) {
   CId img = as<CId >(im);
   CId pri = as<CId >(priority);
-  img.watershed(pri,fill_lines);
+  try{
+    img.watershed(pri,fill_lines);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -164,7 +212,13 @@ NumericVector watershed(NumericVector im,NumericVector priority, bool fill_lines
 NumericVector distance_transform(NumericVector im,double value,unsigned int metric=2)
 {
   CId img = as<CId >(im);
-  img.distance(value,metric);
+  try{
+    img.distance(value,metric);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -174,8 +228,15 @@ NumericVector distance_transform(NumericVector im,double value,unsigned int metr
 // [[Rcpp::export]]
 NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
-  CId msk = as<CId >(mask);
-  img.erode(msk,boundary_conditions,normalise).dilate(msk,boundary_conditions,normalise);
+
+  try{
+    CId msk = as<CId >(mask);
+    img.erode(msk,boundary_conditions,normalise).dilate(msk,boundary_conditions,normalise);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -185,7 +246,12 @@ NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_condit
 // [[Rcpp::export]]
 NumericVector mopening_square(NumericVector im,int size) {
   CId img = as<CId >(im);
-  img.erode(size).dilate(size);
+  try{
+    img.erode(size).dilate(size);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+  }
   return wrap(img);
 }
 
@@ -194,7 +260,14 @@ NumericVector mopening_square(NumericVector im,int size) {
 // [[Rcpp::export]]
 NumericVector mclosing_square(NumericVector im,int size) {
   CId img = as<CId >(im);
-  img.dilate(size).erode(size);
+  
+  try{
+    img.dilate(size).erode(size);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
@@ -203,8 +276,15 @@ NumericVector mclosing_square(NumericVector im,int size) {
 // [[Rcpp::export]]
 NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
   CId img = as<CId >(im);
-  CId msk = as<CId >(mask);
-  img.dilate(msk,boundary_conditions,normalise).erode(msk,boundary_conditions,normalise);
+
+  try{
+    CId msk = as<CId >(mask);
+    img.dilate(msk,boundary_conditions,normalise).erode(msk,boundary_conditions,normalise);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
   return wrap(img);
 }
 
