@@ -786,11 +786,7 @@ extract_patches <- function(im, cx, cy, wx, wy) {
 #'
 #' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
 #'
-#' @param im an image
-#' @param cx vector of x coordinates for patch centers 
-#' @param cy vector of y coordinates for patch centers 
-#' @param wx vector of coordinates for patch width 
-#' @param wy vector of coordinates for patch height 
+#' @inheritParams extract_patches
 #' @return a numeric vector of the minimum values of the patches
 #' @export
 extract_patches_min <- function(im, cx, cy, wx, wy) {
