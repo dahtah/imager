@@ -939,6 +939,21 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// extract_patches_min
+NumericVector extract_patches_min(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
+RcppExport SEXP imager_extract_patches_min(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type cx(cxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type cy(cySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type wx(wxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type wy(wySEXP);
+    __result = Rcpp::wrap(extract_patches_min(im, cx, cy, wx, wy));
+    return __result;
+END_RCPP
+}
 // extract_patches3D
 List extract_patches3D(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector cz, IntegerVector wx, IntegerVector wy, IntegerVector wz);
 RcppExport SEXP imager_extract_patches3D(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP czSEXP, SEXP wxSEXP, SEXP wySEXP, SEXP wzSEXP) {

@@ -87,6 +87,33 @@ List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerV
   return out;
 }
 
+//' Return minimum of image patches 
+//'
+//' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
+//'
+//' @param im an image
+//' @param cx vector of x coordinates for patch centers 
+//' @param cy vector of y coordinates for patch centers 
+//' @param wx vector of coordinates for patch width 
+//' @param wy vector of coordinates for patch height 
+//' @return a numeric vector of the minimum values of the patches
+//' @export
+// [[Rcpp::export]]
+NumericVector extract_patches_min(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
+{
+  CId img = as<CId >(im);
+  int n = cx.length();
+  NumericVector out(n);
+  CId patch;
+  
+  for (int i = 0; i < n; i++)
+  {
+    patch = img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2);
+    out[i] = patch.min();
+  }
+  return out;
+}
+
 //' @param cz vector of z coordinates for patch centers 
 //' @param wz vector of coordinates for patch depth
 //' @describeIn extract_patches Extract 3D patches
