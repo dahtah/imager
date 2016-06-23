@@ -780,6 +780,43 @@ imappend <- function(imlist, axis) {
     .Call('imager_imappend', PACKAGE = 'imager', imlist, axis)
 }
 
+#' Pixel-wise evaluation of a CImg expression
+#' @examples
+#' imfill(10,10) %>% imeval('x+y') %>% plot
+#' # Box filter
+#' boxf = "v=0;for(iy=y-3,iy<y+3,iy++,for(ix=x-3,ix< x+3,ix++,v+=i(ix,iy)));v"
+#' imeval(boats,boxf) %>% plot
+#' # Example by D. Tschumperlé: Julia set
+#' julia <-  "
+#'    zr = -1.2 + 2.4*x/w;
+#'    zi = -1.2 + 2.4*y/h;
+#'    for (iter = 0, zr^2+zi^2<=4 && iter<256, iter++,
+#'      t = zr^2 - zi^2 + 0.5;
+#'      (zi *= 2*zr) += 0.2;
+#'      zr = t
+#'    );
+#'    iter"
+#' imfill(500,500) %>% imeval(julia) %>% plot
+#' @export
+imeval <- function(inp, cmd) {
+    .Call('imager_imeval', PACKAGE = 'imager', inp, cmd)
+}
+
+#' Extract a numerical summary from image patches
+#' @export
+#' @examples
+#' #Example: median filtering using patch_summary
+#' #Center a patch at each pixel
+#' im <- grayscale(boats)
+#' patches <- pixel.grid(im)  %>% mutate(w=3,h=3)
+#' #Extract patch summary:
+#' out <- mutate(patches,med=patch_summary(im,"ic",x,y,w,h))
+#' as.cimg(out,v.name="med") %>% plot
+#' @export
+patch_summary <- function(im, expr, cx, cy, wx, wy) {
+    .Call('imager_patch_summary', PACKAGE = 'imager', im, expr, cx, cy, wx, wy)
+}
+
 #' Return image patches 
 #'
 #' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)

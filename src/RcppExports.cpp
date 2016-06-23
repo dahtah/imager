@@ -980,6 +980,34 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// imeval
+NumericVector imeval(NumericVector inp, std::string cmd);
+RcppExport SEXP imager_imeval(SEXP inpSEXP, SEXP cmdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type inp(inpSEXP);
+    Rcpp::traits::input_parameter< std::string >::type cmd(cmdSEXP);
+    __result = Rcpp::wrap(imeval(inp, cmd));
+    return __result;
+END_RCPP
+}
+// patch_summary
+NumericVector patch_summary(NumericVector im, std::string expr, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
+RcppExport SEXP imager_patch_summary(SEXP imSEXP, SEXP exprSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< std::string >::type expr(exprSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type cx(cxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type cy(cySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type wx(wxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type wy(wySEXP);
+    __result = Rcpp::wrap(patch_summary(im, expr, cx, cy, wx, wy));
+    return __result;
+END_RCPP
+}
 // extract_patches
 List extract_patches(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
 RcppExport SEXP imager_extract_patches(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
