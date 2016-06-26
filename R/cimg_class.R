@@ -85,10 +85,8 @@ plot.cimg <- function(x,frame,rescale.color=TRUE,...)
             {
                 w <- width(im)
                 h <- height(im)
-                if (rescale.color & (diff(range(im)) > 0))  im <- (im-min(im))/diff(range(im))
                 plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...,ylim=c(h,1))
-                as.raster(im) %>% rasterImage(1,height(im),width(im),1)
-#                rasterImage(im,1,1,w,h)
+                as.raster(im,rescale.color=rescale.color) %>% rasterImage(1,height(im),width(im),1)
             }
         else
             {

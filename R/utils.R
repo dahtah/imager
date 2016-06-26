@@ -580,5 +580,5 @@ patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
             init <- list(Xc(im1),Yc(im1),Zc(im1)) %>% imappend("c")
         }
     }
-    imager:::do_patchmatch(im1,im2,sx,sy,sz,nIter,nRad,init)
+    do_patchmatch(im1,im2,sx,sy,sz,nIter,nRad,init)
 }
