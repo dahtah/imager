@@ -78,7 +78,7 @@ NULL
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster
 ##' @export
-plot.cimg <- function(x,frame,rescale.color=TRUE,...)
+plot.cimg <- function(x,frame,...)
     {
         im <- x
         if (dim(im)[3] == 1) #Single image (depth=1)
@@ -86,7 +86,7 @@ plot.cimg <- function(x,frame,rescale.color=TRUE,...)
                 w <- width(im)
                 h <- height(im)
                 plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...,ylim=c(h,1))
-                as.raster(im,rescale.color=rescale.color) %>% rasterImage(1,height(im),width(im),1)
+                as.raster(im,...) %>% rasterImage(1,height(im),width(im),1)
             }
         else
             {
@@ -95,7 +95,7 @@ plot.cimg <- function(x,frame,rescale.color=TRUE,...)
                         warning("Showing first frame")
                         frame <- 1
                     }
-                plot.cimg(frame(im,frame),rescale.color=rescale.color,...)
+                plot.cimg(frame(im,frame),...)
             }
     }
 

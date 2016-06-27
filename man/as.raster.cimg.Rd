@@ -2,16 +2,21 @@
 % Please edit documentation in R/conversions.R
 \name{as.raster.cimg}
 \alias{as.raster.cimg}
-\title{Convert a cimg object to a raster object}
+\title{Convert a cimg object to a raster object for plotting}
 \usage{
-\method{as.raster}{cimg}(x, frames, rescale.color = TRUE, ...)
+\method{as.raster}{cimg}(x, frames, rescale = TRUE, colourscale, colorscale,
+  ...)
 }
 \arguments{
 \item{x}{an image (of class cimg)}
 
 \item{frames}{which frames to extract (in case depth > 1)}
 
-\item{rescale.color}{rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE}
+\item{rescale}{rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE}
+
+\item{colourscale}{a function that returns RGB values in hexadecimal}
+
+\item{colorscale}{same as above in American spelling}
 
 \item{...}{ignored}
 }
@@ -19,7 +24,24 @@
 a raster object
 }
 \description{
-raster objects are used by R's base graphics for plotting
+raster objects are used by R's base graphics for plotting. R wants hexadecimal RGB values for plotting, e.g. gray(0) yields #000000, meaning black. If you want to control precisely how numerical values are turned into colours for plotting, you need to specify a colour scale using the colourscale argument (see examples). Otherwise the default is "gray" for grayscale images, "rgb" for colour. These expect values in [0..1], so the default is to rescale the data to [0..1]. If you wish to over-ride that behaviour, set rescale=FALSE.
+}
+\examples{
+#A raster is a simple array of RGB values
+as.raster(boats) \%>\% str
+#By default as.raster rescales input values, so that:
+all.equal(as.raster(boats),as.raster(boats/2)) #TRUE
+#Setting rescale to FALSE changes that
+try(as.raster(boats,rescale=FALSE))
+#The above fails because the pixel values are in the wrong range
+boats <- boats/255 #Rescale to 0..1
+as.raster(boats,rescale=FALSE) \%>\% plot
+as.raster(boats/2,rescale=FALSE) \%>\% plot
+#For grayscale images, a colourmap should take a single value and
+#return  an RGB code
+#Example: mapping grayscale value to saturation
+cscale <- function(v) hsv(.5,v,1)
+grayscale(boats) \%>\% as.raster(colourscale=cscale) \%>\% plot
 }
 \author{
 Simon Barthelme

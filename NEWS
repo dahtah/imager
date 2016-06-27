@@ -1,6 +1,10 @@
-# imager 0.21 Minor release. 
+# imager 0.21 Major release. 
   * enabled OpenMP on systems that support it. 
-  * fixed bug in inline plugin, should now work on Windows. 
+  * improved as.raster,plot. Now support palettes via colourscale argument.
+  * new patch_summary function
+  * support for CImg's DSL via imeval, patch_summary
+  * new patchmatch function
+  * fixed bug in inline C++ plugin, should now work on Windows. 
 
 # imager 0.20. Major release
   * added a tutorial (vignette), which includes a worked-out example of multi-scale blob detection

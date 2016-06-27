@@ -41,46 +41,80 @@ as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
 
 
 
-##' Convert a cimg object to a raster object
+##' Convert a cimg object to a raster object for plotting
 ##'
-##' raster objects are used by R's base graphics for plotting
+##' raster objects are used by R's base graphics for plotting. R wants hexadecimal RGB values for plotting, e.g. gray(0) yields #000000, meaning black. If you want to control precisely how numerical values are turned into colours for plotting, you need to specify a colour scale using the colourscale argument (see examples). Otherwise the default is "gray" for grayscale images, "rgb" for colour. These expect values in [0..1], so the default is to rescale the data to [0..1]. If you wish to over-ride that behaviour, set rescale=FALSE.  
+##' 
 ##' @param x an image (of class cimg)
 ##' @param frames which frames to extract (in case depth > 1)
-##' @param rescale.color rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE
+##' @param rescale rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE
+##' @param colourscale a function that returns RGB values in hexadecimal
+##' @param colorscale same as above in American spelling
 ##' @param ... ignored
 ##' @return a raster object
 ##' @seealso plot.cimg, rasterImage
 ##' @author Simon Barthelme
+##' @examples
+##' #A raster is a simple array of RGB values
+##' as.raster(boats) %>% str
+##' #By default as.raster rescales input values, so that:
+##' all.equal(as.raster(boats),as.raster(boats/2)) #TRUE
+##' #Setting rescale to FALSE changes that
+##' try(as.raster(boats,rescale=FALSE))
+##' #The above fails because the pixel values are in the wrong range
+##' boats <- boats/255 #Rescale to 0..1
+##' as.raster(boats,rescale=FALSE) %>% plot
+##' as.raster(boats/2,rescale=FALSE) %>% plot
+##' #For grayscale images, a colourmap should take a single value and
+##' #return  an RGB code
+##' #Example: mapping grayscale value to saturation
+##' cscale <- function(v) hsv(.5,v,1)
+##' grayscale(boats) %>% as.raster(colourscale=cscale) %>% plot
 ##' @export
-as.raster.cimg <- function(x,frames,rescale.color=TRUE,...)
+as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale,colorscale,...)
+{
+    if (missing(colorscale) && missing(colourscale))
     {
-        im <- x
-        w <- width(im)
-        h <- height(im)
-
-        if (dim(im)[3] == 1)
-            {
-                if (rescale.color) im <- renorm(im,0,1)
-#                if (rescale.color & !all(im==0))  im <- (im-min(im))/diff(range(im))
-                dim(im) <- dim(im)[-3]
-                if (dim(im)[3] == 1) #BW
-                    {
-                        dim(im) <- dim(im)[1:2]
-                        im <- t(im)
-                        class(im) <- "matrix"
-                    }
-                else{
-                    im <- aperm(im,c(2,1,3))
-                    class(im) <- "array"
-                }
-                as.raster(im)
-            }
-        else
-            {
-                if (missing(frames)) frames <- 1:depth(im)
-                imager::frames(im,frames) %>% llply(as.raster.cimg)
-            }
+        colourscale <- if (spectrum(x) == 1) gray else rgb
     }
+    else
+    {
+        if (missing(colourscale))
+        {
+            colourscale <- colorscale
+        }
+        if (rescale)
+        {
+            warning("You've specified a colour scale, but rescale is set to TRUE. You may get unexpected results")
+        }
+    }
+    im <- x
+    w <- width(im)
+    h <- height(im)
+    if (depth(im) == 1)
+    {
+        if (rescale) im <- renorm(im,0,1)
+        if (spectrum(im) == 1) #BW
+        {
+            dim(im) <- dim(im)[1:2]
+            r <- im %>%  colourscale
+            dim(r) <- dim(im)[2:1]
+            class(r) <- "raster"
+        }
+        else{
+            v <- channels(im) %>% lapply(as.matrix)
+            r <- colourscale(v[[1]],v[[2]],v[[3]])
+            dim(r) <- dim(im)[2:1]
+            class(r) <- "raster"
+        }
+        r
+    }
+    else
+    {
+        if (missing(frames)) frames <- 1:depth(im)
+        imager::frames(im,frames) %>% llply(as.raster.cimg)
+    }
+}
 
 ##' Convert cimg to spatstat im object
 ##'

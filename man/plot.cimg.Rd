@@ -4,16 +4,16 @@
 \alias{plot.cimg}
 \title{Display an image using base graphics}
 \usage{
-\method{plot}{cimg}(x, frame, rescale.color = TRUE, ...)
+\method{plot}{cimg}(x, frame, ...)
 }
 \arguments{
 \item{x}{the image}
 
 \item{frame}{which frame to display, if the image has depth > 1}
 
-\item{rescale.color}{rescale channels so that the values are in [0,1]}
-
 \item{...}{other parameters to be passed to plot.default (eg "main")}
+
+\item{rescale.color}{rescale channels so that the values are in [0,1]}
 }
 \description{
 Display an image using base graphics

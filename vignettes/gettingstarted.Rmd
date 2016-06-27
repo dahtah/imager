@@ -60,6 +60,29 @@ mean(boats)
 sd(boats)
 ```
 
+Now you might wonder why the following two images look exactly the same:
+
+```{r}
+layout(t(1:2))
+plot(boats)
+plot(boats/2)
+```
+
+That's because the plot function automatically rescales the image data so that the whole range of colour values is used. There are two reasons why that's the default behaviour:
+
+1. There's no agreed-upon standard for how RGB values should be scaled. Some software, like CImg, uses a range of 0-255 (dark to light), other, like R's rgb function, uses a 0-1 range. 
+2. Often it's just more convenient to work with a zero-mean image, which means having negative values. 
+
+If you don't want imager to rescale the colours automatically, set rescale.color to FALSE, but now imager will want values that are in the $[0,1]$ range. 
+
+```{r}
+layout(t(1:2))
+boats <- boats/255 #scale to 0..1
+plot(boats,rescale.col=FALSE)
+plot(boats/2,rescale.col=FALSE)
+```
+
+
 The next thing you'll probably want to be doing is to load an image, which can be done using load.image. imager ships with another example image, which is stored somewhere in your R library. We find out where using system.file
 
 ```{r}
