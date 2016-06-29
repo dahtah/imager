@@ -206,13 +206,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // display
-void display(NumericVector im, bool normalise);
-RcppExport SEXP imager_display(SEXP imSEXP, SEXP normaliseSEXP) {
+void display(NumericVector im, bool rescale);
+RcppExport SEXP imager_display(SEXP imSEXP, SEXP rescaleSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
-    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    display(im, normalise);
+    Rcpp::traits::input_parameter< bool >::type rescale(rescaleSEXP);
+    display(im, rescale);
     return R_NilValue;
 END_RCPP
 }

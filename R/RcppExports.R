@@ -104,7 +104,7 @@ getCc <- function(x, y, z, c) {
 #' Press escape or close the window to exit.
 #'
 #' @param im an image (cimg object)
-#' @param normalise if true pixel values are rescaled to 0...255 (default TRUE)
+#' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
 #' @export
 #' @examples
 #' ##Not run: interactive only 
@@ -112,8 +112,8 @@ getCc <- function(x, y, z, c) {
 #' ##display(boats/2,TRUE) #Normalisation on, so same as above
 #' ##display(boats,FALSE) #Normalisation off
 #' ##display(boats/2,FALSE) #Normalisation off, so different from above
-display <- function(im, normalise = TRUE) {
-    invisible(.Call('imager_display', PACKAGE = 'imager', im, normalise))
+display <- function(im, rescale = TRUE) {
+    invisible(.Call('imager_display', PACKAGE = 'imager', im, rescale))
 }
 
 #' Display image list using CImg library

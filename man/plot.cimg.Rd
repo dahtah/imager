@@ -4,21 +4,55 @@
 \alias{plot.cimg}
 \title{Display an image using base graphics}
 \usage{
-\method{plot}{cimg}(x, frame, ...)
+\method{plot}{cimg}(x, frame, rescale = TRUE, colourscale = NULL,
+  colorscale = NULL, ...)
 }
 \arguments{
 \item{x}{the image}
 
 \item{frame}{which frame to display, if the image has depth > 1}
 
-\item{...}{other parameters to be passed to plot.default (eg "main")}
+\item{rescale}{rescale pixel values so that their range is [0,1]}
 
-\item{rescale.color}{rescale channels so that the values are in [0,1]}
+\item{colourscale, colorscale}{an optional colour scale (default is gray or rgb)}
+
+\item{...}{other parameters to be passed to plot.default (eg "main")}
 }
 \description{
-Display an image using base graphics
+If you want to control precisely how numerical values are turned into colours for plotting, you need to specify a colour scale using the colourscale argument (see examples). Otherwise the default is "gray" for grayscale images, "rgb" for colour. These expect values in [0..1], so the default is to rescale the data to [0..1]. If you wish to over-ride that behaviour, set rescale=FALSE.
+See examples for an explanation.
+}
+\examples{
+plot(boats,main="Boats") #extra arguments are passed to default plot function
+plot(boats,axes=FALSE,xlab="",ylab="")
+
+#Pixel values are rescaled to 0-1 by default, so that the following two plots are identical
+plot(boats)
+plot(boats/2,main="Rescaled")
+#If you don't want that behaviour, you can set rescale to FALSE, but
+#then you need to make sure values are in [0,1]
+try(plot(boats,rescale=FALSE)) #Error!
+try(plot(boats/255,rescale=FALSE)) #Works
+#You can specify a colour scale if you don't want the default one.
+#A colour scale is a function that takes pixels values and return an RGB code,
+#like R's rgb function,e.g.
+rgb(0,1,0)
+#Let's switch colour channels
+cscale <- function(r,g,b) rgb(b,g,r)
+plot(boats/255,rescale=FALSE,colourscale=cscale)
+#Display slice of HSV colour space
+im <- imfill(255,255,val=1)
+im <- list(Xc(im)/255,Yc(im)/255,im) \%>\% imappend("c")
+plot(im,colourscale=hsv,rescale=FALSE,
+     xlab="Hue",ylab="Saturation")
+#In grayscale images, the colourscale function should take in a single value
+#and return an RGB code
+boats.gs <- grayscale(boats)
+#We use an interpolation function from package scales
+cscale <- scales::gradient_n_pal(c("red","purple","lightblue"),c(0,.5,1))
+plot(boats.gs,rescale=FALSE,colourscale=cscale)
 }
 \seealso{
-display, which is much faster
+display, which is much faster, as.raster, which converts images to R raster objects
 }
 
