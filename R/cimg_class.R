@@ -111,31 +111,22 @@ NULL
 ##' #We use an interpolation function from package scales
 ##' cscale <- scales::gradient_n_pal(c("red","purple","lightblue"),c(0,.5,1))
 ##' plot(boats.gs,rescale=FALSE,colourscale=cscale)
-plot.cimg <- function(x,frame,rescale=TRUE,colourscale=NULL,colorscale=NULL,...)
+plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,...)
     {
         im <- x
-
-        if (dim(im)[3] == 1) #Single image (depth=1)
-            {
-                w <- width(im)
-                h <- height(im)
-                #Default plot parameters
-                def <- list(xlab="x",ylab="y",ylim=c(h,1),xlim=c(1,w))
-                args <- add.missing(list(...),def)
-                do.call(function(...) plot(c(1,w),c(1,h),type="n",...),args)
-                as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1)
-            }
-        else
+        if (depth(im) > 1)
             {
                 if (missing(frame))
                     {
                         warning("Showing first frame")
                         frame <- 1
                     }
-                plot.cimg(frame(im,frame),...)
+                im <- frame(x,frame)
             }
+                                        
+        plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",...)
+        as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1)
     }
-
 
 ##' @export
 print.cimg <- function(x,...)

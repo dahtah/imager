@@ -4,7 +4,8 @@
 \alias{plot.cimg}
 \title{Display an image using base graphics}
 \usage{
-\method{plot}{cimg}(x, frame, rescale = TRUE, colourscale = NULL,
+\method{plot}{cimg}(x, frame, xlim = c(1, width(x)), ylim = c(height(x), 1),
+  xlab = "x", ylab = "y", rescale = TRUE, colourscale = NULL,
   colorscale = NULL, ...)
 }
 \arguments{
