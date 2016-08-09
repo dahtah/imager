@@ -64,10 +64,11 @@ PKG_CHECK_MODULES(FFTW, fftw3, [HAVE_FFTW=TRUE], [HAVE_FFTW=FALSE])
 
 if test "$HAVE_FFTW" == TRUE
 then
+	HAVE_FFTW='-Dcimg_use_fftw3'
 	AC_MSG_RESULT([FFTW3 found!])
 else
   # Return message that package requires FFTW3 library
-  AC_MSG_RESULT([FFTW library not found, please install fftw3])
+  AC_MSG_RESULT([FFTW library not found, please install fftw3 for better FFT support.])
 fi
 
 
@@ -101,6 +102,7 @@ AC_SUBST(HAVE_OPENMP)
 
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
+AC_SUBST(HAVE_FFTW)
 AC_SUBST(FFTW_CFLAGS)
 AC_SUBST(FFTW_LIBS)
 
