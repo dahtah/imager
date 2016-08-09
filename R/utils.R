@@ -587,7 +587,9 @@ patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
 #'
 #' Patches are rectangular image regions centered at cx,cy with width wx and height wy. This function provides a fast way of extracting a statistic over image patches (for example, their mean).  
 #' Supported functions: sum,mean,min,max,median,var,sd, or any valid CImg expression.
-#' WARNING: values outside of the image region are considered to be 0
+#' WARNINGS: 
+#' - values outside of the image region are considered to be 0.
+#' - widths and heights should be odd integers (they're rounded up otherwise). 
 #' @param im an image
 #' @param expr statistic to extract. a string, either one of the usual statistics like "mean","median", or a CImg expression.
 #' @param cx vector of x coordinates for patch centers 
@@ -600,7 +602,7 @@ patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
 #' #Mean of an image patch centered at (10,10) of size 3x3
 #' patchstat(im,'mean',10,10,3,3)
 #' #Mean of image patches centered at (10,10) and (20,4) of size 2x2
-#' patchstat(im,'mean',c(10,20),c(10,4),2,2)
+#' patchstat(im,'mean',c(10,20),c(10,4),5,5)
 #' #Sample 10 random positions
 #' ptch <- pixel.grid(im) %>% dplyr::sample_n(10)
 #' #Compute median patch value
@@ -640,7 +642,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
             }
         if (expr %in% expr.predef)
             {
-                imager:::extract_fast(im,which(expr==expr.predef)-1,cx,cy,wx,wy)
+                extract_fast(im,which(expr==expr.predef)-1,cx,cy,wx,wy)
             }
         else
             {

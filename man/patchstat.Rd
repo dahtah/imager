@@ -25,14 +25,16 @@ a numeric vector
 \description{
 Patches are rectangular image regions centered at cx,cy with width wx and height wy. This function provides a fast way of extracting a statistic over image patches (for example, their mean).  
 Supported functions: sum,mean,min,max,median,var,sd, or any valid CImg expression.
-WARNING: values outside of the image region are considered to be 0
+WARNINGS: 
+- values outside of the image region are considered to be 0.
+- widths and heights should be odd integers (they're rounded up otherwise).
 }
 \examples{
 im <- grayscale(boats)
 #Mean of an image patch centered at (10,10) of size 3x3
 patchstat(im,'mean',10,10,3,3)
 #Mean of image patches centered at (10,10) and (20,4) of size 2x2
-patchstat(im,'mean',c(10,20),c(10,4),2,2)
+patchstat(im,'mean',c(10,20),c(10,4),5,5)
 #Sample 10 random positions
 ptch <- pixel.grid(im) \%>\% dplyr::sample_n(10)
 #Compute median patch value

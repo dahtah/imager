@@ -831,20 +831,22 @@ extract_fast <- function(im, fun, cx, cy, wx, wy) {
     .Call('imager_extract_fast', PACKAGE = 'imager', im, fun, cx, cy, wx, wy)
 }
 
-#' Return image patches 
+#' Extract image patches and return a list
 #'
 #' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
-#'
+#' WARNINGS: 
+#' - values outside of the image region are considered to be 0.
+#' - widths and heights should be odd integers (they're rounded up otherwise). 
 #' @param im an image
 #' @param cx vector of x coordinates for patch centers 
 #' @param cy vector of y coordinates for patch centers 
-#' @param wx vector of coordinates for patch width 
-#' @param wy vector of coordinates for patch height 
+#' @param wx vector of patch widths (or single value)
+#' @param wy vector of patch heights (or single value)
 #' @return a list of image patches (cimg objects)
 #' @export
 #' @examples
 #' #2 patches of size 5x5 located at (10,10) and (10,20)
-#' extract_patches(boats,c(10,10),c(10,20),rep(5,2),rep(5,2)) 
+#' extract_patches(boats,c(10,10),c(10,20),5,5)
 extract_patches <- function(im, cx, cy, wx, wy) {
     .Call('imager_extract_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)
 }

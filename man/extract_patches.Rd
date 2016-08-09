@@ -3,7 +3,7 @@
 \name{extract_patches}
 \alias{extract_patches}
 \alias{extract_patches3D}
-\title{Return image patches}
+\title{Extract image patches and return a list}
 \usage{
 extract_patches(im, cx, cy, wx, wy)
 
@@ -16,9 +16,9 @@ extract_patches3D(im, cx, cy, cz, wx, wy, wz)
 
 \item{cy}{vector of y coordinates for patch centers}
 
-\item{wx}{vector of coordinates for patch width}
+\item{wx}{vector of patch widths (or single value)}
 
-\item{wy}{vector of coordinates for patch height}
+\item{wy}{vector of patch heights (or single value)}
 
 \item{cz}{vector of z coordinates for patch centers}
 
@@ -29,6 +29,9 @@ a list of image patches (cimg objects)
 }
 \description{
 Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
+WARNINGS: 
+- values outside of the image region are considered to be 0.
+- widths and heights should be odd integers (they're rounded up otherwise).
 }
 \section{Functions}{
 \itemize{
@@ -36,6 +39,6 @@ Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width 
 }}
 \examples{
 #2 patches of size 5x5 located at (10,10) and (10,20)
-extract_patches(boats,c(10,10),c(10,20),rep(5,2),rep(5,2)) 
+extract_patches(boats,c(10,10),c(10,20),5,5)
 }
 

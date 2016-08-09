@@ -8,7 +8,7 @@
 NULL
 
 #' @useDynLib imager
-#' @importFrom grDevices as.raster col2rgb dev.capture
+#' @importFrom grDevices as.raster col2rgb dev.capture gray rgb
 #' @importFrom utils file_test
 #' @importFrom graphics axis plot rasterImage
 #' @importFrom stats quantile rnorm kmeans
