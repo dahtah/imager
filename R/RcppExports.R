@@ -781,6 +781,10 @@ imappend <- function(imlist, axis) {
 }
 
 #' Pixel-wise evaluation of a CImg expression
+#'
+#' This function provides experimental support for CImg's "math expression parser", a byte-compiled mini-language. 
+#' @param im an image
+#' @param expr an expression (as string)
 #' @examples
 #' imfill(10,10) %>% imeval('x+y') %>% plot
 #' # Box filter
@@ -798,23 +802,33 @@ imappend <- function(imlist, axis) {
 #'    iter"
 #' imfill(500,500) %>% imeval(julia) %>% plot
 #' @export
-imeval <- function(inp, cmd) {
-    .Call('imager_imeval', PACKAGE = 'imager', inp, cmd)
+imeval <- function(im, expr) {
+    .Call('imager_imeval', PACKAGE = 'imager', im, expr)
 }
 
-#' Extract a numerical summary from image patches
-#' @export
+#' Extract a numerical summary from image patches, using CImg's mini-language
+#' Experimental feature. 
+#' @param im an image
+#' @param expr a CImg expression (as a string)
+#' @param cx vector of x coordinates for patch centers 
+#' @param cy vector of y coordinates for patch centers 
+#' @param wx vector of coordinates for patch width 
+#' @param wy vector of coordinates for patch height 
 #' @examples
-#' #Example: median filtering using patch_summary
+#' #Example: median filtering using patch_summary_cimg
 #' #Center a patch at each pixel
 #' im <- grayscale(boats)
 #' patches <- pixel.grid(im)  %>% mutate(w=3,h=3)
-#' #Extract patch summary:
-#' out <- mutate(patches,med=patch_summary(im,"ic",x,y,w,h))
+#' #Extract patch summary
+#' out <- mutate(patches,med=patch_summary_cimg(im,"ic",x,y,w,h))
 #' as.cimg(out,v.name="med") %>% plot
 #' @export
-patch_summary <- function(im, expr, cx, cy, wx, wy) {
-    .Call('imager_patch_summary', PACKAGE = 'imager', im, expr, cx, cy, wx, wy)
+patch_summary_cimg <- function(im, expr, cx, cy, wx, wy) {
+    .Call('imager_patch_summary_cimg', PACKAGE = 'imager', im, expr, cx, cy, wx, wy)
+}
+
+extract_fast <- function(im, fun, cx, cy, wx, wy) {
+    .Call('imager_extract_fast', PACKAGE = 'imager', im, fun, cx, cy, wx, wy)
 }
 
 #' Return image patches 
