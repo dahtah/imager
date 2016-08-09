@@ -584,6 +584,7 @@ PACKAGE_URL=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 CXXFLAGS
+HAVE_FFTW
 HAVE_OPENMP
 OPENMP_CFLAGS
 FFTW_LIBS
@@ -3215,12 +3216,13 @@ fi
 
 if test "$HAVE_FFTW" == TRUE
 then
+	HAVE_FFTW='-Dcimg_use_fftw3'
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: FFTW3 found!" >&5
 $as_echo "FFTW3 found!" >&6; }
 else
   # Return message that package requires FFTW3 library
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: FFTW library not found, please install fftw3" >&5
-$as_echo "FFTW library not found, please install fftw3" >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: FFTW library not found, please install fftw3 for better FFT support." >&5
+$as_echo "FFTW library not found, please install fftw3 for better FFT support." >&6; }
 fi
 
 
@@ -3332,6 +3334,7 @@ fi
 
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
+
 
 
 

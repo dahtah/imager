@@ -37,3 +37,6 @@ inst/doc
 #vignettes
 *_cache
 *_files
+
+aclocal.m4
+autom4te.cache
