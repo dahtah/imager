@@ -82,11 +82,18 @@ plot.cimg <- function(x,frame,...)
     {
         im <- x
         if (dim(im)[3] == 1) #Single image (depth=1)
+        {
+            if (1 %in% dim(im)[1:2]) #Image has a single spatial dimension
+            {
+                plot.singleton(im,...)
+            }
+            else
             {
                 w <- width(im)
                 h <- height(im)
                 plot(c(1,w),c(1,h),type="n",xlab="x",ylab="y",...,ylim=c(h,1))
                 as.raster(im,...) %>% rasterImage(1,height(im),width(im),1)
+            }
             }
         else
             {
@@ -99,8 +106,33 @@ plot.cimg <- function(x,frame,...)
             }
     }
 
+#Plots one-dimensional images
+plot.singleton <- function(im,...)
+{
+    varying <- if (width(im) == 1) "y" else "x"
+    l <- max(dim(im)[1:2])
+    if (spectrum(im) == 1)
+    {
+        plot(1:l,as.vector(im),xlab=varying,ylab="Pixel value",type="l")
+    }
+    else if (spectrum(im) ==3)
+    {
+        ylim <- range(im)
+        
+        plot(1:l,1:l,type="n",xlab=varying,ylim=ylim,ylab="Pixel value")
+        cols <- c("red","green","blue")
 
+        for (i in 1:3)
+        {
 
+            lines(1:l,as.vector(channel(im,i)),type="l",col=cols[i])
+        }
+    }
+    else
+    {
+        stop("Unsupported image format")
+    }
+}
 
 ##' @export
 print.cimg <- function(x,...)

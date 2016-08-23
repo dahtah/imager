@@ -372,6 +372,11 @@ as.matrix.cimg <- function(x,...) {
             class(x) <- "matrix"
             x
         }
+    else if (sum(d > 1) == 1)
+    {
+        warning("Image is one-dimensional")
+        as.vector(x) %>% as.matrix
+    }
     else
         {
             stop("Too many non-empty dimensions")
