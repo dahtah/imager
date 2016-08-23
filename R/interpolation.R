@@ -5,14 +5,15 @@
 ##' @param im the image (class cimg)
 ##' @param locations a data.frame 
 ##' @param cubic if TRUE, use cubic interpolation. If FALSE, use linear (default FALSE)
+##' @param extrapolate allow extrapolation (to values outside the image)
 ##' @examples
 ##' 
 ##' loc <- data.frame(x=runif(10,1,width(boats)),y=runif(10,1,height(boats))) #Ten random locations
 ##' interp(boats,loc)
 ##' @export
-interp <- function(im,locations,cubic=FALSE)
+interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
 {
-    if (!check.inside(im,locations))
+    if ((!extrapolate) && !check.inside(im,locations))
         {
             stop("Some locations are outside the image")
         }

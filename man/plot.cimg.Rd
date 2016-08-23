@@ -13,6 +13,14 @@
 
 \item{frame}{which frame to display, if the image has depth > 1}
 
+\item{xlim}{x plot limits (default: 1 to width)}
+
+\item{ylim}{y plot limits (default: 1 to height)}
+
+\item{xlab}{x axis label}
+
+\item{ylab}{y axis label}
+
 \item{rescale}{rescale pixel values so that their range is [0,1]}
 
 \item{colourscale, colorscale}{an optional colour scale (default is gray or rgb)}
@@ -22,6 +30,7 @@
 \description{
 If you want to control precisely how numerical values are turned into colours for plotting, you need to specify a colour scale using the colourscale argument (see examples). Otherwise the default is "gray" for grayscale images, "rgb" for colour. These expect values in [0..1], so the default is to rescale the data to [0..1]. If you wish to over-ride that behaviour, set rescale=FALSE.
 See examples for an explanation.
+If the image is one dimensional (i.e., a simple row or column image), then pixel values will be plotted as a line.
 }
 \examples{
 plot(boats,main="Boats") #extra arguments are passed to default plot function
@@ -52,6 +61,8 @@ boats.gs <- grayscale(boats)
 #We use an interpolation function from package scales
 cscale <- scales::gradient_n_pal(c("red","purple","lightblue"),c(0,.5,1))
 plot(boats.gs,rescale=FALSE,colourscale=cscale)
+#Plot a one-dimensional image
+imsub(boats,x==1) \%>\% plot(main="Image values along first column")
 }
 \seealso{
 display, which is much faster, as.raster, which converts images to R raster objects
