@@ -582,3 +582,70 @@ patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
     }
     do_patchmatch(im1,im2,sx,sy,sz,nIter,nRad,init)
 }
+
+#' Return image patch summary 
+#'
+#' Patches are rectangular image regions centered at cx,cy with width wx and height wy. This function provides a fast way of extracting a statistic over image patches (for example, their mean).  
+#' Supported functions: sum,mean,min,max,median,var,sd, or any valid CImg expression.
+#' WARNINGS: 
+#' - values outside of the image region are considered to be 0.
+#' - widths and heights should be odd integers (they're rounded up otherwise). 
+#' @param im an image
+#' @param expr statistic to extract. a string, either one of the usual statistics like "mean","median", or a CImg expression.
+#' @param cx vector of x coordinates for patch centers 
+#' @param cy vector of y coordinates for patch centers 
+#' @param wx vector of patch widths (or single value)
+#' @param wy vector of patch heights (or single value)
+#' @return a numeric vector
+#' @examples
+#' im <- grayscale(boats)
+#' #Mean of an image patch centered at (10,10) of size 3x3
+#' patchstat(im,'mean',10,10,3,3)
+#' #Mean of image patches centered at (10,10) and (20,4) of size 2x2
+#' patchstat(im,'mean',c(10,20),c(10,4),5,5)
+#' #Sample 10 random positions
+#' ptch <- pixel.grid(im) %>% dplyr::sample_n(10)
+#' #Compute median patch value
+#' with(ptch,patchstat(im,'median',x,y,3,3))
+#' @export
+#' @seealso extract_patches
+patchstat <- function(im,expr,cx,cy,wx,wy)
+    {
+        expr.predef <- c('sum','mean','min','max','median','var','sd')
+        cx <- cx-1
+        cy <- cy-1
+        if (length(cx) != length(cy))
+            {
+                stop('cx and cy must have equal length')
+            }
+        if (length(cx) != length(wx))
+            {
+                if (length(wx) == 1)
+                {
+                    wx <- rep(wx,length(cx))
+                }
+                else
+                {
+                    stop('cx and wx have incompatible lengths')
+                }
+            }
+        if (length(cy) != length(wy))
+            {
+                if (length(wy) == 1)
+                {
+                    wy <- rep(wy,length(cy))
+                }
+                else
+                {
+                    stop('cy and wy have incompatible lengths')
+                }
+            }
+        if (expr %in% expr.predef)
+            {
+                extract_fast(im,which(expr==expr.predef)-1,cx,cy,wx,wy)
+            }
+        else
+            {
+                patch_summary_cimg(im,expr,cx,cy,wx,wy)
+            }
+    }

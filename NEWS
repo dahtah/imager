@@ -1,10 +1,11 @@
 # imager 0.21 Major release. 
   * enabled OpenMP on systems that support it. 
   * improved as.raster,plot. Now support palettes via colourscale argument.
-  * new patch_summary function
+  * new patchstat function for fast extraction of patch statistics
   * support for CImg's DSL via imeval, patch_summary
-  * new patchmatch function
+  * new patchmatch function 
   * fixed bug in inline C++ plugin, should now work on Windows. 
+  * FFTW3 now optional (should be less confusing to OSX users)
 
 # imager 0.20. Major release
   * added a tutorial (vignette), which includes a worked-out example of multi-scale blob detection

@@ -4,10 +4,15 @@
 \alias{imeval}
 \title{Pixel-wise evaluation of a CImg expression}
 \usage{
-imeval(inp, cmd)
+imeval(im, expr)
+}
+\arguments{
+\item{im}{an image}
+
+\item{expr}{an expression (as string)}
 }
 \description{
-Pixel-wise evaluation of a CImg expression
+This function provides experimental support for CImg's "math expression parser", a byte-compiled mini-language.
 }
 \examples{
 imfill(10,10) \%>\% imeval('x+y') \%>\% plot

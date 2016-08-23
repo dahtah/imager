@@ -71,15 +71,15 @@ as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
 ##' cscale <- function(v) hsv(.5,v,1)
 ##' grayscale(boats) %>% as.raster(colourscale=cscale) %>% plot
 ##' @export
-as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale,colorscale,...)
+as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NULL,...)
 {
-    if (missing(colorscale) && missing(colourscale))
+    if (is.null(colorscale) && is.null(colourscale))
     {
         colourscale <- if (spectrum(x) == 1) gray else rgb
     }
     else
     {
-        if (missing(colourscale))
+        if (is.null(colourscale))
         {
             colourscale <- colorscale
         }

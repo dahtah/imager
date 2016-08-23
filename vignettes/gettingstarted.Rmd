@@ -82,6 +82,37 @@ plot(boats,rescale.col=FALSE)
 plot(boats/2,rescale.col=FALSE)
 ```
 
+If you'd like tighter control over how imager converts pixel values into colours, you can specify a colour scale. R likes its colours defined as hex codes, like so:
+
+```{r}
+rgb(0,1,0)
+```
+
+The function rgb is a colour scale, i.e., it takes pixel values and returns colours. We can define an alternative colour scale that swaps the red and green values: 
+
+```{r}
+cscale <- function(r,g,b) rgb(g,r,b)
+plot(boats/255,colourscale=cscale,rescale=FALSE)
+```
+
+In grayscale images pixels have only one value, so that the colour map is simpler: it takes a single value and returns a colour. In the next example we convert the image to grayscale
+
+```{r}
+#Map grayscale values to blue
+cscale <- function(v) rgb(0,0,v)
+grayscale(boats) %>% plot(colourscale=cscale,rescale=FALSE)
+```
+
+The scales package has a few handy functions for creating colour scales, for example by interpolating a gradient:
+
+```{r}
+cscale <- scales::gradient_n_pal(c("red","purple","lightblue"),c(0,.5,1))
+#cscale is now a function returning colour codes
+cscale(0)
+grayscale(boats) %>% plot(colourscale=cscale,rescale=FALSE)
+```
+
+See the documentation for plot.cimg and as.raster.cimg for more information and examples. 
 
 The next thing you'll probably want to be doing is to load an image, which can be done using load.image. imager ships with another example image, which is stored somewhere in your R library. We find out where using system.file
 

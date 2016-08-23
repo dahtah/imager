@@ -9,7 +9,7 @@ using namespace cimg_library;
 //' Press escape or close the window to exit.
 //'
 //' @param im an image (cimg object)
-//' @param normalise if true pixel values are rescaled to 0...255 (default TRUE)
+//' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
 //' @export
 //' @examples
 //' ##Not run: interactive only 
@@ -18,11 +18,11 @@ using namespace cimg_library;
 //' ##display(boats,FALSE) #Normalisation off
 //' ##display(boats/2,FALSE) #Normalisation off, so different from above
 // [[Rcpp::export]]
-void display(NumericVector im,bool normalise=true)
+void display(NumericVector im,bool rescale=true)
 {
    CId img = as<CId >(im);
    int norm;
-   if (normalise)
+   if (rescale)
      {
        norm = 3;
      }

@@ -104,7 +104,7 @@ getCc <- function(x, y, z, c) {
 #' Press escape or close the window to exit.
 #'
 #' @param im an image (cimg object)
-#' @param normalise if true pixel values are rescaled to 0...255 (default TRUE)
+#' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
 #' @export
 #' @examples
 #' ##Not run: interactive only 
@@ -112,8 +112,8 @@ getCc <- function(x, y, z, c) {
 #' ##display(boats/2,TRUE) #Normalisation on, so same as above
 #' ##display(boats,FALSE) #Normalisation off
 #' ##display(boats/2,FALSE) #Normalisation off, so different from above
-display <- function(im, normalise = TRUE) {
-    invisible(.Call('imager_display', PACKAGE = 'imager', im, normalise))
+display <- function(im, rescale = TRUE) {
+    invisible(.Call('imager_display', PACKAGE = 'imager', im, rescale))
 }
 
 #' Display image list using CImg library
@@ -781,6 +781,10 @@ imappend <- function(imlist, axis) {
 }
 
 #' Pixel-wise evaluation of a CImg expression
+#'
+#' This function provides experimental support for CImg's "math expression parser", a byte-compiled mini-language. 
+#' @param im an image
+#' @param expr an expression (as string)
 #' @examples
 #' imfill(10,10) %>% imeval('x+y') %>% plot
 #' # Box filter
@@ -798,39 +802,51 @@ imappend <- function(imlist, axis) {
 #'    iter"
 #' imfill(500,500) %>% imeval(julia) %>% plot
 #' @export
-imeval <- function(inp, cmd) {
-    .Call('imager_imeval', PACKAGE = 'imager', inp, cmd)
+imeval <- function(im, expr) {
+    .Call('imager_imeval', PACKAGE = 'imager', im, expr)
 }
 
-#' Extract a numerical summary from image patches
-#' @export
-#' @examples
-#' #Example: median filtering using patch_summary
-#' #Center a patch at each pixel
-#' im <- grayscale(boats)
-#' patches <- pixel.grid(im)  %>% mutate(w=3,h=3)
-#' #Extract patch summary:
-#' out <- mutate(patches,med=patch_summary(im,"ic",x,y,w,h))
-#' as.cimg(out,v.name="med") %>% plot
-#' @export
-patch_summary <- function(im, expr, cx, cy, wx, wy) {
-    .Call('imager_patch_summary', PACKAGE = 'imager', im, expr, cx, cy, wx, wy)
-}
-
-#' Return image patches 
-#'
-#' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
-#'
+#' Extract a numerical summary from image patches, using CImg's mini-language
+#' Experimental feature. 
 #' @param im an image
+#' @param expr a CImg expression (as a string)
 #' @param cx vector of x coordinates for patch centers 
 #' @param cy vector of y coordinates for patch centers 
 #' @param wx vector of coordinates for patch width 
 #' @param wy vector of coordinates for patch height 
+#' @examples
+#' #Example: median filtering using patch_summary_cimg
+#' #Center a patch at each pixel
+#' im <- grayscale(boats)
+#' patches <- pixel.grid(im)  %>% mutate(w=3,h=3)
+#' #Extract patch summary
+#' out <- mutate(patches,med=patch_summary_cimg(im,"ic",x,y,w,h))
+#' as.cimg(out,v.name="med") %>% plot
+#' @export
+patch_summary_cimg <- function(im, expr, cx, cy, wx, wy) {
+    .Call('imager_patch_summary_cimg', PACKAGE = 'imager', im, expr, cx, cy, wx, wy)
+}
+
+extract_fast <- function(im, fun, cx, cy, wx, wy) {
+    .Call('imager_extract_fast', PACKAGE = 'imager', im, fun, cx, cy, wx, wy)
+}
+
+#' Extract image patches and return a list
+#'
+#' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
+#' WARNINGS: 
+#' - values outside of the image region are considered to be 0.
+#' - widths and heights should be odd integers (they're rounded up otherwise). 
+#' @param im an image
+#' @param cx vector of x coordinates for patch centers 
+#' @param cy vector of y coordinates for patch centers 
+#' @param wx vector of patch widths (or single value)
+#' @param wy vector of patch heights (or single value)
 #' @return a list of image patches (cimg objects)
 #' @export
 #' @examples
 #' #2 patches of size 5x5 located at (10,10) and (10,20)
-#' extract_patches(boats,c(10,10),c(10,20),rep(5,2),rep(5,2)) 
+#' extract_patches(boats,c(10,10),c(10,20),5,5)
 extract_patches <- function(im, cx, cy, wx, wy) {
     .Call('imager_extract_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)
 }
