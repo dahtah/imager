@@ -321,7 +321,7 @@ as.cimg.matrix <- function(obj,...)
 
 ##' Create an image from a data.frame
 ##'
-##' The data frame must be of the form (x,y,value) or (x,y,z,value), or (x,y,z,cc,value). The coordinates must be valid image coordinates (i.e., positive integers). 
+##' This function is meant to be just like as.cimg.data.frame, but in reverse. Each line in the data frame must correspond to a pixel. For example, the data fame can be of the form (x,y,value) or (x,y,z,value), or (x,y,z,cc,value). The coordinates must be valid image coordinates (i.e., positive integers). 
 ##' 
 ##' @param obj a data.frame
 ##' @param v.name name of the variable to extract pixel values from (default "value")
@@ -336,32 +336,38 @@ as.cimg.matrix <- function(obj,...)
 ##' @author Simon Barthelme
 ##' @export
 as.cimg.data.frame <- function(obj,v.name="value",dims,...)
+{
+    nm <- names(obj) %>% tolower
+    names(obj) <- nm
+    if (!any(c("x","y","z","c","cc") %in% nm))
     {
-        which.v <- (names(obj) == v.name) %>% which
-        col.coord <- (names(obj) %in% names.coords) %>% which
-        coords <- names(obj)[col.coord]
-        if (length(which.v) == 0)
-            {
-                sprintf("Variable %s is missing",v.name) %>% stop
-            }
-        if (any(sapply(obj[,-which.v],min) <= 0))
-            {
-                stop('Indices must be positive')
-            }
-        if (missing(dims))
-            {
-                warning('Guessing dimension from maximum coordinate values')
-                dims <- rep(1,4)
-                for (n in coords)
-                    {
-                        dims[index.coords[[n]]] <- max(obj[[n]])
-                    }
-            }
-        im <- as.cimg(array(0,dims))
-        ind <- pixel.index(im,obj[,col.coord])
-        im[ind] <- obj[[v.name]]
-        im
+        stop('input must have (x,y,value) format or similar, see help')
     }
+    which.v <- (names(obj) == v.name) %>% which
+    col.coord <- (names(obj) %in% names.coords) %>% which
+    coords <- names(obj)[col.coord]
+    if (length(which.v) == 0)
+    {
+        sprintf("Variable %s is missing",v.name) %>% stop
+    }
+    if (any(sapply(obj[,-which.v],min) <= 0))
+    {
+        stop('Indices must be positive')
+    }
+    if (missing(dims))
+    {
+        warning('Guessing image dimensions from maximum coordinate values')
+        dims <- rep(1,4)
+        for (n in coords)
+        {
+            dims[index.coords[[n]]] <- max(obj[[n]])
+        }
+    }
+    im <- as.cimg(array(0,dims))
+    ind <- pixel.index(im,obj[,col.coord])
+    im[ind] <- obj[[v.name]]
+    im
+}
 
 ##' @export
 as.matrix.cimg <- function(x,...) {

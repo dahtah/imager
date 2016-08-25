@@ -57,6 +57,12 @@ get.stencil <- function(im,stencil,...)
         im[d]
     }
 
+check.dim <- function(im,coord,d)
+{
+    if (is.character(d)) d <- index.coords[[d]]
+    coord %inr% c(1,dim(im)[d])
+}
+
 check.x <- function(im,x)
     {
         x[x < 1] <- NA

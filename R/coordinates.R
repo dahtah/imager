@@ -112,7 +112,7 @@ coordImage <- function(im,channel)
 ##' im[px] #Values should be 3+1=4, 3+2=5
 ##' @author Simon Barthelme
 ##' @export
-pixel.index <- function(im,coords)
+pixel.index <- function(im,coords,outside="stop")
     {
         d <- dim(im)
         if ("c" %in% names(im))
