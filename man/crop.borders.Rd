@@ -21,7 +21,7 @@ crop.borders(im, nx = 0, ny = 0, nz = 0, nPix)
 an image
 }
 \description{
-This function crops pixels on each side of an image. This function is a kind of inverse (centred) padding, and is useful e.g. when you want to get only the valid part of a convolution.
+This function crops pixels on each side of an image. This function is a kind of inverse (centred) padding, and is useful e.g. when you want to get only the valid part of a convolution
 }
 \examples{
 #These two versions are equivalent

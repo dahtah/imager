@@ -661,7 +661,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 ##' @export
 `%inr%` <- function(x,range)
 {
-    if (!is.numeric(range) || length(range) != 2 || diff(range) < 0)
+    if (!is.numeric(range) || length(range) != 2)
     {
         stop("Range must be a vector of 2 numeric values")
     }
@@ -671,6 +671,11 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
     }
     else
     {
+        if (diff(range) < 0)
+        {
+            stop('Range must be increasing')
+        }
+
         x >= range[1] & x <= range[2]
     }
 }
