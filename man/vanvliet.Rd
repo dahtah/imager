@@ -4,7 +4,7 @@
 \alias{vanvliet}
 \title{Young-Van Vliet recursive Gaussian filter.}
 \usage{
-vanvliet(im, sigma, order = 0L, axis = "x", boundary_conditions = 0L)
+vanvliet(im, sigma, order = 0L, axis = "x", neumann = FALSE)
 }
 \arguments{
 \item{im}{an image}
@@ -15,24 +15,25 @@ vanvliet(im, sigma, order = 0L, axis = "x", boundary_conditions = 0L)
 
 \item{axis}{Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.}
 
-\item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
-(Dirichlet boundary condition has a strange behavior)}
+\item{neumann}{If true, use Neumann boundary conditions (default false, Dirichlet)}
 }
 \description{
-From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
-      IEEE Trans. Sig. Proc., vol. 50, pp. 2799-2805, 2002.
-      (this is an improvement over Young-Van Vliet, Sig. Proc. 44, 1995)
-}
-\details{
-Boundary conditions (only for order 0) using Triggs matrix, from
-      B. Triggs and M. Sdika. Boundary conditions for Young-van Vliet
-      recursive filtering. IEEE Trans. Signal Processing,
-      vol. 54, pp. 2365-2367, 2006.
+The Young-van Vliet filter is a fast approximation to a Gaussian filter (order = 0), or Gaussian derivatives (order = 1 or 2).
 }
 \examples{
 vanvliet(boats,sigma=2,order=0) \%>\% plot("Zeroth-order Young-van Vliet along x")
 vanvliet(boats,sigma=2,order=1) \%>\% plot("First-order Young-van Vliet along x")
 vanvliet(boats,sigma=2,order=1) \%>\% plot("Second-order Young-van Vliet along x")
 vanvliet(boats,sigma=2,order=1,axis="y") \%>\% plot("Second-order Young-van Vliet along y")
+}
+\references{
+From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
+      IEEE Trans. Sig. Proc., vol. 50, pp. 2799-2805, 2002.
+      (this is an improvement over Young-Van Vliet, Sig. Proc. 44, 1995)
+
+      Boundary conditions (only for order 0) using Triggs matrix, from
+      B. Triggs and M. Sdika. Boundary conditions for Young-van Vliet
+      recursive filtering. IEEE Trans. Signal Processing,
+      vol. 54, pp. 2365-2367, 2006.
 }
 

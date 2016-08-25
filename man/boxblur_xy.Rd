@@ -4,7 +4,7 @@
 \alias{boxblur_xy}
 \title{Blur image with a box filter.}
 \usage{
-boxblur_xy(im, sx, sy, boundary_conditions = TRUE)
+boxblur_xy(im, sx, sy, neumann = TRUE)
 }
 \arguments{
 \item{im}{an image}
@@ -13,7 +13,7 @@ boxblur_xy(im, sx, sy, boundary_conditions = TRUE)
 
 \item{sy}{Size of the box window, along the Y-axis.}
 
-\item{boundary_conditions}{Boundary conditions. FALSE=Dirichlet, TRUE=Neumann.}
+\item{neumann}{If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)}
 }
 \description{
 This is a recursive algorithm, not depending on the values of the box kernel size.

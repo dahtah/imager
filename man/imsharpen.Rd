@@ -10,18 +10,18 @@ imsharpen(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0,
 \arguments{
 \item{im}{an image}
 
-\item{amplitude}{Sharpening amplitude}
+\item{amplitude}{Sharpening amplitude (positive scalar, 0: no filtering).}
 
-\item{sharpen_type}{Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.}
+\item{edge}{Edge threshold (shock filters only, positive scalar, default 1).}
 
-\item{edge}{Edge threshold (shock filters only).}
+\item{alpha}{Window size for initial blur (shock filters only, positive scalar, default 0).}
 
-\item{alpha}{Gradient smoothness (shock filters only).}
+\item{sigma}{Window size for diffusion tensor blur (shock filters only, positive scalar, default 0).}
 
-\item{sigma}{Tensor smoothness (shock filters only).}
+\item{type}{Filtering type. "diffusion" (default) or "shock"}
 }
 \description{
-Sharpen image.
+The default sharpening filter is inverse diffusion. The "shock filter" is a non-linear diffusion that has better edge-preserving properties.
 }
 \examples{
 layout(t(1:2))

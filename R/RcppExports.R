@@ -146,23 +146,33 @@ bucket_select <- function(im, x, y, z, sigma = 0, high_connexity = FALSE) {
 
 #' Apply recursive Deriche filter.
 #'
+#' The Deriche filter is a fast approximation to a Gaussian filter (order = 0), or Gaussian derivatives (order = 1 or 2).   
+#' 
 #' @param im an image
 #' @param sigma Standard deviation of the filter.
-#' @param order Order of the filter. Can be <tt>{ 0=smooth-filter | 1=1st-derivative | 2=2nd-derivative }</tt>.
-#' @param axis Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
-#' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
+#' @param order Order of the filter. 0 for a smoothing filter, 1 for first-derivative, 2 for second.
+#' @param axis Axis along which the filter is computed ( 'x' , 'y', 'z' or 'c').
+#' @param neumann If true, use Neumann boundary conditions (default false, Dirichlet)
 #' @export
 #' @examples
 #' deriche(boats,sigma=2,order=0) %>% plot("Zeroth-order Deriche along x")
 #' deriche(boats,sigma=2,order=1) %>% plot("First-order Deriche along x")
 #' deriche(boats,sigma=2,order=1) %>% plot("Second-order Deriche along x")
 #' deriche(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Deriche along y")
-deriche <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L) {
-    .Call('imager_deriche', PACKAGE = 'imager', im, sigma, order, axis, boundary_conditions)
+deriche <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
+    .Call('imager_deriche', PACKAGE = 'imager', im, sigma, order, axis, neumann)
 }
 
 #' Young-Van Vliet recursive Gaussian filter.
 #'
+#' The Young-van Vliet filter is a fast approximation to a Gaussian filter (order = 0), or Gaussian derivatives (order = 1 or 2).   
+#'
+#' @param im an image
+#' @param sigma standard deviation of the Gaussian filter
+#' @param order the order of the filter 0,1,2,3
+#' @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
+#' @param neumann If true, use Neumann boundary conditions (default false, Dirichlet)
+#' @references
 #'       From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
 #'       IEEE Trans. Sig. Proc., vol. 50, pp. 2799-2805, 2002.
 #'       (this is an improvement over Young-Van Vliet, Sig. Proc. 44, 1995)
@@ -171,64 +181,59 @@ deriche <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L)
 #'       B. Triggs and M. Sdika. Boundary conditions for Young-van Vliet
 #'       recursive filtering. IEEE Trans. Signal Processing,
 #'       vol. 54, pp. 2365-2367, 2006.
-#'
-#' @param im an image
-#' @param sigma standard deviation of the Gaussian filter
-#' @param order the order of the filter 0,1,2,3
-#' @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
-#' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.
-#'       (Dirichlet boundary condition has a strange behavior)
 #' @examples
 #' vanvliet(boats,sigma=2,order=0) %>% plot("Zeroth-order Young-van Vliet along x")
 #' vanvliet(boats,sigma=2,order=1) %>% plot("First-order Young-van Vliet along x")
 #' vanvliet(boats,sigma=2,order=1) %>% plot("Second-order Young-van Vliet along x")
 #' vanvliet(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Young-van Vliet along y")
 #' @export
-vanvliet <- function(im, sigma, order = 0L, axis = 'x', boundary_conditions = 0L) {
-    .Call('imager_vanvliet', PACKAGE = 'imager', im, sigma, order, axis, boundary_conditions)
+vanvliet <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
+    .Call('imager_vanvliet', PACKAGE = 'imager', im, sigma, order, axis, neumann)
 }
 
 #' Blur image isotropically.
 #' @param im an image
 #' @param sigma Standard deviation of the blur.
-#' @param boundary_conditions Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }
-#' @param gaussian Use a Gaussian filter (default FALSE). Default: O-order Deriche filter.
-#' @seealso deriche
+#' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
+#' @param gaussian Use a Gaussian filter (actually vanVliet-Young). Default: 0th-order Deriche filter.
+#' @seealso deriche,vanvliet
 #' @export
 #' @examples
 #' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=3")
 #' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=10")
 #' @seealso medianblur
-isoblur <- function(im, sigma, boundary_conditions = TRUE, gaussian = FALSE) {
-    .Call('imager_isoblur', PACKAGE = 'imager', im, sigma, boundary_conditions, gaussian)
+isoblur <- function(im, sigma, neumann = TRUE, gaussian = FALSE) {
+    .Call('imager_isoblur', PACKAGE = 'imager', im, sigma, neumann, gaussian)
 }
 
 #' Blur image with the median filter.
 #'    
+#' In a window of size n x n centered at pixel (x,y), compute median pixel value over the window. Optionally, ignore values that are too far from the value at current pixel.  
+#'
 #' @param im an image
 #' @param n Size of the median filter.
-#' @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. 
+#' @param threshold Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. Default 0 (include all pixels in window).
 #' @export
 #' @examples
-#' medianblur(boats,5,Inf) %>% plot(main="Median blur, 5 pixels")
-#' medianblur(boats,10,Inf) %>% plot(main="Median blur, 10 pixels")
+#' medianblur(boats,5) %>% plot(main="Median blur, 5 pixels")
+#' medianblur(boats,10) %>% plot(main="Median blur, 10 pixels")
 #' medianblur(boats,10,8) %>% plot(main="Median blur, 10 pixels, threshold = 8")
 #' @seealso isoblur, boxblur
-medianblur <- function(im, n, threshold) {
+medianblur <- function(im, n, threshold = 0) {
     .Call('imager_medianblur', PACKAGE = 'imager', im, n, threshold)
 }
 
 #' Blur image with a box filter (square window)
 #' @param im an image
 #' @param sigma Size of the box window.
-#' @param boundary_conditions Boundary conditions. FALSE: Dirichlet TRUE: Neumann.
+#' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
 #' @seealso deriche(), vanvliet().
 #' @examples
 #' boxblur(boats,5) %>% plot(main="Dirichlet boundary")
 #' boxblur(boats,5,TRUE) %>% plot(main="Neumann boundary")
 #' @export
-boxblur <- function(im, sigma, boundary_conditions = TRUE) {
-    .Call('imager_boxblur', PACKAGE = 'imager', im, sigma, boundary_conditions)
+boxblur <- function(im, sigma, neumann = TRUE) {
+    .Call('imager_boxblur', PACKAGE = 'imager', im, sigma, neumann)
 }
 
 #' Blur image with a box filter.
@@ -238,14 +243,14 @@ boxblur <- function(im, sigma, boundary_conditions = TRUE) {
 #' @param im an image
 #' @param sx Size of the box window, along the X-axis.
 #' @param sy Size of the box window, along the Y-axis.
-#' @param boundary_conditions Boundary conditions. FALSE=Dirichlet, TRUE=Neumann.
+#' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
 #' @seealso blur().
 #'
 #' @export
 #' @examples
 #' boxblur_xy(boats,20,5) %>% plot(main="Anisotropic blur")
-boxblur_xy <- function(im, sx, sy, boundary_conditions = TRUE) {
-    .Call('imager_boxblur_xy', PACKAGE = 'imager', im, sx, sy, boundary_conditions)
+boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
+    .Call('imager_boxblur_xy', PACKAGE = 'imager', im, sx, sy, neumann)
 }
 
 #' Correlation of image by filter
@@ -254,9 +259,9 @@ boxblur_xy <- function(im, sx, sy, boundary_conditions = TRUE) {
 #'  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
 #'
 #' @param im an image
-#' @param filter = the correlation kernel.
-#' @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-#' @param normalise  = normalise filter (default FALSE)
+#' @param filter the correlation kernel.
+#' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+#' @param normalise normalise filter (default FALSE)
 #'      
 #'
 #' @export
@@ -267,8 +272,8 @@ boxblur_xy <- function(im, sx, sy, boundary_conditions = TRUE) {
 #' #Convolution vs. correlation 
 #' correlate(boats,filter) %>% plot(main="Correlation")
 #' convolve(boats,filter) %>% plot(main="Convolution")
-correlate <- function(im, filter, boundary_conditions = TRUE, normalise = FALSE) {
-    .Call('imager_correlate', PACKAGE = 'imager', im, filter, boundary_conditions, normalise)
+correlate <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
+    .Call('imager_correlate', PACKAGE = 'imager', im, filter, dirichlet, normalise)
 }
 
 #' Convolve image by filter.
@@ -278,8 +283,8 @@ correlate <- function(im, filter, boundary_conditions = TRUE, normalise = FALSE)
 #'
 #' @param im an image
 #' @param filter a filter (another image)
-#' @param boundary_conditions = the border condition type (0=zero, 1=dirichlet)
-#' @param normalise = normalise filter (default FALSE)
+#' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+#' @param normalise normalise filter (default FALSE)
 #' @export
 #' @seealso correlate
 #' @examples
@@ -289,18 +294,20 @@ correlate <- function(im, filter, boundary_conditions = TRUE, normalise = FALSE)
 #' #Convolution vs. correlation 
 #' correlate(boats,filter) %>% plot(main="Correlation")
 #' convolve(boats,filter) %>% plot(main="Convolution")
-convolve <- function(im, filter, boundary_conditions = TRUE, normalise = FALSE) {
-    .Call('imager_convolve', PACKAGE = 'imager', im, filter, boundary_conditions, normalise)
+convolve <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
+    .Call('imager_convolve', PACKAGE = 'imager', im, filter, dirichlet, normalise)
 }
 
 #' Sharpen image.
 #'
+#' The default sharpening filter is inverse diffusion. The "shock filter" is a non-linear diffusion that has better edge-preserving properties.
+#'
 #' @param im an image
-#' @param amplitude Sharpening amplitude
-#' @param sharpen_type Select sharpening method. Can be <tt>{ false=inverse diffusion | true=shock filters }</tt>.
-#' @param edge Edge threshold (shock filters only).
-#' @param alpha Gradient smoothness (shock filters only).
-#' @param sigma Tensor smoothness (shock filters only).
+#' @param amplitude Sharpening amplitude (positive scalar, 0: no filtering). 
+#' @param type Filtering type. "diffusion" (default) or "shock"
+#' @param edge Edge threshold (shock filters only, positive scalar, default 1).
+#' @param alpha Window size for initial blur (shock filters only, positive scalar, default 0).
+#' @param sigma Window size for diffusion tensor blur (shock filters only, positive scalar, default 0).
 #'
 #' @export
 #' @examples
@@ -395,6 +402,9 @@ displacement <- function(sourceIm, destIm, smoothness = 0.1, precision = 5.0, nb
 }
 
 #' Blur image anisotropically, in an edge-preserving way.
+#' 
+#' Standard blurring removes noise from images, but tends to smooth away edges in the process. This anisotropic filter preserves edges better. 
+#' 
 #' @param im an image
 #' @param amplitude Amplitude of the smoothing.
 #' @param sharpness Sharpness.
@@ -406,14 +416,14 @@ displacement <- function(sourceIm, destIm, smoothness = 0.1, precision = 5.0, nb
 #' @param gauss_prec Precision of the diffusion process.
 #' @param interpolation_type Interpolation scheme.
 #'  Can be 0=nearest-neighbor | 1=linear | 2=Runge-Kutta 
-#' @param is_fast_approx Determines if a fast approximation of the gaussian function is used or not.
+#' @param fast_approx If true, use fast approximation (default TRUE)
 #' @export
 #' @examples
 #' im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
 #' im.noisy <- (im + 80*rnorm(prod(dim(im)))) 
 #' blur_anisotropic(im.noisy,ampl=1e4,sharp=1) %>% plot
-blur_anisotropic <- function(im, amplitude, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2, interpolation_type = 0L, is_fast_approx = TRUE) {
-    .Call('imager_blur_anisotropic', PACKAGE = 'imager', im, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, is_fast_approx)
+blur_anisotropic <- function(im, amplitude, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2, interpolation_type = 0L, fast_approx = TRUE) {
+    .Call('imager_blur_anisotropic', PACKAGE = 'imager', im, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, fast_approx)
 }
 
 periodic_part <- function(im) {

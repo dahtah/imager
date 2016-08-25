@@ -4,16 +4,16 @@
 \alias{convolve}
 \title{Convolve image by filter.}
 \usage{
-convolve(im, filter, boundary_conditions = TRUE, normalise = FALSE)
+convolve(im, filter, dirichlet = FALSE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{filter}{a filter (another image)}
 
-\item{boundary_conditions}{= the border condition type (0=zero, 1=dirichlet)}
+\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
 
-\item{normalise}{= normalise filter (default FALSE)}
+\item{normalise}{normalise filter (default FALSE)}
 }
 \description{
 The result  res of the convolution of an image img by filter flt is defined to be:

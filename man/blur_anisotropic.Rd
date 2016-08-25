@@ -6,7 +6,7 @@
 \usage{
 blur_anisotropic(im, amplitude, sharpness = 0.7, anisotropy = 0.6,
   alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2,
-  interpolation_type = 0L, is_fast_approx = TRUE)
+  interpolation_type = 0L, fast_approx = TRUE)
 }
 \arguments{
 \item{im}{an image}
@@ -30,10 +30,10 @@ blur_anisotropic(im, amplitude, sharpness = 0.7, anisotropy = 0.6,
 \item{interpolation_type}{Interpolation scheme.
 Can be 0=nearest-neighbor | 1=linear | 2=Runge-Kutta}
 
-\item{is_fast_approx}{Determines if a fast approximation of the gaussian function is used or not.}
+\item{fast_approx}{If true, use fast approximation (default TRUE)}
 }
 \description{
-Blur image anisotropically, in an edge-preserving way.
+Standard blurring removes noise from images, but tends to smooth away edges in the process. This anisotropic filter preserves edges better.
 }
 \examples{
 im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))

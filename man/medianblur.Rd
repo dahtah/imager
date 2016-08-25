@@ -2,23 +2,27 @@
 % Please edit documentation in R/RcppExports.R
 \name{medianblur}
 \alias{medianblur}
-\title{Blur image with the median filter.}
+\title{Blur image with the median filter.
+   
+In a window of size n x n centered at pixel (x,y), compute median pixel value over the window. Optionally, ignore values that are too far from the value at current pixel.}
 \usage{
-medianblur(im, n, threshold)
+medianblur(im, n, threshold = 0)
 }
 \arguments{
 \item{im}{an image}
 
 \item{n}{Size of the median filter.}
 
-\item{threshold}{Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing.}
+\item{threshold}{Threshold used to discard pixels too far from the current pixel value in the median computation. Can be used for edge-preserving smoothing. Default 0 (include all pixels in window).}
 }
 \description{
 Blur image with the median filter.
+   
+In a window of size n x n centered at pixel (x,y), compute median pixel value over the window. Optionally, ignore values that are too far from the value at current pixel.
 }
 \examples{
-medianblur(boats,5,Inf) \%>\% plot(main="Median blur, 5 pixels")
-medianblur(boats,10,Inf) \%>\% plot(main="Median blur, 10 pixels")
+medianblur(boats,5) \%>\% plot(main="Median blur, 5 pixels")
+medianblur(boats,10) \%>\% plot(main="Median blur, 10 pixels")
 medianblur(boats,10,8) \%>\% plot(main="Median blur, 10 pixels, threshold = 8")
 }
 \seealso{

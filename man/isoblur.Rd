@@ -4,16 +4,16 @@
 \alias{isoblur}
 \title{Blur image isotropically.}
 \usage{
-isoblur(im, sigma, boundary_conditions = TRUE, gaussian = FALSE)
+isoblur(im, sigma, neumann = TRUE, gaussian = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{sigma}{Standard deviation of the blur.}
 
-\item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }}
+\item{neumann}{If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)}
 
-\item{gaussian}{Use a Gaussian filter (default FALSE). Default: O-order Deriche filter.}
+\item{gaussian}{Use a Gaussian filter (actually vanVliet-Young). Default: 0th-order Deriche filter.}
 }
 \description{
 Blur image isotropically.
@@ -23,7 +23,7 @@ isoblur(boats,3) \%>\% plot(main="Isotropic blur, sigma=3")
 isoblur(boats,3) \%>\% plot(main="Isotropic blur, sigma=10")
 }
 \seealso{
-deriche
+deriche,vanvliet
 
 medianblur
 }

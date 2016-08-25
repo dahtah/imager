@@ -4,21 +4,21 @@
 \alias{deriche}
 \title{Apply recursive Deriche filter.}
 \usage{
-deriche(im, sigma, order = 0L, axis = "x", boundary_conditions = 0L)
+deriche(im, sigma, order = 0L, axis = "x", neumann = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{sigma}{Standard deviation of the filter.}
 
-\item{order}{Order of the filter. Can be <tt>{ 0=smooth-filter | 1=1st-derivative | 2=2nd-derivative }</tt>.}
+\item{order}{Order of the filter. 0 for a smoothing filter, 1 for first-derivative, 2 for second.}
 
-\item{axis}{Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.}
+\item{axis}{Axis along which the filter is computed ( 'x' , 'y', 'z' or 'c').}
 
-\item{boundary_conditions}{Boundary conditions. Can be <tt>{ 0=dirichlet | 1=neumann }</tt>.}
+\item{neumann}{If true, use Neumann boundary conditions (default false, Dirichlet)}
 }
 \description{
-Apply recursive Deriche filter.
+The Deriche filter is a fast approximation to a Gaussian filter (order = 0), or Gaussian derivatives (order = 1 or 2).
 }
 \examples{
 deriche(boats,sigma=2,order=0) \%>\% plot("Zeroth-order Deriche along x")
