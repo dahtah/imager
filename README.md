@@ -47,10 +47,29 @@ To load videos you'll need [ffmpeg](http://ffmpeg.org/download.html), no file fo
 
 ## Getting started 
 
-	tennis <- load.image(system.file('extdata/tennis_sif.mpeg',package='imager'))
-	play(tennis)
-	#now filter in the time direction and pipe to play
-	deriche(tennis,10,axis="z") %>% play
+Here's a small demo that actually demonstrates an interesting property of colour perception:
+
+	library(imager)
+	parrots <- load.example("parrots")
+	plot(parrots)
+	#Define a function that blurs a specific channel
+	bchan <- function(im,ind,sigma=5) { 
+		channel(im,ind) <- isoblur(channel(im,ind),sigma); 
+		im 
+	}
+	
+	#Blur luminance channel, leave chrominance as is
+	im1 <- RGBtoYUV(parrots) %>% bchan(1) %>% YUVtoRGB
+	plot(im1,main="Luminance blur")
+
+    #Blur chrominance channel, leave luminance as is
+    im2 <- RGBtoYUV(parrots) %>% bchan(2) %>% YUVtoRGB
+	plot(im2,main="Chrominance blur (U channel)")
+
+    im3 <- RGBtoYUV(parrots) %>% bchan(3) %>% YUVtoRGB
+	plot(im3,main="Chrominance blur (V channel)")
+
+We're much more [sensitive to luminance edges than we are to colour edges](https://en.wikipedia.org/wiki/Chroma_subsampling). 
 
 Documentation is available [here](http://dahtah.github.io/imager/). To get a list of all package functions, run:
 	ls(pos = "package:imager")

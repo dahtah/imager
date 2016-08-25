@@ -74,11 +74,15 @@ NULL
 ##'
 ##' If you want to control precisely how numerical values are turned into colours for plotting, you need to specify a colour scale using the colourscale argument (see examples). Otherwise the default is "gray" for grayscale images, "rgb" for colour. These expect values in [0..1], so the default is to rescale the data to [0..1]. If you wish to over-ride that behaviour, set rescale=FALSE.
 ##' See examples for an explanation.
-##' 
+##' If the image is one dimensional (i.e., a simple row or column image), then pixel values will be plotted as a line.
 ##' @param x the image 
 ##' @param frame which frame to display, if the image has depth > 1
 ##' @param rescale rescale pixel values so that their range is [0,1]
 ##' @param colourscale,colorscale an optional colour scale (default is gray or rgb)
+##' @param xlim x plot limits (default: 1 to width)
+##' @param ylim y plot limits (default: 1 to height)
+##' @param xlab x axis label
+##' @param ylab y axis label
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster, as.raster, which converts images to R raster objects
 ##' @export
@@ -111,22 +115,58 @@ NULL
 ##' #We use an interpolation function from package scales
 ##' cscale <- scales::gradient_n_pal(c("red","purple","lightblue"),c(0,.5,1))
 ##' plot(boats.gs,rescale=FALSE,colourscale=cscale)
+##' #Plot a one-dimensional image
+##' imsub(boats,x==1) %>% plot(main="Image values along first column")
 plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,...)
     {
         im <- x
         if (depth(im) > 1)
+        {
+            if (missing(frame))
             {
-                if (missing(frame))
-                    {
-                        warning("Showing first frame")
-                        frame <- 1
-                    }
-                im <- frame(x,frame)
+                warning("Showing first frame")
+                frame <- 1
             }
-                                        
-        plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",...)
-        as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1)
+            im <- frame(x,frame)
+        }
+        if (1 %in% dim(im)[1:2]) #Image has a single spatial dimension
+        {
+            plot.singleton(im,...)
+        }
+        else
+        {
+            plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",...)
+            as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1)
+        }
     }
+
+#Plots one-dimensional images
+plot.singleton <- function(im,...)
+{
+    varying <- if (width(im) == 1) "y" else "x"
+    l <- max(dim(im)[1:2])
+    if (spectrum(im) == 1)
+    {
+        plot(1:l,as.vector(im),xlab=varying,ylab="Pixel value",type="l",...)
+    }
+    else if (spectrum(im) ==3)
+    {
+        ylim <- range(im)
+        
+        plot(1:l,1:l,type="n",xlab=varying,ylim=ylim,ylab="Pixel value",...)
+        cols <- c("red","green","blue")
+
+        for (i in 1:3)
+        {
+
+            graphics::lines(1:l,as.vector(channel(im,i)),type="l",col=cols[i])
+        }
+    }
+    else
+    {
+        stop("Unsupported image format")
+    }
+}
 
 ##' @export
 print.cimg <- function(x,...)

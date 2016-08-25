@@ -4,7 +4,7 @@
 \alias{interp}
 \title{Interpolate image values}
 \usage{
-interp(im, locations, cubic = FALSE)
+interp(im, locations, cubic = FALSE, extrapolate = TRUE)
 }
 \arguments{
 \item{im}{the image (class cimg)}
@@ -12,6 +12,8 @@ interp(im, locations, cubic = FALSE)
 \item{locations}{a data.frame}
 
 \item{cubic}{if TRUE, use cubic interpolation. If FALSE, use linear (default FALSE)}
+
+\item{extrapolate}{allow extrapolation (to values outside the image)}
 }
 \description{
 This function provides 2D and 3D (linear or cubic) interpolation for pixel values.
