@@ -205,14 +205,14 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// display
-void display(NumericVector im, bool rescale);
-RcppExport SEXP imager_display(SEXP imSEXP, SEXP rescaleSEXP) {
+// display_
+void display_(NumericVector im, bool rescale);
+RcppExport SEXP imager_display_(SEXP imSEXP, SEXP rescaleSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< bool >::type rescale(rescaleSEXP);
-    display(im, rescale);
+    display_(im, rescale);
     return R_NilValue;
 END_RCPP
 }
@@ -780,16 +780,16 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// autocrop
-NumericVector autocrop(NumericVector im, NumericVector color, std::string axes);
-RcppExport SEXP imager_autocrop(SEXP imSEXP, SEXP colorSEXP, SEXP axesSEXP) {
+// autocrop_
+NumericVector autocrop_(NumericVector im, NumericVector color, std::string axes);
+RcppExport SEXP imager_autocrop_(SEXP imSEXP, SEXP colorSEXP, SEXP axesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type color(colorSEXP);
     Rcpp::traits::input_parameter< std::string >::type axes(axesSEXP);
-    __result = Rcpp::wrap(autocrop(im, color, axes));
+    __result = Rcpp::wrap(autocrop_(im, color, axes));
     return __result;
 END_RCPP
 }
@@ -1087,6 +1087,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int >::type nb_randoms(nb_randomsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type guide(guideSEXP);
     __result = Rcpp::wrap(do_patchmatch(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide));
+    return __result;
+END_RCPP
+}
+// checkcoords
+LogicalVector checkcoords(IntegerVector x, IntegerVector y, IntegerVector z, IntegerVector c, IntegerVector d);
+RcppExport SEXP imager_checkcoords(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type c(cSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type d(dSEXP);
+    __result = Rcpp::wrap(checkcoords(x, y, z, c, d));
     return __result;
 END_RCPP
 }

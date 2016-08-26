@@ -320,3 +320,22 @@ List do_patchmatch(NumericVector im1,NumericVector im2,
 
 
 
+// Check that coordinates are all in image (indexing from 1)
+// [[Rcpp::export]]
+LogicalVector checkcoords(IntegerVector x,IntegerVector y,IntegerVector z,IntegerVector c,IntegerVector d)
+{
+  int n = x.length();
+  LogicalVector out(n);
+  for (int i = 0; i < n; i++)
+    {
+      if ((x[i] < 1) or (x[i] > d[0]) or (y[i] < 1) or (y[i] > d[1]) or (z[i] < 1) or (z[i] > d[2]) or (c[i] < 1) or (c[i] > d[3]))
+	{
+	  out[i] = false;
+	}
+      else
+	{
+	  out[i] = true;
+	}
+    }
+  return out;
+}

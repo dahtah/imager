@@ -105,6 +105,7 @@ coordImage <- function(im,channel)
 ##' Pixels are stored linearly in (x,y,z,c) order. This function computes the vector index of a pixel given its coordinates
 ##' @param im an image
 ##' @param coords a data.frame with values x,y,z (optional), c (optional)
+##' @param outside what to do if some coordinates are outside the image: "stop" issues error, "NA" replaces invalid coordinates with NAs. Default: "stop". 
 ##' @return a vector of indices (NA if the indices are invalid)
 ##' @examples
 ##' im <- as.cimg(function(x,y) x+y,100,100)
@@ -113,61 +114,50 @@ coordImage <- function(im,channel)
 ##' @author Simon Barthelme
 ##' @export
 pixel.index <- function(im,coords,outside="stop")
-    {
-        d <- dim(im)
-        if ("c" %in% names(im))
+{
+    if ("c" %in% names(coords))
             {
                 coords <- rename(coords,list("c"="cc")) #Safer
             }
-        if (setequal(names(coords),c("x","y")))
-            {
-                if (depth(im) > 1)
-                    {
-                        stop("Coordinates are ambiguous, must specify frame")
-                    }
-                else if (spectrum(im) > 1)
-                    {
-                        stop("Coordinates are ambiguous, must specify channel")
-                    }
-                else
-                    {
-                        out <- check.x(im,coords$x)+d[1]*(check.y(im,coords$y)-1)
-                    }
-            }
-        else if (setequal(names(coords),c("x","y","z")))
-            {
-                if (spectrum(im) > 1)
-                    {
-                        stop("Coordinates are ambiguous, must specify channel")
-                    }
-                else
-                    {
-                        out <- check.x(im,coords$x)+d[1]*(check.y(im,coords$y)-1)+(d[1]*d[2])*(check.z(im,coords$z)-1)
-                    }
-            }
-        else if (setequal(names(coords),c("x","y","cc")))
-            {
-                if (depth(im) > 1)
-                    {
-                        stop("Coordinates are ambiguous, must specify frame")
-                    }
-                else
-                    {
-                        out <- check.x(im,coords$x)+d[1]*(check.y(im,coords$y)-1)+(d[1]*d[2])*(check.cc(im,coords$cc)-1)
-                    }
-            }
-        else if (setequal(names(coords),c("x","y","cc","z")))
-            {
-                out <- check.x(im,coords$x)+d[1]*(check.y(im,coords$y)-1)+(d[1]*d[2])*(check.z(im,coords$z)-1)+prod(d[1:3])*(check.cc(im,coords$cc)-1)
-            }
+    nc <- setdiff(names.coords,"c")
+    ms <- setdiff(nc,names(coords))
+    for (m in ms) #Add missing coordinates
+    {
+        if (dimn(im,m) == 1)
+        {
+            #Check singleton oth. ambiguous
+            coords[[m]] <- 1
+        }
         else
-            {
-                stop("Unrecognised coordinates")
-            }
-        out[out < 0] <- NA
-        out[out > prod(dim(im))] <- NA
-        out
+        {
+            stop(paste0("Ambiguous coordinates: missing ",m))
+        }
     }
+    if (prod(dim(im)) == 1) #Edge case
+    {
+        ind <- rowSums(as.matrix(coords[,c("x","y","z","cc")])-1)+1
+    }
+    else
+    {
+        ns <- nc[dim(im) > 1]
+        ws <- (c(1,cumprod(dim(im))[1:3]))[dim(im) > 1]
+        ind <- 1+(as.matrix(coords[,ns])-1)%*%ws
+    }
+    check <- with(coords,checkcoords(x,y,z,cc,dim(im)))
+    if (!all(check))
+    {
+        if (outside=="stop")
+        {
+            stop("Some coordinates are outside the image")
+        }
+        else if (outside == "NA")
+        {
+            ind[!check] <- NA
+        }
+    }
+    as.vector(ind)
+}
+
 
 coord.index <- function(im,index)
     {
@@ -211,3 +201,6 @@ get.locations <- function(im,condition)
             }
         coord.index(im,which(condition(im)))
     }
+
+
+dimn <- function(im,v) dim(im)[index.coords[[v]]]

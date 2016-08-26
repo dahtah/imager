@@ -13,6 +13,7 @@ NULL
 #' @importFrom graphics axis plot rasterImage
 #' @importFrom stats quantile rnorm kmeans
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
+#' @importFrom purrr map map_dbl map_lgl map_df map2
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
 #' @importFrom readbitmap read.bitmap
@@ -45,6 +46,10 @@ cimg <- function(X)
         class(X) <-c("cimg","numeric")
         X
     }
+
+##' @describeIn cimg
+##' @export
+is.cimg <- function(X) "cimg" %in% class(X)
 
 ##' Various shortcuts for extracting colour channels, frames, etc
 ##'
@@ -975,3 +980,25 @@ NULL
     cimg(out)
 }
 
+#' Display image using CImg library
+#'
+#' Press escape or close the window to exit.
+#'
+#' @param im an image (cimg object)
+#' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
+#' @export
+#' @examples
+#' ##Not run: interactive only 
+#' ##display(boats,TRUE) #Normalisation on 
+#' ##display(boats/2,TRUE) #Normalisation on, so same as above
+#' ##display(boats,FALSE) #Normalisation off
+#' ##display(boats/2,FALSE) #Normalisation off, so different from above
+display.cimg <- function(im,rescale=TRUE)
+{
+    display_(im,rescale)
+}
+
+##' @export
+display <- function (x, ...) {
+   UseMethod("display", x)
+ }

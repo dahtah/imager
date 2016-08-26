@@ -99,27 +99,10 @@ getCc <- function(x, y, z, c) {
     .Call('imager_getCc', PACKAGE = 'imager', x, y, z, c)
 }
 
-#' Display image using CImg library
-#'
-#' Press escape or close the window to exit.
-#'
-#' @param im an image (cimg object)
-#' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
-#' @export
-#' @examples
-#' ##Not run: interactive only 
-#' ##display(boats,TRUE) #Normalisation on 
-#' ##display(boats/2,TRUE) #Normalisation on, so same as above
-#' ##display(boats,FALSE) #Normalisation off
-#' ##display(boats/2,FALSE) #Normalisation off, so different from above
-display <- function(im, rescale = TRUE) {
-    invisible(.Call('imager_display', PACKAGE = 'imager', im, rescale))
+display_ <- function(im, rescale = TRUE) {
+    invisible(.Call('imager_display_', PACKAGE = 'imager', im, rescale))
 }
 
-#' Display image list using CImg library
-#'
-#' @param imlist a list of cimg objects
-#' @export
 display_list <- function(imlist) {
     invisible(.Call('imager_display_list', PACKAGE = 'imager', imlist))
 }
@@ -602,20 +585,8 @@ mclosing <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
     .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
-#' Autocrop image region 
-#'
-#' @param im an image
-#' @param color Color used for the crop. If  0, color is guessed.
-#' @param axes Axes used for the crop.
-#' @export
-#' @examples
-#' #Add pointless padding
-#' padded <- pad(boats,30,"xy")
-#' plot(padded)
-#' #Remove padding
-#' autocrop(padded,color=c(0,0,0)) %>% plot
-autocrop <- function(im, color, axes = "zyx") {
-    .Call('imager_autocrop', PACKAGE = 'imager', im, color, axes)
+autocrop_ <- function(im, color, axes = "zyx") {
+    .Call('imager_autocrop_', PACKAGE = 'imager', im, color, axes)
 }
 
 #' Rotate image by an arbitrary angle.
@@ -875,5 +846,9 @@ draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
 
 do_patchmatch <- function(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide) {
     .Call('imager_do_patchmatch', PACKAGE = 'imager', im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide)
+}
+
+checkcoords <- function(x, y, z, c, d) {
+    .Call('imager_checkcoords', PACKAGE = 'imager', x, y, z, c, d)
 }
 

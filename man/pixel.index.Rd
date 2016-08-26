@@ -4,12 +4,14 @@
 \alias{pixel.index}
 \title{Linear index in internal vector from pixel coordinates}
 \usage{
-pixel.index(im, coords)
+pixel.index(im, coords, outside = "stop")
 }
 \arguments{
 \item{im}{an image}
 
 \item{coords}{a data.frame with values x,y,z (optional), c (optional)}
+
+\item{outside}{what to do if some coordinates are outside the image: "stop" issues error, "NA" replaces invalid coordinates with NAs. Default: "stop".}
 }
 \value{
 a vector of indices (NA if the indices are invalid)

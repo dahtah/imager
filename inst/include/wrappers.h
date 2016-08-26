@@ -40,6 +40,7 @@ namespace Rcpp {
       {
 	out[i] = wrap(ilist(i));
       }
+    out.attr("class") = CharacterVector::create("imlist","list");
     return Rcpp::wrap(out);
   }
 }

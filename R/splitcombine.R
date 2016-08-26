@@ -66,16 +66,18 @@ iiply <- function(im,axis,fun,...)
 ##' Split an image along a certain axis (producing a list)
 ##'
 ##' Use this if you need to process colour channels separately, or frames separately, or rows separately, etc. You can also use it to chop up an image into blocks.
-##' 
+##' Returns an "imlist" object, which is essentially a souped-up list. 
 ##' @param im an image 
 ##' @param axis the axis along which to split (for example 'c')
 ##' @param nb number of objects to split into. 
-##' if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels
+##' if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels.
+## if nb = -px, with px > 1 split into blocks of px pixels.
 ##' @seealso imappend (the reverse operation)
 ##' @examples
 ##' im <- as.cimg(function(x,y,z) x+y+z,10,10,5)
 ##' imsplit(im,"z") #Split along the z axis into a list with 5 elements
 ##' imsplit(im,"z",2) #Split along the z axis into two groups
+##' imsplit(boats,"x",-200) %>% plot #Blocks of 200 pix. along x
 ##' imsplit(im,"z",2) %>% imappend("z") #Split and reshape into a single image
 ##' @export
 imsplit <- function(im,axis,nb=-1)

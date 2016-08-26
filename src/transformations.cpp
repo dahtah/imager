@@ -2,20 +2,8 @@
 using namespace Rcpp;
 using namespace cimg_library;
 
-//' Autocrop image region 
-//'
-//' @param im an image
-//' @param color Color used for the crop. If  0, color is guessed.
-//' @param axes Axes used for the crop.
-//' @export
-//' @examples
-//' #Add pointless padding
-//' padded <- pad(boats,30,"xy")
-//' plot(padded)
-//' #Remove padding
-//' autocrop(padded,color=c(0,0,0)) %>% plot
 // [[Rcpp::export]]
-NumericVector autocrop(NumericVector im,NumericVector color,std::string axes = "zyx")
+NumericVector autocrop_(NumericVector im,NumericVector color,std::string axes = "zyx")
 {
   CId img = as<CId >(im);
   CId out(img,false);

@@ -364,7 +364,7 @@ as.cimg.data.frame <- function(obj,v.name="value",dims,...)
         }
     }
     im <- as.cimg(array(0,dims))
-    ind <- pixel.index(im,obj[,col.coord])
+    ind <- pixel.index(im,obj[,col.coord,drop=FALSE])
     im[ind] <- obj[[v.name]]
     im
 }
