@@ -34,14 +34,13 @@ as.data.frame.imlist <- function(x)
     map_df(x,as.data.frame,.id="im")
 }
 
-
+##' @export
 print.imlist <- function(x,...)
 {
     msg <- sprintf("Image list of size %i \n",length(x))
     cat(msg)
     invisible(x)
 }
-
 
 ##' Plot an image list
 ##'
@@ -116,5 +115,23 @@ rect.layout <- function(n)
 #' @export
 display.list <- function(im,rescale=TRUE)
 {
-    display_list(im,rescale)
+    display_list(im)
+}
+
+##' Type-stable map for use with the purrr package
+##'
+##' Works like purrr::map, purrr::map_dbl and the like but ensures that the output is an image list. 
+##' @param ... passed to map
+##' @return an image list
+##' @author Simon Barthelme
+##' @examples
+##' #Returns a list
+##' imsplit(boats,"x",2) %>% map(~ isoblur(.,3))
+##' #Returns an "imlist" object
+##' imsplit(boats,"x",2) %>% map_il(~ isoblur(.,3))
+##' #Fails if function returns an object that's not an image
+##' try(imsplit(boats,"x",2) %>% map_il(~ . > 2))
+map_il <- function(...)
+{
+    map(...) %>% imlist
 }

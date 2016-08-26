@@ -1,3 +1,15 @@
+# imager 0.30 Major release. 
+  * new S3 class imlist improves support for image lists 
+  * enabled OpenMP. Many CImg primitives now run in parallel. 
+  * experimental support for CImg's DSL via imeval, patch_summary. 
+  * improved as.raster,plot. Now support palettes via colourscale argument.
+  * new patchstat function for fast extraction of patch statistics
+  * new patchmatch function 
+  * cleaned up the API, improved the documentation
+  * fixed bug in inline C++ plugin, should now work on Windows. 
+  * improved configure script. FFTW3 is now optional (should be less confusing to OSX users)
+
+
 # imager 0.20. Major release
   * added a tutorial (vignette), which includes a worked-out example of multi-scale blob detection
   * new functions: 

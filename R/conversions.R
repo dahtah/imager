@@ -201,6 +201,10 @@ as.cimg <- function(obj,...) UseMethod("as.cimg")
 ##' @export
 as.cimg.numeric <- function(obj,...) as.cimg.vector(obj,...)
 
+##' @describeIn as.cimg convert logical
+##' @export
+as.cimg.logical <- function(obj,...) as.cimg.vector(as.numeric(obj),...)
+
 ##' @describeIn as.cimg convert double
 ##' @export
 as.cimg.double <- function(obj,...) as.cimg.vector(obj,...)
