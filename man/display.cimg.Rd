@@ -4,10 +4,10 @@
 \alias{display.cimg}
 \title{Display image using CImg library}
 \usage{
-\method{display}{cimg}(im, rescale = TRUE)
+\method{display}{cimg}(x, rescale = TRUE)
 }
 \arguments{
-\item{im}{an image (cimg object)}
+\item{x}{an image (cimg object)}
 
 \item{rescale}{if true pixel values are rescaled to 0...255 (default TRUE)}
 }

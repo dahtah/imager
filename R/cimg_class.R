@@ -10,7 +10,7 @@ NULL
 #' @useDynLib imager
 #' @importFrom grDevices as.raster col2rgb dev.capture gray rgb
 #' @importFrom utils file_test
-#' @importFrom graphics axis plot rasterImage
+#' @importFrom graphics axis plot rasterImage layout
 #' @importFrom stats quantile rnorm kmeans
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom purrr map map_dbl map_lgl map_df map2
@@ -984,7 +984,7 @@ NULL
 #'
 #' Press escape or close the window to exit.
 #'
-#' @param im an image (cimg object)
+#' @param x an image (cimg object)
 #' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
 #' @export
 #' @examples
@@ -993,11 +993,15 @@ NULL
 #' ##display(boats/2,TRUE) #Normalisation on, so same as above
 #' ##display(boats,FALSE) #Normalisation off
 #' ##display(boats/2,FALSE) #Normalisation off, so different from above
-display.cimg <- function(im,rescale=TRUE)
+display.cimg <- function(x,rescale=TRUE)
 {
     display_(im,rescale)
 }
 
+##' Display object using CImg library
+##'
+##' CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in Rstudio.
+##' @param x an image or a list of images
 ##' @export
 display <- function (x, ...) {
    UseMethod("display", x)

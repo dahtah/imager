@@ -3,6 +3,7 @@
 \name{as.cimg}
 \alias{as.cimg}
 \alias{as.cimg.double}
+\alias{as.cimg.logical}
 \alias{as.cimg.matrix}
 \alias{as.cimg.numeric}
 \alias{as.cimg.vector}
@@ -11,6 +12,8 @@
 as.cimg(obj, ...)
 
 \method{as.cimg}{numeric}(obj, ...)
+
+\method{as.cimg}{logical}(obj, ...)
 
 \method{as.cimg}{double}(obj, ...)
 
@@ -40,6 +43,8 @@ Imager implements various converters that turn your data into cimg objects. If y
 \section{Methods (by class)}{
 \itemize{
 \item \code{numeric}: convert numeric
+
+\item \code{logical}: convert logical
 
 \item \code{double}: convert double
 

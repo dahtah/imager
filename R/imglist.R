@@ -1,8 +1,10 @@
 
 ##' Image list
 ##'
-##' An imlist object is simply a list of images (of class cimg). 
+##' An imlist object is simply a list of images (of class cimg).
+##' 
 ##' @param l a list
+##' @param ... ignored 
 ##' @export
 ##' @examples
 ##' #imsplit returns objects of class "imlist"
@@ -21,17 +23,30 @@ imlist <- function(l)
     }
 }
 
+##' @describeIn imlist
 ##' @export
 as.imlist.list <- imlist
 
-##' @export
-as.list.imlist <- function(x) { class(x) <- "list"; x }
 
+##' @describeIn imlist
 ##' @export
-as.data.frame.imlist <- function(x)
+as.list.imlist <- function(x,...) { class(x) <- "list"; x }
+
+##' Convert image list to data.frame
+##'
+##' An column named "im"
+##' @param x
+##' @param index. Name of the colum containing the index (or name) of the image in the list. Default: "im"
+##' @param ... Passed on to as.data.frame.cimg
+##' @examples
+##' #Transform the image gradient into a data.frame
+##' gr <- imgradient(boats,"xy") %>% setNames(c("dx","dy")) %>% as.data.frame
+##' str(gr)
+##' @export
+as.data.frame.imlist <- function(x,index="im",...)
 {
-    if (is.null(names(x))) names(x) <- 1:n
-    map_df(x,as.data.frame,.id="im")
+    if (is.null(names(x))) names(x) <- 1:length(x)
+    map_df(x,~ as.data.frame(.,...),.id=index)
 }
 
 ##' @export
@@ -96,7 +111,7 @@ rect.layout <- function(n)
     sn <- sqrt(n)
     if (sn == n)
     {
-        layout(matrix(1:n,sn,sn))
+        matrix(1:n,sn,sn)
     }
     else
     {
@@ -111,11 +126,13 @@ rect.layout <- function(n)
 
 #' Display image list using CImg library
 #'
-#' @param imlist a list of cimg objects
+#' Click on individual images to zoom in.
+#' 
+#' @param x a list of cimg objects
 #' @export
-display.list <- function(im,rescale=TRUE)
+display.list <- function(x)
 {
-    display_list(im)
+    display_list(x)
 }
 
 ##' Type-stable map for use with the purrr package

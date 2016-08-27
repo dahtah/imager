@@ -8,6 +8,8 @@ imlist(l)
 }
 \arguments{
 \item{l}{a list}
+
+\item{...}{ignored}
 }
 \description{
 An imlist object is simply a list of images (of class cimg).
