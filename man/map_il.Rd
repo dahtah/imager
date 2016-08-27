@@ -17,7 +17,7 @@ Works like purrr::map, purrr::map_dbl and the like but ensures that the output i
 }
 \examples{
 #Returns a list
-imsplit(boats,"x",2) \%>\% map(~ isoblur(.,3))
+imsplit(boats,"x",2) \%>\% purrr::map(~ isoblur(.,3))
 #Returns an "imlist" object
 imsplit(boats,"x",2) \%>\% map_il(~ isoblur(.,3))
 #Fails if function returns an object that's not an image

@@ -7,7 +7,7 @@
 display(x, ...)
 }
 \arguments{
-\item{x}{}
+\item{x}{an image or a list of images}
 }
 \description{
 CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in Rstudio.
