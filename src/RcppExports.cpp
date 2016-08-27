@@ -385,9 +385,9 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
-// imsharpen
-NumericVector imsharpen(NumericVector im, float amplitude, bool sharpen_type, float edge, float alpha, float sigma);
-RcppExport SEXP imager_imsharpen(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpen_typeSEXP, SEXP edgeSEXP, SEXP alphaSEXP, SEXP sigmaSEXP) {
+// sharpen
+NumericVector sharpen(NumericVector im, float amplitude, bool sharpen_type, float edge, float alpha, float sigma);
+RcppExport SEXP imager_sharpen(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpen_typeSEXP, SEXP edgeSEXP, SEXP alphaSEXP, SEXP sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -397,7 +397,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type edge(edgeSEXP);
     Rcpp::traits::input_parameter< float >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
-    __result = Rcpp::wrap(imsharpen(im, amplitude, sharpen_type, edge, alpha, sigma));
+    __result = Rcpp::wrap(sharpen(im, amplitude, sharpen_type, edge, alpha, sigma));
     return __result;
 END_RCPP
 }

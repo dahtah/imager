@@ -4,7 +4,7 @@
 \alias{display.cimg}
 \title{Display image using CImg library}
 \usage{
-\method{display}{cimg}(x, rescale = TRUE)
+\method{display}{cimg}(x, ..., rescale = TRUE)
 }
 \arguments{
 \item{x}{an image (cimg object)}

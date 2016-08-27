@@ -298,8 +298,8 @@ convolve <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
 #' plot(boats,main="Original")
 #' imsharpen(boats,150)  %>% plot(main="Sharpened")
 #' 
-imsharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, sigma = 0) {
-    .Call('imager_imsharpen', PACKAGE = 'imager', im, amplitude, sharpen_type, edge, alpha, sigma)
+sharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, sigma = 0) {
+    .Call('imager_sharpen', PACKAGE = 'imager', im, amplitude, sharpen_type, edge, alpha, sigma)
 }
 
 #' Compute image gradient.

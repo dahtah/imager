@@ -4,15 +4,17 @@
 \alias{as.data.frame.imlist}
 \title{Convert image list to data.frame}
 \usage{
-\method{as.data.frame}{imlist}(x, index = "im", ...)
+\method{as.data.frame}{imlist}(x, ..., index = "im")
 }
 \arguments{
+\item{x}{an image list (an imlist object)}
+
 \item{...}{Passed on to as.data.frame.cimg}
 
-\item{index.}{Name of the colum containing the index (or name) of the image in the list. Default: "im"}
+\item{index}{Name of the colum containing the index (or name) of the image in the list. Default: "im"}
 }
 \description{
-An column named "im"
+Convert image list to data.frame
 }
 \examples{
 #Transform the image gradient into a data.frame

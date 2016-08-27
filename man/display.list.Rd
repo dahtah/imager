@@ -4,10 +4,12 @@
 \alias{display.list}
 \title{Display image list using CImg library}
 \usage{
-\method{display}{list}(x)
+\method{display}{list}(x, ...)
 }
 \arguments{
 \item{x}{a list of cimg objects}
+
+\item{...}{ignored}
 }
 \description{
 Click on individual images to zoom in.

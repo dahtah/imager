@@ -8,6 +8,8 @@ display(x, ...)
 }
 \arguments{
 \item{x}{an image or a list of images}
+
+\item{...}{ignored}
 }
 \description{
 CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in Rstudio.
