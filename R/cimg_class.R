@@ -993,7 +993,7 @@ NULL
 #' ##display(boats/2,TRUE) #Normalisation on, so same as above
 #' ##display(boats,FALSE) #Normalisation off
 #' ##display(boats/2,FALSE) #Normalisation off, so different from above
-display.cimg <- function(x,rescale=TRUE)
+display.cimg <- function(x,...,rescale=TRUE)
 {
     display_(im,rescale)
 }
@@ -1002,6 +1002,7 @@ display.cimg <- function(x,rescale=TRUE)
 ##'
 ##' CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in Rstudio.
 ##' @param x an image or a list of images
+##' @param ... ignored
 ##' @export
 display <- function (x, ...) {
    UseMethod("display", x)

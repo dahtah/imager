@@ -257,7 +257,7 @@ NumericVector convolve(NumericVector im,NumericVector filter, bool dirichlet=fal
 //' imsharpen(boats,150)  %>% plot(main="Sharpened")
 //' 
 // [[Rcpp::export]]
-NumericVector imsharpen(NumericVector im,float amplitude,
+NumericVector sharpen(NumericVector im,float amplitude,
 		bool sharpen_type = false,float edge = 1,
 		float alpha = 0,float sigma = 0)
  {

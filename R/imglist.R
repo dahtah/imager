@@ -34,16 +34,15 @@ as.list.imlist <- function(x,...) { class(x) <- "list"; x }
 
 ##' Convert image list to data.frame
 ##'
-##' An column named "im"
-##' @param x
-##' @param index. Name of the colum containing the index (or name) of the image in the list. Default: "im"
+##' @param x an image list (an imlist object)
+##' @param index Name of the colum containing the index (or name) of the image in the list. Default: "im"
 ##' @param ... Passed on to as.data.frame.cimg
 ##' @examples
 ##' #Transform the image gradient into a data.frame
 ##' gr <- imgradient(boats,"xy") %>% setNames(c("dx","dy")) %>% as.data.frame
 ##' str(gr)
 ##' @export
-as.data.frame.imlist <- function(x,index="im",...)
+as.data.frame.imlist <- function(x,...,index="im")
 {
     if (is.null(names(x))) names(x) <- 1:length(x)
     map_df(x,~ as.data.frame(.,...),.id=index)
@@ -129,8 +128,9 @@ rect.layout <- function(n)
 #' Click on individual images to zoom in.
 #' 
 #' @param x a list of cimg objects
+#' @param ... ignored
 #' @export
-display.list <- function(x)
+display.list <- function(x,...)
 {
     display_list(x)
 }
