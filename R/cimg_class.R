@@ -986,6 +986,7 @@ NULL
 #'
 #' @param x an image (cimg object)
 #' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
+#' @param ... ignored
 #' @export
 #' @examples
 #' ##Not run: interactive only 
@@ -1003,6 +1004,7 @@ display.cimg <- function(x,...,rescale=TRUE)
 ##' CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in Rstudio.
 ##' @param x an image or a list of images
 ##' @param ... ignored
+##' @seealso display.cimg, display.imlist
 ##' @export
 display <- function (x, ...) {
    UseMethod("display", x)

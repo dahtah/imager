@@ -129,6 +129,10 @@ rect.layout <- function(n)
 #' 
 #' @param x a list of cimg objects
 #' @param ... ignored
+#' @examples
+#' ##Not run: interactive only 
+#' ## imgradient(boats,"xy") %>% display
+
 #' @export
 display.list <- function(x,...)
 {

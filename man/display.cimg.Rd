@@ -9,6 +9,8 @@
 \arguments{
 \item{x}{an image (cimg object)}
 
+\item{...}{ignored}
+
 \item{rescale}{if true pixel values are rescaled to 0...255 (default TRUE)}
 }
 \description{

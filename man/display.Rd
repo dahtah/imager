@@ -14,4 +14,7 @@ display(x, ...)
 \description{
 CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in Rstudio.
 }
+\seealso{
+display.cimg, display.imlist
+}
 
