@@ -15,6 +15,7 @@ output:
 If you're on OS X, you're probably missing XQuartz: https://www.xquartz.org/. 
 Otherwise, you're probably attempting to compile from source. If you're installing from github, try installing from CRAN (install.packages('imager')).
 If CRAN can't find binaries for your platform:
+
 - If you're on OS X, make sure you have installed Xcode. 
 - If you're on Linux, make sure you have all the build essentials (installing libfftw3-dev and g++ should pull all the dependencies you need). 
 
