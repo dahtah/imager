@@ -143,12 +143,12 @@ fun &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% lapply(rank)
     
 system.time(fun())</code></pre>
 <pre><code>##    user  system elapsed 
-##   7.372   0.096   7.466</code></pre>
+##   7.272   0.132   7.403</code></pre>
 <pre class="r"><code>#Parallel version: use mclapply
 fun.par &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% mclapply(rank,mc.cores=2)
 system.time(fun.par())</code></pre>
 <pre><code>##    user  system elapsed 
-##   2.616   0.244   5.422</code></pre>
+##   2.648   0.212   5.394</code></pre>
 </div>
 <div id="native-parallelisation-cimg-and-openmp" class="section level1">
 <h1><span class="header-section-number">2</span> Native parallelisation: CImg and OpenMP</h1>
@@ -167,7 +167,7 @@ OpenMPController::omp_set_num_threads(1)</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
 ##   expr      min       lq     mean   median       uq      max neval
-##  fun() 297.0964 297.4661 297.7576 297.8535 298.0663 298.2756    15</code></pre>
+##  fun() 296.3879 296.5457 297.2724 297.1645 297.7369 299.2296    15</code></pre>
 <pre class="r"><code>#2 cores
 OpenMPController::omp_set_num_threads(2)</code></pre>
 <pre><code>## [[1]]
@@ -175,15 +175,15 @@ OpenMPController::omp_set_num_threads(2)</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
 ##   expr      min       lq     mean   median       uq      max neval
-##  fun() 197.9129 198.3742 198.8412 198.9958 199.2477 200.1741    15</code></pre>
+##  fun() 197.5318 197.9494 198.1364 198.0699 198.3315 198.9566    15</code></pre>
 <pre class="r"><code>#3 cores, etc.
 OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre><code>## [[1]]
 ## [1] 3</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
-##   expr      min       lq     mean   median       uq      max neval
-##  fun() 101.5473 102.0608 103.0975 102.4377 102.8881 109.5653    15</code></pre>
+##   expr      min       lq     mean   median       uq     max neval
+##  fun() 176.7235 195.4229 194.6893 195.9774 196.3835 196.611    15</code></pre>
 <p>If CImg’s parallelisation doesn’t seem to work on your machine, it’s probably because you compiled the package with clang, which has patchy support for OpenMP. Recompile using gcc if possible.</p>
 </div>
 <div id="parallelisation-in-r-vs.native-parallelisation" class="section level1">
@@ -192,21 +192,20 @@ OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre class="r"><code>OpenMPController::omp_set_num_threads(1)</code></pre>
 <pre><code>## [[1]]
 ## [1] 1</code></pre>
-<pre class="r"><code>fun.R &lt;- function() imsplit(boats,&quot;c&quot;) %&gt;% mclapply(function(v) medianblur(v,40),mc.cores=3)
-microbenchmark(fun.R(),times=10)</code></pre>
+<pre class="r"><code>fun.R &lt;- function() imsplit(boats,&quot;c&quot;) %&gt;% mclapply(function(v) medianblur(v,50),mc.cores=3)
+microbenchmark(fun.R(),times=20)</code></pre>
 <pre><code>## Unit: seconds
-##     expr      min       lq     mean   median       uq      max neval
-##  fun.R() 2.064683 2.065289 2.069543 2.068879 2.073606 2.076702    10</code></pre>
+##     expr      min       lq    mean  median       uq      max neval
+##  fun.R() 3.050014 3.069831 3.12196 3.10297 3.163867 3.291679    20</code></pre>
 <p>Second, CImg’s native version:</p>
 <pre class="r"><code>OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre><code>## [[1]]
 ## [1] 3</code></pre>
-<pre class="r"><code>fun.nat &lt;- function() medianblur(boats,40)
-microbenchmark(fun.nat(),times=10)</code></pre>
+<pre class="r"><code>fun.nat &lt;- function() medianblur(boats,50)
+microbenchmark(fun.nat(),times=20)</code></pre>
 <pre><code>## Unit: seconds
-##       expr      min       lq     mean   median       uq      max neval
-##  fun.nat() 2.052927 2.706196 2.600311 2.706931 2.707516 2.773158    10</code></pre>
-<p>The native version has a bit less overhead.</p>
+##       expr      min       lq     mean  median       uq      max neval
+##  fun.nat() 3.013194 3.019402 3.046271 3.04238 3.055052 3.130165    20</code></pre>
 <p>Pros and cons of using native parallelisation:</p>
 <ul>
 <li>Transparent</li>

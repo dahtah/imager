@@ -68,19 +68,19 @@ Here's a simple benchmark: medianblur can be parallelised across image channels.
 
 ```{r}
 OpenMPController::omp_set_num_threads(1)
-fun.R <- function() imsplit(boats,"c") %>% mclapply(function(v) medianblur(v,40),mc.cores=3)
-microbenchmark(fun.R(),times=10)
+fun.R <- function() imsplit(boats,"c") %>% mclapply(function(v) medianblur(v,50),mc.cores=3)
+microbenchmark(fun.R(),times=20)
 ```
 
 Second, CImg's native version:
 
 ```{r}
 OpenMPController::omp_set_num_threads(3)
-fun.nat <- function() medianblur(boats,40)
-microbenchmark(fun.nat(),times=10)
+fun.nat <- function() medianblur(boats,50)
+microbenchmark(fun.nat(),times=20)
 ```
 
-The native version has a bit less overhead. 
+
 
 Pros and cons of using native parallelisation:
 
