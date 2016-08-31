@@ -10,14 +10,15 @@
 
 
 
+
 <title>Foreground/background segmentation using imager</title>
 
-<script src="foreground_background_files/jquery-1.11.0/jquery.min.js"></script>
+<script src="foreground_background_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="foreground_background_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
-<script src="foreground_background_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="foreground_background_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="foreground_background_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="foreground_background_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="foreground_background_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="foreground_background_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="foreground_background_files/bootstrap-3.3.5/shim/respond.min.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <link rel="stylesheet"
@@ -39,6 +40,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
 </head>
 
 <body>
@@ -53,16 +82,42 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
 <div class="container-fluid main-container">
 
+<!-- tabsets -->
+<script src="foreground_background_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
 
-<div id="header">
-<h1 class="title">Foreground/background segmentation using imager</h1>
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Foreground/background segmentation using imager</h1>
+
 </div>
 
 
@@ -77,22 +132,22 @@ str(grad)</code></pre>
 <pre class="r"><code>layout(t(1:2))
 plot(grad$x,main=&quot;Gradient along x&quot;)
 plot(grad$y,main=&quot;Gradient along y&quot;)</code></pre>
-<p><img src="foreground_background_files/figure-html/gradient-1.png" title="" alt="" width="1152" /></p>
+<p><img src="foreground_background_files/figure-html/gradient-1.png" width="1152" /></p>
 <p>What we now have is a list of two images, one corresponding to the gradient in the x direction and the gradient in the y dimension. Both are computed across the RGB channels separately.</p>
 <p>The image gradient isn’t quite what we need yet, since a light-to-dark edge will have negative gradient while a dark-to-light edge will have positive gradient. A good solution is to square the gradient:</p>
 <pre class="r"><code>grad.sq &lt;- grad %&gt;% llply(function(v) v^2)
 layout(t(1:2))
 plot(sqrt(grad.sq$x),main=&quot;Gradient magnitude along x&quot;)
 plot(sqrt(grad.sq$y),main=&quot;Gradient magnitude along y&quot;)</code></pre>
-<p><img src="foreground_background_files/figure-html/squaring_gradient-1.png" title="" alt="" width="1152" /></p>
+<p><img src="foreground_background_files/figure-html/squaring_gradient-1.png" width="1152" /></p>
 <p>Since we don’t care about the direction of the gradient we can just sum the two:</p>
 <pre class="r"><code>grad.sq &lt;- add(grad.sq) #Add (d/dx)^2 and (d/dy)^2
 plot(sqrt(grad.sq))</code></pre>
-<p><img src="foreground_background_files/figure-html/avg_grad-1.png" title="" alt="" width="624" /></p>
+<p><img src="foreground_background_files/figure-html/avg_grad-1.png" width="624" /></p>
 <p>and finally we combine all three colour channels by summing:</p>
 <pre class="r"><code>edges &lt;- imsplit(grad.sq,&quot;c&quot;) %&gt;% add
 plot(sqrt(edges),main=&quot;Detected edges&quot;)</code></pre>
-<p><img src="foreground_background_files/figure-html/edges-1.png" title="" alt="" width="624" /></p>
+<p><img src="foreground_background_files/figure-html/edges-1.png" width="624" /></p>
 <p>We have too many edges: for example, the edges around the eyes are spurious (they’re not true object boundaries). A way of mitigating the problem is to operate at a lower resolution. I’ll wrap everything into a function</p>
 <pre class="r"><code>#Sigma is the size of the blur window.
 
@@ -102,11 +157,11 @@ detect.edges &lt;- function(im,sigma=1)
     }
 
 detect.edges(parrots,5) %&gt;% sqrt %&gt;% plot</code></pre>
-<p><img src="foreground_background_files/figure-html/detect_edges-1.png" title="" alt="" width="624" /></p>
+<p><img src="foreground_background_files/figure-html/detect_edges-1.png" width="624" /></p>
 <p>The next step is to use the watershed algorithm for label propagation. The watershed algorithm propagates labels (non-zero pixels) to their non-labelled (zero-valued) neighbours according to a priority map. Labels get propagated first to neighbours with high priority. Here we’re going to give higher priority to non-edge neighbouts. David Tschumperlé uses the following heuristic:</p>
 <pre class="r"><code>pmap &lt;- 1/(1+edges) #Priority inv. proportional to gradient magnitude
 plot(pmap,main=&quot;Priority map&quot;) #Nice metal plate effect! </code></pre>
-<p><img src="foreground_background_files/figure-html/pmap-1.png" title="" alt="" width="624" /></p>
+<p><img src="foreground_background_files/figure-html/pmap-1.png" width="624" /></p>
 <p>The other element needed for the watershed transform is an image of the same size as pmap, with a few labelled (non-zero) pixels. We’ll start with two:</p>
 <pre class="r"><code>seeds &lt;- imfill(width(pmap),height(pmap)) #Empty image
 seeds[400,50,1,1] &lt;- 1 #Background pixel 
@@ -114,14 +169,16 @@ seeds[600,450,1,1] &lt;- 2 #Foreground pixel</code></pre>
 <p>and we can now run the watershed transform:</p>
 <pre class="r"><code>wt &lt;- watershed(seeds,pmap)
 plot(wt,main=&quot;Watershed segmentation&quot;)</code></pre>
-<p><img src="foreground_background_files/figure-html/watershed-1.png" title="" alt="" width="624" /></p>
+<p><img src="foreground_background_files/figure-html/watershed-1.png" width="624" /></p>
 <p>We can use the result as a mask:</p>
 <pre class="r"><code>mask &lt;- add.colour(wt) #We copy along the three colour channels
 layout(t(1:2))
 plot(parrots*(mask==1),main=&quot;Background&quot;)
 plot(parrots*(mask==2),main=&quot;Foreground&quot;)</code></pre>
-<p><img src="foreground_background_files/figure-html/mask-1.png" title="" alt="" width="1152" /></p>
+<p><img src="foreground_background_files/figure-html/mask-1.png" width="1152" /></p>
 <p>Not perfect but pretty good already!</p>
+
+
 
 
 </div>

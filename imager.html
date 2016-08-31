@@ -10,14 +10,15 @@
 
 
 
+
 <title>imager: an R package for image processing</title>
 
-<script src="imager_files/jquery-1.11.0/jquery.min.js"></script>
+<script src="imager_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="imager_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
-<script src="imager_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="imager_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="imager_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="imager_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="imager_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="imager_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="imager_files/bootstrap-3.3.5/shim/respond.min.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <link rel="stylesheet"
@@ -39,6 +40,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
 </head>
 
 <body>
@@ -53,16 +82,42 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
 <div class="container-fluid main-container">
 
+<!-- tabsets -->
+<script src="imager_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
 
-<div id="header">
-<h1 class="title">imager: an R package for image processing</h1>
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">imager: an R package for image processing</h1>
+
 </div>
 
 <div id="TOC">
@@ -135,8 +190,8 @@ combined &lt;- list(motion/max(motion),tennis.g/max(tennis.g)) %&gt;% imappend(&
 <source src="imager_files/figure-html/animate-.webm" />
 <p>
 video of chunk animate
-</p></video>
-
+</p>
+</video>
 </div>
 <div id="loading-and-saving" class="section level1">
 <h1><span class="header-section-number">2</span> Loading and saving</h1>
@@ -156,15 +211,15 @@ urls &lt;- search %&gt;% html_nodes(&quot;img&quot;) %&gt;% html_attr(&quot;src&
 
 #Load the first one
 load.image(urls[1]) %&gt;% plot()</code></pre>
-<p><img src="imager_files/figure-html/loading_parrots-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/loading_parrots-1.jpeg" width="624" /></p>
 </div>
 <div id="displaying-images-and-videos" class="section level1">
 <h1><span class="header-section-number">3</span> Displaying images and videos</h1>
 <p>To get a standard R plot use the plot function:</p>
 <pre class="r"><code>plot(parrots)</code></pre>
-<p><img src="imager_files/figure-html/plotting-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/plotting-1.jpeg" width="624" /></p>
 <pre class="r"><code>plot(tennis,frame=1) </code></pre>
-<p><img src="imager_files/figure-html/plotting-2.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/plotting-2.jpeg" width="624" /></p>
 <p>In addition imager provides display() (for images) and play() (for videos), which are much faster C++ functions for quickly viewing your results. If you’d like to use an external viewer, you can save the image to a temporary file:</p>
 <pre class="r"><code>tmp &lt;- tempfile(fileext=&quot;.png&quot;) #Open temp. file
 imager::save.image(boats,tmp) #Save image to temp. file
@@ -311,13 +366,13 @@ G &lt;- as.cimg(function(x,y) sin(cos(3*x*y + pi/2)),100,100)
 B &lt;- as.cimg(function(x,y) exp(-.03*x),100,100)
 trippy &lt;- imappend(list(R,G,B),&quot;c&quot;) #Bind the three channels into one image
 plot(trippy)</code></pre>
-<p><img src="imager_files/figure-html/imappend-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/imappend-1.jpeg" width="624" /></p>
 </div>
 <div id="split-apply-combine" class="section level1">
 <h1><span class="header-section-number">8</span> Split, apply, combine</h1>
 <p>Often what one wants to do is to split the image along a certain axis (e.g. colour), apply a transformation separately and recombine the result. iiply does that:</p>
 <pre class="r"><code>iiply(parrots,&quot;c&quot;,function(v) v/max(v))  %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/iiply-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/iiply-1.jpeg" width="624" /></p>
 <pre class="r"><code>#Same thing but longer:
 #imsplit(parrots,&quot;c&quot;) %&gt;% llply(function(v) v/max(v) %&gt;% imappend(&quot;c&quot;) %&gt;% plot</code></pre>
 <p>The code above separates colour channels, applies a normalisation and recombines the result into an image. Following the same convention used by plyr, imager also defines ilply (which splits, applies and returns a list), idply (which splits, applies and returns a data.frame) and liply (which applies, combines and returns an image).</p>
@@ -364,7 +419,7 @@ parrots.cp &lt;- load.example(&quot;parrots&quot;)
 G(parrots.cp) &lt;- 0
 B(parrots.cp) &lt;- 0
 plot(parrots.cp)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-4-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-4-1.jpeg" width="624" /></p>
 <p>If you need to access a specific frame, use frame:</p>
 <pre class="r"><code>frame(tennis,1)</code></pre>
 <pre><code>Image. Width: 352 pix Height: 240 pix Depth: 1 Colour channels: 3 </code></pre>
@@ -372,9 +427,9 @@ plot(parrots.cp)</code></pre>
 frame(tennis,1) &lt;- isoblur(frame(tennis,1),10)</code></pre>
 <p>If you need pixel values along rows and columns use:</p>
 <pre class="r"><code>imrow(R(parrots),10) %&gt;% plot(main=&quot;Red channel along 10th row&quot;,type=&quot;l&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-6-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-6-1.jpeg" width="624" /></p>
 <pre class="r"><code>imcol(B(parrots),10) %&gt;% plot(main=&quot;Blue channel along 10th line&quot;,type=&quot;l&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-6-2.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-6-2.jpeg" width="624" /></p>
 <p>Individual pixels can be accessed using <em>at</em> and <em>color.at</em>:</p>
 <pre class="r"><code>at(parrots,x=20,y=20,cc=1:3)</code></pre>
 <pre><code>[1] 0.6313725 0.5882353 0.4941176</code></pre>
@@ -395,12 +450,12 @@ birds.noisy &lt;- (birds + 80*rnorm(prod(dim(birds))))
 layout(t(1:2))
 plot(birds.noisy,main=&quot;Original&quot;)
 isoblur(birds.noisy,5) %&gt;% plot(main=&quot;Blurred&quot;)</code></pre>
-<p><img src="imager_files/figure-html/denoise_blur-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/denoise_blur-1.jpeg" width="624" /></p>
 <p>Blurring removes some of the noise but also blurs away the contours. CImg provides an anisotropic blur that does not have that problem:</p>
 <pre class="r"><code>layout(t(1:2))
 plot(birds.noisy,main=&quot;Original&quot;)
 blur_anisotropic(birds.noisy,ampl=1e5,sharp=1) %&gt;% plot(main=&quot;Blurred (anisotropic)&quot;)</code></pre>
-<p><img src="imager_files/figure-html/denoise_aniso-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/denoise_aniso-1.jpeg" width="624" /></p>
 </div>
 <div id="colour-spaces" class="section level1">
 <h1><span class="header-section-number">11</span> Colour spaces</h1>
@@ -411,10 +466,10 @@ names(chan) &lt;- c(&quot;H&quot;,&quot;S&quot;,&quot;L&quot;)
 #Plot
 layout(matrix(1:3,1,3))
 l_ply(names(chan),function(nm) plot(chan[[nm]],main=nm))</code></pre>
-<p><img src="imager_files/figure-html/hsl,im-1.jpeg" title="" alt="" width="1728" /></p>
+<p><img src="imager_files/figure-html/hsl,im-1.jpeg" width="1728" /></p>
 <p>The reverse operation is done by running […]toRGB. Note that all display functions assume that your image is in RGB.</p>
 <pre class="r"><code>YUVtoRGB(trippy) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/trippy_is_back-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/trippy_is_back-1.jpeg" width="624" /></p>
 <p>If you have a colour image, you convert it to grayscale using the grayscale function. If you have a grayscale image, add colour channels using add.colour:</p>
 <pre class="r"><code>grayscale(parrots) %&gt;% spectrum</code></pre>
 <pre><code>[1] 1</code></pre>
@@ -429,42 +484,42 @@ grayscale(parrots) %&gt;% add.colour %&gt;% spectrum</code></pre>
 <p>Functions for resizing and rotation should be fairly intuitive:</p>
 <pre class="r"><code>thmb &lt;- resize(parrots,round(width(parrots)/10),round(height(parrots)/10))
 plot(thmb,main=&quot;Thumbnail&quot;) #Pixellated parrots</code></pre>
-<p><img src="imager_files/figure-html/resize_rotate-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/resize_rotate-1.jpeg" width="624" /></p>
 <pre class="r"><code>#Same as above: negative arguments are interpreted as percentages
 thmb &lt;- resize(parrots,-10,-10)
 
 imrotate(parrots,30) %&gt;% plot(main=&quot;Rotating&quot;)</code></pre>
-<p><img src="imager_files/figure-html/resize_rotate-2.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/resize_rotate-2.jpeg" width="624" /></p>
 <pre class="r"><code>imshift(parrots,40,20) %&gt;% plot(main=&quot;Shifting&quot;)</code></pre>
-<p><img src="imager_files/figure-html/resize_rotate-3.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/resize_rotate-3.jpeg" width="624" /></p>
 <pre class="r"><code>imshift(parrots,100,100,boundary=1) %&gt;% plot(main=&quot;Shifting (Neumann boundaries)&quot;)</code></pre>
-<p><img src="imager_files/figure-html/resize_rotate-4.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/resize_rotate-4.jpeg" width="624" /></p>
 <pre class="r"><code>imshift(parrots,100,100,boundary=2) %&gt;% plot(main=&quot;Shifting (circular)&quot;)</code></pre>
-<p><img src="imager_files/figure-html/resize_rotate-5.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/resize_rotate-5.jpeg" width="624" /></p>
 <p>You can pad an image using “pad”:</p>
 <pre class="r"><code>pad(parrots,axes=&quot;y&quot;,140) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/pad-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/pad-1.jpeg" width="624" /></p>
 <pre class="r"><code>pad(parrots,axes=&quot;y&quot;,140,pos=-1) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/pad-2.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/pad-2.jpeg" width="624" /></p>
 <p>autocrop will remove any extra padding:</p>
 <pre class="r"><code>#The argument to autocrop is the colour of the background it needs to remove
 pad(parrots,axes=&quot;y&quot;,140,pos=-1) %&gt;% autocrop(c(0,0,0)) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/autocrop-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/autocrop-1.jpeg" width="624" /></p>
 </div>
 <div id="warping" class="section level1">
 <h1><span class="header-section-number">13</span> Warping</h1>
-<p>Warping maps the pixels of the input image to a different location in the output. Scaling is a special case of warping, so is shifting. Warping relies on a map: <span class="math">\(M(x,y) = (x&#39;,y&#39;)\)</span></p>
-<p>that describes where to send pixel (x,y). Shifting the image corresponds to adding a constant to the coordinates: <span class="math">\(M(x,y) = (x+\delta_x,y+\delta_y)\)</span></p>
+<p>Warping maps the pixels of the input image to a different location in the output. Scaling is a special case of warping, so is shifting. Warping relies on a map: <span class="math inline">\(M(x,y) = (x&#39;,y&#39;)\)</span></p>
+<p>that describes where to send pixel (x,y). Shifting the image corresponds to adding a constant to the coordinates: <span class="math inline">\(M(x,y) = (x+\delta_x,y+\delta_y)\)</span></p>
 <p>In imager:</p>
 <pre class="r"><code>map.shift &lt;- function(x,y) list(x=x+10,y=y+30)
 imwarp(parrots,map=map.shift) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/warp_shift-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/warp_shift-1.jpeg" width="624" /></p>
 <p>The map function should take (x,y) as arguments and output a named list with values (x,y).</p>
-<p>The warping algorithm has two modes, “forward” and “backward”. In forward mode you go through all <span class="math">\((x,y)\)</span> pixels in the source, and paint the corresponding location <span class="math">\(M(x,y)\)</span> in the target image. This may result in unpainted pixels, as in the following example:</p>
+<p>The warping algorithm has two modes, “forward” and “backward”. In forward mode you go through all <span class="math inline">\((x,y)\)</span> pixels in the source, and paint the corresponding location <span class="math inline">\(M(x,y)\)</span> in the target image. This may result in unpainted pixels, as in the following example:</p>
 <pre class="r"><code>map.scale &lt;- function(x,y) list(x=1.5*x,y=1.5*y)
 imwarp(parrots,map=map.scale) %&gt;% plot(main=&quot;Forward mode&quot;)</code></pre>
 <p><img src="imager_files/figure-html/warp_scale_forward-1.jpeg" title="" alt="" width="624" /></p>
-<p>In backward mode you go through all pixels <span class="math">\((x&#39;,y&#39;)\)</span> in the target image, and look up their ancestor <span class="math">\(M^{-1}(x&#39;,y&#39;)\)</span> in the source image. Backward mode has no missing pixel problems, but now you need to define the inverse map and set the “direction” argument to “backward”.</p>
+<p>In backward mode you go through all pixels <span class="math inline">\((x&#39;,y&#39;)\)</span> in the target image, and look up their ancestor <span class="math inline">\(M^{-1}(x&#39;,y&#39;)\)</span> in the source image. Backward mode has no missing pixel problems, but now you need to define the inverse map and set the “direction” argument to “backward”.</p>
 <pre class="r"><code>map.scale.bw &lt;- function(x,y) list(x=x/1.5,y=y/1.5)
 imwarp(parrots,map=map.scale.bw,direction=&quot;backward&quot;) %&gt;% plot(main=&quot;Backward mode&quot;)</code></pre>
 <p><img src="imager_files/figure-html/warp_scale_backward-1.jpeg" title="" alt="" width="624" /></p>
@@ -492,7 +547,7 @@ imwarp(parrots,map=map,direction=&quot;forward&quot;) %&gt;% plot()</code></pre>
 <p>imager has the usual correlate and convolve operations:</p>
 <pre class="r"><code>flt &lt;- as.cimg(matrix(1,4,4)) #4x4 box filter
 grayscale(parrots) %&gt;% correlate(flt) %&gt;% plot(main=&quot;Filtering with box filter&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-9-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-9-1.jpeg" width="624" /></p>
 <pre class="r"><code>#Here the filter is symmetrical so convolution and correlation should be the same. Check:
 a &lt;- grayscale(parrots) %&gt;% correlate(flt)
 b &lt;- grayscale(parrots) %&gt;% imager::convolve(flt)
@@ -503,7 +558,7 @@ all.equal(a,b)</code></pre>
 layout(t(1:2))
 deriche(im,sigma=4,order=2,axis=&quot;y&quot;) %&gt;% plot(main=&quot;2nd deriv of Gaussian along y&quot;)
 vanvliet(im,sigma=4,order=2,axis=&quot;y&quot;) %&gt;% plot(main=&quot;2nd deriv of Gaussian along y&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-10-1.jpeg" title="" alt="" width="1152" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-10-1.jpeg" width="1152" /></p>
 <p>The Vanvliet-Young filter is typically a better approximation. We can establish this by looking at the impulse response (which should be Gaussian). Here’s the one-dimensional case:</p>
 <pre class="r"><code>n &lt;- 1e3
 xv &lt;- seq(0,1,l=n) #1D Grid
@@ -517,15 +572,15 @@ imp.true &lt;- dnorm(xv,sd=sig/n,m=.5) #True impulse response
 plot(xv,imp.true/max(imp.true),type=&quot;l&quot;,lwd=2,xlab=&quot;x&quot;,ylab=&quot;Impulse response&quot;)
 lines(xv,imp.vv/max(imp.vv),col=&quot;blue&quot;,lwd=2)
 lines(xv,imp.dr/max(imp.dr),col=&quot;red&quot;,lwd=2)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-11-1.jpeg" title="" alt="" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-11-1.jpeg" width="624" /></p>
 <p>The ideal filter is in black, the Vanvliet-Young filter in blue, the Deriche filter in red. Vanvliet-Young is clearly more accurate, but slightly slower:</p>
 <pre class="r"><code>im &lt;- imfill(3e3,3e3)
 system.time(deriche(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.080   0.008   0.088 </code></pre>
+  0.096   0.008   0.037 </code></pre>
 <pre class="r"><code>system.time(vanvliet(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.144   0.004   0.151 </code></pre>
+  0.160   0.004   0.047 </code></pre>
 <p>In both cases computation time is independent of filter bandwidth, which is a very nice feature (the filters are IIR).</p>
 </div>
 <div id="ffts-and-the-periodicsmooth-decomposition" class="section level1">
@@ -565,6 +620,8 @@ periodic.part(parrots) %&gt;% plot(main=&quot;Periodic part of parrots&quot;)
 </ul>
 <p>See the vignette on <a href="morphology.html">morphology</a>.</p>
 </div>
+
+
 
 
 </div>
