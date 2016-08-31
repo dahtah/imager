@@ -23,12 +23,22 @@ imlist <- function(l)
     }
 }
 
-##' @describeIn imlist
+##' @rdname imlist
 ##' @export
-as.imlist.list <- imlist
+is.imlist <- function(l) "imlist" %in% class(l)
+
+##' @rdname imlist 
+##' @export
+as.imlist.list <- function(l)
+    {
+        imlist(l)
+    }
 
 
-##' @describeIn imlist
+##' Convert image list to list
+##' 
+##' @param x
+##' @param ...
 ##' @export
 as.list.imlist <- function(x,...) { class(x) <- "list"; x }
 

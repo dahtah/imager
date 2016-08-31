@@ -158,7 +158,21 @@ pixel.index <- function(im,coords,outside="stop")
     as.vector(ind)
 }
 
-
+##' Coordinates from pixel index
+##'
+##' Compute (x,y,z,cc) coordinates from linear pixel index. 
+##' @param im an image
+##' @param index a vector of indices
+##' @return a data.frame of coordinate values
+##' @seealso pixel.index for the reverse operation
+##' @examples
+##' cind <- coord.index(boats,33)
+##' #Returns (x,y,z,c) coordinates of the 33rd pixel in the array
+##' cind
+##' all.equal(boats[33],with(cind,at(boats,x,y,z,cc)))
+##' all.equal(33,pixel.index(boats,cind))
+##' @author Simon Barthelme
+##' @export
 coord.index <- function(im,index)
     {
         index <- index-1

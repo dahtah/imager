@@ -33,7 +33,7 @@ utils::globalVariables(c(".", "%>%","x","y","z","cc"))
 ##' Images have up to 4 dimensions, labelled x,y,z,c. x and y are the usual spatial dimensions, z is a depth dimension (which would correspond to time in a movie), and c is a colour dimension. Images are stored linearly in that order, starting from the top-left pixel and going along *rows* (scanline order).
 ##' A colour image is just three R,G,B channels in succession. A sequence of N images is encoded as R1,R2,....,RN,G1,...,GN,B1,...,BN where R_i is the red channel of frame i.
 ##' The number of pixels along the x,y,z, and c axes is called (in that order), width, height, depth and spectrum. 
-##' 
+##' NB: Logical and integer values are automatically converted to type double. NAs are not supported by CImg, so you should manage them on the R end of things. 
 ##' @title Create a cimg object 
 ##' @param X a four-dimensional numeric array
 ##' @return an object of class cimg
@@ -43,11 +43,15 @@ utils::globalVariables(c(".", "%>%","x","y","z","cc"))
 ##' @export
 cimg <- function(X)
     {
+        if (is.logical(X) | is.integer(X))
+            {
+                X <- X+0.0
+            }
         class(X) <-c("cimg","numeric")
         X
     }
 
-##' @describeIn cimg
+##' @rdname cimg 
 ##' @export
 is.cimg <- function(X) "cimg" %in% class(X)
 
@@ -996,7 +1000,7 @@ NULL
 #' ##display(boats/2,FALSE) #Normalisation off, so different from above
 display.cimg <- function(x,...,rescale=TRUE)
 {
-    display_(im,rescale)
+    display_(x,rescale)
 }
 
 ##' Display object using CImg library

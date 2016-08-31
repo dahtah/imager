@@ -510,3 +510,5 @@ NumericVector periodic_part(NumericVector im)
   img -= realpart;
   return wrap(img);
 }
+
+

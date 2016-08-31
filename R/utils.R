@@ -696,3 +696,35 @@ autocrop <- function(im,color=c(0,0,0),axes="zyx")
 {
     autocrop_(im,color,axes)
 }
+
+##' Control CImg's parallelisation
+##'
+##' On supported architectures CImg can parallelise many operations using OpenMP. 
+##' Use this function to turn parallelisation on or off.
+##' 
+##' @param mode Either "adaptive","always" or "none". The default is adaptive (parallelisation for large images only). 
+##' @return NULL (function is used for side effects)
+##' @author Simon Barthelme
+##' @examples
+##' cimg.use.openmp("never") #turn off parallelisation
+##' @export
+cimg.use.openmp <- function(mode="adaptive")
+{
+    if (mode=="never")
+        {
+            set_cimg_omp(0)
+        }
+    else if (mode=="always")
+        {
+            set_cimg_omp(1)
+        }
+    else if (mode=="adaptive")
+        {
+            set_cimg_omp(2)
+        }
+    else
+        {
+            stop("Unknown mode, should be one of 'never','adaptive', or 'always'")
+        }
+    NULL
+}

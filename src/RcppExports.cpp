@@ -1105,3 +1105,34 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// cimg_omp
+int cimg_omp();
+RcppExport SEXP imager_cimg_omp() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(cimg_omp());
+    return __result;
+END_RCPP
+}
+// set_cimg_omp
+int set_cimg_omp(int mode);
+RcppExport SEXP imager_set_cimg_omp(SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< int >::type mode(modeSEXP);
+    __result = Rcpp::wrap(set_cimg_omp(mode));
+    return __result;
+END_RCPP
+}
+// has_omp
+bool has_omp();
+RcppExport SEXP imager_has_omp() {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    __result = Rcpp::wrap(has_omp());
+    return __result;
+END_RCPP
+}

@@ -282,6 +282,10 @@ as.cimg.vector <- function(obj,x=NA,y=NA,z=NA,cc=NA,dim=NULL,...)
 as.cimg.array <- function(obj,...)
     {
         d <- dim(obj)
+        if (is.logical(obj) | is.integer(obj))
+            {
+                obj <- obj+0.0
+            }
         if (length(d)==4)
             {
                 cimg(obj)

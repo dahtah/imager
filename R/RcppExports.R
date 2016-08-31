@@ -835,3 +835,15 @@ checkcoords <- function(x, y, z, c, d) {
     .Call('imager_checkcoords', PACKAGE = 'imager', x, y, z, c, d)
 }
 
+cimg_omp <- function() {
+    .Call('imager_cimg_omp', PACKAGE = 'imager')
+}
+
+set_cimg_omp <- function(mode) {
+    .Call('imager_set_cimg_omp', PACKAGE = 'imager', mode)
+}
+
+has_omp <- function() {
+    .Call('imager_has_omp', PACKAGE = 'imager')
+}
+

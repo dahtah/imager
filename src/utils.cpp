@@ -339,3 +339,26 @@ LogicalVector checkcoords(IntegerVector x,IntegerVector y,IntegerVector z,Intege
     }
   return out;
 }
+
+
+// [[Rcpp::export]]
+int cimg_omp()
+{
+  return cimg::openmp_mode();
+}
+
+// [[Rcpp::export]]
+int set_cimg_omp(int mode)
+{
+  return cimg::openmp_mode(mode);
+}
+
+// [[Rcpp::export]]
+bool has_omp()
+{
+#ifdef cimg_use_openmp
+  return true;
+#else
+  return false;
+#endif
+}
