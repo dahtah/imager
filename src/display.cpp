@@ -104,3 +104,12 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
 
     return;
 }
+
+// [[Rcpp::export]]
+NumericVector select(NumericVector im,int type=2)
+{
+CImg<double> img = as<CImg<double> >(im);
+CImg<double> out;
+out = img.get_select("",type);
+return wrap(out);
+}

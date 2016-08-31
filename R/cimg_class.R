@@ -53,7 +53,9 @@ cimg <- function(X)
 
 ##' @rdname cimg 
 ##' @export
-is.cimg <- function(X) "cimg" %in% class(X)
+is.cimg <- function(X) {
+    "cimg" %in% class(X)
+}
 
 ##' Various shortcuts for extracting colour channels, frames, etc
 ##'
