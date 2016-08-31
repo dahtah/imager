@@ -6,6 +6,14 @@
 \usage{
 \method{as.list}{imlist}(x, ...)
 }
+\arguments{
+\item{x}{an image list}
+
+\item{...}{ignored}
+}
+\value{
+a list
+}
 \description{
 Convert image list to list
 }

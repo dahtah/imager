@@ -73,13 +73,13 @@ That's because the plot function automatically rescales the image data so that t
 1. There's no agreed-upon standard for how RGB values should be scaled. Some software, like CImg, uses a range of 0-255 (dark to light), other, like R's rgb function, uses a 0-1 range. 
 2. Often it's just more convenient to work with a zero-mean image, which means having negative values. 
 
-If you don't want imager to rescale the colours automatically, set rescale.color to FALSE, but now imager will want values that are in the $[0,1]$ range. 
+If you don't want imager to rescale the colours automatically, set rescale to FALSE, but now imager will want values that are in the $[0,1]$ range. 
 
 ```{r}
 layout(t(1:2))
-boats <- boats/255 #scale to 0..1
-plot(boats,rescale.col=FALSE)
-plot(boats/2,rescale.col=FALSE)
+boats.s <- boats/255 #scale to 0..1
+plot(boats.s,rescale=FALSE)
+plot(boats.s/2,rescale=FALSE)
 ```
 
 If you'd like tighter control over how imager converts pixel values into colours, you can specify a colour scale. R likes its colours defined as hex codes, like so:
@@ -92,7 +92,7 @@ The function rgb is a colour scale, i.e., it takes pixel values and returns colo
 
 ```{r}
 cscale <- function(r,g,b) rgb(g,r,b)
-plot(boats/255,colourscale=cscale,rescale=FALSE)
+plot(boats.s,colourscale=cscale,rescale=FALSE)
 ```
 
 In grayscale images pixels have only one value, so that the colour map is simpler: it takes a single value and returns a colour. In the next example we convert the image to grayscale
@@ -229,11 +229,14 @@ Our trick worked.
 
 Edge detection relies on image gradients, which imager returns via:
 
-```{r}
-layout(t(1:2))
-imgradient(boats.g,"x") %>% plot(main="Gradient along x")
-imgradient(boats.g,"y") %>% plot(main="Gradient along y")
+```{r fig.width=7}
+gr <- imgradient(boats.g,"xy")
+gr
+plot(gr,layout="row")
 ```
+
+The object "gr" is an image list, with two components, one for the gradient along $x$, the other for the gradient along $y$. "gr" is an object with class "imlist", which is just a list of images but comes with a few convenience functions (for example, a plotting function as used above). 
+
 
 To be more specific, noting $I(x,y)$ the image intensity at location $x,y$, what imager returns is an approximation of:
 $$ \frac{\partial}{\partial x}I $$
@@ -500,9 +503,9 @@ plot(d.max,main="Point-wise maximum across scales")
 
 parmax is another example of a reduction function, one that here takes the maximum value for each pixel across all scales. To find out which scale had the maximum value point-wise, we can use which.parmax:
 
-```{r}
+```{r fig.height=5,fig.width=5}
 i.max <- llply(scales,function(scale) hessdet(hub,scale)) %>% which.parmax
-plot(i.max,main="Index of the point-wise maximum across scales")
+plot(i.max,main="Index of the point-wise maximum \n across scales")
 ```
 
 So far this isn't too informative. It will be once we have labelled regions:
@@ -571,6 +574,8 @@ All functions are documented.
 
 ## Accessing image data, converting to and from other data structures
 
+
+
 ### Conversions
 
 - as.data.frame.cimg, as.matrix.cimg, as.array.cimg, squeeze
@@ -583,7 +588,9 @@ All functions are documented.
 - imrow,imcol,at,color.at
 - channel, channel<-, channels, R, R<-, G, G<-, B, B<-,
 - frame, frame<-, frames
-- subim
+- imsub
+- interactive functions: grabLine,grabRect,grabPoint
+- patchstat
 
 ### Neighbourhoods
 
