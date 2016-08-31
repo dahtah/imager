@@ -17,6 +17,8 @@ Imports:
     Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices,purrr
 Depends:
     R (>= 2.10.0),plyr,magrittr
+URL: http://dahtah.github.io/imager, https://github.com/dahtah/imager
+BugReports: https://github.com/dahtah/imager/issues
 SystemRequirements: fftw3
 Enhances: spatstat
 LinkingTo: Rcpp

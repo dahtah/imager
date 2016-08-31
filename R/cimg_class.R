@@ -11,7 +11,7 @@ NULL
 #' @importFrom grDevices as.raster col2rgb dev.capture gray rgb
 #' @importFrom utils file_test
 #' @importFrom graphics axis plot rasterImage layout
-#' @importFrom stats quantile rnorm kmeans
+#' @importFrom stats quantile rnorm kmeans setNames
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom purrr map map_dbl map_lgl map_df map2
 #' @importFrom png readPNG writePNG
@@ -51,7 +51,9 @@ cimg <- function(X)
         X
     }
 
-##' @rdname cimg 
+##' Checks that an object is a cimg object
+##' @param X an object
+##' @return logical
 ##' @export
 is.cimg <- function(X) {
     "cimg" %in% class(X)

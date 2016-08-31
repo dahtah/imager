@@ -22,6 +22,7 @@ If that doesn't work then you're probably missing a build environment or a libra
 
 ### OS X
 
+Install [XQuartz](https://www.xquartz.org/) if you haven't already (it's required for the interactive functions). 
 You'll need Xcode (OS X's development environment) to compile source packages. The FFTW library is needed, and the easiest way to install it is via [Homebrew](http://brew.sh/). Install Homebrew, then run:
 	brew install fftw
 
@@ -41,6 +42,7 @@ To build under Linux make sure you have the headers for libX11 and libfftw3. On 
 
 ### External dependencies
 
+OS X users need [XQuartz](https://www.xquartz.org/). 
 On its own imager only supports JPEG, PNG and BMP formats. If you need support for other file types install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php).
 To load videos you'll need [ffmpeg](http://ffmpeg.org/download.html), no file formats are supported natively.
 
