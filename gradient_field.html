@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Plotting a gradient field</title>
+
+<script src="gradient_field_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="gradient_field_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="gradient_field_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="gradient_field_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="gradient_field_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="gradient_field_files/highlight/default.css"
+      type="text/css" />
+<script src="gradient_field_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="gradient_field_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Plotting a gradient field</h1>
+
+</div>
+
+
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<p>This example shows how to use some tools from the Hadleyverse (dplyr,tidyr and ggplot2) to visualise the gradient of an image.</p>
+<p>An effective way of visualising the image gradient is to see it as a vector field (a flow). At each pixel, the gradient gives a direction, which we can plot as an arrow.</p>
+<p>The first step is to compute a gradient, using imgradient:</p>
+<pre class="r"><code>library(imager)
+#The 255 factor isn&#39;t stricly needed, it&#39;s for the luminance values to be properly scaled
+im &lt;- (255*load.example(&quot;parrots&quot;)) %&gt;% grayscale %&gt;% imresize(.3)
+gr &lt;- imgradient(im,&quot;xy&quot;)</code></pre>
+<p>The next step is to convert the gradient to a data.frame:</p>
+<pre class="r"><code>library(dplyr)
+names(gr) &lt;- c(&quot;dx&quot;,&quot;dy&quot;)
+dgr &lt;- as.data.frame(gr)
+head(dgr)</code></pre>
+<pre><code>##   im x y        value
+## 1 dx 1 1  0.002254443
+## 2 dx 2 1  0.004575028
+## 3 dx 3 1  0.001670949
+## 4 dx 4 1 -0.003463370
+## 5 dx 5 1 -0.007614315
+## 6 dx 6 1 -0.011073519</code></pre>
+<pre class="r"><code>tail(dgr)</code></pre>
+<pre><code>##       im   x   y       value
+## 70375 dy 225 153 -0.03170663
+## 70376 dy 226 153 -0.03175244
+## 70377 dy 227 153 -0.03047952
+## 70378 dy 228 153 -0.02752334
+## 70379 dy 229 153 -0.02692745
+## 70380 dy 230 153 -0.02842904</code></pre>
+<p>The <em>dx</em> component and <em>dy</em> components are on separate rows. For plotting it’s more convenient to convert to a “wide” format:</p>
+<pre class="r"><code>dgr &lt;- tidyr::spread(dgr,im,value)
+head(dgr)</code></pre>
+<pre><code>##   x y          dx         dy
+## 1 1 1 0.002254443 0.02485384
+## 2 1 2 0.002486826 0.05486897
+## 3 1 3 0.002532086 0.05468528
+## 4 1 4 0.003915785 0.04276814
+## 5 1 5 0.006757821 0.03109652
+## 6 1 6 0.010245041 0.02739618</code></pre>
+<p>And we can now proceed with plotting:</p>
+<pre class="r"><code>##cowplot sets better defaults for ggplot2,
+##replace with library(ggplot2) if you prefer
+library(cowplot)</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;cowplot&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     ggsave</code></pre>
+<pre class="r"><code>##Subsample: take every fourth pixel
+dgr.sub &lt;- dplyr::filter(dgr,(x %% 4) ==0,(y %% 4) == 0)
+
+#Compute end points of the arrows we&#39;ll plot, scaled so that they have a typical
+#size of 1px or thereabouts
+dgr.sub &lt;- mutate(dgr.sub,xend=x+dx/sd(dx),yend=y+dy/sd(dy))
+
+#Plot the gradient field 
+p &lt;- ggplot(dgr.sub,aes(x,y))
+p &lt;- p+geom_segment(aes(xend=xend,yend=yend),arrow = arrow(length = unit(0.01, &quot;npc&quot;)),col=&quot;black&quot;,alpha=1)
+p+scale_y_reverse()</code></pre>
+<p><img src="gradient_field_files/figure-html/unnamed-chunk-4-1.png" width="816" /></p>
+<p>The outline of the parrots is visible but things would be nicer if we could just overlay the gradient field on top of the image. Fortunately, we can:</p>
+<pre class="r"><code>p &lt;- as.data.frame(im) %&gt;% ggplot(aes(x,y))+geom_raster(aes(fill=value))
+p &lt;- p+geom_segment(data=dgr.sub,aes(xend=xend,yend=yend),arrow = arrow(length = unit(0.01, &quot;npc&quot;)),col=&quot;black&quot;,alpha=1)
+p+scale_y_reverse()</code></pre>
+<p><img src="gradient_field_files/figure-html/unnamed-chunk-5-1.png" width="816" /></p>
+<p>The plot is still a bit messy but we can already see how the gradient always points towards image regions with higher luminance. We just need an additional bit of cleaning up to get a very clear picture:</p>
+<pre class="r"><code>dgr.sub &lt;- dplyr::mutate(dgr.sub,mag=sqrt(dx^2+dy^2), #Gradient magnitude
+                         dxs=dx/mag,dys=dy/mag,#Scale every vector to unit size
+                         xend = x + dxs,yend = y +dys) 
+p &lt;- as.data.frame(im) %&gt;% ggplot(aes(x,y))+geom_raster(aes(fill=value))
+p &lt;- p+geom_segment(data=dgr.sub,aes(xend=xend,yend=yend,alpha=mag),arrow = arrow(length = unit(0.01, &quot;npc&quot;)),col=&quot;red&quot;)
+p+scale_y_reverse()+scale_fill_continuous(low=&quot;black&quot;,high=&quot;white&quot;)</code></pre>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_segment).</code></pre>
+<p><img src="gradient_field_files/figure-html/unnamed-chunk-6-1.png" width="816" /></p>
+<p>Here’s everything wrapped up in a function:</p>
+<pre class="r"><code>gradfield &lt;- function(im,subs=4)
+    {
+        gr &lt;- imgradient(im,&quot;xy&quot;)
+        names(gr) &lt;- c(&quot;dx&quot;,&quot;dy&quot;)
+        dgr &lt;- as.data.frame(gr) %&gt;% tidyr::spread(im,value)
+        dgr &lt;- dplyr::filter(dgr,(x %% subs) ==0,(y %% subs) == 0)
+        dgr &lt;- dplyr::mutate(dgr,mag=sqrt(dx^2+dy^2), #Gradient magnitude
+                                 dxs=dx/mag,dys=dy/mag,#Scale every vector to unit size
+                                 xend = x + 2*dxs,yend = y +2*dys) 
+        p &lt;- as.data.frame(im) %&gt;% ggplot(aes(x,y))+geom_raster(aes(fill=value))
+        p &lt;- p+geom_segment(data=dgr,aes(xend=xend,yend=yend,alpha=mag),arrow = arrow(length = unit(0.01, &quot;npc&quot;)),col=&quot;red&quot;)
+        p+scale_y_reverse()+scale_fill_continuous(low=&quot;black&quot;,high=&quot;white&quot;)
+    }
+
+gradfield(grayscale(boats),6)</code></pre>
+<p><img src="gradient_field_files/figure-html/unnamed-chunk-7-1.png" width="816" /></p>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

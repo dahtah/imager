@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>imager in parallel</title>
+
+<script src="parallel_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="parallel_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="parallel_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="parallel_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="parallel_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="parallel_files/highlight/default.css"
+      type="text/css" />
+<script src="parallel_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="parallel_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">imager in parallel</h1>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#parallelising-from-r"><span class="toc-section-number">1</span> Parallelising from R</a></li>
+<li><a href="#native-parallelisation-cimg-and-openmp"><span class="toc-section-number">2</span> Native parallelisation: CImg and OpenMP</a></li>
+<li><a href="#parallelisation-in-r-vs.native-parallelisation"><span class="toc-section-number">3</span> Parallelisation in R vs. native parallelisation</a></li>
+</ul>
+</div>
+
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<p>There are several ways of doing things in parallel with imager. One of them is to use of R’s many packages for doing things in parallel (parallel, futures, etc.). The other one is to take advantage of CImg’s ative use of OpenMP.</p>
+<div id="parallelising-from-r" class="section level1">
+<h1><span class="header-section-number">1</span> Parallelising from R</h1>
+<p>Parallelising from R is very easy (provided that what you want to do actually parallelises). Something that does parallelise easily is to run the same operations on different images, or on different image channels.</p>
+<pre class="r"><code>library(parallel)
+
+#A really big image
+im &lt;- boats %&gt;% imresize(8)
+#Rank pixels in each image channel 
+#Serial version 
+fun &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% lapply(rank)
+    
+system.time(fun())</code></pre>
+<pre><code>##    user  system elapsed 
+##   7.372   0.096   7.466</code></pre>
+<pre class="r"><code>#Parallel version: use mclapply
+fun.par &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% mclapply(rank,mc.cores=2)
+system.time(fun.par())</code></pre>
+<pre><code>##    user  system elapsed 
+##   2.616   0.244   5.422</code></pre>
+</div>
+<div id="native-parallelisation-cimg-and-openmp" class="section level1">
+<h1><span class="header-section-number">2</span> Native parallelisation: CImg and OpenMP</h1>
+<p>Many CImg operations are parallelised natively. The parallelisation is optional and is only activated starting from a certain image size. The speed-ups are sublinear, meaning that unless your image is gigantic you won’t gain much from throwing 200 cores at a problem.</p>
+<p>By default OpenMP will grab all the CPU cores it can. You can control how many cores are accessed using <code>OpenMPController::omp_set_num_threads</code>:</p>
+<pre class="r"><code>library(imager)
+library(microbenchmark)
+#Let&#39;s do a big convolution
+a &lt;- boats
+b &lt;- imnoise(30,30) 
+fun &lt;- function() convolve(a,b)
+#No parallelisation
+OpenMPController::omp_set_num_threads(1)</code></pre>
+<pre><code>## [[1]]
+## [1] 1</code></pre>
+<pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
+<pre><code>## Unit: milliseconds
+##   expr      min       lq     mean   median       uq      max neval
+##  fun() 297.0964 297.4661 297.7576 297.8535 298.0663 298.2756    15</code></pre>
+<pre class="r"><code>#2 cores
+OpenMPController::omp_set_num_threads(2)</code></pre>
+<pre><code>## [[1]]
+## [1] 2</code></pre>
+<pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
+<pre><code>## Unit: milliseconds
+##   expr      min       lq     mean   median       uq      max neval
+##  fun() 197.9129 198.3742 198.8412 198.9958 199.2477 200.1741    15</code></pre>
+<pre class="r"><code>#3 cores, etc.
+OpenMPController::omp_set_num_threads(3)</code></pre>
+<pre><code>## [[1]]
+## [1] 3</code></pre>
+<pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
+<pre><code>## Unit: milliseconds
+##   expr      min       lq     mean   median       uq      max neval
+##  fun() 101.5473 102.0608 103.0975 102.4377 102.8881 109.5653    15</code></pre>
+<p>If CImg’s parallelisation doesn’t seem to work on your machine, it’s probably because you compiled the package with clang, which has patchy support for OpenMP. Recompile using gcc if possible.</p>
+</div>
+<div id="parallelisation-in-r-vs.native-parallelisation" class="section level1">
+<h1><span class="header-section-number">3</span> Parallelisation in R vs. native parallelisation</h1>
+<p>Here’s a simple benchmark: medianblur can be parallelised across image channels. First, the R version using mclapply:</p>
+<pre class="r"><code>OpenMPController::omp_set_num_threads(1)</code></pre>
+<pre><code>## [[1]]
+## [1] 1</code></pre>
+<pre class="r"><code>fun.R &lt;- function() imsplit(boats,&quot;c&quot;) %&gt;% mclapply(function(v) medianblur(v,40),mc.cores=3)
+microbenchmark(fun.R(),times=10)</code></pre>
+<pre><code>## Unit: seconds
+##     expr      min       lq     mean   median       uq      max neval
+##  fun.R() 2.064683 2.065289 2.069543 2.068879 2.073606 2.076702    10</code></pre>
+<p>Second, CImg’s native version:</p>
+<pre class="r"><code>OpenMPController::omp_set_num_threads(3)</code></pre>
+<pre><code>## [[1]]
+## [1] 3</code></pre>
+<pre class="r"><code>fun.nat &lt;- function() medianblur(boats,40)
+microbenchmark(fun.nat(),times=10)</code></pre>
+<pre><code>## Unit: seconds
+##       expr      min       lq     mean   median       uq      max neval
+##  fun.nat() 2.052927 2.706196 2.600311 2.706931 2.707516 2.773158    10</code></pre>
+<p>The native version has a bit less overhead.</p>
+<p>Pros and cons of using native parallelisation:</p>
+<ul>
+<li>Transparent</li>
+<li>Very efficient if you work on large images</li>
+<li>Only works on compatible platforms (i.e., needs gcc)</li>
+</ul>
+<p>Pros and cons of parallelisation from R:</p>
+<ul>
+<li>More flexible (futures, multiple threads, etc.)</li>
+<li>Effective if you run a long chain of operations over many images</li>
+<li>Better cross-platform support</li>
+<li>Slightly less transparent and possibly slower</li>
+</ul>
+<p>Note that both types of parallelisation can be combined if you can spread the load over several machines.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

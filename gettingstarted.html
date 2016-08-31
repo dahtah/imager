@@ -11,7 +11,7 @@
 
 <meta name="author" content="Simon Barthelmé" />
 
-<meta name="date" content="2016-08-26" />
+<meta name="date" content="2016-08-31" />
 
 <title>Getting started with imager</title>
 
@@ -120,7 +120,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Getting started with imager</h1>
 <h4 class="author"><em>Simon Barthelmé</em></h4>
-<h4 class="date"><em>2016-08-26</em></h4>
+<h4 class="date"><em>2016-08-31</em></h4>
 
 </div>
 
@@ -240,14 +240,7 @@ hist.eq &lt;- function(im) as.cimg(ecdf(im)(im),dim=dim(im))
 #Split across colour channels, 
 cn &lt;- imsplit(boats,&quot;c&quot;)
 cn #we now have a list of images</code></pre>
-<pre><code>$`c = 1`
-Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 
-
-$`c = 2`
-Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 
-
-$`c = 3`
-Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 </code></pre>
+<pre><code>Image list of size 3 </code></pre>
 <pre class="r"><code>cn.eq &lt;- llply(cn,hist.eq) #run hist.eq on each
 imappend(cn.eq,&quot;c&quot;) %&gt;% plot(main=&quot;All channels equalised&quot;) #recombine and plot</code></pre>
 <p><img src="gettingstarted_files/figure-html/unnamed-chunk-17-1.jpeg" width="384" /></p>
@@ -281,7 +274,8 @@ plot(grad.mag,main=&quot;Gradient magnitude&quot;)</code></pre>
 str(l)</code></pre>
 <pre><code>List of 2
  $ x: cimg [1:256, 1:384, 1, 1] 0.002784 0.002879 -0.000485 -0.000331 0.000134 ...
- $ y: cimg [1:256, 1:384, 1, 1] 0.00483 0.011 0.01502 0.01439 0.01358 ...</code></pre>
+ $ y: cimg [1:256, 1:384, 1, 1] 0.00483 0.011 0.01502 0.01439 0.01358 ...
+ - attr(*, &quot;class&quot;)= chr [1:2] &quot;imlist&quot; &quot;list&quot;</code></pre>
 <p>And the second takes a list of images and computes the Euclidean norm pixel-wise, i.e.:</p>
 <pre class="r"><code>enorm(list(3,2))</code></pre>
 <pre><code>[1] 3.605551</code></pre>
@@ -360,14 +354,7 @@ plot(blobs,main=&quot;Blobs&quot;)</code></pre>
 <p>where <span class="math inline">\(I_{xx}\)</span> is the second derivative of the image along x, etc. See wikipedia on <a href="https://en.wikipedia.org/wiki/Blob_detection">blob detection</a> for more.</p>
 <p>In imager we can use:</p>
 <pre class="r"><code>imhessian(blobs)</code></pre>
-<pre><code>$xx
-Image. Width: 100 pix Height: 100 pix Depth: 1 Colour channels: 1 
-
-$xy
-Image. Width: 100 pix Height: 100 pix Depth: 1 Colour channels: 1 
-
-$yy
-Image. Width: 100 pix Height: 100 pix Depth: 1 Colour channels: 1 </code></pre>
+<pre><code>Image list of size 3 </code></pre>
 <p>to get the derivatives we need, and:</p>
 <pre class="r"><code>Hdet &lt;- with(imhessian(blobs),(xx*yy - xy^2))
 plot(Hdet,main=&quot;Determinant of Hessian&quot;)</code></pre>

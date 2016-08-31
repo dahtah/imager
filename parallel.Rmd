@@ -1,0 +1,98 @@
+---
+title: "imager in parallel"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+---    
+
+[Simon Barthelmé](http://sites.google.com/site/simonbarthelme) (GIPSA-lab, CNRS)
+
+There are several ways of doing things in parallel with imager. One of them is to use of R's many packages for doing things in parallel  (parallel, futures, etc.). The other one is to take advantage of CImg's ative use of OpenMP.
+
+# Parallelising from R
+
+Parallelising from R is very easy (provided that what you want to do actually parallelises). Something that does parallelise easily is to run the same operations on different images, or on different image channels. 
+
+```{r}
+library(parallel)
+
+#A really big image
+im <- boats %>% imresize(8)
+#Rank pixels in each image channel 
+#Serial version 
+fun <- function() imsplit(im,"c") %>% lapply(rank)
+    
+system.time(fun())
+
+#Parallel version: use mclapply
+fun.par <- function() imsplit(im,"c") %>% mclapply(rank,mc.cores=2)
+system.time(fun.par())
+```
+
+
+
+# Native parallelisation: CImg and OpenMP
+
+Many CImg operations are parallelised natively. The parallelisation is optional and is only activated starting from a certain image size. The speed-ups are sublinear, meaning that unless your image is gigantic you won't gain much from throwing 200 cores at a problem. 
+
+
+
+By default OpenMP will grab all the CPU cores it can. You can control how many cores are accessed using ```OpenMPController::omp_set_num_threads```:
+
+```{r}
+library(imager)
+library(microbenchmark)
+#Let's do a big convolution
+a <- boats
+b <- imnoise(30,30) 
+fun <- function() convolve(a,b)
+#No parallelisation
+OpenMPController::omp_set_num_threads(1)
+microbenchmark(fun(),times=15)
+
+#2 cores
+OpenMPController::omp_set_num_threads(2)
+microbenchmark(fun(),times=15)
+
+#3 cores, etc.
+OpenMPController::omp_set_num_threads(3)
+microbenchmark(fun(),times=15)
+```
+
+If CImg's parallelisation doesn't seem to work on your machine, it's probably because you compiled the package with clang, which has patchy support for OpenMP. Recompile using gcc if possible.
+
+# Parallelisation in R vs. native parallelisation 
+
+Here's a simple benchmark: medianblur can be parallelised across image channels. First, the R version using mclapply:
+
+```{r}
+OpenMPController::omp_set_num_threads(1)
+fun.R <- function() imsplit(boats,"c") %>% mclapply(function(v) medianblur(v,40),mc.cores=3)
+microbenchmark(fun.R(),times=10)
+```
+
+Second, CImg's native version:
+
+```{r}
+OpenMPController::omp_set_num_threads(3)
+fun.nat <- function() medianblur(boats,40)
+microbenchmark(fun.nat(),times=10)
+```
+
+The native version has a bit less overhead. 
+
+Pros and cons of using native parallelisation:
+
+- Transparent
+- Very efficient if you work on large images
+- Only works on compatible platforms (i.e., needs gcc)
+
+Pros and cons of parallelisation from R:
+
+- More flexible (futures, multiple threads, etc.)
+- Effective if you run a long chain of operations over many images
+- Better cross-platform support
+- Slightly less transparent and possibly slower
+
+Note that both types of parallelisation can be combined if you can spread the load over several machines. 
