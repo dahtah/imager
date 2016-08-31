@@ -10,14 +10,15 @@
 
 
 
+
 <title>Accessing the CImg API using Rcpp and imager</title>
 
-<script src="cpp_api_files/jquery-1.11.0/jquery.min.js"></script>
+<script src="cpp_api_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="cpp_api_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
-<script src="cpp_api_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="cpp_api_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="cpp_api_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="cpp_api_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="cpp_api_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="cpp_api_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="cpp_api_files/bootstrap-3.3.5/shim/respond.min.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <link rel="stylesheet"
@@ -39,6 +40,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
 </head>
 
 <body>
@@ -53,16 +82,42 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
 <div class="container-fluid main-container">
 
+<!-- tabsets -->
+<script src="cpp_api_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
 
-<div id="header">
-<h1 class="title">Accessing the CImg API using Rcpp and imager</h1>
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Accessing the CImg API using Rcpp and imager</h1>
+
 </div>
 
 
@@ -101,6 +156,8 @@ foo(im) %&gt;% plot</code></pre>
 <pre><code>return wrap(img);</code></pre>
 <p>Use a custom wrap function that takes a CImg object and turns into into a NumericVector object with the right attributes. The result will show up in R as a cimg object.</p>
 <p>To learn more about CImg, see the <a href="http://cimg.eu">website</a> or these <a href="http://cimg.eu/CImg_slides.pdf">slides</a>.</p>
+
+
 
 
 </div>

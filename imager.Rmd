@@ -220,16 +220,62 @@ head(as.vector(parrots))
 grayscale(parrots) %>% as.matrix %>% dim
 ```
 
+# Image lists 
+
+Many functions in imager produce lists of image as output (see below). These are given the "imlist" class, e.g. imgradient returns: 
+
+```{r}
+imgradient(parrots,"xy") %>% class
+```
+
+The imlist class comes with a few convenience functions, for example:
+
+```{r}
+imgradient(parrots,"xy") %>% plot
+```
+
+and: 
+
+```{r}
+imgradient(parrots,"xy") %>% as.data.frame %>% head
+```
+
+where the "im" column indexes the image in the list. 
+
+To make an image list from a list, use "imlist"
+
+```{r}
+list(a=parrots,b=3*parrots) %>% imlist
+```
+
+
+
 # Splitting and concatenating images
 
 One often needs to perform separate computations on each channel of an image, or on each frame, each line, etc. This can be achieved using a loop or more conveniently using imsplit:
+
 ```{r imsplit}
 imsplit(parrots,"c") #A list with three elements corresponding to the three channels
 imsplit(parrots,"c") %>% laply(mean) #Mean pixel value in each channel
 imsplit(parrots,"x") %>% laply(mean) %>% head #Mean pixel value in each line (across all channels)
 ```
 
-The inverse operation is called imappend: it takes a list of images and concatenates them along the dimension of your choice.
+imsplit contains an additional argument, called "nb". When "nb" is positive imsplit cuts the image into "nb" chunks, along the axis "axis":
+
+```{r}
+imsplit(parrots,"x",4) %>% plot
+imsplit(parrots,"y",3) %>% plot
+```
+
+When "nb" is negative, "nb" pixels defines the chunk size:
+
+```{r}
+imsplit(parrots,"x",-250) %>% plot
+```
+
+That last panel looks crummy because it's a long-and-thin image stretched into a square. 
+
+The inverse operation to imsplit is called imappend: it takes a list of images and concatenates them along the dimension of your choice.
 
 ```{r imappend}
 #Sample functions and turn them into separate R,G,B channels

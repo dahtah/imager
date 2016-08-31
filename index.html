@@ -10,14 +10,15 @@
 
 
 
+
 <title></title>
 
-<script src="index_files/jquery-1.11.0/jquery.min.js"></script>
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="index_files/bootstrap-3.3.1/css/readable.min.css" rel="stylesheet" />
-<script src="index_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="index_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="index_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="index_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <link rel="stylesheet"
@@ -39,6 +40,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
 </head>
 
 <body>
@@ -53,20 +82,47 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
 <div class="container-fluid main-container">
 
+<!-- tabsets -->
+<script src="index_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
 
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
 
 
 <!-- --- -->
 <!-- title: "imager: an R package for image processing" -->
 <!-- --- -->
-
 <div id="header">
 <p>
 <img src="warped_parrots_small.png" style="float: right; margin-left: 20px;" />
@@ -74,16 +130,13 @@ img {
 <h1 class="title">
 imager: an R package for image processing
 </h1>
-
 </div>
 <p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
 <!-- <img src="warped_parrots_small.png" style="float: right; margin-left: 20px;" /> -->
-
-
 <p>R is a bit lacking in the area of image processing, where Matlab is still king. Imager aims to make image processing work in R easier. It is based on <a href="http://cimg.sourceforge.net/">CImg</a>, a C++ library by David Tschumperlé. CImg provides an easy-to-use and consistent API for image processing, which imager largely replicates. CImg supports images in up to four dimensions, which makes it suitable for basic video processing/hyperspectral imaging as well.</p>
 <div id="features" class="section level2">
 <h2>Features</h2>
-<p>At this stage imager covers:</p>
+<p>At this stage imager contains over 100 functions, and covers all the classics:</p>
 <ul>
 <li>loading and saving images in various formats</li>
 <li>displaying and plotting images</li>
@@ -91,7 +144,10 @@ imager: an R package for image processing
 <li>interpolation, resizing, warping</li>
 <li>filtering and FFTs</li>
 <li>morphological operations</li>
+<li>denoising</li>
+<li>…</li>
 </ul>
+<p>imager aims to be fast (doing things in C++ as much as possible), but also R-friendly, and defines contains many convenience functions that make it easy to work with native R datatypes and functions.</p>
 </div>
 <div id="installing-the-package" class="section level2">
 <h2>Installing the package</h2>
@@ -101,7 +157,7 @@ imager: an R package for image processing
 </div>
 <div id="dependencies" class="section level2">
 <h2>Dependencies</h2>
-<p>You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to work with videos, or import and save images in formats other than PNG and JPEG. On Linux these should be available from standard repositories (ie. “sudo apt-get install ffmpeg” should work). On OS X they are available via brew: “brew install imagemagick ffmpeg”.</p>
+<p>You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to work with videos, or import and save images in formats other than BMP, PNG and JPEG. On Linux these should be available from standard repositories (ie. “sudo apt-get install ffmpeg” should work). On OS X they are available via brew: “brew install imagemagick ffmpeg”.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
@@ -112,18 +168,29 @@ imager: an R package for image processing
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
-<p>Most functions are described in the general package <a href="imager.html">documentation</a>.</p>
+<div id="general-package-documentation" class="section level3">
+<h3>General package documentation</h3>
+<p>Most functions are described in the general package <a href="imager.html">documentation</a>. The automatically generated docs are <a href="https://cran.r-project.org/web/packages/imager/imager.pdf">here</a>, and come with examples.</p>
+</div>
+<div id="tutorials-case-studies-etc." class="section level3">
+<h3>Tutorials, case studies, etc.</h3>
 <p>There’s also a number of tutorials and case studies:</p>
 <ul>
 <li>a <a href="image_stats.html">tutorial</a> on natural image statistics using imager</li>
 <li>another (incomplete) tutorial on <a href="morphology.html">morphology and detrending</a></li>
 <li>a <a href="foreground_background.html">tutorial</a> on <a href="http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/">foreground/background segmentation</a></li>
+<li>plotting the <a href="gradient_field.html">image gradient as a vector field</a></li>
 <li>information on <a href="cpp_api.html">accessing the CImg API using Rcpp</a></li>
-<li>a <a href="https://cran.r-project.org/web/packages/imager/imager.pdf">list of all functions</a> with examples</li>
 </ul>
 <p>You might find <a href="http://cimg.eu/">CImg</a>’s doc useful as well.</p>
+</div>
+</div>
+<div id="bugs-issues-etc." class="section level2">
+<h2>Bugs, issues, etc.</h2>
 <p>Bugs and miscellaneous problems can be reported on the <a href="https://github.com/dahtah/imager/issues">issues page</a> on Github.</p>
 </div>
+
+
 
 
 </div>

@@ -18,7 +18,7 @@ R is a bit lacking in the area of image processing, where Matlab is still king. 
 
 ## Features
 
-At this stage imager covers:
+At this stage imager contains over 100 functions, and covers all the classics:
 
 - loading and saving images in various formats
 - displaying and plotting images
@@ -26,6 +26,10 @@ At this stage imager covers:
 - interpolation, resizing, warping
 - filtering and FFTs
 - morphological operations 
+- denoising 
+- ... 
+
+imager aims to be fast (doing things in C++ as much as possible), but also R-friendly, and defines many convenience functions that make it easy to work with native R datatypes and functions. 
 
 ## Installing the package
 
@@ -37,7 +41,7 @@ should to the trick. If you prefer the latest development version, see our [Gith
 
 ## Dependencies
 
-You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to work with videos, or import and save images in formats other than PNG and JPEG. On Linux these should be available from standard repositories (ie. "sudo apt-get install ffmpeg" should work). On OS X they are available via brew: "brew install imagemagick ffmpeg". 
+You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to work with videos, or import and save images in formats other than BMP, PNG and JPEG. On Linux these should be available from standard repositories (ie. "sudo apt-get install ffmpeg" should work). On OS X they are available via brew: "brew install imagemagick ffmpeg". 
 
 ## Getting started 
 
@@ -51,16 +55,23 @@ The tutorial covers basic image manipulation, plotting use base graphics and ggp
 
 ## Documentation
 
-Most functions are described in the general package [documentation](imager.html).
+### General package documentation 
+
+Most functions are described in the general package [documentation](imager.html). The automatically generated docs are [here](https://cran.r-project.org/web/packages/imager/imager.pdf), and come with examples. 
+
+### Tutorials, case studies, etc. 
 
 There's also a number of tutorials and case studies:
 
+- how to [parallelise](parallel.html) computations 
 - a [tutorial](image_stats.html) on natural image statistics using imager
 - another (incomplete) tutorial on [morphology and detrending](morphology.html)
 - a [tutorial](foreground_background.html) on [foreground/background segmentation](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/)
+- plotting the [image gradient as a vector field](gradient_field.html)
 - information on [accessing the CImg API using Rcpp](cpp_api.html)
-- a [list of all functions](https://cran.r-project.org/web/packages/imager/imager.pdf) with examples
 
 You might find [CImg](http://cimg.eu/)'s doc useful as well. 
+
+## Bugs, issues, etc.
 
 Bugs and miscellaneous problems can be reported on the [issues page](https://github.com/dahtah/imager/issues) on Github. 
