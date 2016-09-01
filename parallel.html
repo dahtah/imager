@@ -11,7 +11,7 @@
 
 
 
-<title>Parallelising imager</title>
+<title>imager in parallel</title>
 
 <script src="parallel_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -116,22 +116,22 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Parallelising imager</h1>
+<h1 class="title toc-ignore">imager in parallel</h1>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#parallelising-from-r"><span class="toc-section-number">0.1</span> Parallelising from R</a></li>
-<li><a href="#cimg-and-openmp"><span class="toc-section-number">0.2</span> CImg and OpenMP</a></li>
-<li><a href="#parallelisation-in-r-vs.native-parallelisation"><span class="toc-section-number">1</span> Parallelisation in R vs. native parallelisation</a></li>
+<li><a href="#parallelising-from-r"><span class="toc-section-number">1</span> Parallelising from R</a></li>
+<li><a href="#native-parallelisation-cimg-and-openmp"><span class="toc-section-number">2</span> Native parallelisation: CImg and OpenMP</a></li>
+<li><a href="#parallelisation-in-r-vs.native-parallelisation"><span class="toc-section-number">3</span> Parallelisation in R vs. native parallelisation</a></li>
 </ul>
 </div>
 
 <p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
-<p>There are several ways of doing things in parallel with imager. One of them is to use of R’s many packages for doing things in parallel (doSnow, futures, etc.). The other one is to take advantage of CImg’s ative use of OpenMP.</p>
-<div id="parallelising-from-r" class="section level2">
-<h2><span class="header-section-number">0.1</span> Parallelising from R</h2>
+<p>There are several ways of doing things in parallel with imager. One of them is to use of R’s many packages for doing things in parallel (parallel, futures, etc.). The other one is to take advantage of CImg’s ative use of OpenMP.</p>
+<div id="parallelising-from-r" class="section level1">
+<h1><span class="header-section-number">1</span> Parallelising from R</h1>
 <p>Parallelising from R is very easy (provided that what you want to do actually parallelises). Something that does parallelise easily is to run the same operations on different images, or on different image channels.</p>
 <pre class="r"><code>library(parallel)
 
@@ -143,15 +143,15 @@ fun &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% lapply(rank)
     
 system.time(fun())</code></pre>
 <pre><code>##    user  system elapsed 
-##  12.855   0.550  13.403</code></pre>
+##  15.210   0.505  15.714</code></pre>
 <pre class="r"><code>#Parallel version: use mclapply
 fun.par &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% mclapply(rank,mc.cores=2)
 system.time(fun.par())</code></pre>
 <pre><code>##    user  system elapsed 
-##   5.804   0.484  11.850</code></pre>
+##   5.800   0.566  11.388</code></pre>
 </div>
-<div id="cimg-and-openmp" class="section level2">
-<h2><span class="header-section-number">0.2</span> CImg and OpenMP</h2>
+<div id="native-parallelisation-cimg-and-openmp" class="section level1">
+<h1><span class="header-section-number">2</span> Native parallelisation: CImg and OpenMP</h1>
 <p>Many CImg operations are parallelised natively. The parallelisation is optional and is only activated starting from a certain image size. The speed-ups are sublinear, meaning that unless your image is gigantic you won’t gain much from throwing 200 cores at a problem.</p>
 <p>By default OpenMP will grab all the CPU cores it can. You can control how many cores are accessed using <code>OpenMPController::omp_set_num_threads</code>:</p>
 <pre class="r"><code>library(imager)
@@ -167,48 +167,58 @@ OpenMPController::omp_set_num_threads(1)</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
 ##   expr      min       lq     mean   median       uq      max neval
-##  fun() 438.2027 440.7411 442.9761 442.8501 445.4488 446.9651    15</code></pre>
+##  fun() 447.4261 451.8722 454.5209 454.9349 457.0902 461.4721    15</code></pre>
 <pre class="r"><code>#2 cores
 OpenMPController::omp_set_num_threads(2)</code></pre>
 <pre><code>## [[1]]
 ## [1] 2</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
-##   expr      min       lq     mean   median       uq      max neval
-##  fun() 347.2036 361.9472 369.6724 368.7963 376.2194 396.9074    15</code></pre>
+##   expr      min       lq   mean   median       uq      max neval
+##  fun() 369.3261 379.9934 388.27 386.0809 390.1093 426.4627    15</code></pre>
 <pre class="r"><code>#3 cores, etc.
 OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre><code>## [[1]]
 ## [1] 3</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
-##   expr      min       lq    mean   median       uq      max neval
-##  fun() 295.5114 313.6592 333.891 333.9963 348.7461 379.3519    15</code></pre>
+##   expr      min       lq     mean   median       uq      max neval
+##  fun() 325.0197 335.6653 363.1866 366.3607 387.0628 409.9709    15</code></pre>
 <p>If CImg’s parallelisation doesn’t seem to work on your machine, it’s probably because you compiled the package with clang, which has patchy support for OpenMP. Recompile using gcc if possible.</p>
 </div>
 <div id="parallelisation-in-r-vs.native-parallelisation" class="section level1">
-<h1><span class="header-section-number">1</span> Parallelisation in R vs. native parallelisation</h1>
+<h1><span class="header-section-number">3</span> Parallelisation in R vs. native parallelisation</h1>
 <p>Here’s a simple benchmark: medianblur can be parallelised across image channels. First, the R version using mclapply:</p>
 <pre class="r"><code>OpenMPController::omp_set_num_threads(1)</code></pre>
 <pre><code>## [[1]]
 ## [1] 1</code></pre>
-<pre class="r"><code>fun.R &lt;- function() imsplit(boats,&quot;c&quot;) %&gt;% mclapply(function(v) medianblur(v,40),mc.cores=3)
-microbenchmark(fun.R(),times=10)</code></pre>
+<pre class="r"><code>fun.R &lt;- function() imsplit(boats,&quot;c&quot;) %&gt;% mclapply(function(v) medianblur(v,50),mc.cores=3)
+microbenchmark(fun.R(),times=20)</code></pre>
 <pre><code>## Unit: seconds
-##     expr     min       lq     mean   median       uq     max neval
-##  fun.R() 4.08445 4.098728 4.319341 4.258605 4.457103 4.74093    10</code></pre>
+##     expr      min       lq     mean   median       uq      max neval
+##  fun.R() 5.977051 6.179595 6.236711 6.235032 6.366866 6.430422    20</code></pre>
 <p>Second, CImg’s native version:</p>
 <pre class="r"><code>OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre><code>## [[1]]
 ## [1] 3</code></pre>
-<pre class="r"><code>fun.nat &lt;- function() medianblur(boats,40)
-microbenchmark(fun.nat(),times=10)</code></pre>
+<pre class="r"><code>fun.nat &lt;- function() medianblur(boats,50)
+microbenchmark(fun.nat(),times=20)</code></pre>
 <pre><code>## Unit: seconds
 ##       expr      min       lq     mean   median       uq      max neval
-##  fun.nat() 3.873067 3.948749 4.065615 4.080281 4.119771 4.272506    10</code></pre>
-<p>The native version has a bit less overhead.</p>
-<p>Pros and cons of using native parallelisation: - Transparent - Very efficient if you work on large images - Only works on compatible platforms (i.e., needs gcc)</p>
-<p>Pros and cons of parallelisation from R: - More flexible (futures, multiple threads, etc.) - Effective if you run a long chain of operations over many images - Better cross-platform support - Slightly less transparent and possibly slower</p>
+##  fun.nat() 5.981353 6.174646 6.369881 6.408754 6.562772 6.685932    20</code></pre>
+<p>Pros and cons of using native parallelisation:</p>
+<ul>
+<li>Transparent</li>
+<li>Very efficient if you work on large images</li>
+<li>Only works on compatible platforms (i.e., needs gcc)</li>
+</ul>
+<p>Pros and cons of parallelisation from R:</p>
+<ul>
+<li>More flexible (futures, multiple threads, etc.)</li>
+<li>Effective if you run a long chain of operations over many images</li>
+<li>Better cross-platform support</li>
+<li>Slightly less transparent and possibly slower</li>
+</ul>
 <p>Note that both types of parallelisation can be combined if you can spread the load over several machines.</p>
 </div>
 

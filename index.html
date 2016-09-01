@@ -147,7 +147,7 @@ imager: an R package for image processing
 <li>denoising</li>
 <li>…</li>
 </ul>
-<p>imager aims to be fast (doing things in C++ as much as possible), but also R-friendly, and defines contains many convenience functions that make it easy to work with native R datatypes and functions.</p>
+<p>imager aims to be fast (doing things in C++ as much as possible), but also R-friendly, and defines many convenience functions that make it easy to work with native R datatypes and functions.</p>
 </div>
 <div id="installing-the-package" class="section level2">
 <h2>Installing the package</h2>
@@ -157,7 +157,7 @@ imager: an R package for image processing
 </div>
 <div id="dependencies" class="section level2">
 <h2>Dependencies</h2>
-<p>You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to work with videos, or import and save images in formats other than BMP, PNG and JPEG. On Linux these should be available from standard repositories (ie. “sudo apt-get install ffmpeg” should work). On OS X they are available via brew: “brew install imagemagick ffmpeg”.</p>
+<p>OS X users need to install XQuartz: <a href="https://www.xquartz.org/" class="uri">https://www.xquartz.org/</a>. You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to work with videos, or import and save images in formats other than BMP, PNG and JPEG. On Linux these should be available from standard repositories (ie. “sudo apt-get install ffmpeg” should work). On OS X they are available via brew: “brew install imagemagick ffmpeg”.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
@@ -172,10 +172,16 @@ imager: an R package for image processing
 <h3>General package documentation</h3>
 <p>Most functions are described in the general package <a href="imager.html">documentation</a>. The automatically generated docs are <a href="https://cran.r-project.org/web/packages/imager/imager.pdf">here</a>, and come with examples.</p>
 </div>
+<div id="faq" class="section level3">
+<h3>FAQ</h3>
+<p>See here for <a href="FAQ.html">Frequently Asked Questions</a>.</p>
+</div>
 <div id="tutorials-case-studies-etc." class="section level3">
 <h3>Tutorials, case studies, etc.</h3>
 <p>There’s also a number of tutorials and case studies:</p>
 <ul>
+<li>how to <a href="parallel.html">parallelise</a> computations</li>
+<li>how to right fast functional code: <a href="canny.html">a loop-free Canny edge detector</a></li>
 <li>a <a href="image_stats.html">tutorial</a> on natural image statistics using imager</li>
 <li>another (incomplete) tutorial on <a href="morphology.html">morphology and detrending</a></li>
 <li>a <a href="foreground_background.html">tutorial</a> on <a href="http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/">foreground/background segmentation</a></li>

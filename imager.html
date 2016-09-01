@@ -602,10 +602,10 @@ lines(xv,imp.dr/max(imp.dr),col=&quot;red&quot;,lwd=2)</code></pre>
 <pre class="r"><code>im &lt;- imfill(3e3,3e3)
 system.time(deriche(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.126   0.368   0.426 </code></pre>
+  0.125   0.067   0.115 </code></pre>
 <pre class="r"><code>system.time(vanvliet(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.223   0.080   0.159 </code></pre>
+  0.289   0.160   0.260 </code></pre>
 <p>In both cases computation time is independent of filter bandwidth, which is a very nice feature (the filters are IIR).</p>
 </div>
 <div id="ffts-and-the-periodicsmooth-decomposition" class="section level1">

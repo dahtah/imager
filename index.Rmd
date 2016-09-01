@@ -41,7 +41,7 @@ should to the trick. If you prefer the latest development version, see our [Gith
 
 ## Dependencies
 
-You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to work with videos, or import and save images in formats other than BMP, PNG and JPEG. On Linux these should be available from standard repositories (ie. "sudo apt-get install ffmpeg" should work). On OS X they are available via brew: "brew install imagemagick ffmpeg". 
+OS X users need to install XQuartz: https://www.xquartz.org/. You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to work with videos, or import and save images in formats other than BMP, PNG and JPEG. On Linux these should be available from standard repositories (ie. "sudo apt-get install ffmpeg" should work). On OS X they are available via brew: "brew install imagemagick ffmpeg". 
 
 ## Getting started 
 
@@ -59,11 +59,16 @@ The tutorial covers basic image manipulation, plotting use base graphics and ggp
 
 Most functions are described in the general package [documentation](imager.html). The automatically generated docs are [here](https://cran.r-project.org/web/packages/imager/imager.pdf), and come with examples. 
 
+### FAQ
+
+See here for [Frequently Asked Questions](FAQ.html). 
+
 ### Tutorials, case studies, etc. 
 
 There's also a number of tutorials and case studies:
 
 - how to [parallelise](parallel.html) computations 
+- how to right fast functional code: [a loop-free Canny edge detector](canny.html)
 - a [tutorial](image_stats.html) on natural image statistics using imager
 - another (incomplete) tutorial on [morphology and detrending](morphology.html)
 - a [tutorial](foreground_background.html) on [foreground/background segmentation](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/)

@@ -126,38 +126,39 @@ $(document).ready(function () {
 <p>An effective way of visualising the image gradient is to see it as a vector field (a flow). At each pixel, the gradient gives a direction, which we can plot as an arrow.</p>
 <p>The first step is to compute a gradient, using imgradient:</p>
 <pre class="r"><code>library(imager)
-im &lt;- load.example(&quot;parrots&quot;) %&gt;% grayscale %&gt;% imresize(.3)
+#The 255 factor isn&#39;t stricly needed, it&#39;s for the luminance values to be properly scaled
+im &lt;- (255*load.example(&quot;parrots&quot;)) %&gt;% grayscale %&gt;% imresize(.3)
 gr &lt;- imgradient(im,&quot;xy&quot;)</code></pre>
 <p>The next step is to convert the gradient to a data.frame:</p>
 <pre class="r"><code>library(dplyr)
 names(gr) &lt;- c(&quot;dx&quot;,&quot;dy&quot;)
 dgr &lt;- as.data.frame(gr)
 head(dgr)</code></pre>
-<pre><code>##   im x y         value
-## 1 dx 1 1  8.840955e-06
-## 2 dx 2 1  1.794129e-05
-## 3 dx 3 1  6.552742e-06
-## 4 dx 4 1 -1.358184e-05
-## 5 dx 5 1 -2.986006e-05
-## 6 dx 6 1 -4.342557e-05</code></pre>
+<pre><code>##   im x y        value
+## 1 dx 1 1  0.002254443
+## 2 dx 2 1  0.004575028
+## 3 dx 3 1  0.001670949
+## 4 dx 4 1 -0.003463370
+## 5 dx 5 1 -0.007614315
+## 6 dx 6 1 -0.011073519</code></pre>
 <pre class="r"><code>tail(dgr)</code></pre>
-<pre><code>##       im   x   y         value
-## 70375 dy 225 153 -0.0001243397
-## 70376 dy 226 153 -0.0001245194
-## 70377 dy 227 153 -0.0001195275
-## 70378 dy 228 153 -0.0001079347
-## 70379 dy 229 153 -0.0001055978
-## 70380 dy 230 153 -0.0001114864</code></pre>
+<pre><code>##       im   x   y       value
+## 70375 dy 225 153 -0.03170663
+## 70376 dy 226 153 -0.03175244
+## 70377 dy 227 153 -0.03047952
+## 70378 dy 228 153 -0.02752334
+## 70379 dy 229 153 -0.02692745
+## 70380 dy 230 153 -0.02842904</code></pre>
 <p>The <em>dx</em> component and <em>dy</em> components are on separate rows. For plotting it’s more convenient to convert to a “wide” format:</p>
 <pre class="r"><code>dgr &lt;- tidyr::spread(dgr,im,value)
 head(dgr)</code></pre>
-<pre><code>##   x y           dx           dy
-## 1 1 1 8.840955e-06 9.746603e-05
-## 2 1 2 9.752258e-06 2.151724e-04
-## 3 1 3 9.929750e-06 2.144521e-04
-## 4 1 4 1.535602e-05 1.677182e-04
-## 5 1 5 2.650126e-05 1.219471e-04
-## 6 1 6 4.017663e-05 1.074360e-04</code></pre>
+<pre><code>##   x y          dx         dy
+## 1 1 1 0.002254443 0.02485384
+## 2 1 2 0.002486826 0.05486897
+## 3 1 3 0.002532086 0.05468528
+## 4 1 4 0.003915785 0.04276814
+## 5 1 5 0.006757821 0.03109652
+## 6 1 6 0.010245041 0.02739618</code></pre>
 <p>And we can now proceed with plotting:</p>
 <pre class="r"><code>##cowplot sets better defaults for ggplot2,
 ##replace with library(ggplot2) if you prefer
@@ -180,7 +181,7 @@ p &lt;- ggplot(dgr.sub,aes(x,y))
 p &lt;- p+geom_segment(aes(xend=xend,yend=yend),arrow = arrow(length = unit(0.01, &quot;npc&quot;)),col=&quot;black&quot;,alpha=1)
 p+scale_y_reverse()</code></pre>
 <p><img src="gradient_field_files/figure-html/unnamed-chunk-4-1.png" width="816" /></p>
-<p>The outline of the boats is visible but things would be nicer if we could just overlay the gradient field on top of the image. Fortunately, we can:</p>
+<p>The outline of the parrots is visible but things would be nicer if we could just overlay the gradient field on top of the image. Fortunately, we can:</p>
 <pre class="r"><code>p &lt;- as.data.frame(im) %&gt;% ggplot(aes(x,y))+geom_raster(aes(fill=value))
 p &lt;- p+geom_segment(data=dgr.sub,aes(xend=xend,yend=yend),arrow = arrow(length = unit(0.01, &quot;npc&quot;)),col=&quot;black&quot;,alpha=1)
 p+scale_y_reverse()</code></pre>
@@ -192,6 +193,7 @@ p+scale_y_reverse()</code></pre>
 p &lt;- as.data.frame(im) %&gt;% ggplot(aes(x,y))+geom_raster(aes(fill=value))
 p &lt;- p+geom_segment(data=dgr.sub,aes(xend=xend,yend=yend,alpha=mag),arrow = arrow(length = unit(0.01, &quot;npc&quot;)),col=&quot;red&quot;)
 p+scale_y_reverse()+scale_fill_continuous(low=&quot;black&quot;,high=&quot;white&quot;)</code></pre>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_segment).</code></pre>
 <p><img src="gradient_field_files/figure-html/unnamed-chunk-6-1.png" width="816" /></p>
 <p>Here’s everything wrapped up in a function:</p>
 <pre class="r"><code>gradfield &lt;- function(im,subs=4)

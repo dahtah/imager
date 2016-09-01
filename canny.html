@@ -124,7 +124,7 @@ $(document).ready(function () {
 <ul>
 <li><a href="#step-i-denoising"><span class="toc-section-number">1</span> Step I: denoising</a></li>
 <li><a href="#step-ii-computing-the-image-gradient-its-magnitude-and-angle"><span class="toc-section-number">2</span> Step II: computing the image gradient, its magnitude and angle</a></li>
-<li><a href="#step-3-cleaning-up-using-non-maxima-suppression"><span class="toc-section-number">3</span> Step 3: cleaning up using non-maxima suppression</a></li>
+<li><a href="#step-iii-cleaning-up-using-non-maxima-suppression"><span class="toc-section-number">3</span> Step III: cleaning up using non-maxima suppression</a></li>
 <li><a href="#step-iv-hysteresis"><span class="toc-section-number">4</span> Step IV: hysteresis</a></li>
 </ul>
 </div>
@@ -135,29 +135,8 @@ $(document).ready(function () {
 <div id="step-i-denoising" class="section level1">
 <h1><span class="header-section-number">1</span> Step I: denoising</h1>
 <p>Noise in the image can cause illusory edges to be detected. The traditional recommendation is Gaussian filtering, which is easy enough:</p>
-<pre class="r"><code>library(imager)</code></pre>
-<pre><code>## Loading required package: plyr</code></pre>
-<pre><code>## 
-## Attaching package: &#39;imager&#39;</code></pre>
-<pre><code>## The following object is masked _by_ &#39;.GlobalEnv&#39;:
-## 
-##     add</code></pre>
-<pre><code>## The following object is masked from &#39;package:plyr&#39;:
-## 
-##     liply</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     convolve, spectrum</code></pre>
-<pre><code>## The following object is masked from &#39;package:graphics&#39;:
-## 
-##     frame</code></pre>
-<pre><code>## The following object is masked from &#39;package:magrittr&#39;:
-## 
-##     add</code></pre>
-<pre><code>## The following object is masked from &#39;package:base&#39;:
-## 
-##     save.image</code></pre>
-<pre class="r"><code>im &lt;- grayscale(boats) %&gt;% isoblur(2) #2 pix. blur</code></pre>
+<pre class="r"><code>library(imager)
+im &lt;- grayscale(boats) %&gt;% isoblur(2) #2 pix. blur</code></pre>
 <p>(NB: other filters may actually perform better here, for example the median filter).</p>
 </div>
 <div id="step-ii-computing-the-image-gradient-its-magnitude-and-angle" class="section level1">
@@ -182,8 +161,8 @@ plot(ang,colourscale=cs,rescale=FALSE)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-5-1.png" width="624" /></p>
 <p>For a better way of visualising image gradients, see <a href="gradient_field.html">here</a>.</p>
 </div>
-<div id="step-3-cleaning-up-using-non-maxima-suppression" class="section level1">
-<h1><span class="header-section-number">3</span> Step 3: cleaning up using non-maxima suppression</h1>
+<div id="step-iii-cleaning-up-using-non-maxima-suppression" class="section level1">
+<h1><span class="header-section-number">3</span> Step III: cleaning up using non-maxima suppression</h1>
 <p>The gradient magnitude we plotted above is blurry, and if we threshold it directly we’ll see that some pixels near edges are also labelled as being edges:</p>
 <pre class="r"><code>threshold(mag) %&gt;% plot</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-6-1.png" width="624" /></p>
@@ -212,11 +191,6 @@ plot(mag)</code></pre>
 <li>points with magnitudes above <span class="math inline">\(t_2\)</span> are called “strong edges”</li>
 <li>points with magnitudes above <span class="math inline">\(t_1\)</span> are called “weak edges”</li>
 </ul>
-<p>Weak edges have a high chance of being false positives, but less so if there’s a strong edge somewhere nearby, because edges are usually continuous. Hysteresis rescues such weak edges progressively. The usual implementation is iterative: you start from a strong edge, look at all its neighbours, and if any of these neighbours is a weak edge you rescue it by labelling it as strong. Again, R is impractically slow for such a process. We can do much better by using morphological dilation as our computational primitive. <a href="https://en.wikipedia.org/wiki/Dilation_(morphology)">Morphological dilation</a> takes a B&amp;W image and expands the set of white pixels by using a “structuring element”. In the simplest case the structuring element is a square and dilation corresponds to a kind of convolution: we move the square around, and we label the central element white if there is another white pixel in the square. Here it is at work on a small noise image:</p>
-<pre class="r"><code>imn &lt;- as.cimg(imnoise(100,100) &gt; 1)
-list(imn,dilate_square(imn,2)) %&gt;% imlist %&gt;% plot(layout=&quot;row&quot;)</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
-<p>Morphological dilation gives us a way of implementing hysteresis. We start from the set of strong edges, expand it with dilation, and check its overlap with the set of weak-edges. Any points in the overlap can now be labelled “strong”:</p>
 <pre class="r"><code>#strong threshold
 t2 &lt;- quantile(mag,.96)
 #weak threshold 
@@ -226,10 +200,56 @@ layout(t(1:2))
 strong &lt;- as.cimg(mag&gt;t2)
 plot(strong,main=&quot;Initial set of strong edges&quot;)
 weak &lt;- as.cimg(mag %inr% c(t1,t2))
-overlap &lt;- dilate_square(strong,3)*weak 
+plot(weak,main=&quot;Initial set of weak edges&quot;)</code></pre>
+<p><img src="canny_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
+<p>Weak edges have a high chance of being false positives, but less so if there’s a strong edge somewhere nearby, because edges are usually continuous.</p>
+<p>Hysteresis rescues such weak edges progressively. The usual implementation is iterative. First, we put all the strong edges in a stack (or queue). Then, we pop the first strong edge off the stack, look at all its neighbours, and if any of these neighbours is a weak edge you rescue it by labelling it as strong and adding it to the stack. Then we move on to the next item on the stack (or queue). When we run out of items in the queue we’re done.</p>
+<pre class="r"><code>hyst.loop &lt;- function(strong,weak)
+    {
+        #We make the queue a list so that it can grow or shrink relatively fast
+        queue &lt;- which(strong==1) %&gt;% as.list
+        max.x &lt;- width(strong)
+        max.y &lt;- height(strong)
+        while (length(queue)&gt;0)
+            {
+                ind &lt;- queue[[1]]
+                #get (x,y) coordinates of the current point
+                cc &lt;- coord.index(strong,ind)
+                #explore the neighbourhood
+                for (nx in (cc$x+c(-1,0,1)))
+                {
+                    for (ny in (cc$y+c(-1,0,1)))
+                    {
+                        #we have to mind boundary conditions
+                        if (nx &gt; 0 &amp;&amp; nx &lt;= max.x &amp;&amp; ny &gt; 0 &amp;&amp; ny &lt;= max.y)
+                        {
+                            if (at(weak,nx,ny)==1)
+                            {
+                                at(weak,nx,ny) &lt;- 0
+                                at(strong,nx,ny) &lt;- 1
+                                queue[[length(queue)+1]] &lt;- index.coord(strong,data.frame(x=nx,y=ny))
+                            }
+                        }
+                    }
+                }
+                queue[[1]] &lt;- NULL
+            }
+        strong
+    }
+
+canny &lt;- hyst.loop(strong,weak)
+plot(canny,main=&quot;Edges after hystereris&quot;)</code></pre>
+<p><img src="canny_files/figure-html/unnamed-chunk-11-1.png" width="624" /></p>
+<p>R is impractically slow for such a process (try running hyst.loop on a large image).</p>
+<p>We can do much better by using morphological dilation as our computational primitive. <a href="https://en.wikipedia.org/wiki/Dilation_(morphology)">Morphological dilation</a> takes a B&amp;W image and expands the set of white pixels by using a “structuring element”. In the simplest case the structuring element is a square and dilation corresponds to a kind of convolution: we move the square around, and we label the central element white if there is another white pixel in the square. Here it is at work on a small noise image:</p>
+<pre class="r"><code>imn &lt;- as.cimg(imnoise(100,100) &gt; 1)
+list(imn,dilate_square(imn,2)) %&gt;% imlist %&gt;% plot(layout=&quot;row&quot;)</code></pre>
+<p><img src="canny_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
+<p>Morphological dilation gives us a way of implementing hysteresis. We start from the set of strong edges, expand it with dilation, and check its overlap with the set of weak-edges. Any points in the overlap can now be labelled “strong”:</p>
+<pre class="r"><code>overlap &lt;- dilate_square(strong,3)*weak 
 strong.new &lt;- strong + overlap
 plot(strong.new,main=&quot;New set of strong edges&quot;)</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-11-1.png" width="624" /></p>
+<p><img src="canny_files/figure-html/unnamed-chunk-13-1.png" width="624" /></p>
 <pre class="r"><code>delta &lt;- sum(strong.new)-sum(strong)
 delta</code></pre>
 <pre><code>## [1] 202</code></pre>
@@ -276,18 +296,18 @@ out</code></pre>
 ## Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1</code></pre>
 <pre class="r"><code>canny &lt;- out$strong
 plot(canny,main=&quot;Canny edges&quot;)</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-13-1.png" width="624" /></p>
+<p><img src="canny_files/figure-html/unnamed-chunk-15-1.png" width="624" /></p>
 <p>Of course, in a way we are cheating here: the fixed point iteration is really a loop. But instead of looping over each pixel (which is slow, because there are many pixels), we run a global computation on all pixels, 70 times, which is much faster. The fact that it takes 70 iterations to rescue all the weak edges tells us that, in this image at least, some weak edges are hard to reach: there is a connection between the initial set of strong edges and some far-away weak edges. A better computational primitive in this case is the bucket fill (also called the “flood fill”), which you probably know from using your favourite image editor.</p>
 <pre class="r"><code>im1 &lt;- as.cimg(function(x,y) x == 50,100,100)
 layout(t(1:2))
 plot(im1,main=&quot;Bucket fill initialised at red point&quot;)
 points(80,80,col=&quot;red&quot;)
 bucketfill(im1,80,80,color=1,high_connex=TRUE) %&gt;% plot(main=&quot;Result&quot;)</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-14-1.png" width="624" /></p>
+<p><img src="canny_files/figure-html/unnamed-chunk-16-1.png" width="768" /></p>
 <p>The bucketfill has a tolerance parameter, which sets a stopping criterion: if nearby pixels are more than “sigma” apart in value, they won’t be filled. The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we’ll have rescued all the weak edges that need to be rescued. To identify all strong regions, we use “label”:</p>
 <pre class="r"><code>labs &lt;- label(strong,high=TRUE)
 suppressWarnings((labs*strong) %&gt;% plot(.,colourscale=scales::div_gradient_pal()))</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-15-1.png" width="624" /></p>
+<p><img src="canny_files/figure-html/unnamed-chunk-17-1.png" width="624" /></p>
 <p>label gives each distinct, connected region an integer label. To obtain a starting pixel inside each region, we use dplyr:</p>
 <pre class="r"><code>lab &lt;- label(strong,TRUE)*strong
 loc &lt;- as.data.frame(lab) %&gt;% dplyr::filter(value &gt; 0)%&gt;%
@@ -295,21 +315,13 @@ loc &lt;- as.data.frame(lab) %&gt;% dplyr::filter(value &gt; 0)%&gt;%
     dplyr::summarize(x=x[1],y=y[1])
 plot(strong)
 points(loc$x,loc$y,col=&quot;red&quot;)</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-16-1.png" width="624" /></p>
+<p><img src="canny_files/figure-html/unnamed-chunk-18-1.png" width="624" /></p>
 <p>For the bucket fill trick to work we need to be able to spread the value of strong pixels to their weak neighbour (but not elsewhere). We assign different values to strong and weak pixels:</p>
 <pre class="r"><code>v &lt;- strong
 v[weak==1] &lt;- .9 #Strong pixels have value 1, weak .9, and the rest are 0.</code></pre>
-<p>Finally we need to go through the list of seed pixels, and apply bucket fill every time. We could write a loop, but to keep with the functional style we have used so far we’ll cast this operation as a <em>fold</em>, using <em>reduce</em> from the <em>purrr</em> package. <em>reduce</em> takes a function of two arguments (an accumulator and an item), and reduces a list to a single item by accumulating. It’s best illustrated by example:</p>
-<pre class="r"><code>library(purrr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;purrr&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:plyr&#39;:
-## 
-##     compact</code></pre>
-<pre><code>## The following object is masked from &#39;package:magrittr&#39;:
-## 
-##     set_names</code></pre>
-<pre class="r"><code>add &lt;- function(l) reduce(l,function(acc,item) acc+item,.init=0)
+<p>Finally we need to go through the list of seed pixels, and apply bucket fill every time. We could write a loop, but to keep with the functional style we have used so far, we’ll cast this operation as a <em>fold</em>, using <em>reduce</em> from the <a href="https://github.com/hadley/purrr">purrr</a> package. <em>reduce</em> takes a function of two arguments (an accumulator and an item), and reduces a list to a single item by accumulating. It’s best illustrated by example:</p>
+<pre class="r"><code>library(purrr)
+add &lt;- function(l) reduce(l,function(acc,item) acc+item,.init=0)
 add(1:3) #equals sum(1:3)</code></pre>
 <pre><code>## [1] 6</code></pre>
 <pre class="r"><code>mult &lt;- function(l) reduce(l,function(acc,item) acc*item,.init=1)
@@ -317,7 +329,7 @@ mult(1:3) #equals prod(1:3)</code></pre>
 <pre><code>## [1] 6</code></pre>
 <pre class="r"><code>#put the three colour channels side-by-side
 imsplit(boats,&quot;c&quot;) %&gt;% reduce(function(acc,l) imappend(list(acc,l),&quot;x&quot;)) %&gt;% plot</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-18-1.png" width="624" /></p>
+<p><img src="canny_files/figure-html/unnamed-chunk-20-1.png" width="624" /></p>
 <pre class="r"><code>#Gives a set of initial locations for the bucket fill
 fillInit &lt;- function(strong)
     {
@@ -346,11 +358,11 @@ all.equal(canny,canny2)</code></pre>
 <p>The second function is much faster, at least on this image (for this particular choice of thresholds):</p>
 <pre class="r"><code>system.time(hystFP(list(strong=strong,weak=weak)))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.735   0.000   0.735</code></pre>
+##   0.727   0.008   0.736</code></pre>
 <pre class="r"><code>system.time(rescueFill(strong,weak))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.048   0.000   0.048</code></pre>
-<p>A full implementation of the canny edge detector is below:</p>
+##   0.051   0.000   0.051</code></pre>
+<p>A full implementation of the Canny edge detector is below:</p>
 <pre class="r"><code>nonmax &lt;- function(gr)
     {
         mag &lt;- with(gr,sqrt(x^2+y^2))
@@ -375,7 +387,12 @@ cannyEdges &lt;- function(im,t1,t2,method=&quot;fp&quot;)
         weak &lt;- as.cimg(mag %inr% c(t1,t2))
         if (method==&quot;fp&quot;)
             {
+                
                 hystFP(list(strong=strong,weak=weak))$strong
+            }
+        else if (method==&quot;loop&quot;)
+            {
+                hyst.loop(strong,weak)
             }
         else if (method==&quot;bucket&quot;)
             {
@@ -383,40 +400,9 @@ cannyEdges &lt;- function(im,t1,t2,method=&quot;fp&quot;)
             }
     }
 
-parrots &lt;- load.example(&quot;parrots&quot;)*255
+parrots &lt;- load.example(&quot;parrots&quot;)*255 
 grayscale(parrots) %&gt;% cannyEdges(.01,.1,method=&quot;bucket&quot;)  %&gt;% plot</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-21-1.png" width="624" /></p>
-<pre class="r"><code>hyst.naive &lt;- function(mag,t1,t2)
-    {
-        strong &lt;- mag&gt;t2
-        stack &lt;- which(strong)
-        weak &lt;- as.cimg(mag %inr% c(t1,t2))
-        max.x &lt;- width(mag)
-        max.y &lt;- height(mag)
-        while (length(stack)&gt;0)
-            {
-                ind &lt;- stack[1]
-                cc &lt;- coord.index(mag,ind)
-                for (nx in (cc$x+c(-1,0,1)))
-                {
-                    for (ny in (y+c(-1,0,1)))
-                    {
-                        if (nx &gt; 0 &amp;&amp; nx &lt;= max.x &amp;&amp; ny &gt; 0 &amp;&amp; ny &lt; max.y)
-                        {
-                            if (at(weak,nx,ny)==1)
-                            {
-                                at(weak,nx,ny) &lt;- 0
-                                at(strong,nx,ny) &lt;- 1
-                                stack[length(stack)+1] &lt;- index.coord(mag,data.frame(x=nx,y=ny))
-                            }
-                        }
-                    }
-                }
-                stack &lt;- stack[-1]
-            }
-
-        strong
-    }</code></pre>
+<p><img src="canny_files/figure-html/unnamed-chunk-23-1.png" width="624" /></p>
 </div>
 
 

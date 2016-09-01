@@ -1,4 +1,4 @@
-#!/usr/bin/Rscript
+#!/usr/bin/Rscript --no-site-file
 args <- commandArgs(trailingOnly = TRUE)
 library(methods)
 library(knitr)

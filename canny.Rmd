@@ -61,7 +61,7 @@ plot(ang,colourscale=cs,rescale=FALSE)
 
 For a better way of visualising image gradients, see [here](gradient_field.html).
 
-# Step 3: cleaning up using non-maxima suppression
+# Step III: cleaning up using non-maxima suppression
 
 The gradient magnitude we plotted above is blurry, and if we threshold it directly we'll see that some pixels near edges are also labelled as being edges: 
 
@@ -231,7 +231,7 @@ Of course, in a way we are cheating here: the fixed point iteration is really a 
 The fact that it takes 70 iterations to rescue all the weak edges tells us that, in this image at least, some weak edges are hard to reach: there is a connection between the initial set of strong edges and some far-away weak edges. 
 A better computational primitive in this case is the bucket fill (also called the "flood fill"), which you probably know from using your favourite image editor. 
 
-```{r}
+```{r fig.width=8}
 im1 <- as.cimg(function(x,y) x == 50,100,100)
 layout(t(1:2))
 plot(im1,main="Bucket fill initialised at red point")
@@ -265,10 +265,10 @@ v <- strong
 v[weak==1] <- .9 #Strong pixels have value 1, weak .9, and the rest are 0.
 ```
 
-Finally we need to go through the list of seed pixels, and apply bucket fill every time. We could write a loop, but to keep with the functional style we have used so far we'll cast this operation as a *fold*, using *reduce* from the *purrr* package. 
+Finally we need to go through the list of seed pixels, and apply bucket fill every time. We could write a loop, but to keep with the functional style we have used so far, we'll cast this operation as a *fold*, using *reduce* from the [purrr](https://github.com/hadley/purrr) package. 
 *reduce* takes a function of two arguments (an accumulator and an item), and reduces a list to a single item by accumulating. It's best illustrated by example: 
 
-```{r}
+```{r message=FALSE}
 library(purrr)
 add <- function(l) reduce(l,function(acc,item) acc+item,.init=0)
 add(1:3) #equals sum(1:3)
@@ -317,7 +317,7 @@ system.time(hystFP(list(strong=strong,weak=weak)))
 system.time(rescueFill(strong,weak))
 ```
 
-A full implementation of the canny edge detector is below: 
+A full implementation of the Canny edge detector is below: 
 
 ```{r}
 nonmax <- function(gr)
@@ -361,9 +361,3 @@ parrots <- load.example("parrots")*255
 grayscale(parrots) %>% cannyEdges(.01,.1,method="bucket")  %>% plot
 ```
 
-```{r}
-
-
-
-            
-```
