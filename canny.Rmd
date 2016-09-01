@@ -107,15 +107,6 @@ At this stage we're beginning to see some nice outlines, but the ultimate goal i
 - points with magnitudes above $t_2$ are called "strong edges" 
 - points with magnitudes above $t_1$ are called "weak edges"
 
-Weak edges have a high chance of being false positives, but less so if there's a strong edge somewhere nearby, because edges are usually continuous. Hysteresis rescues such weak edges progressively. The usual implementation is iterative: you start from a strong edge, look at all its neighbours, and if any of these neighbours is a weak edge you rescue it by labelling it as strong. Again, R is impractically slow for such a process. We can do much better by using morphological dilation as our computational primitive. [Morphological dilation](https://en.wikipedia.org/wiki/Dilation_(morphology)) takes a B&W image and expands the set of white pixels by using a "structuring element". In the simplest case the structuring element is a square and dilation corresponds to a kind of convolution: we move the square around, and we label the central element white if there is another white pixel in the square. 
-Here it is at work on a small noise image: 
-
-```{r}
-imn <- as.cimg(imnoise(100,100) > 1)
-list(imn,dilate_square(imn,2)) %>% imlist %>% plot(layout="row")
-```
-
-Morphological dilation gives us a way of implementing hysteresis. We start from the set of strong edges, expand it with dilation, and check its overlap with the set of weak-edges. Any points in the overlap can now be labelled "strong": 
 
 ```{r}
 #strong threshold
@@ -127,6 +118,66 @@ layout(t(1:2))
 strong <- as.cimg(mag>t2)
 plot(strong,main="Initial set of strong edges")
 weak <- as.cimg(mag %inr% c(t1,t2))
+plot(weak,main="Initial set of weak edges")
+```
+
+Weak edges have a high chance of being false positives, but less so if there's a strong edge somewhere nearby, because edges are usually continuous. 
+
+Hysteresis rescues such weak edges progressively. The usual implementation is iterative. First, we put all the strong edges in a stack (or queue). Then, we pop the first strong edge off the stack, look at all its neighbours, and if any of these neighbours is a weak edge you rescue it by labelling it as strong and adding it to the stack. Then we move on to the next item on the stack (or queue). When we run out of items in the queue we're done. 
+
+```{r }
+
+hyst.loop <- function(strong,weak)
+    {
+        #We make the queue a list so that it can grow or shrink relatively fast
+        queue <- which(strong==1) %>% as.list
+        max.x <- width(strong)
+        max.y <- height(strong)
+        while (length(queue)>0)
+            {
+                ind <- queue[[1]]
+                #get (x,y) coordinates of the current point
+                cc <- coord.index(strong,ind)
+                #explore the neighbourhood
+                for (nx in (cc$x+c(-1,0,1)))
+                {
+                    for (ny in (cc$y+c(-1,0,1)))
+                    {
+                        #we have to mind boundary conditions
+                        if (nx > 0 && nx <= max.x && ny > 0 && ny <= max.y)
+                        {
+                            if (at(weak,nx,ny)==1)
+                            {
+                                at(weak,nx,ny) <- 0
+                                at(strong,nx,ny) <- 1
+                                queue[[length(queue)+1]] <- index.coord(strong,data.frame(x=nx,y=ny))
+                            }
+                        }
+                    }
+                }
+                queue[[1]] <- NULL
+            }
+        strong
+    }
+
+canny <- hyst.loop(strong,weak)
+plot(canny,main="Edges after hystereris")
+
+```
+
+R is impractically slow for such a process (try running hyst.loop on a large image). 
+
+We can do much better by using morphological dilation as our computational primitive. [Morphological dilation](https://en.wikipedia.org/wiki/Dilation_(morphology)) takes a B&W image and expands the set of white pixels by using a "structuring element". In the simplest case the structuring element is a square and dilation corresponds to a kind of convolution: we move the square around, and we label the central element white if there is another white pixel in the square. 
+Here it is at work on a small noise image: 
+
+```{r}
+imn <- as.cimg(imnoise(100,100) > 1)
+list(imn,dilate_square(imn,2)) %>% imlist %>% plot(layout="row")
+```
+
+Morphological dilation gives us a way of implementing hysteresis. We start from the set of strong edges, expand it with dilation, and check its overlap with the set of weak-edges. Any points in the overlap can now be labelled "strong": 
+
+```{r}
 overlap <- dilate_square(strong,3)*weak 
 strong.new <- strong + overlap
 plot(strong.new,main="New set of strong edges")
@@ -218,6 +269,7 @@ Finally we need to go through the list of seed pixels, and apply bucket fill eve
 *reduce* takes a function of two arguments (an accumulator and an item), and reduces a list to a single item by accumulating. It's best illustrated by example: 
 
 ```{r}
+library(purrr)
 add <- function(l) reduce(l,function(acc,item) acc+item,.init=0)
 add(1:3) #equals sum(1:3)
 
@@ -245,6 +297,7 @@ rescueFill <- function(strong,weak)
     {
         v <- strong
         v[weak==1] <- .9
+        loc <- fillInit(strong)
         #Transform the data.frame into a list of locations
         loc <- dplyr::select(loc,-value) %>% transpose
         #Fold
@@ -267,18 +320,17 @@ system.time(rescueFill(strong,weak))
 A full implementation of the canny edge detector is below: 
 
 ```{r}
-
 nonmax <- function(gr)
     {
         mag <- with(gr,sqrt(x^2+y^2))
         ang <- with(gr,atan2(y,x))
         grs <- list(x=gr$x/mag,y=gr$y/mag)
-        nX <- Xc(im) - gr$x/mag 
-        nY <- Yc(im) - gr$y/mag
-        val.bwd <- interp(mag,data.frame(x=as.vector(Xc(im)-grs$x),
-                                         y=as.vector(Yc(im)-grs$y)))
-        val.fwd <- interp(mag,data.frame(x=as.vector(Xc(im)+grs$x),
-                                         y=as.vector(Yc(im)+grs$y)))
+        X <- Xc(gr$x)
+        Y <- Yc(gr$y)
+        val.bwd <- interp(mag,data.frame(x=as.vector(X-grs$x),
+                                         y=as.vector(Y -grs$y)))
+        val.fwd <- interp(mag,data.frame(x=as.vector(X+grs$x),
+                                         y=as.vector(Y+grs$y)))
         
         throw <- (mag < val.bwd) | (mag < val.fwd)
         mag[throw] <- 0
@@ -292,8 +344,12 @@ cannyEdges <- function(im,t1,t2,method="fp")
         weak <- as.cimg(mag %inr% c(t1,t2))
         if (method=="fp")
             {
-                browser()
+                
                 hystFP(list(strong=strong,weak=weak))$strong
+            }
+        else if (method=="loop")
+            {
+                hyst.loop(strong,weak)
             }
         else if (method=="bucket")
             {
@@ -301,5 +357,13 @@ cannyEdges <- function(im,t1,t2,method="fp")
             }
     }
 
+parrots <- load.example("parrots")*255 
+grayscale(parrots) %>% cannyEdges(.01,.1,method="bucket")  %>% plot
+```
 
+```{r}
+
+
+
+            
 ```
