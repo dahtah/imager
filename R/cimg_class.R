@@ -51,8 +51,6 @@ cimg <- function(X)
         X
     }
 
-##' @rdname cimg 
-##' @export
 is.cimg <- function(X) "cimg" %in% class(X)
 
 ##' Various shortcuts for extracting colour channels, frames, etc
@@ -348,7 +346,7 @@ G <- function(im) { channel(im,2) }
 ##' @export
 B <- function(im) { channel(im,3) }
 
-##' Return pixel value at coordinates
+##' Return or set pixel value at coordinates
 ##'
 ##' @param im an image (cimg object)
 ##' @param x x coordinate (vector)
@@ -362,12 +360,22 @@ B <- function(im) { channel(im,3) }
 ##' at(im,10,1)
 ##' at(im,10:12,1)
 ##' at(im,10:12,1:3)
+##' at(im,1,2) <- 10
+##' at(im,1,2)
 ##' @export
 at <- function(im,x,y,z=1,cc=1)
     {
         as.array(im)[x,y,z,cc]
     }
 
+##' @describeIn at set value of pixel at a location
+##' @param value replacement
+##' @export
+`at<-` <- function(im,x,y,z=1,cc=1,value)
+    {
+        im[x,y,z,cc] <- value
+        im
+    }
 
 ##' @describeIn at return value of all colour channels at a location
 ##' @examples
@@ -377,6 +385,20 @@ color.at <- function(im,x,y,z=1)
     {
         at(im,x,y,z,cc=1:spectrum(im))
     }
+
+##' @describeIn at set value of all colour channels at a location
+##' @examples
+##' im <- boats
+##' color.at(im,x=10,y=10) <- c(255,0,0)
+##' #There should now be a red dot
+##' imsub(im, x %inr% c(1,100), y %inr% c(1,100)) %>% plot
+##' @export
+`color.at<-` <- function(im,x,y,z=1,value)
+    {
+        at(im,x,y,z,cc=1:spectrum(im)) <- value
+        im
+    }
+
 
 all.names <- function(cl)
     {

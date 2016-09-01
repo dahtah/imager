@@ -2,12 +2,9 @@
 % Please edit documentation in R/cimg_class.R
 \name{cimg}
 \alias{cimg}
-\alias{is.cimg}
 \title{Create a cimg object}
 \usage{
 cimg(X)
-
-is.cimg(a)
 }
 \arguments{
 \item{X}{a four-dimensional numeric array}

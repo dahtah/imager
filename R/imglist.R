@@ -1,15 +1,17 @@
 
 ##' Image list
 ##'
-##' An imlist object is simply a list of images (of class cimg).
+##' An imlist object is simply a list of images (of class cimg). For convenience, some generic functions are defined that wouldn't work on plain lists, like plot, display and as.data.frame.
 ##' 
 ##' @param l a list
 ##' @param ... ignored 
 ##' @export
+##' @seealso plot.imlist, display.imlist, as.data.frame.imlist
 ##' @examples
 ##' #imsplit returns objects of class "imlist"
 ##' imsplit(boats,"c")
 ##' list(a=imfill(3,3),b=imfill(10,10)) %>% imlist
+##' imsplit(boats,"x",6) %>% plot
 imlist <- function(l)
 {
     if (!(map_lgl(l,is.cimg) %>% all))
@@ -68,7 +70,7 @@ print.imlist <- function(x,...)
 
 ##' Plot an image list
 ##'
-##' Each image in the list will be plotted separately. The layout argument controls the overall layout of the plot window. 
+##' Each image in the list will be plotted separately. The layout argument controls the overall layout of the plot window. The default layout is "rect", which will fit all of your images into a rectangle that's as close to a square as possible. 
 ##' @param x an image list (of type imlist)
 ##' @param layout either a matrix (in the format defined by the layout command) or one of "row","col" or "rect". Default: "rect"
 ##' @param ... other parameters, to be passed to the plot command

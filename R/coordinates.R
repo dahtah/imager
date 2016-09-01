@@ -109,11 +109,12 @@ coordImage <- function(im,channel)
 ##' @return a vector of indices (NA if the indices are invalid)
 ##' @examples
 ##' im <- as.cimg(function(x,y) x+y,100,100)
-##' px <- pixel.index(im,data.frame(x=c(3,3),y=c(1,2)))
+##' px <- index.coord(im,data.frame(x=c(3,3),y=c(1,2)))
 ##' im[px] #Values should be 3+1=4, 3+2=5
 ##' @author Simon Barthelme
+##' @seealso coord.index, the reverse operation
 ##' @export
-pixel.index <- function(im,coords,outside="stop")
+index.coord <- function(im,coords,outside="stop")
 {
     if ("c" %in% names(coords))
             {
@@ -164,13 +165,13 @@ pixel.index <- function(im,coords,outside="stop")
 ##' @param im an image
 ##' @param index a vector of indices
 ##' @return a data.frame of coordinate values
-##' @seealso pixel.index for the reverse operation
+##' @seealso index.coord for the reverse operation
 ##' @examples
 ##' cind <- coord.index(boats,33)
 ##' #Returns (x,y,z,c) coordinates of the 33rd pixel in the array
 ##' cind
 ##' all.equal(boats[33],with(cind,at(boats,x,y,z,cc)))
-##' all.equal(33,pixel.index(boats,cind))
+##' all.equal(33,index.coord(boats,cind))
 ##' @author Simon Barthelme
 ##' @export
 coord.index <- function(im,index)
@@ -192,6 +193,8 @@ coord.index <- function(im,index)
         as.data.frame(V+1)
     }
 
+
+pixel.index <- coord.index
 
 ##' Return coordinates of subset of pixels
 ##'

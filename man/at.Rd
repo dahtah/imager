@@ -2,12 +2,18 @@
 % Please edit documentation in R/cimg_class.R
 \name{at}
 \alias{at}
+\alias{at<-}
 \alias{color.at}
-\title{Return pixel value at coordinates}
+\alias{color.at<-}
+\title{Return or set pixel value at coordinates}
 \usage{
 at(im, x, y, z = 1, cc = 1)
 
+at(im, x, y, z = 1, cc = 1) <- value
+
 color.at(im, x, y, z = 1)
+
+color.at(im, x, y, z = 1) <- value
 }
 \arguments{
 \item{im}{an image (cimg object)}
@@ -19,23 +25,35 @@ color.at(im, x, y, z = 1)
 \item{z}{z coordinate (vector, default 1)}
 
 \item{cc}{colour coordinate (vector, default 1)}
+
+\item{value}{replacement}
 }
 \value{
 pixel values
 }
 \description{
-Return pixel value at coordinates
+Return or set pixel value at coordinates
 }
 \section{Functions}{
 \itemize{
+\item \code{at<-}: set value of pixel at a location
+
 \item \code{color.at}: return value of all colour channels at a location
+
+\item \code{color.at<-}: set value of all colour channels at a location
 }}
 \examples{
 im <- as.cimg(function(x,y) x+y,50,50)
 at(im,10,1)
 at(im,10:12,1)
 at(im,10:12,1:3)
+at(im,1,2) <- 10
+at(im,1,2)
 color.at(boats,x=10,y=10)
+im <- boats
+color.at(im,x=10,y=10) <- c(255,0,0)
+#There should now be a red dot
+imsub(im, x \%inr\% c(1,100), y \%inr\% c(1,100)) \%>\% plot
 }
 \author{
 Simon Barthelme
