@@ -3,6 +3,7 @@
   * enabled OpenMP. Many CImg primitives now run in parallel. 
   * experimental support for CImg's DSL via imeval, patch_summary. 
   * improved as.raster,plot. Now support palettes via colourscale argument.
+  * new interactive functions for selecting image regions (grabRect,grabPoint,grabLine)
   * new patchstat function for fast extraction of patch statistics
   * new patchmatch function 
   * cleaned up the API, improved the documentation

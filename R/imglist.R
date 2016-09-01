@@ -39,8 +39,9 @@ as.imlist.list <- function(l)
 
 ##' Convert image list to list
 ##' 
-##' @param x
-##' @param ...
+##' @param x an image list  
+##' @param ... ignored
+##' @return a list
 ##' @export
 as.list.imlist <- function(x,...) { class(x) <- "list"; x }
 

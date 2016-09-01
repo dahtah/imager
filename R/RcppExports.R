@@ -119,6 +119,10 @@ play <- function(vid, loop = FALSE, delay = 30L, normalise = TRUE) {
     invisible(.Call('imager_play', PACKAGE = 'imager', vid, loop, delay, normalise))
 }
 
+select <- function(im, type = 2L) {
+    .Call('imager_select', PACKAGE = 'imager', im, type)
+}
+
 bucket_fill <- function(im, x, y, z, color, opacity = 1, sigma = 0, high_connexity = FALSE) {
     .Call('imager_bucket_fill', PACKAGE = 'imager', im, x, y, z, color, opacity, sigma, high_connexity)
 }

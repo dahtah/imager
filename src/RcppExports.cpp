@@ -239,6 +239,18 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// select
+NumericVector select(NumericVector im, int type);
+RcppExport SEXP imager_select(SEXP imSEXP, SEXP typeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    __result = Rcpp::wrap(select(im, type));
+    return __result;
+END_RCPP
+}
 // bucket_fill
 NumericVector bucket_fill(NumericVector im, int x, int y, int z, NumericVector color, float opacity, float sigma, bool high_connexity);
 RcppExport SEXP imager_bucket_fill(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP sigmaSEXP, SEXP high_connexitySEXP) {

@@ -22,6 +22,7 @@ If that doesn't work then you're probably missing a build environment or a libra
 
 ### OS X
 
+Install [XQuartz](https://www.xquartz.org/) if you haven't already (it's required for the interactive functions). 
 You'll need Xcode (OS X's development environment) to compile source packages. The FFTW library is needed, and the easiest way to install it is via [Homebrew](http://brew.sh/). Install Homebrew, then run:
 	brew install fftw
 
@@ -41,6 +42,7 @@ To build under Linux make sure you have the headers for libX11 and libfftw3. On 
 
 ### External dependencies
 
+OS X users need [XQuartz](https://www.xquartz.org/). 
 On its own imager only supports JPEG, PNG and BMP formats. If you need support for other file types install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php).
 To load videos you'll need [ffmpeg](http://ffmpeg.org/download.html), no file formats are supported natively.
 
@@ -50,25 +52,20 @@ To load videos you'll need [ffmpeg](http://ffmpeg.org/download.html), no file fo
 Here's a small demo that actually demonstrates an interesting property of colour perception:
 
 	library(imager)
+	library(purrr)
 	parrots <- load.example("parrots")
 	plot(parrots)
-	#Define a function that blurs a specific channel
+	#Define a function that converts to YUV, blurs a specific channel, and converts back
 	bchan <- function(im,ind,sigma=5) { 
+		im <- RGBtoYUV(im)
 		channel(im,ind) <- isoblur(channel(im,ind),sigma); 
-		im 
+		YUVtoRGB(im)
 	}
+	#Run the function on all three channels and collect the results as a list
+	blurred <- map_il(1:3,~ bchan(parrots,.))
+	names(blurred) <- c("Luminance blur (Y)","Chrominance blur (U)","Chrominance blur (V)")
+	plot(blurred)
 	
-	#Blur luminance channel, leave chrominance as is
-	im1 <- RGBtoYUV(parrots) %>% bchan(1) %>% YUVtoRGB
-	plot(im1,main="Luminance blur")
-
-    #Blur chrominance channel, leave luminance as is
-    im2 <- RGBtoYUV(parrots) %>% bchan(2) %>% YUVtoRGB
-	plot(im2,main="Chrominance blur (U channel)")
-
-    im3 <- RGBtoYUV(parrots) %>% bchan(3) %>% YUVtoRGB
-	plot(im3,main="Chrominance blur (V channel)")
-
 We're much more [sensitive to luminance edges than we are to colour edges](https://en.wikipedia.org/wiki/Chroma_subsampling). 
 
 Documentation is available [here](http://dahtah.github.io/imager/). To get a list of all package functions, run:
