@@ -18,11 +18,15 @@ as.imlist.list(l)
 \item{...}{ignored}
 }
 \description{
-An imlist object is simply a list of images (of class cimg).
+An imlist object is simply a list of images (of class cimg). For convenience, some generic functions are defined that wouldn't work on plain lists, like plot, display and as.data.frame.
 }
 \examples{
 #imsplit returns objects of class "imlist"
 imsplit(boats,"c")
 list(a=imfill(3,3),b=imfill(10,10)) \%>\% imlist
+imsplit(boats,"x",6) \%>\% plot
+}
+\seealso{
+plot.imlist, display.imlist, as.data.frame.imlist
 }
 

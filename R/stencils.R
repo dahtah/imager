@@ -53,7 +53,7 @@ center.stencil <- function(stencil,...)
 ##' @export
 get.stencil <- function(im,stencil,...)
     {
-        d <- center.stencil(stencil,...) %>% pixel.index(im,.)
+        d <- center.stencil(stencil,...) %>% index.coord(im,.)
         im[d]
     }
 
@@ -137,3 +137,4 @@ stencil.cross <- function(z=FALSE,cc=FALSE,origin=FALSE)
         if (origin) v <- rbind(0,v)
         v
     }
+
