@@ -8,7 +8,7 @@
 ##' @name grab
 ##' @param im an image
 ##' @param coord if TRUE, return coordinates. if FALSE, content
-##' @return
+##' @return either a vector of coordinates, or an image
 ##' @seealso display
 ##' @examples
 ##' ##Not run: interactive only 

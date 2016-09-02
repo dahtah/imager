@@ -52,12 +52,10 @@ cimg <- function(X)
     }
 
 ##' Checks that an object is a cimg object
-##' @param X an object
+##' @param x an object
 ##' @return logical
 ##' @export
-is.cimg <- function(X) {
-    "cimg" %in% class(X)
-}
+is.cimg <- function(x) is(x,"cimg")
 
 
 ##' Various shortcuts for extracting colour channels, frames, etc
@@ -805,7 +803,7 @@ capture.plot <- function()
         }
     }
 
-is.cimg <- function(a) is(a,"cimg")
+
 
 
 

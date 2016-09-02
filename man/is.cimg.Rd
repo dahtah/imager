@@ -4,10 +4,10 @@
 \alias{is.cimg}
 \title{Checks that an object is a cimg object}
 \usage{
-is.cimg(a)
+is.cimg(x)
 }
 \arguments{
-\item{X}{an object}
+\item{x}{an object}
 }
 \value{
 logical
