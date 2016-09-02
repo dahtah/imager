@@ -68,7 +68,7 @@ See here for [Frequently Asked Questions](FAQ.html).
 There's also a number of tutorials and case studies:
 
 - how to [parallelise](parallel.html) computations 
-- how to right fast functional code: [a loop-free Canny edge detector](canny.html)
+- how to write fast functional code: [a loop-free Canny edge detector](canny.html)
 - a [tutorial](image_stats.html) on natural image statistics using imager
 - another (incomplete) tutorial on [morphology and detrending](morphology.html)
 - a [tutorial](foreground_background.html) on [foreground/background segmentation](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/)
