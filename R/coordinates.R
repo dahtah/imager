@@ -51,7 +51,7 @@ pixel.grid <- function(im,standardise=FALSE,drop.unused=TRUE,dim=NULL)
             }
         if (drop.unused)
             {
-                res[,d > 1]
+                res[,d > 1,drop=FALSE]
             }
         else
             {
