@@ -720,6 +720,8 @@ inda <- list('x'=1,'y'=2,'z'=3,'c'=4)
 ##' pad(boats,20,pos=1,"xy") %>% plot
 ##' @export
 pad <- function(im,nPix,axes,pos=0,val=0)
+{
+    if (nPix > 0)
     {
         if (nchar(axes) > 1)
             {
@@ -747,8 +749,12 @@ pad <- function(im,nPix,axes,pos=0,val=0)
                 pdIm <- cimg(array(val,d))
                 imappend(list(im,pdIm),axes)
             }
-        
     }
+    else
+    {
+        im
+    }
+}
 
 
 .onUnload <- function (libpath) {
