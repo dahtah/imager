@@ -723,31 +723,38 @@ pad <- function(im,nPix,axes,pos=0,val=0)
 {
     if (nPix > 0)
     {
-        if (nchar(axes) > 1)
+        if (nPix > 0)
             {
-                im <- pad(im,nPix,str_sub(axes,2),pos,val)
-                axes <- str_sub(axes,1,1)
-            }
-        if (pos==0)
-            {
-                d <- rep(1,4)
-                d[inda[[axes]]] <- round(nPix/2)
+                if (nchar(axes) > 1)
+                {
+                    im <- pad(im,nPix,str_sub(axes,2),pos,val)
+                    axes <- str_sub(axes,1,1)
+                }
+                if (pos==0)
+                {
+                    d <- rep(1,4)
+                    d[inda[[axes]]] <- round(nPix/2)
+                    pdIm <- cimg(array(val,d))
+                    imappend(list(pdIm,im,pdIm),axes)
+                }
+                else if (pos == -1)
+                {
+                    d <- rep(1,4)
+                    d[inda[[axes]]] <- nPix
+                    pdIm <- cimg(array(val,d))
+                    imappend(list(pdIm,im),axes)
+                }
+                else if (pos == 1)
+                {
+                    d <- rep(1,4)
+                    d[inda[[axes]]] <- nPix
                 pdIm <- cimg(array(val,d))
-                imappend(list(pdIm,im,pdIm),axes)
+                    imappend(list(im,pdIm),axes)
+                }
             }
-        else if (pos == -1)
+        else
             {
-                d <- rep(1,4)
-                d[inda[[axes]]] <- nPix
-                pdIm <- cimg(array(val,d))
-                imappend(list(pdIm,im),axes)
-            }
-        else if (pos == 1)
-            {
-                d <- rep(1,4)
-                d[inda[[axes]]] <- nPix
-                pdIm <- cimg(array(val,d))
-                imappend(list(im,pdIm),axes)
+                im
             }
     }
     else
