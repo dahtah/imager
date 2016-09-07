@@ -95,6 +95,7 @@ NULL
 ##' @param ylim y plot limits (default: 1 to height)
 ##' @param xlab x axis label
 ##' @param ylab y axis label
+##' @param interpolate should the image be plotted with antialiasing (default TRUE)
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster, as.raster, which converts images to R raster objects
 ##' @export
@@ -129,7 +130,11 @@ NULL
 ##' plot(boats.gs,rescale=FALSE,colourscale=cscale)
 ##' #Plot a one-dimensional image
 ##' imsub(boats,x==1) %>% plot(main="Image values along first column")
-plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,...)
+##' #Plotting with and without anti-aliasing:
+##' boats.small <- imresize(boats,.3)
+##' plot(boats.small,interp=TRUE)
+##' plot(boats.small,interp=FALSE)
+plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,...)
     {
         im <- x
         if (depth(im) > 1)
@@ -148,7 +153,7 @@ plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",yl
         else
         {
             plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",...)
-            as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1)
+            as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
         }
     }
 

@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{cimg}(x, frame, xlim = c(1, width(x)), ylim = c(height(x), 1),
   xlab = "x", ylab = "y", rescale = TRUE, colourscale = NULL,
-  colorscale = NULL, ...)
+  colorscale = NULL, interpolate = TRUE, ...)
 }
 \arguments{
 \item{x}{the image}
@@ -24,6 +24,8 @@
 \item{rescale}{rescale pixel values so that their range is [0,1]}
 
 \item{colourscale, colorscale}{an optional colour scale (default is gray or rgb)}
+
+\item{interpolate}{should the image be plotted with antialiasing (default TRUE)}
 
 \item{...}{other parameters to be passed to plot.default (eg "main")}
 }
@@ -63,6 +65,10 @@ cscale <- scales::gradient_n_pal(c("red","purple","lightblue"),c(0,.5,1))
 plot(boats.gs,rescale=FALSE,colourscale=cscale)
 #Plot a one-dimensional image
 imsub(boats,x==1) \%>\% plot(main="Image values along first column")
+#Plotting with and without anti-aliasing:
+boats.small <- imresize(boats,.3)
+plot(boats.small,interp=TRUE)
+plot(boats.small,interp=FALSE)
 }
 \seealso{
 display, which is much faster, as.raster, which converts images to R raster objects
