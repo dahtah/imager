@@ -3,12 +3,12 @@ cache: packages
 sudo: required
 matrix:
   include:
-    - os: linux
-      dist: precise
-      sudo: true
     - os: osx
       osx_image: xcode8
       latex: false
+    - os: linux
+      dist: precise
+      sudo: true
 disable_homebrew: true
 warnings_are_errors: false
 
