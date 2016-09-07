@@ -67,6 +67,7 @@ then
 	HAVE_FFTW='-Dcimg_use_fftw3'
 	AC_MSG_RESULT([FFTW3 found!])
 else
+	HAVE_FFTW="
   # Return message that package requires FFTW3 library
   AC_MSG_RESULT([FFTW library not found, please install fftw3 for better FFT support.])
 fi

@@ -3220,6 +3220,7 @@ then
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: FFTW3 found!" >&5
 $as_echo "FFTW3 found!" >&6; }
 else
+	HAVE_FFTW="
   # Return message that package requires FFTW3 library
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: FFTW library not found, please install fftw3 for better FFT support." >&5
 $as_echo "FFTW library not found, please install fftw3 for better FFT support." >&6; }
