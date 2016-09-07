@@ -5,10 +5,9 @@ matrix:
   include:
     - os: linux
       dist: precise
-      sudo: false
+      sudo: true
     - os: osx
       osx_image: xcode8
-      brew_packages: jq # to test for conflicts
       latex: false
 disable_homebrew: true
 warnings_are_errors: false
