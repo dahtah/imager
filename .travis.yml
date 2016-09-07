@@ -1,10 +1,19 @@
 language: r
+cache: packages
 sudo: required
-
-# Be strict when checking our package
+matrix:
+  include:
+    - os: linux
+      dist: precise
+      sudo: false
+    - os: osx
+      osx_image: xcode8
+      brew_packages: jq # to test for conflicts
+      latex: false
+disable_homebrew: true
 warnings_are_errors: false
 
-# System dependencies for HTTP calling
+
 apt_packages:
  - libfftw3-dev
 r_binary_packages:
