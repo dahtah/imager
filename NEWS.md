@@ -1,3 +1,7 @@
+# imager 0.31 Minor release
+   * fixed inline C++ plugin, this time for OS X systems
+   * added interpolation option to plot.cimg (to prevent systematic antialiasing when plotting small images)
+   
 # imager 0.30 Major release. 
   * new S3 class imlist improves support for image lists 
   * enabled OpenMP. Many CImg primitives now run in parallel. 
