@@ -38,21 +38,21 @@ implot <- function(im,expr,...)
     {
         w <- width(im)
         h <- height(im)
-        Cairo(type="raster",width=w,height=h)
+        Cairo::Cairo(type="raster",width=w,height=h)
         out <- try({
             mplot(im,interp=FALSE,...)
             eval(expr,parent.frame())
-            ptr <- Cairo:::.image(dev.cur())
+            ptr <- Cairo:::.image(grDevices()::dev.cur())
             b <- Cairo:::.ptr.to.raw(ptr$ref,0,ptr$width*ptr$height*4) %>% as.integer
             },TRUE)
         if (is(out,"try-error"))
             {
-                dev.off()
+                grDevices()::dev.off()
                 stop(out)
             }
         else
             {
-                dev.off()
+                grDevices()::dev.off()
                 
                 ## ch <- c(3,2,1,0)
                 ## ind <- seq_along(b)
