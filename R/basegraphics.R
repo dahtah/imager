@@ -42,17 +42,17 @@ implot <- function(im,expr,...)
         out <- try({
             mplot(im,interp=FALSE,...)
             eval(expr,parent.frame())
-            ptr <- Cairo:::.image(grDevices()::dev.cur())
+            ptr <- Cairo:::.image(grDevices::dev.cur())
             b <- Cairo:::.ptr.to.raw(ptr$ref,0,ptr$width*ptr$height*4) %>% as.integer
             },TRUE)
         if (is(out,"try-error"))
             {
-                grDevices()::dev.off()
+                grDevices::dev.off()
                 stop(out)
             }
         else
             {
-                grDevices()::dev.off()
+                grDevices::dev.off()
                 
                 ## ch <- c(3,2,1,0)
                 ## ind <- seq_along(b)
