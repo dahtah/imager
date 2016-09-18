@@ -53,16 +53,15 @@ grabRect <- function(im,coord=TRUE)
     else
     {
         out <- select(im)
-        cs <- c(out)[-c(3,6)]
-        cs[1:2] <- cs[1:2]+1
-        names(cs) <- c("x","y","w","h")
+        cs <- c(out)[-c(3,6)] + 1
+        names(cs) <- c("x0","y0","x1","y1")
         if (coord)
         {
             cs
         }
         else
         {
-            subim(im, x %inr% c(cs[1],cs[1]+cs[3]), y %inr% c(cs[2],cs[2]+cs[4]))
+            subim(im, x %inr% c(cs[1],cs[3]), y %inr% c(cs[2],cs[4]))
         }
     }
 }
