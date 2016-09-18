@@ -1,7 +1,6 @@
 mplot <- function(im,...)
     {
-        par(mar=rep(0,4),omi=rep(0,4))
-        
+        graphics::par(mar=rep(0,4),omi=rep(0,4))
         plot(im,axes=FALSE,xlim=c(1,width(im)),xaxs="i",yaxs="i",...)
     }
 
@@ -61,9 +60,4 @@ implot <- function(im,expr,...)
                 dim(mat) <- c(w,h,1,4)
                 as.cimg(mat) %>% flattenAlpha 
             }
-    }
-
-do <- function(expr)
-    {
-        eval(expr)
     }
