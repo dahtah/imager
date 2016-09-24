@@ -6,10 +6,10 @@ using namespace cimg_library;
 NumericVector autocrop_(NumericVector im,NumericVector color,std::string axes = "zyx")
 {
   CId img = as<CId >(im);
-  CId out(img,false);
+  CId out;
 
   try{
-    out.autocrop(color.begin(),axes.c_str());
+    out = img.get_autocrop(color.begin(),axes.c_str());
     }
   catch(CImgException &e){
     forward_exception_to_r(e);

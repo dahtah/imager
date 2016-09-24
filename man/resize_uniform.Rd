@@ -14,12 +14,14 @@ resize_halfXY(im)
 
 resize_tripleXY(im)
 
-imresize(im, scale = 1)
+imresize(im, scale = 1, interpolation = 3)
 }
 \arguments{
 \item{im}{an image}
 
 \item{scale}{a scale factor}
+
+\item{interpolation}{interpolation method to use (see doc for resize). Default 3, linear.}
 }
 \value{
 an image
