@@ -10,40 +10,106 @@
 ##' @examples
 ##' #imsplit returns objects of class "imlist"
 ##' imsplit(boats,"c")
-##' list(a=imfill(3,3),b=imfill(10,10)) %>% imlist
+##' imlist(a=imfill(3,3),b=imfill(10,10)) 
+##' 
 ##' imsplit(boats,"x",6) %>% plot
-imlist <- function(l)
+imlist <- function(...)
 {
-    if (!(map_lgl(l,is.cimg) %>% all))
-    {
-        stop("The list may only contain images (objects with class cimg)")
-    }
-    else
-    {
-        class(l) <- c("imlist","list")
-        l
-    }
+    list(...) %>% as.imlist.list
 }
 
 ##' @rdname imlist
 ##' @export
 is.imlist <- function(l) "imlist" %in% class(l)
 
-##' @rdname imlist 
+##' @describeIn as.imlist convert from list
 ##' @export
 as.imlist.list <- function(l)
     {
-        imlist(l)
+        if (!(map_lgl(l,is.cimg) %>% all))
+        {
+            stop("The list may only contain images (objects with class cimg)")
+        }
+        else
+        {
+            class(l) <- c("imlist","list")
+            l
+        }
     }
 
 
-##' Convert image list to list
+ilcat <- function(a,b)
+{
+    if (is.imlist(a) & is.imlist(b))
+    {
+        c(a,b) %>% as.imlist.list
+    }
+    else if (is.null(a))
+        {
+            as.imlist(b)
+        }
+    else if (is.null(b))
+        {
+            as.imlist(a)
+        }
+    else if (is.imlist(a) & is.cimg(b))
+    {
+        a[[length(a)+1]] <- b
+        a
+    }
+    else  if (is.imlist(b) & is.cimg(a))
+    {
+        c(list(a),b) %>% as.imlist.list
+    }
+    else
+    {
+        stop("arguments should be image lists or images")
+    }
+}
+
+##' Concatenation for image lists
+##'
+##' Allows you to concatenate image lists together, or images with image lists.
+##' Doesn't quite work like R's "c" primitive: image lists are always *flat*, not nested, meaning each element of an image list is an image. 
+##' @param ... objects to concatenate
+##' @return an image list
+##' @author Simon Barthelmé
+##' @examples
+##'
+##' l1 <- imlist(boats,grayscale(boats))
+##' l2 <- imgradient(boats,"xy")
+##' ci(l1,l2) #List + list
+##' ci(l1,imfill(3,3)) #List + image
+##' ci(imfill(3,3),l1,l2) #Three elements, etc.
+##' @export
+ci <- function(...)
+    {
+        l <- list(...)
+        Reduce(ilcat,l,init=NULL)
+    }
+
+##' Convert various objects to image lists
 ##' 
 ##' @param x an image list  
 ##' @param ... ignored
 ##' @return a list
 ##' @export
+##' @examples
+##' list(a=boats,b=boats*2) %>% as.imlist
+as.imlist <- function(x,...) UseMethod("as.imlist")
+
+##' @describeIn as.imlist Convert from list
+##' @export
 as.list.imlist <- function(x,...) { class(x) <- "list"; x }
+
+##' @describeIn as.imlist Convert from imlist (identity)
+##' @export
+as.imlist.imlist <- function(x,...) x
+
+##' @describeIn as.imlist Convert from image
+##' @export
+as.imlist.cimg <- function(x,...) list(x) %>% as.imlist.list
+
 
 ##' Convert image list to data.frame
 ##'
@@ -77,7 +143,10 @@ print.imlist <- function(x,...)
 ##' @param ... other parameters, to be passed to the plot command
 ##' @examples
 ##' imsplit(boats,"c") #Returns an image list
-##' 
+##' imsplit(boats,"c") %>% plot
+##' imsplit(boats,"c") %>% plot(layout="row")
+##' imsplit(boats,"c") %>% plot(layout="col")
+##' imsplit(boats,"x",5) %>% plot(layout="rect")
 ##' @author Simon Barthelme
 ##' @export
 plot.imlist <- function(x,layout="rect",...)
@@ -168,5 +237,5 @@ display.list <- function(x,...)
 ##' try(imsplit(boats,"x",2) %>% map_il(~ . > 2))
 map_il <- function(...)
 {
-    map(...) %>% imlist
+    map(...) %>% as.imlist
 }

@@ -16,6 +16,17 @@ namespace Rcpp {
     return img;		
   }
   
+  template <> inline cimg_library::CImg<bool> as(SEXP inp) {
+    Rcpp::LogicalVector Rvec(inp);
+    IntegerVector d = Rvec.attr("dim");
+    if (d.length() < 4)
+      {
+	Rcpp::stop("Expecting a four-dimensional array");
+      }
+    cimg_library::CImg<bool> img(Rvec.begin(),d[0],d[1],d[2],d[3],false);
+    return img;		
+  }
+
 
   //Convert a CImg object to an R cimg object
   template <> inline SEXP wrap(const cimg_library::CImg<double> &img) 
@@ -26,6 +37,20 @@ namespace Rcpp {
     dims[2] = img.depth();
     dims[3] = img.spectrum();
     Rcpp::NumericVector out(img.begin(),img.end());
+    out.attr("class") = "cimg";
+    out.attr("dim") = dims;
+    return Rcpp::wrap(out);
+  }
+
+
+  template <> inline SEXP wrap(const cimg_library::CImg<bool> &img) 
+  {
+    IntegerVector dims(4);
+    dims[0] = img.width();
+    dims[1] = img.height();
+    dims[2] = img.depth();
+    dims[3] = img.spectrum();
+    Rcpp::LogicalVector out(img.begin(),img.end());
     out.attr("class") = "cimg";
     out.attr("dim") = dims;
     return Rcpp::wrap(out);
