@@ -106,7 +106,7 @@ print.pixset <- function(x,...)
 Ops.cimg <- function(e1, e2)
 {
     out <- NextMethod(.Generic)
-    if (is.logical(out))
+    if (is.logical(out) && length(dim(out))==4)
         {
             as.pixset(out)
         }
@@ -136,11 +136,48 @@ Ops.pixset <- function(e1, e2)
         }
 }
 
-grow <- function(px,x)
+
+#' Grow/shrink a pixel set
+#'
+#' Grow/shrink a pixel set through morphological dilation/erosion. The default is to use square or rectangular structuring elements, but an arbitrary structuring element can be given as input. 
+#' A structuring element is a pattern to be moved over the image: for example a 3x3 square. In "shrink" mode, a element of the pixset is retained only if and only the structuring element fits entirely within the pixset. In "grow" mode, the structuring element acts like a neighbourhood: all pixels that are in the original pixset *or* in the neighbourhood defined by the structuring element belong the new pixset. 
+#' @param px 
+#' @param x either an integer value, or an image/pixel set. 
+#' @param y width of the rectangular structuring element (if x is an integer value)
+#' @param z depth of the rectangular structuring element (if x is an integer value)
+#' @examples
+#' #A pixel set:
+#' a <- grayscale(boats) > .8
+#' plot(a)
+#' #Grow by a 8x8 square
+#' grow(a,8) %>% plot
+#' #Grow by a 8x2 rectangle
+#' grow(a,8,2) %>% plot
+#' #Custom structuring element
+#' el <- matrix(1,2,2) %>% as.cimg
+#' all.equal(grow(a,el),grow(a,2))
+#' #Circular structuring element
+#' 
+#' @export
+grow <- function(px,x,y=x,z=x)
     {
-        if (length(x) == 1 && is.numeric(x))
+        if (is.cimg(x) || is.pixset(x))
+            {
+                bdilate(px,as.pixset(x))
+            }
+        else if (x==y && y==z)
             {
                 bdilate_square(px,x)
             }
-#        else if (length(x) == 2 
+        else
+            {
+                bdilate_rect(px,x,y,z)
+            }
+    }
+
+
+px.circle <- function(x,y,rad)
+    {
+        im <- imfill(x,y)
+        (Xc(im)-(x+1)/2)^2 + (Yc(im)-(y+1)/2)^2 < rad^2
     }

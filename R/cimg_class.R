@@ -721,6 +721,10 @@ add.colour <- function(im,simple=TRUE)
         }
 }
 
+##' @export
+##' @describeIn add.colour Alias for add.colour
+add.color <- function(im,simple=TRUE) add.colour(im,simple)
+
 inda <- list('x'=1,'y'=2,'z'=3,'c'=4)
 
 ##' Pad image with n pixels along specified axis
