@@ -684,26 +684,40 @@ squeeze <- function(x) {
 }
 
 
-##' Add colour channels to an grayscale image
+##' Add colour channels to a grayscale image or pixel set
 ##'
 ##' @param im a grayscale image
-##' @param simple if TRUE just stack three copies of the grayscale image, if FALSE treat the image as the L channel in an HSL representation. Default TRUE.
+##' @param simple if TRUE just stack three copies of the grayscale image, if FALSE treat the image as the L channel in an HSL representation. Default TRUE. For pixel sets this option makes no sense and is ignored. 
 ##' @return an image of class cimg
 ##' @author Simon Barthelme
 ##' @examples
 ##' grayscale(boats) #No more colour channels
 ##' add.colour(grayscale(boats)) #Image has depth = 3 (but contains only grays)
+##' #A pixel set defined on the grayscale channel only:
+##' px <- grayscale(boats) > .8
+##' #The following won't work: px and boats have different dimensions
+##' try(boats[px])
+##' #This does work
+##' head(boats[add.colour(px)])
 ##' @export
 add.colour <- function(im,simple=TRUE)
 {
-    if (spectrum(im)!=1) stop('Image already has colour channels')
-    if (simple)
+    if (is.cimg(im))
         {
-            imappend(list(im,im,im),"c")
+            if (spectrum(im)!=1) stop('Image already has colour channels')
+            if (simple)
+            {
+                imappend(list(im,im,im),"c")
+            }
+            else
+            {
+                imappend(list(0*im,0*im,im),"c") %>% HSLtoRGB
+            }
         }
-    else
+    else if (is.pixset(im))
         {
-            imappend(list(0*im,0*im,im),"c") %>% HSLtoRGB
+            if (spectrum(im)!=1) stop('Image already has colour channels')
+            rep(im,3) %>% array(dim=c(dim(im)[1:3],3)) %>% pixset
         }
 }
 

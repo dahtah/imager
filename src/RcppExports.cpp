@@ -634,6 +634,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// blabel
+NumericVector blabel(LogicalVector im, bool high_connectivity);
+RcppExport SEXP imager_blabel(SEXP imSEXP, SEXP high_connectivitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< bool >::type high_connectivity(high_connectivitySEXP);
+    rcpp_result_gen = Rcpp::wrap(blabel(im, high_connectivity));
+    return rcpp_result_gen;
+END_RCPP
+}
 // erode
 NumericVector erode(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
 RcppExport SEXP imager_erode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
@@ -645,6 +657,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
     Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
     rcpp_result_gen = Rcpp::wrap(erode(im, mask, boundary_conditions, normalise));
+    return rcpp_result_gen;
+END_RCPP
+}
+// berode
+LogicalVector berode(LogicalVector im, LogicalVector mask, bool boundary_conditions, bool normalise);
+RcppExport SEXP imager_berode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    rcpp_result_gen = Rcpp::wrap(berode(im, mask, boundary_conditions, normalise));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -662,6 +688,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// berode_rect
+LogicalVector berode_rect(LogicalVector im, int sx, int sy, int sz);
+RcppExport SEXP imager_berode_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type sx(sxSEXP);
+    Rcpp::traits::input_parameter< int >::type sy(sySEXP);
+    Rcpp::traits::input_parameter< int >::type sz(szSEXP);
+    rcpp_result_gen = Rcpp::wrap(berode_rect(im, sx, sy, sz));
+    return rcpp_result_gen;
+END_RCPP
+}
 // erode_square
 NumericVector erode_square(NumericVector im, int size);
 RcppExport SEXP imager_erode_square(SEXP imSEXP, SEXP sizeSEXP) {
@@ -671,6 +711,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
     rcpp_result_gen = Rcpp::wrap(erode_square(im, size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// berode_square
+LogicalVector berode_square(LogicalVector im, int size);
+RcppExport SEXP imager_berode_square(SEXP imSEXP, SEXP sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(berode_square(im, size));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -688,6 +740,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bdilate
+LogicalVector bdilate(LogicalVector im, LogicalVector mask, bool boundary_conditions, bool normalise);
+RcppExport SEXP imager_bdilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
+    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
+    rcpp_result_gen = Rcpp::wrap(bdilate(im, mask, boundary_conditions, normalise));
+    return rcpp_result_gen;
+END_RCPP
+}
 // dilate_rect
 NumericVector dilate_rect(NumericVector im, int sx, int sy, int sz);
 RcppExport SEXP imager_dilate_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
@@ -702,6 +768,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bdilate_rect
+LogicalVector bdilate_rect(LogicalVector im, int sx, int sy, int sz);
+RcppExport SEXP imager_bdilate_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type sx(sxSEXP);
+    Rcpp::traits::input_parameter< int >::type sy(sySEXP);
+    Rcpp::traits::input_parameter< int >::type sz(szSEXP);
+    rcpp_result_gen = Rcpp::wrap(bdilate_rect(im, sx, sy, sz));
+    return rcpp_result_gen;
+END_RCPP
+}
 // dilate_square
 NumericVector dilate_square(NumericVector im, int size);
 RcppExport SEXP imager_dilate_square(SEXP imSEXP, SEXP sizeSEXP) {
@@ -711,6 +791,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
     rcpp_result_gen = Rcpp::wrap(dilate_square(im, size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bdilate_square
+LogicalVector bdilate_square(LogicalVector im, int size);
+RcppExport SEXP imager_bdilate_square(SEXP imSEXP, SEXP sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type size(sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(bdilate_square(im, size));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -737,6 +829,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type value(valueSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type metric(metricSEXP);
     rcpp_result_gen = Rcpp::wrap(distance_transform(im, value, metric));
+    return rcpp_result_gen;
+END_RCPP
+}
+// bdistance_transform
+LogicalVector bdistance_transform(LogicalVector im, bool value, unsigned int metric);
+RcppExport SEXP imager_bdistance_transform(SEXP imSEXP, SEXP valueSEXP, SEXP metricSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< bool >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type metric(metricSEXP);
+    rcpp_result_gen = Rcpp::wrap(bdistance_transform(im, value, metric));
     return rcpp_result_gen;
 END_RCPP
 }

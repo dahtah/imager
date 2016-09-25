@@ -39,6 +39,22 @@ double tolerance=0)
   return wrap(img);
 }
 
+// [[Rcpp::export]]
+NumericVector blabel(LogicalVector im,bool high_connectivity=false)
+{
+    CIb img = as<CIb >(im);
+    CId out;
+    try{
+      out = img.get_label(high_connectivity,0);
+    }
+    catch(CImgException &e){
+      forward_exception_to_r(e);
+    }
+    return wrap(out);
+}
+
+
+
 //' Erode/dilate image by a structuring element.
 //'
 //' @param im an image
@@ -73,6 +89,22 @@ NumericVector erode(NumericVector im,NumericVector mask, bool boundary_condition
   return wrap(img);
 }
 
+
+// [[Rcpp::export]]
+LogicalVector berode(LogicalVector im,LogicalVector mask, bool boundary_conditions=true,bool normalise = false) {
+  CIb img = as<CIb >(im);
+  try{
+    CIb msk = as<CIb >(mask);
+    img.erode(msk,boundary_conditions,normalise);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
+
 //' @describeIn erode Erode image by a rectangular structuring element of specified size.
 //' @param sx Width of the structuring element.
 //' @param sy Height of the structuring element.
@@ -91,6 +123,20 @@ NumericVector erode_rect(NumericVector im,int sx,int sy,int sz=1) {
   return wrap(img);
 }
 
+// [[Rcpp::export]]
+LogicalVector berode_rect(LogicalVector im,int sx,int sy,int sz=1) {
+  CIb img = as<CIb >(im);
+  try{
+    img.erode(sx,sy,sz);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
+
 //' @describeIn erode Erode image by a square structuring element of specified size.
 //'
 //' @export
@@ -106,6 +152,20 @@ NumericVector erode_square(NumericVector im,int size) {
   }
   return wrap(img);
 }
+
+// [[Rcpp::export]]
+LogicalVector berode_square(LogicalVector im,int size) {
+  CIb img = as<CIb >(im);
+  try{
+    img.erode(size);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
 
 //' @describeIn erode Dilate image by a structuring element.
 //' @export
@@ -123,6 +183,21 @@ NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditio
   return wrap(img);
 }
 
+// [[Rcpp::export]]
+LogicalVector bdilate(LogicalVector im,LogicalVector mask, bool boundary_conditions=true,bool normalise = false) {
+  CIb img = as<CIb >(im);
+  CIb msk = as<CIb >(mask);
+  try{
+    img.dilate(msk,boundary_conditions,normalise);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
+
 //' @describeIn erode Dilate image by a rectangular structuring element of specified size
 //' @export
 // [[Rcpp::export]]
@@ -134,6 +209,19 @@ NumericVector dilate_rect(NumericVector im,int sx,int sy,int sz=1) {
   catch(CImgException &e){
     forward_exception_to_r(e);
     
+  }
+  return wrap(img);
+}
+
+
+// [[Rcpp::export]]
+LogicalVector bdilate_rect(LogicalVector im,int sx,int sy,int sz=1) {
+  CIb img = as<CIb >(im);
+  try{
+    img.dilate(sx,sy,sz);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
   }
   return wrap(img);
 }
@@ -152,6 +240,20 @@ NumericVector dilate_square(NumericVector im,int size) {
   }
   return wrap(img);
 }
+
+// [[Rcpp::export]]
+LogicalVector bdilate_square(LogicalVector im,int size) {
+  CIb img = as<CIb >(im);
+  try{
+    img.dilate(size);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
 
 //' Compute watershed transform.
 //'
@@ -220,6 +322,21 @@ NumericVector distance_transform(NumericVector im,double value,unsigned int metr
     
   }
   return wrap(img);
+}
+
+
+// [[Rcpp::export]]
+LogicalVector bdistance_transform(LogicalVector im,bool value=true,unsigned int metric=2)
+{
+  CIb img = as<CIb >(im);
+  CId out;
+  try{
+    out = img.get_distance(value,metric);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+  }
+  return wrap(out);
 }
 
 

@@ -2,24 +2,30 @@
 % Please edit documentation in R/cimg_class.R
 \name{add.colour}
 \alias{add.colour}
-\title{Add colour channels to an grayscale image}
+\title{Add colour channels to a grayscale image or pixel set}
 \usage{
 add.colour(im, simple = TRUE)
 }
 \arguments{
 \item{im}{a grayscale image}
 
-\item{simple}{if TRUE just stack three copies of the grayscale image, if FALSE treat the image as the L channel in an HSL representation. Default TRUE.}
+\item{simple}{if TRUE just stack three copies of the grayscale image, if FALSE treat the image as the L channel in an HSL representation. Default TRUE. For pixel sets this option makes no sense and is ignored.}
 }
 \value{
 an image of class cimg
 }
 \description{
-Add colour channels to an grayscale image
+Add colour channels to a grayscale image or pixel set
 }
 \examples{
 grayscale(boats) #No more colour channels
 add.colour(grayscale(boats)) #Image has depth = 3 (but contains only grays)
+#A pixel set defined on the grayscale channel only:
+px <- grayscale(boats) > .8
+#The following won't work: px and boats have different dimensions
+try(boats[px])
+#This does work
+head(boats[add.colour(px)])
 }
 \author{
 Simon Barthelme

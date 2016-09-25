@@ -10,18 +10,15 @@ imlist(...)
 is.imlist(l)
 }
 \arguments{
-\item{...}{ignored}
-
-\item{l}{a list}
+\item{...}{images to be included in the image list}
 }
 \description{
 An imlist object is simply a list of images (of class cimg). For convenience, some generic functions are defined that wouldn't work on plain lists, like plot, display and as.data.frame.
+DEPRECATION NOTE: in v0.30 of imager, the original behaviour of the "imlist" function was to take a list and turn it into an image list. This behaviour has now been changed to make "imlist" be more like "list". If you wish to turn a list into an image list, use as.imlist.
 }
 \examples{
-#imsplit returns objects of class "imlist"
-imsplit(boats,"c")
 imlist(a=imfill(3,3),b=imfill(10,10)) 
-
+imsplit(boats,"x",6) 
 imsplit(boats,"x",6) \%>\% plot
 }
 \seealso{

@@ -51,7 +51,7 @@ namespace Rcpp {
     dims[2] = img.depth();
     dims[3] = img.spectrum();
     Rcpp::LogicalVector out(img.begin(),img.end());
-    out.attr("class") = "cimg";
+    out.attr("class") = "pixset";
     out.attr("dim") = dims;
     return Rcpp::wrap(out);
   }

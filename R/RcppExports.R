@@ -442,6 +442,10 @@ label <- function(im, high_connectivity = FALSE, tolerance = 0) {
     .Call('imager_label', PACKAGE = 'imager', im, high_connectivity, tolerance)
 }
 
+blabel <- function(im, high_connectivity = FALSE) {
+    .Call('imager_blabel', PACKAGE = 'imager', im, high_connectivity)
+}
+
 #' Erode/dilate image by a structuring element.
 #'
 #' @param im an image
@@ -466,6 +470,10 @@ erode <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
     .Call('imager_erode', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
+berode <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
+    .Call('imager_berode', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
+}
+
 #' @describeIn erode Erode image by a rectangular structuring element of specified size.
 #' @param sx Width of the structuring element.
 #' @param sy Height of the structuring element.
@@ -475,11 +483,19 @@ erode_rect <- function(im, sx, sy, sz = 1L) {
     .Call('imager_erode_rect', PACKAGE = 'imager', im, sx, sy, sz)
 }
 
+berode_rect <- function(im, sx, sy, sz = 1L) {
+    .Call('imager_berode_rect', PACKAGE = 'imager', im, sx, sy, sz)
+}
+
 #' @describeIn erode Erode image by a square structuring element of specified size.
 #'
 #' @export
 erode_square <- function(im, size) {
     .Call('imager_erode_square', PACKAGE = 'imager', im, size)
+}
+
+berode_square <- function(im, size) {
+    .Call('imager_berode_square', PACKAGE = 'imager', im, size)
 }
 
 #' @describeIn erode Dilate image by a structuring element.
@@ -488,16 +504,28 @@ dilate <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
     .Call('imager_dilate', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
 }
 
+bdilate <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
+    .Call('imager_bdilate', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
+}
+
 #' @describeIn erode Dilate image by a rectangular structuring element of specified size
 #' @export
 dilate_rect <- function(im, sx, sy, sz = 1L) {
     .Call('imager_dilate_rect', PACKAGE = 'imager', im, sx, sy, sz)
 }
 
+bdilate_rect <- function(im, sx, sy, sz = 1L) {
+    .Call('imager_bdilate_rect', PACKAGE = 'imager', im, sx, sy, sz)
+}
+
 #' @describeIn erode Dilate image by a square structuring element of specified size
 #' @export
 dilate_square <- function(im, size) {
     .Call('imager_dilate_square', PACKAGE = 'imager', im, size)
+}
+
+bdilate_square <- function(im, size) {
+    .Call('imager_bdilate_square', PACKAGE = 'imager', im, size)
 }
 
 #' Compute watershed transform.
@@ -546,6 +574,10 @@ watershed <- function(im, priority, fill_lines = TRUE) {
 #' distance_transform(im,1) %>% plot
 distance_transform <- function(im, value, metric = 2L) {
     .Call('imager_distance_transform', PACKAGE = 'imager', im, value, metric)
+}
+
+bdistance_transform <- function(im, value = TRUE, metric = 2L) {
+    .Call('imager_bdistance_transform', PACKAGE = 'imager', im, value, metric)
 }
 
 #' @describeIn erode Morphological opening (erosion followed by dilation)
