@@ -1,10 +1,28 @@
+
+#' Pixel sets (pixsets)
+#'
+#' Pixel sets represent sets of pixels in images (ROIs, foreground, etc.). From an implementation point of view, they're just a thin layer over arrays of logical values, just like the cimg class is a layer over arrays of numeric values.
+#' Pixsets can be turned back into logical arrays, but they come with a number of generic functions that should make your life easier.
+#' They are created automatically whenever you run a test on an image (for example im > 0 returns a pixset). 
+#' @param X an array of logical values
 #' @export
-pixset <- function(X)
+#' @examples
+#' #A test on an image returns a pixset
+#' boats > 250
+#' #Pixsets can be combined using the usual Boolean operators
+#' (boats > 230) & (Xc(boats) < width(boats)/2)
+#' #Subset an image using a pixset
+#' boats[boats > 250]
+#' #Turn a pixset into an image
+#' as.cimg(boats > 250)
+#' #Equivalently:
+#' (boats > 250) + 0
+pixset <- function(x)
     {
-        if (is.logical(X) && is.array(X) && (length(dim(X)) == 4 ))
+        if (is.logical(x) && is.array(x) && (length(dim(x)) == 4 ))
             {
-                class(X) <-c("pixset","logical")
-                X
+                class(x) <-c("pixset","logical")
+                x
             }
         else
             {
@@ -15,17 +33,50 @@ pixset <- function(X)
 #' @export
 is.pixset <- function(x) is(x,"pixset")
 
-
+#' Methods to convert various objects to pixsets
+#'
+#' @param x object to convert to pixset
+#' @param ... ignored
+#' @examples
+#' #When converting an image to a pixset, the default is to include all pixels with non-zero value 
+#' as.pixset(boats)
+#' #The above is equivalent to:
+#' boats!=0
+#' 
 #' @export
 as.pixset <- function(x,...) UseMethod("as.pixset")
-#' @export
+
 as.pixset.logical <- function(x,...) pixset(x)
+
+#' @describeIn as.pixset convert cimg to pixset
 #' @export
 as.pixset.cimg <- function(x,...) pixset(x!=0)
+
+#' @describeIn as.pixset convert pixset to pixset (nothing happens)
 #' @export
 as.cimg.pixset <- function(x,...) x+0
+
+
+
 #' @export
 as.logical.pixset <- function(x,...) { class(x) <- "logical"; x }
+
+#' Methods to convert pixsets to various objects
+#'
+#' @param x pixset to convert
+#' @alias convert_pixset
+#' @param ... ignored
+#' @seealso where
+#' @examples
+#' 
+#' px <- boats > 250
+#' #Convert to array of logicals
+#' as.logical(px) %>% dim
+#' #Convert to data.frame: gives all pixel locations in the set
+#' as.data.frame(px) %>% head
+#' #Drop flat dimensions
+#' as.data.frame(px,drop=TRUE) %>% head
+#' @param drop drop flat dimensions
 #' @export
 as.data.frame.pixset <- function(x,...,drop=FALSE) {
     co <- coord.index(x,which(x))
@@ -40,7 +91,7 @@ as.data.frame.pixset <- function(x,...,drop=FALSE) {
 }
 
 
-##' @export
+##' @export 
 as.matrix.pixset <- function(x,...) {
     d <- dim(x)
     if (sum(d==1) == 2)
@@ -175,9 +226,95 @@ grow <- function(px,x,y=x,z=x)
             }
     }
 
+##' Clean up and fill in pixel sets (morphological opening and closing)
+##' 
+##' Cleaning up a pixel set here means removing small isolated elements (speckle). Filling in means removing holes.
+##' Cleaning up can be achieved by shrinking the set (removing speckle), followed by growing it back up. Filling in can be achieved by growing the set (removing holes), and shrinking it again. 
+##' @param px 
+##' @param ... parameters that define the structuring element to use, passed on to "grow" and "shrink"
+##' @return a pixset
+##' im <- load.example("birds") %>% grayscale
+##' sub <- imsub(-im,y> 380) %>% threshold("85%")
+##' plot(sub)
+##' #Turn into a pixel set
+##' px <- sub==1
+##' layout(t(1:2))
+##' plot(px,main="Before clean-up")
+##' clean(px,3) %>% plot(main="After clean-up")
+##' #Now fill in the holes
+##' px <- clean(px,3)
+##' plot(px,main="Before filling-in")
+##' fill(px,28) %>% plot(main="After filling-in")
+##' @author Simon Barthelme
+##' @export
+clean <- function(px,...)
+    {
+        shrink(px,...) %>% grow(...)
+    }
 
-px.circle <- function(x,y,rad)
+##' @describeIn clean Fill in holes using morphological closing
+##' @export
+fill <- function(px,...)
+    {
+        grow(px,...) %>% shrink(...)
+    }
+
+
+#' @describeIn grow shrink pixset using erosion
+#' @export
+shrink <- function(px,x,y=x,z=x)
+    {
+        if (is.cimg(x) || is.pixset(x))
+            {
+                berode(px,as.pixset(x))
+            }
+        else if (x==y && y==z)
+            {
+                berode_square(px,x)
+            }
+        else
+            {
+                berode_rect(px,x,y,z)
+            }
+    }
+
+
+##' Various useful pixsets
+##'
+##' px.circle returns an (approximately) circular pixset of radius r, embedded in an image of width x and height y
+##' Mathematically speaking, the set of all pixels whose L2 distance to the center equals r or less.
+##' px.diamond is similar but returns a diamong (L1 distance less than r)
+##' px.square is also similar but returns a square (Linf distance less than r)
+##' @param r radius (in pixels)
+##' @param x width (default 2*r+1)
+##' @param y height (default 2*r+1)
+##' @return a pixset
+##' px.circle(20,350,350) %>% plot(interp=FALSE)
+##' px.circle(3) %>% plot(interp=FALSE)
+##' r <- 5
+##' layout(t(1:3))
+##' plot(px.circle(r,20,20))
+##' plot(px.square(r,20,20))
+##' plot(px.diamond(r,20,20))
+##' #They're useful as structuring elements
+##' px <- grayscale(boats) > .8
+##' grow(px,px.circle(5)) %>% plot
+##' @author Simon Barthelme
+px.circle <- function(r,x=2*r+1,y=2*r+1)
     {
         im <- imfill(x,y)
-        (Xc(im)-(x+1)/2)^2 + (Yc(im)-(y+1)/2)^2 < rad^2
+        (Xc(im)-(x+1)/2)^2 + (Yc(im)-(y+1)/2)^2 <= r^2
     }
+
+px.diamond <- function(r,x=2*r+1,y=2*r+1)
+    {
+        im <- imfill(x,y)
+        abs(Xc(im)-(x+1)/2) + abs(Yc(im)-(y+1)/2) <= r
+    }
+
+px.square <- function(r,x=2*r+1,y=2*r+1)
+    {
+        im <- imfill(x,y)
+        (abs(Xc(im)-(x+1)/2) <= r) & (abs(Yc(im)-(y+1)/2) <= r)
+    }
+
