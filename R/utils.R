@@ -76,6 +76,7 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
 ##' @name resize_uniform
 ##' @param im an image
 ##' @param scale a scale factor
+##' @param interpolation interpolation method to use (see doc for resize). Default 3, linear.
 ##' @return an image
 ##' @references
 ##' For double-scale, half-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}.
@@ -89,7 +90,7 @@ NULL
 
 ##' @describeIn resize_uniform resize by scale factor
 ##' @export
-imresize <- function(im,scale=1)
+imresize <- function(im,scale=1,interpolation=3)
     {
         
         if (depth(im) == 1 & ((1/scale)%%2)==0) #Half-size, quarter-size, etc.
@@ -109,7 +110,7 @@ imresize <- function(im,scale=1)
         else
             {
                 scale.z <- if (depth(im) > 1) -scale*100 else -100
-                resize(im,-scale*100,-scale*100,scale.z,interpolation_type=3)
+                resize(im,-scale*100,-scale*100,scale.z,interpolation_type=interpolation)
             }
     }
 
@@ -187,6 +188,10 @@ imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
 renorm <- function(x,min=0,max=255)
     {
         rg <- range(x)
+        if (any(!is.finite(rg)))
+            {
+                stop('Image contains non-finite values or NAs')
+            }
         dr <- diff(rg)
         if (dr!=0)
             {
@@ -683,7 +688,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 #' Autocrop image region 
 #'
 #' @param im an image
-#' @param color Color used for the crop. If  0, color is guessed.
+#' @param color Colour used for the crop. If missing, the colour is taken from the top-left pixel. 
 #' @param axes Axes used for the crop.
 #' @export
 #' @examples
@@ -691,8 +696,15 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 #' padded <- pad(boats,30,"xy")
 #' plot(padded)
 #' #Remove padding
-#' autocrop(padded,color=c(0,0,0)) %>% plot
-autocrop <- function(im,color=c(0,0,0),axes="zyx")
+#' autocrop(padded) %>% plot
+#'
+#' #autocrop has a zero-tolerance policy: if a pixel value is slightly different from the one you gave
+#' #the pixel won't get cropped. A fix is to do a bucket fill first
+#' padded <- isoblur(padded,10)
+#' autocrop(padded) %>% plot
+#' padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=20)
+#' autocrop(padded2) %>% plot
+autocrop <- function(im,color=color.at(im,1,1),axes="zyx")
 {
     autocrop_(im,color,axes)
 }
