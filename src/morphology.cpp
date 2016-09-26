@@ -326,7 +326,7 @@ NumericVector distance_transform(NumericVector im,double value,unsigned int metr
 
 
 // [[Rcpp::export]]
-LogicalVector bdistance_transform(LogicalVector im,bool value=true,unsigned int metric=2)
+NumericVector bdistance_transform(LogicalVector im,bool value=true,unsigned int metric=2)
 {
   CIb img = as<CIb >(im);
   CId out;

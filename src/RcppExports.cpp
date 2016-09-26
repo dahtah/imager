@@ -833,7 +833,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // bdistance_transform
-LogicalVector bdistance_transform(LogicalVector im, bool value, unsigned int metric);
+NumericVector bdistance_transform(LogicalVector im, bool value, unsigned int metric);
 RcppExport SEXP imager_bdistance_transform(SEXP imSEXP, SEXP valueSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

@@ -2,6 +2,7 @@
 % Please edit documentation in R/pixset.R
 \name{as.data.frame.pixset}
 \alias{as.data.frame.pixset}
+\alias{convert_pixset}
 \title{Methods to convert pixsets to various objects}
 \usage{
 \method{as.data.frame}{pixset}(x, ..., drop = FALSE)

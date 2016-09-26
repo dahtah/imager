@@ -64,7 +64,7 @@ as.logical.pixset <- function(x,...) { class(x) <- "logical"; x }
 #' Methods to convert pixsets to various objects
 #'
 #' @param x pixset to convert
-#' @alias convert_pixset
+#' @aliases convert_pixset
 #' @param ... ignored
 #' @seealso where
 #' @examples
@@ -123,6 +123,12 @@ check.pixset <- function(x)
             }
     }
 
+#' Return locations in pixel set
+#'
+#' @param x
+#' @examples
+#' #All pixel locations with value greater than 254
+#' where(boats > 254) 
 #' @export
 where <- function(x)
     {
@@ -281,14 +287,18 @@ shrink <- function(px,x,y=x,z=x)
 
 ##' Various useful pixsets
 ##'
+##' These functions define some commonly used pixsets.
+##' px.left gives the left-most pixels of an image
 ##' px.circle returns an (approximately) circular pixset of radius r, embedded in an image of width x and height y
 ##' Mathematically speaking, the set of all pixels whose L2 distance to the center equals r or less.
 ##' px.diamond is similar but returns a diamong (L1 distance less than r)
 ##' px.square is also similar but returns a square (Linf distance less than r)
+##' @name common_pixsets
 ##' @param r radius (in pixels)
 ##' @param x width (default 2*r+1)
 ##' @param y height (default 2*r+1)
 ##' @return a pixset
+##' @examples
 ##' px.circle(20,350,350) %>% plot(interp=FALSE)
 ##' px.circle(3) %>% plot(interp=FALSE)
 ##' r <- 5
@@ -296,25 +306,89 @@ shrink <- function(px,x,y=x,z=x)
 ##' plot(px.circle(r,20,20))
 ##' plot(px.square(r,20,20))
 ##' plot(px.diamond(r,20,20))
-##' #They're useful as structuring elements
+##' #These pixsets are useful as structuring elements
 ##' px <- grayscale(boats) > .8
 ##' grow(px,px.circle(5)) %>% plot
+##' #The following functions select pixels on the left, right, bottom, top of the image
+##' im <- imfill(10,10)
+##' px.left(im,3) %>% plot(int=F)
+##' px.right(im,1) %>% plot(int=F)
+##' px.top(im,4) %>% plot(int=F)
+##' px.bottom(im,2) %>% plot(int=F)
+##' px.borders(im,1) %>% plot(int=F)
 ##' @author Simon Barthelme
+NULL
+
+#' @describeIn common_pixsets A circular-shaped pixset
+##' @export
 px.circle <- function(r,x=2*r+1,y=2*r+1)
     {
         im <- imfill(x,y)
         (Xc(im)-(x+1)/2)^2 + (Yc(im)-(y+1)/2)^2 <= r^2
     }
 
+#' @describeIn common_pixsets A diamond-shaped pixset
+#' @export
 px.diamond <- function(r,x=2*r+1,y=2*r+1)
     {
         im <- imfill(x,y)
         abs(Xc(im)-(x+1)/2) + abs(Yc(im)-(y+1)/2) <= r
     }
 
+#' @describeIn common_pixsets A square-shaped pixset
+#' @export
 px.square <- function(r,x=2*r+1,y=2*r+1)
     {
         im <- imfill(x,y)
         (abs(Xc(im)-(x+1)/2) <= r) & (abs(Yc(im)-(y+1)/2) <= r)
     }
 
+
+#' @describeIn common_pixsets n left-most pixels (left-hand border)
+#' @param n number of pixels to include
+#' @export
+px.left <- function(im,n=1)
+    {
+        Xc(im) <= n
+    }
+
+#' @describeIn common_pixsets n top-most pixels 
+#' @export
+px.top <- function(im,n=1)
+    {
+        Yc(im) <= n
+    }
+
+#' @describeIn common_pixsets n bottom-most pixels 
+#' @export
+px.bottom <- function(im,n=1)
+    {
+        Yc(im) > height(im)- n
+    }
+
+
+#' @describeIn common_pixsets n right-most pixels 
+#' @export
+px.right <- function(im,n=1)
+    {
+        Xc(im) > (width(im)-n)
+    }
+
+#' @describeIn common_pixsets image borders (to depth n)
+#' @export
+px.borders <- function(im,n=1)
+{
+    (px.left(im,n) | px.right(im,n)) | (px.top(im,n) | px.bottom(im,n))
+}
+
+#' Find the boundary of a shape in a pixel set
+#' 
+#' @param px pixel set
+#' @examples
+#' px.diamond(10,30,30) %>% boundary %>% plot
+#' px.square(10,30,30) %>% boundary %>% plot
+#' @export
+boundary <- function(px)
+    {
+        bdistance_transform(px,FALSE) == 1
+    }
