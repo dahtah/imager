@@ -4,7 +4,7 @@
 #' Pixel sets represent sets of pixels in images (ROIs, foreground, etc.). From an implementation point of view, they're just a thin layer over arrays of logical values, just like the cimg class is a layer over arrays of numeric values.
 #' Pixsets can be turned back into logical arrays, but they come with a number of generic functions that should make your life easier.
 #' They are created automatically whenever you run a test on an image (for example im > 0 returns a pixset). 
-#' @param X an array of logical values
+#' @param x an array of logical values
 #' @export
 #' @examples
 #' #A test on an image returns a pixset
@@ -52,9 +52,10 @@ as.pixset.logical <- function(x,...) pixset(x)
 #' @export
 as.pixset.cimg <- function(x,...) pixset(x!=0)
 
-#' @describeIn as.pixset convert pixset to pixset (nothing happens)
+#' @describeIn as.pixset convert pixset to cimg
+#' @param obj pixset to convert
 #' @export
-as.cimg.pixset <- function(x,...) x+0
+as.cimg.pixset <- function(obj,...) obj+0
 
 
 
@@ -125,7 +126,7 @@ check.pixset <- function(x)
 
 #' Return locations in pixel set
 #'
-#' @param x
+#' @param x a pixset
 #' @examples
 #' #All pixel locations with value greater than 254
 #' where(boats > 254) 
@@ -198,7 +199,7 @@ Ops.pixset <- function(e1, e2)
 #'
 #' Grow/shrink a pixel set through morphological dilation/erosion. The default is to use square or rectangular structuring elements, but an arbitrary structuring element can be given as input. 
 #' A structuring element is a pattern to be moved over the image: for example a 3x3 square. In "shrink" mode, a element of the pixset is retained only if and only the structuring element fits entirely within the pixset. In "grow" mode, the structuring element acts like a neighbourhood: all pixels that are in the original pixset *or* in the neighbourhood defined by the structuring element belong the new pixset. 
-#' @param px 
+#' @param px a pixset
 #' @param x either an integer value, or an image/pixel set. 
 #' @param y width of the rectangular structuring element (if x is an integer value)
 #' @param z depth of the rectangular structuring element (if x is an integer value)
@@ -236,7 +237,7 @@ grow <- function(px,x,y=x,z=x)
 ##' 
 ##' Cleaning up a pixel set here means removing small isolated elements (speckle). Filling in means removing holes.
 ##' Cleaning up can be achieved by shrinking the set (removing speckle), followed by growing it back up. Filling in can be achieved by growing the set (removing holes), and shrinking it again. 
-##' @param px 
+##' @param px a pixset
 ##' @param ... parameters that define the structuring element to use, passed on to "grow" and "shrink"
 ##' @return a pixset
 ##' im <- load.example("birds") %>% grayscale
@@ -311,11 +312,11 @@ shrink <- function(px,x,y=x,z=x)
 ##' grow(px,px.circle(5)) %>% plot
 ##' #The following functions select pixels on the left, right, bottom, top of the image
 ##' im <- imfill(10,10)
-##' px.left(im,3) %>% plot(int=F)
-##' px.right(im,1) %>% plot(int=F)
-##' px.top(im,4) %>% plot(int=F)
-##' px.bottom(im,2) %>% plot(int=F)
-##' px.borders(im,1) %>% plot(int=F)
+##' px.left(im,3) %>% plot(int=FALSE)
+##' px.right(im,1) %>% plot(int=FALSE)
+##' px.top(im,4) %>% plot(int=FALSE)
+##' px.bottom(im,2) %>% plot(int=FALSE)
+##' px.borders(im,1) %>% plot(int=FALSE)
 ##' @author Simon Barthelme
 NULL
 

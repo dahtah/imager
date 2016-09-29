@@ -79,11 +79,11 @@ px <- grayscale(boats) > .8
 grow(px,px.circle(5)) \%>\% plot
 #The following functions select pixels on the left, right, bottom, top of the image
 im <- imfill(10,10)
-px.left(im,3) \%>\% plot(int=F)
-px.right(im,1) \%>\% plot(int=F)
-px.top(im,4) \%>\% plot(int=F)
-px.bottom(im,2) \%>\% plot(int=F)
-px.borders(im,1) \%>\% plot(int=F)
+px.left(im,3) \%>\% plot(int=FALSE)
+px.right(im,1) \%>\% plot(int=FALSE)
+px.top(im,4) \%>\% plot(int=FALSE)
+px.bottom(im,2) \%>\% plot(int=FALSE)
+px.borders(im,1) \%>\% plot(int=FALSE)
 }
 \author{
 Simon Barthelme

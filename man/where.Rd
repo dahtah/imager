@@ -6,6 +6,9 @@
 \usage{
 where(x)
 }
+\arguments{
+\item{x}{a pixset}
+}
 \description{
 Return locations in pixel set
 }

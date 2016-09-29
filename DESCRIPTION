@@ -3,10 +3,8 @@ Type: Package
 Title: Image Processing Library Based on 'CImg'
 Version: 0.40
 Date: 2016-09-02
-Author: Simon Barthelme [aut, cre],
-    Antoine Cecchi [ctb]
-Authors@R: c(person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut","cre")),
-	   person("Antoine","Cecchi",email="antoine.cecchi@phelma.grenoble-inp.fr",role="ctb"))
+Author: Simon Barthelme [aut, cre]
+Authors@R: person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut","cre"))
 Maintainer: Simon Barthelme <simon.barthelme@gipsa-lab.fr>
 Description: Fast image processing for images in up to 4 dimensions (two spatial
     dimensions, one time/depth dimension, one colour dimension). Provides most

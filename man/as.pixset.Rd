@@ -10,12 +10,14 @@ as.pixset(x, ...)
 
 \method{as.pixset}{cimg}(x, ...)
 
-\method{as.cimg}{pixset}(x, ...)
+\method{as.cimg}{pixset}(obj, ...)
 }
 \arguments{
 \item{x}{object to convert to pixset}
 
 \item{...}{ignored}
+
+\item{obj}{pixset to convert}
 }
 \description{
 Methods to convert various objects to pixsets
@@ -24,7 +26,7 @@ Methods to convert various objects to pixsets
 \itemize{
 \item \code{cimg}: convert cimg to pixset
 
-\item \code{pixset}: convert pixset to pixset (nothing happens)
+\item \code{pixset}: convert pixset to cimg
 }}
 \examples{
 #When converting an image to a pixset, the default is to include all pixels with non-zero value 

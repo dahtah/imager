@@ -10,7 +10,7 @@ grow(px, x, y = x, z = x)
 shrink(px, x, y = x, z = x)
 }
 \arguments{
-\item{px}{}
+\item{px}{a pixset}
 
 \item{x}{either an integer value, or an image/pixel set.}
 

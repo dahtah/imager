@@ -10,7 +10,7 @@ clean(px, ...)
 fill(px, ...)
 }
 \arguments{
-\item{px}{}
+\item{px}{a pixset}
 
 \item{...}{parameters that define the structuring element to use, passed on to "grow" and "shrink"}
 }

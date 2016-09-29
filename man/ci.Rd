@@ -25,6 +25,6 @@ ci(l1,imfill(3,3)) #List + image
 ci(imfill(3,3),l1,l2) #Three elements, etc.
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 

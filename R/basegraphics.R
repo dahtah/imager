@@ -1,3 +1,23 @@
+#The following two functions are taken from the Cairo package
+#CRAN complains if they get called via :::
+
+cairo.ptr.to.raw <- function (ptr, begin, length)
+{
+    .Call("ptr_to_raw", ptr, begin, length, PACKAGE = "Cairo")
+}
+
+cairo.image <- function (device) 
+{
+    a <- .Call("get_img_backplane", device, PACKAGE = "Cairo")
+    names(a) <- c("ref", "info")
+    a$width <- a[[2]][1]
+    a$height <- a[[2]][2]
+    a$format <- c("ARGB", "RGB", "A8", "A1", "dep", "RGB16")[a[[2]][3] + 
+        1]
+    class(a) <- "CairoImageRef"
+    a
+}
+
 mplot <- function(im,...)
     {
         graphics::par(mar=rep(0,4),omi=rep(0,4))
@@ -32,7 +52,7 @@ flattenAlpha <- function(im)
 ##' draw.fun <- function() text(150,50,"Boats!!!",cex=3)
 ##' out <- implot(im,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
 ##' plot(out)
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 implot <- function(im,expr,...)
     {
         w <- width(im)
@@ -41,8 +61,8 @@ implot <- function(im,expr,...)
         out <- try({
             mplot(im,interp=FALSE,...)
             eval(expr,parent.frame())
-            ptr <- Cairo:::.image(grDevices::dev.cur())
-            b <- Cairo:::.ptr.to.raw(ptr$ref,0,ptr$width*ptr$height*4) %>% as.integer
+            ptr <- cairo.image(grDevices::dev.cur())
+            b <- cairo.ptr.to.raw(ptr$ref,0,ptr$width*ptr$height*4) %>% as.integer
             },TRUE)
         if (is(out,"try-error"))
             {

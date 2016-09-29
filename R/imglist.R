@@ -21,16 +21,16 @@ is.imlist <- function(l) "imlist" %in% class(l)
 
 ##' @describeIn as.imlist convert from list
 ##' @export
-as.imlist.list <- function(l)
+as.imlist.list <- function(x,...)
     {
-        if (!(map_lgl(l,is.cimg) %>% all))
+        if (!(map_lgl(x,is.cimg) %>% all))
         {
             stop("The list may only contain images (objects with class cimg)")
         }
         else
         {
-            class(l) <- c("imlist","list")
-            l
+            class(x) <- c("imlist","list")
+            x
         }
     }
 
@@ -70,7 +70,7 @@ ilcat <- function(a,b)
 ##' Doesn't quite work like R's "c" primitive: image lists are always *flat*, not nested, meaning each element of an image list is an image. 
 ##' @param ... objects to concatenate
 ##' @return an image list
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @examples
 ##'
 ##' l1 <- imlist(boats,grayscale(boats))

@@ -7,7 +7,7 @@
 pixset(x)
 }
 \arguments{
-\item{X}{an array of logical values}
+\item{x}{an array of logical values}
 }
 \description{
 Pixel sets represent sets of pixels in images (ROIs, foreground, etc.). From an implementation point of view, they're just a thin layer over arrays of logical values, just like the cimg class is a layer over arrays of numeric values.

@@ -8,7 +8,7 @@
 \alias{as.list.imlist}
 \title{Convert various objects to image lists}
 \usage{
-\method{as.imlist}{list}(l)
+\method{as.imlist}{list}(x, ...)
 
 as.imlist(x, ...)
 

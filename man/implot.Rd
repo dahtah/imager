@@ -33,7 +33,7 @@ out <- implot(im,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
 plot(out)
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 \seealso{
 plot, capture.plot
