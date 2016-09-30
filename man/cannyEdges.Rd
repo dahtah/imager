@@ -7,7 +7,7 @@
 cannyEdges(im, t1, t2, alpha = 1, sigma = 2)
 }
 \arguments{
-\item{im}{}
+\item{im}{input image}
 
 \item{t1}{threshold for weak edges (if missing, both thresholds are determined automatically)}
 

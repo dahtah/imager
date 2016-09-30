@@ -212,15 +212,15 @@ medianblur <- function(im, n, threshold = 0) {
 
 #' Blur image with a box filter (square window)
 #' @param im an image
-#' @param sigma Size of the box window.
+#' @param boxsize Size of the box window (can be subpixel).
 #' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
 #' @seealso deriche(), vanvliet().
 #' @examples
 #' boxblur(boats,5) %>% plot(main="Dirichlet boundary")
 #' boxblur(boats,5,TRUE) %>% plot(main="Neumann boundary")
 #' @export
-boxblur <- function(im, sigma, neumann = TRUE) {
-    .Call('imager_boxblur', PACKAGE = 'imager', im, sigma, neumann)
+boxblur <- function(im, boxsize, neumann = TRUE) {
+    .Call('imager_boxblur', PACKAGE = 'imager', im, boxsize, neumann)
 }
 
 #' Blur image with a box filter.

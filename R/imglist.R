@@ -14,10 +14,11 @@ imlist <- function(...)
 {
     list(...) %>% as.imlist.list
 }
-
-##' @rdname imlist
+##' Check that an object is an imlist object
+##' @param x an object
+##' @return logical
 ##' @export
-is.imlist <- function(l) "imlist" %in% class(l)
+is.imlist <- function(x) is(x,"imlist")
 
 ##' @describeIn as.imlist convert from list
 ##' @export

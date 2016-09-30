@@ -126,11 +126,4 @@ NumericVector grayscale(NumericVector im) {
 }
 
 
-// NumericVector HSLtoRGB(NumericVector inp) {
-//   //There's a bug in CImg with HSLtoRGB with CId  
-//   CImg<float> img(as<CId >(inp));
-//   img.HSLtoRGB();
-//   CId out(img);
-//   return wrap(out);
-// }
 

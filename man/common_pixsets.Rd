@@ -35,6 +35,8 @@ px.borders(im, n = 1)
 
 \item{y}{height (default 2*r+1)}
 
+\item{im}{an image}
+
 \item{n}{number of pixels to include}
 }
 \value{

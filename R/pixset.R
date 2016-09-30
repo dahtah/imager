@@ -30,7 +30,10 @@ pixset <- function(x)
             }
     }
 
-#' @export
+##' Check that an object is a pixset object
+##' @param x an object
+##' @return logical
+##' @export
 is.pixset <- function(x) is(x,"pixset")
 
 #' Methods to convert various objects to pixsets
@@ -346,6 +349,7 @@ px.square <- function(r,x=2*r+1,y=2*r+1)
 
 
 #' @describeIn common_pixsets n left-most pixels (left-hand border)
+#' @param im an image
 #' @param n number of pixels to include
 #' @export
 px.left <- function(im,n=1)

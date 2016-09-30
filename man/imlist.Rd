@@ -2,12 +2,9 @@
 % Please edit documentation in R/imglist.R
 \name{imlist}
 \alias{imlist}
-\alias{is.imlist}
 \title{Image list}
 \usage{
 imlist(...)
-
-is.imlist(l)
 }
 \arguments{
 \item{...}{images to be included in the image list}
