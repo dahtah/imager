@@ -4,12 +4,12 @@
 \alias{boxblur}
 \title{Blur image with a box filter (square window)}
 \usage{
-boxblur(im, sigma, neumann = TRUE)
+boxblur(im, boxsize, neumann = TRUE)
 }
 \arguments{
 \item{im}{an image}
 
-\item{sigma}{Size of the box window.}
+\item{boxsize}{Size of the box window (can be subpixel).}
 
 \item{neumann}{If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)}
 }

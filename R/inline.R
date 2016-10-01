@@ -8,8 +8,8 @@
         imager_cflags <- "-Dcimg_r_mode -fpermissive"
         imager_libs   <- "-lgdi32"
     } else {
-        imager_cflags <- "-Dcimg_r_mode -fpermissive -I/usr/X11R6/include"
-        imager_libs   <- "-lX11 -L/usr/X11R6/lib"
+        imager_cflags <- "-Dcimg_r_mode -fpermissive -I/usr/X11R6/include -I/opt/X11/include"
+        imager_libs   <- "-lX11 -L/usr/X11R6/lib -L/opt/X11/include"
     }
     assign("imager_cflags", imager_cflags, envir=.pkgglobalenv)
     assign("imager_libs", imager_libs, envir=.pkgglobalenv)

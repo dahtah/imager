@@ -27,7 +27,7 @@ names.coords <- c('x','y','z','c','cc')
 index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
 
 ## CRAN sometimes issues spurious warnings about undefined variables
-utils::globalVariables(c(".", "%>%","x","y","z","cc"))
+utils::globalVariables(c(".", "%>%","x","y","z","cc","value"))
 
 ##' cimg is a class for storing image or video/hyperspectral data.  It is designed to provide easy interaction with the CImg library, but in order to use it you need to be aware of how CImg wants its image data stored. 
 ##' Images have up to 4 dimensions, labelled x,y,z,c. x and y are the usual spatial dimensions, z is a depth dimension (which would correspond to time in a movie), and c is a colour dimension. Images are stored linearly in that order, starting from the top-left pixel and going along *rows* (scanline order).

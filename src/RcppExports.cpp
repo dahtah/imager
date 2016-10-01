@@ -343,15 +343,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // boxblur
-NumericVector boxblur(NumericVector im, float sigma, bool neumann);
-RcppExport SEXP imager_boxblur(SEXP imSEXP, SEXP sigmaSEXP, SEXP neumannSEXP) {
+NumericVector boxblur(NumericVector im, float boxsize, bool neumann);
+RcppExport SEXP imager_boxblur(SEXP imSEXP, SEXP boxsizeSEXP, SEXP neumannSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
-    Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< float >::type boxsize(boxsizeSEXP);
     Rcpp::traits::input_parameter< bool >::type neumann(neumannSEXP);
-    rcpp_result_gen = Rcpp::wrap(boxblur(im, sigma, neumann));
+    rcpp_result_gen = Rcpp::wrap(boxblur(im, boxsize, neumann));
     return rcpp_result_gen;
 END_RCPP
 }

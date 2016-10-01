@@ -75,31 +75,31 @@ fi
 
 
 # Check for OpenMP (from randomForests package)
-AC_OPENMP
+dnl AC_OPENMP
 
-RBIN="${R_HOME}/bin/R"
+dnl RBIN="${R_HOME}/bin/R"
 
-# Since some systems have broken OMP libraries we also check that the
-# actual package will work.
-ac_pkg_openmp=no
-if test -n "${OPENMP_CFLAGS}"; then
-  AC_MSG_CHECKING([whether OpenMP will work in a package])
-  AC_LANG_CONFTEST([AC_LANG_PROGRAM([[#include <omp.h>]], [[ return omp_get_num_threads (); ]])])
-  "$RBIN" CMD SHLIB conftest.c 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD && "$RBIN" --vanilla -q -e "dyn.load(paste('conftest',.Platform\$dynlib.ext,sep=''))" 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD && ac_pkg_openmp=yes
-  AC_MSG_RESULT([${ac_pkg_openmp}])
-fi
+dnl # Since some systems have broken OMP libraries we also check that the
+dnl # actual package will work.
+dnl ac_pkg_openmp=no
+dnl if test -n "${OPENMP_CFLAGS}"; then
+dnl   AC_MSG_CHECKING([whether OpenMP will work in a package])
+dnl   AC_LANG_CONFTEST([AC_LANG_PROGRAM([[#include <omp.h>]], [[ return omp_get_num_threads (); ]])])
+dnl   "$RBIN" CMD SHLIB conftest.c 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD && "$RBIN" --vanilla -q -e "dyn.load(paste('conftest',.Platform\$dynlib.ext,sep=''))" 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD && ac_pkg_openmp=yes
+dnl   AC_MSG_RESULT([${ac_pkg_openmp}])
+dnl fi
 
-# If ${ac_pkg_openmp} = "yes" then we have OMP, otherwise it will be "no".
-if test "${ac_pkg_openmp}" = no; then
-  OPENMP_CFLAGS=''
-  HAVE_OPENMP=''
-  AC_MSG_WARN([OpenMP does NOT appear to be supported on this system.])
-else
-  HAVE_OPENMP='-Dcimg_use_openmp'
-fi
+dnl # If ${ac_pkg_openmp} = "yes" then we have OMP, otherwise it will be "no".
+dnl if test "${ac_pkg_openmp}" = no; then
+dnl   OPENMP_CFLAGS=''
+dnl   HAVE_OPENMP=''
+dnl   AC_MSG_WARN([OpenMP does NOT appear to be supported on this system.])
+dnl else
+dnl   HAVE_OPENMP='-Dcimg_use_openmp'
+dnl fi
 
-AC_SUBST(OPENMP_CFLAGS)
-AC_SUBST(HAVE_OPENMP)
+dnl AC_SUBST(OPENMP_CFLAGS)
+dnl AC_SUBST(HAVE_OPENMP)
 
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars

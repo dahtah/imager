@@ -14,7 +14,7 @@ rescueFill <- function(strong,weak)
         #Transform the data.frame into a list of locations
         loc <- dplyr::select(loc,-value) %>% { purrr::transpose(.) }
         #Fold
-        out <- purrr::reduce(loc,function(v,l) bucketfill(v,l$x,l$y,color=1,sigma=.1,high=TRUE),
+        out <- purrr::reduce(loc,function(v,l) bucketfill(v,l$x,l$y,color=1,sigma=.1,high_connexity=TRUE),
                       .init=v)
         as.cimg(out==1)
     }
@@ -48,7 +48,7 @@ guess.kmeans <- function(x)
 ##' If the threshold parameters are missing, they are determined automatically using a k-means heuristic. Use the alpha parameter  to adjust the automatic thresholds up or down
 ##' The thresholds are returned as attributes.
 ##' The edge detection is based on a smoothed image gradient with a degree of smoothing set by the sigma parameter. 
-##' @param im 
+##' @param im input image
 ##' @param t1 threshold for weak edges (if missing, both thresholds are determined automatically)
 ##' @param t2 threshold for strong edges
 ##' @param alpha threshold adjusment factor (default 1)
