@@ -83,7 +83,7 @@ as.data.frame.pixset <- function(x,...,drop=FALSE) {
     co <- coord.index(x,which(x))
     if (drop)
         {
-            co[,dim(x)>1]
+            co[,dim(x)>1,drop=FALSE]
         }
     else
         {
