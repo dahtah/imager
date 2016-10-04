@@ -452,7 +452,7 @@ blabel <- function(im, high_connectivity = FALSE) {
 #' @param size size of the structuring element.
 #' @param mask Structuring element.
 #' @param boundary_conditions Boundary conditions. If FALSE, pixels beyond image boundaries are considered to be 0, if TRUE one. Default: TRUE.
-#' @param real_mode. If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).
+#' @param real_mode If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).
 #' @export
 #' @examples
 #' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
@@ -582,8 +582,8 @@ bdistance_transform <- function(im, value = TRUE, metric = 2L) {
 
 #' @describeIn erode Morphological opening (erosion followed by dilation)
 #' @export
-mopening <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
-    .Call('imager_mopening', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
+mopening <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
+    .Call('imager_mopening', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
 }
 
 #' @describeIn erode Morphological opening by a square element (erosion followed by dilation)
@@ -600,8 +600,8 @@ mclosing_square <- function(im, size) {
 
 #' @describeIn erode Morphological closing (dilation followed by erosion)
 #' @export
-mclosing <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
-    .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
+mclosing <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
+    .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
 }
 
 autocrop_ <- function(im, color, axes = "zyx") {

@@ -844,16 +844,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // mopening
-NumericVector mopening(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
-RcppExport SEXP imager_mopening(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
+NumericVector mopening(NumericVector im, NumericVector mask, bool boundary_conditions, bool real_mode);
+RcppExport SEXP imager_mopening(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    rcpp_result_gen = Rcpp::wrap(mopening(im, mask, boundary_conditions, normalise));
+    Rcpp::traits::input_parameter< bool >::type real_mode(real_modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(mopening(im, mask, boundary_conditions, real_mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -882,16 +882,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // mclosing
-NumericVector mclosing(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
-RcppExport SEXP imager_mclosing(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
+NumericVector mclosing(NumericVector im, NumericVector mask, bool boundary_conditions, bool real_mode);
+RcppExport SEXP imager_mclosing(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    rcpp_result_gen = Rcpp::wrap(mclosing(im, mask, boundary_conditions, normalise));
+    Rcpp::traits::input_parameter< bool >::type real_mode(real_modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(mclosing(im, mask, boundary_conditions, real_mode));
     return rcpp_result_gen;
 END_RCPP
 }

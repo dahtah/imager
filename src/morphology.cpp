@@ -61,7 +61,7 @@ NumericVector blabel(LogicalVector im,bool high_connectivity=false)
 //' @param size size of the structuring element.
 //' @param mask Structuring element.
 //' @param boundary_conditions Boundary conditions. If FALSE, pixels beyond image boundaries are considered to be 0, if TRUE one. Default: TRUE.
-//' @param real_mode. If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).
+//' @param real_mode If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).
 //' @export
 //' @examples
 //' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
@@ -342,12 +342,12 @@ NumericVector bdistance_transform(LogicalVector im,bool value=true,unsigned int 
 //' @describeIn erode Morphological opening (erosion followed by dilation)
 //' @export
 // [[Rcpp::export]]
-NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
+NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool real_mode = false) {
   CId img = as<CId >(im);
 
   try{
     CId msk = as<CId >(mask);
-    img.erode(msk,boundary_conditions,normalise).dilate(msk,boundary_conditions,normalise);
+    img.erode(msk,boundary_conditions,real_mode).dilate(msk,boundary_conditions,real_mode);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
@@ -390,12 +390,12 @@ NumericVector mclosing_square(NumericVector im,int size) {
 //' @describeIn erode Morphological closing (dilation followed by erosion)
 //' @export
 // [[Rcpp::export]]
-NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
+NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool real_mode = false) {
   CId img = as<CId >(im);
 
   try{
     CId msk = as<CId >(mask);
-    img.dilate(msk,boundary_conditions,normalise).erode(msk,boundary_conditions,normalise);
+    img.dilate(msk,boundary_conditions,real_mode).erode(msk,boundary_conditions,real_mode);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);

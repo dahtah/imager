@@ -25,13 +25,13 @@ dilate_rect(im, sx, sy, sz = 1L)
 
 dilate_square(im, size)
 
-mopening(im, mask, boundary_conditions = TRUE, normalise = FALSE)
+mopening(im, mask, boundary_conditions = TRUE, real_mode = FALSE)
 
 mopening_square(im, size)
 
 mclosing_square(im, size)
 
-mclosing(im, mask, boundary_conditions = TRUE, normalise = FALSE)
+mclosing(im, mask, boundary_conditions = TRUE, real_mode = FALSE)
 }
 \arguments{
 \item{im}{an image}
@@ -40,6 +40,8 @@ mclosing(im, mask, boundary_conditions = TRUE, normalise = FALSE)
 
 \item{boundary_conditions}{Boundary conditions. If FALSE, pixels beyond image boundaries are considered to be 0, if TRUE one. Default: TRUE.}
 
+\item{real_mode}{If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).}
+
 \item{sx}{Width of the structuring element.}
 
 \item{sy}{Height of the structuring element.}
@@ -47,8 +49,6 @@ mclosing(im, mask, boundary_conditions = TRUE, normalise = FALSE)
 \item{sz}{Depth of the structuring element.}
 
 \item{size}{size of the structuring element.}
-
-\item{real_mode.}{If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).}
 }
 \description{
 Erode/dilate image by a structuring element.
