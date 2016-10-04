@@ -15949,6 +15949,18 @@ namespace cimg_library_suffixed {
             if (_cimg_mp_is_vector(arg1) && _cimg_mp_is_scalar(arg2)) _cimg_mp_vector2_vs(mp_mul,arg1,arg2);
             if (_cimg_mp_is_scalar(arg1) && _cimg_mp_is_vector(arg2)) _cimg_mp_vector2_sv(mp_mul,arg1,arg2);
             if (_cimg_mp_is_constant(arg1) && _cimg_mp_is_constant(arg2)) _cimg_mp_constant(mem[arg1]*mem[arg2]);
+
+            if (code) { // Try to spot double multiplication 'a*b*c'.
+              CImg<ulongT> &pop = code.back();
+              if (pop[0]==(ulongT)mp_mul && (pop[1]==arg1 || pop[1]==arg2)) {
+                arg3 = (unsigned int)pop[1];
+                arg4 = (unsigned int)pop[2];
+                arg5 = (unsigned int)pop[3];
+                code.remove();
+                CImg<ulongT>::vector((ulongT)mp_mul2,arg3,arg4,arg5,arg3==arg2?arg1:arg2).move_to(code);
+                _cimg_mp_return(arg3);
+              }
+            }
             if (!arg1 || !arg2) _cimg_mp_return(0);
             _cimg_mp_scalar2(mp_mul,arg1,arg2);
           }
@@ -17137,11 +17149,14 @@ namespace cimg_library_suffixed {
               arg1 = compile(++s1,s2,depth1,0);
               p2 = code._width;
               p3 = mempos;
+
               if (s3<se1) { pos = compile(s3 + 1,se1,depth1,0); compile(++s2,s3,depth1,0); } // Body + proc
               else pos = compile(++s2,se1,depth1,0); // Proc only
+
               _cimg_mp_check_type(arg1,2,1,0);
               arg2 = _cimg_mp_is_vector(pos)?_cimg_mp_vector_size(pos):0; // Output vector size (or 0 if scalar)
-              CImg<ulongT>::vector((ulongT)mp_whiledo,pos,arg1,p2 - p1,code._width - p2,arg2,pos>=p3).move_to(code,p1);
+              CImg<ulongT>::vector((ulongT)mp_whiledo,pos,arg1,p2 - p1,code._width - p2,arg2,
+                                   pos>=p3 && !_cimg_mp_is_constant(pos)).move_to(code,p1);
               _cimg_mp_return(pos);
             }
             break;
@@ -17829,7 +17844,8 @@ namespace cimg_library_suffixed {
               pos = compile(++s1,se1,depth1,0);
               _cimg_mp_check_type(arg1,1,1,0);
               arg2 = _cimg_mp_is_vector(pos)?_cimg_mp_vector_size(pos):0; // Output vector size (or 0 if scalar)
-              CImg<ulongT>::vector((ulongT)mp_whiledo,pos,arg1,p2 - p1,code._width - p2,arg2,pos>=p3).move_to(code,p1);
+              CImg<ulongT>::vector((ulongT)mp_whiledo,pos,arg1,p2 - p1,code._width - p2,arg2,
+                                   pos>=p3 && !_cimg_mp_is_constant(pos)).move_to(code,p1);
               _cimg_mp_return(pos);
             }
             break;
@@ -20081,6 +20097,10 @@ namespace cimg_library_suffixed {
 
       static double mp_mul(_cimg_math_parser& mp) {
         return _mp_arg(2)*_mp_arg(3);
+      }
+
+      static double mp_mul2(_cimg_math_parser& mp) {
+        return _mp_arg(2)*_mp_arg(3)*_mp_arg(4);
       }
 
       static double mp_neq(_cimg_math_parser& mp) {
@@ -31215,7 +31235,7 @@ namespace cimg_library_suffixed {
       if (sx>1 && _width>1) { // Along X-axis.
         const int L = width(), off = 1, s = (int)sx, _s1 = s/2, _s2 = s - _s1, s1 = _s1>L?L:_s1, s2 = _s2>L?L:_s2;
         CImg<T> buf(L);
-#ifdef cimg_use_opemp
+#ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3) firstprivate(buf) if (size()>524288)
 #endif
         cimg_forYZC(*this,y,z,c) {
@@ -31258,7 +31278,7 @@ namespace cimg_library_suffixed {
         const int L = height(), off = width(), s = (int)sy, _s1 = s/2, _s2 = s - _s1, s1 = _s1>L?L:_s1,
           s2 = _s2>L?L:_s2;
         CImg<T> buf(L);
-#ifdef cimg_use_opemp
+#ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3) firstprivate(buf) if (size()>524288)
 #endif
         cimg_forXZC(*this,x,z,c) {
@@ -31302,7 +31322,7 @@ namespace cimg_library_suffixed {
         const int L = depth(), off = width()*height(), s = (int)sz, _s1 = s/2, _s2 = s - _s1, s1 = _s1>L?L:_s1,
           s2 = _s2>L?L:_s2;
         CImg<T> buf(L);
-#ifdef cimg_use_opemp
+#ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3) firstprivate(buf) if (size()>524288)
 #endif
         cimg_forXYC(*this,x,y,c) {
@@ -31507,7 +31527,7 @@ namespace cimg_library_suffixed {
       if (sx>1 && _width>1) { // Along X-axis.
         const int L = width(), off = 1, s = (int)sx, _s2 = s/2 + 1, _s1 = s - _s2, s1 = _s1>L?L:_s1, s2 = _s2>L?L:_s2;
         CImg<T> buf(L);
-#ifdef cimg_use_opemp
+#ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3) firstprivate(buf) if (size()>524288)
 #endif
         cimg_forYZC(*this,y,z,c) {
@@ -31551,7 +31571,7 @@ namespace cimg_library_suffixed {
         const int L = height(), off = width(), s = (int)sy, _s2 = s/2 + 1, _s1 = s - _s2, s1 = _s1>L?L:_s1,
           s2 = _s2>L?L:_s2;
         CImg<T> buf(L);
-#ifdef cimg_use_opemp
+#ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3) firstprivate(buf) if (size()>524288)
 #endif
         cimg_forXZC(*this,x,z,c) {
@@ -31595,7 +31615,7 @@ namespace cimg_library_suffixed {
         const int L = depth(), off = width()*height(), s = (int)sz, _s2 = s/2 + 1, _s1 = s - _s2, s1 = _s1>L?L:_s1,
           s2 = _s2>L?L:_s2;
         CImg<T> buf(L);
-#ifdef cimg_use_opemp
+#ifdef cimg_use_openmp
 #pragma omp parallel for collapse(3) firstprivate(buf) if (size()>524288)
 #endif
         cimg_forXYC(*this,x,y,c) {
@@ -56708,7 +56728,8 @@ namespace cimg {
     return stdin;
 #else
     cimg::exception_mode(0);
-    throw CImgIOException("cimg::stdin(): Reference to 'stdin' stream not allowed in R mode ('cimg_use_r' is defined).");
+    throw CImgIOException("cimg::stdin(): Reference to 'stdin' stream not allowed in R mode "
+                          "('cimg_use_r' is defined).");
     return 0;
 #endif
   }
@@ -56718,7 +56739,8 @@ namespace cimg {
     return stdout;
 #else
     cimg::exception_mode(0);
-    throw CImgIOException("cimg::stdout(): Reference to 'stdout' stream not allowed in R mode ('cimg_use_r' is defined).");
+    throw CImgIOException("cimg::stdout(): Reference to 'stdout' stream not allowed in R mode "
+                          "('cimg_use_r' is defined).");
     return 0;
 #endif
   }
@@ -56728,7 +56750,8 @@ namespace cimg {
     return stderr;
 #else
     cimg::exception_mode(0);
-    throw CImgIOException("cimg::stderr(): Reference to 'stderr' stream not allowed in R mode ('cimg_use_r' is defined).");
+    throw CImgIOException("cimg::stderr(): Reference to 'stderr' stream not allowed in R mode "
+                          "('cimg_use_r' is defined).");
     return 0;
 #endif
   }

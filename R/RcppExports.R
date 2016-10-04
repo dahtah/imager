@@ -451,8 +451,8 @@ blabel <- function(im, high_connectivity = FALSE) {
 #' @param im an image
 #' @param size size of the structuring element.
 #' @param mask Structuring element.
-#' @param boundary_conditions Boundary conditions.
-#' @param normalise Determines if the closing is locally normalised (default FALSE)
+#' @param boundary_conditions Boundary conditions. If FALSE, pixels beyond image boundaries are considered to be 0, if TRUE one. Default: TRUE.
+#' @param real_mode. If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).
 #' @export
 #' @examples
 #' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
@@ -466,12 +466,12 @@ blabel <- function(im, high_connectivity = FALSE) {
 #' plot(dilate(outline,mask))
 #' plot(dilate_rect(outline,5,10))
 #' plot(dilate_square(outline,5)) 
-erode <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
-    .Call('imager_erode', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
+erode <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
+    .Call('imager_erode', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
 }
 
-berode <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
-    .Call('imager_berode', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
+berode <- function(im, mask, boundary_conditions = TRUE) {
+    .Call('imager_berode', PACKAGE = 'imager', im, mask, boundary_conditions)
 }
 
 #' @describeIn erode Erode image by a rectangular structuring element of specified size.
@@ -500,12 +500,12 @@ berode_square <- function(im, size) {
 
 #' @describeIn erode Dilate image by a structuring element.
 #' @export
-dilate <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
-    .Call('imager_dilate', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
+dilate <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
+    .Call('imager_dilate', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
 }
 
-bdilate <- function(im, mask, boundary_conditions = TRUE, normalise = FALSE) {
-    .Call('imager_bdilate', PACKAGE = 'imager', im, mask, boundary_conditions, normalise)
+bdilate <- function(im, mask, boundary_conditions = TRUE) {
+    .Call('imager_bdilate', PACKAGE = 'imager', im, mask, boundary_conditions)
 }
 
 #' @describeIn erode Dilate image by a rectangular structuring element of specified size

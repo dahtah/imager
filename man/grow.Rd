@@ -5,9 +5,9 @@
 \alias{shrink}
 \title{Grow/shrink a pixel set}
 \usage{
-grow(px, x, y = x, z = x)
+grow(px, x, y = x, z = x, boundary = TRUE)
 
-shrink(px, x, y = x, z = x)
+shrink(px, x, y = x, z = x, boundary = TRUE)
 }
 \arguments{
 \item{px}{a pixset}
@@ -17,6 +17,8 @@ shrink(px, x, y = x, z = x)
 \item{y}{width of the rectangular structuring element (if x is an integer value)}
 
 \item{z}{depth of the rectangular structuring element (if x is an integer value)}
+
+\item{boundary}{are pixels beyond the boundary considered to have value TRUE or FALSE (default TRUE)}
 }
 \description{
 Grow/shrink a pixel set through morphological dilation/erosion. The default is to use square or rectangular structuring elements, but an arbitrary structuring element can be given as input. 
@@ -38,6 +40,11 @@ grow(a,8,2) \%>\% plot
 el <- matrix(1,2,2) \%>\% as.cimg
 all.equal(grow(a,el),grow(a,2))
 #Circular structuring element
-
+px.circle(5) \%>\% grow(a,.) \%>\% plot
+#Sometimes boundary conditions matter
+im <- imfill(10,10)
+px <- px.all(im)
+shrink(px,3,bound=TRUE) \%>\% plot(main="Boundary conditions: TRUE")
+shrink(px,3,bound=FALSE) \%>\% plot(main="Boundary conditions: FALSE")
 }
 

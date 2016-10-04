@@ -4,10 +4,14 @@
 \alias{boundary}
 \title{Find the boundary of a shape in a pixel set}
 \usage{
-boundary(px)
+boundary(px, depth = 1, high_connexity = FALSE)
 }
 \arguments{
 \item{px}{pixel set}
+
+\item{depth}{boundary depth (default 1)}
+
+\item{high_connexity}{if FALSE, use 4-point neighbourhood. If TRUE, use 8-point.  (default FALSE)}
 }
 \description{
 Find the boundary of a shape in a pixel set
@@ -15,5 +19,6 @@ Find the boundary of a shape in a pixel set
 \examples{
 px.diamond(10,30,30) \%>\% boundary \%>\% plot
 px.square(10,30,30) \%>\% boundary \%>\% plot
+px.square(10,30,30) \%>\% boundary(depth==3) \%>\% plot
 }
 

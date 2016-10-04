@@ -647,30 +647,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // erode
-NumericVector erode(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
-RcppExport SEXP imager_erode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
+NumericVector erode(NumericVector im, NumericVector mask, bool boundary_conditions, bool real_mode);
+RcppExport SEXP imager_erode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    rcpp_result_gen = Rcpp::wrap(erode(im, mask, boundary_conditions, normalise));
+    Rcpp::traits::input_parameter< bool >::type real_mode(real_modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(erode(im, mask, boundary_conditions, real_mode));
     return rcpp_result_gen;
 END_RCPP
 }
 // berode
-LogicalVector berode(LogicalVector im, LogicalVector mask, bool boundary_conditions, bool normalise);
-RcppExport SEXP imager_berode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
+LogicalVector berode(LogicalVector im, LogicalVector mask, bool boundary_conditions);
+RcppExport SEXP imager_berode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    rcpp_result_gen = Rcpp::wrap(berode(im, mask, boundary_conditions, normalise));
+    rcpp_result_gen = Rcpp::wrap(berode(im, mask, boundary_conditions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -727,30 +726,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // dilate
-NumericVector dilate(NumericVector im, NumericVector mask, bool boundary_conditions, bool normalise);
-RcppExport SEXP imager_dilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
+NumericVector dilate(NumericVector im, NumericVector mask, bool boundary_conditions, bool real_mode);
+RcppExport SEXP imager_dilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    rcpp_result_gen = Rcpp::wrap(dilate(im, mask, boundary_conditions, normalise));
+    Rcpp::traits::input_parameter< bool >::type real_mode(real_modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(dilate(im, mask, boundary_conditions, real_mode));
     return rcpp_result_gen;
 END_RCPP
 }
 // bdilate
-LogicalVector bdilate(LogicalVector im, LogicalVector mask, bool boundary_conditions, bool normalise);
-RcppExport SEXP imager_bdilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP normaliseSEXP) {
+LogicalVector bdilate(LogicalVector im, LogicalVector mask, bool boundary_conditions);
+RcppExport SEXP imager_bdilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< bool >::type boundary_conditions(boundary_conditionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    rcpp_result_gen = Rcpp::wrap(bdilate(im, mask, boundary_conditions, normalise));
+    rcpp_result_gen = Rcpp::wrap(bdilate(im, mask, boundary_conditions));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -206,6 +206,7 @@ Ops.pixset <- function(e1, e2)
 #' @param x either an integer value, or an image/pixel set. 
 #' @param y width of the rectangular structuring element (if x is an integer value)
 #' @param z depth of the rectangular structuring element (if x is an integer value)
+#' @param boundary are pixels beyond the boundary considered to have value TRUE or FALSE (default TRUE)
 #' @examples
 #' #A pixel set:
 #' a <- grayscale(boats) > .8
@@ -218,23 +219,39 @@ Ops.pixset <- function(e1, e2)
 #' el <- matrix(1,2,2) %>% as.cimg
 #' all.equal(grow(a,el),grow(a,2))
 #' #Circular structuring element
-#' 
+#' px.circle(5) %>% grow(a,.) %>% plot
 #' @export
-grow <- function(px,x,y=x,z=x)
+grow <- function(px,x,y=x,z=x,boundary=TRUE)
+{
+    if (is.cimg(x) || is.pixset(x))
     {
-        if (is.cimg(x) || is.pixset(x))
-            {
-                bdilate(px,as.pixset(x))
-            }
-        else if (x==y && y==z)
-            {
-                bdilate_square(px,x)
-            }
-        else
-            {
-                bdilate_rect(px,x,y,z)
-            }
+        bdilate(px,as.pixset(x),boundary=boundary)
     }
+    else if (x==y && y==z)
+    {
+        if (boundary)
+        {
+            bdilate_square(px,x)
+        }
+        else
+        {
+            msk <- array(TRUE,ifelse(dim(px) > 1,x,1)) %>% as.pixset
+            bdilate(px,msk,boundary=FALSE)
+        }
+    }
+    else
+    {
+        if (boundary)
+        {
+            bdilate_rect(px,x,y,z)
+        }
+        else
+        {
+            msk <- array(TRUE,ifelse(dim(px) > 1,c(x,y,z,1),1)) %>% as.pixset
+            bdilate(px,msk,boundary=FALSE)
+        }
+    }
+}
 
 ##' Clean up and fill in pixel sets (morphological opening and closing)
 ##' 
@@ -271,22 +288,44 @@ fill <- function(px,...)
 
 
 #' @describeIn grow shrink pixset using erosion
+#' @examples
+#' #Sometimes boundary conditions matter
+#' im <- imfill(10,10)
+#' px <- px.all(im)
+#' shrink(px,3,bound=TRUE) %>% plot(main="Boundary conditions: TRUE")
+#' shrink(px,3,bound=FALSE) %>% plot(main="Boundary conditions: FALSE")
 #' @export
-shrink <- function(px,x,y=x,z=x)
+shrink <- function(px,x,y=x,z=x,boundary=TRUE)
+{
+    if (is.cimg(x) || is.pixset(x))
     {
-        if (is.cimg(x) || is.pixset(x))
-            {
-                berode(px,as.pixset(x))
-            }
-        else if (x==y && y==z)
-            {
-                berode_square(px,x)
-            }
-        else
-            {
-                berode_rect(px,x,y,z)
-            }
+        berode(px,as.pixset(x),boundary=boundary)
     }
+    else if (x==y && y==z)
+    {
+        if (boundary)
+        {
+            berode_square(px,x)
+        }
+        else
+        {
+            msk <- array(TRUE,ifelse(dim(px) > 1,x,1)) %>% as.pixset
+            berode(px, msk,boundary=FALSE)
+        }
+    }
+    else
+    {
+        if (boundary)
+        {
+            berode_rect(px,x,y,z)
+        }
+        else
+        {
+            msk <- array(TRUE,ifelse(dim(px) > 1,c(x,y,z,1),1)) %>% as.pixset
+            berode(px,msk,boundary=FALSE)
+        }
+    }
+}
 
 
 ##' Various useful pixsets
@@ -386,14 +425,37 @@ px.borders <- function(im,n=1)
     (px.left(im,n) | px.right(im,n)) | (px.top(im,n) | px.bottom(im,n))
 }
 
+#' @describeIn common_pixsets all pixels in image
+#' @export
+px.all <- function(im)
+{
+    array(TRUE,dim=dim(im)) %>% pixset
+}
+
+#' @describeIn common_pixsets no pixel in image
+#' @export
+px.none <- function(im)
+{
+    array(FALSE,dim=dim(im)) %>% pixset
+}
+
+
 #' Find the boundary of a shape in a pixel set
 #' 
 #' @param px pixel set
+#' @param depth boundary depth (default 1)
+#' @param high_connexity if FALSE, use 4-point neighbourhood. If TRUE, use 8-point.  (default FALSE)
 #' @examples
 #' px.diamond(10,30,30) %>% boundary %>% plot
 #' px.square(10,30,30) %>% boundary %>% plot
+#' px.square(10,30,30) %>% boundary(depth==3) %>% plot
+#' px <- (px.square(10,30,30) | px.circle(12,30,30))
+#' boundary(px,high=TRUE) %>% plot(int=TRUE,main="8-point neighbourhood")
+#' boundary(px,high=TRUE) %>% plot(int=FALSE,main="4-point neighbourhood")
 #' @export
-boundary <- function(px)
-    {
-        bdistance_transform(px,FALSE) == 1
-    }
+boundary <- function(px,depth=1,high_connexity=FALSE)
+{
+    a <- if (high_connexity) sqrt(2) else 1
+    bd <- bdistance_transform(px,FALSE)
+    (bd <= depth*a) & px
+}
