@@ -2,11 +2,13 @@
 % Please edit documentation in R/pixset.R
 \name{common_pixsets}
 \alias{common_pixsets}
+\alias{px.all}
 \alias{px.borders}
 \alias{px.bottom}
 \alias{px.circle}
 \alias{px.diamond}
 \alias{px.left}
+\alias{px.none}
 \alias{px.right}
 \alias{px.square}
 \alias{px.top}
@@ -27,6 +29,10 @@ px.bottom(im, n = 1)
 px.right(im, n = 1)
 
 px.borders(im, n = 1)
+
+px.all(im)
+
+px.none(im)
 }
 \arguments{
 \item{r}{radius (in pixels)}
@@ -67,6 +73,10 @@ px.square is also similar but returns a square (Linf distance less than r)
 \item \code{px.right}: n right-most pixels
 
 \item \code{px.borders}: image borders (to depth n)
+
+\item \code{px.all}: all pixels in image
+
+\item \code{px.none}: no pixel in image
 }}
 \examples{
 px.circle(20,350,350) \%>\% plot(interp=FALSE)

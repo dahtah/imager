@@ -60,8 +60,8 @@ NumericVector blabel(LogicalVector im,bool high_connectivity=false)
 //' @param im an image
 //' @param size size of the structuring element.
 //' @param mask Structuring element.
-//' @param boundary_conditions Boundary conditions.
-//' @param normalise Determines if the closing is locally normalised (default FALSE)
+//' @param boundary_conditions Boundary conditions. If FALSE, pixels beyond image boundaries are considered to be 0, if TRUE one. Default: TRUE.
+//' @param real_mode. If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).
 //' @export
 //' @examples
 //' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
@@ -76,11 +76,11 @@ NumericVector blabel(LogicalVector im,bool high_connectivity=false)
 //' plot(dilate_rect(outline,5,10))
 //' plot(dilate_square(outline,5)) 
 // [[Rcpp::export]]
-NumericVector erode(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
+NumericVector erode(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool real_mode=false) {
   CId img = as<CId >(im);
   try{
     CId msk = as<CId >(mask);
-    img.erode(msk,boundary_conditions,normalise);
+    img.erode(msk,boundary_conditions,real_mode);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
@@ -91,15 +91,14 @@ NumericVector erode(NumericVector im,NumericVector mask, bool boundary_condition
 
 
 // [[Rcpp::export]]
-LogicalVector berode(LogicalVector im,LogicalVector mask, bool boundary_conditions=true,bool normalise = false) {
+LogicalVector berode(LogicalVector im,LogicalVector mask, bool boundary_conditions=true) {
   CIb img = as<CIb >(im);
   try{
     CIb msk = as<CIb >(mask);
-    img.erode(msk,boundary_conditions,normalise);
+    img.erode(msk,boundary_conditions,false);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
-    
   }
   return wrap(img);
 }
@@ -170,11 +169,11 @@ LogicalVector berode_square(LogicalVector im,int size) {
 //' @describeIn erode Dilate image by a structuring element.
 //' @export
 // [[Rcpp::export]]
-NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
+NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool real_mode = false) {
   CId img = as<CId >(im);
   CId msk = as<CId >(mask);
   try{
-    img.dilate(msk,boundary_conditions,normalise);
+    img.dilate(msk,boundary_conditions,real_mode);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
@@ -184,11 +183,11 @@ NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditio
 }
 
 // [[Rcpp::export]]
-LogicalVector bdilate(LogicalVector im,LogicalVector mask, bool boundary_conditions=true,bool normalise = false) {
+LogicalVector bdilate(LogicalVector im,LogicalVector mask, bool boundary_conditions=true) {
   CIb img = as<CIb >(im);
   CIb msk = as<CIb >(mask);
   try{
-    img.dilate(msk,boundary_conditions,normalise);
+    img.dilate(msk,boundary_conditions,false);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
