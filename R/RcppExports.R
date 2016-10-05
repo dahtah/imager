@@ -7,6 +7,18 @@ RGBtoHSL <- function(im) {
     .Call('imager_RGBtoHSL', PACKAGE = 'imager', im)
 }
 
+#' @describeIn imager.colourspaces CIE RGB to CIE XYZ (1931) conversion, D65 white point
+#' @export
+RGBtoXYZ <- function(im) {
+    .Call('imager_RGBtoXYZ', PACKAGE = 'imager', im)
+}
+
+#' @describeIn imager.colourspaces CIE XYZ to CIE RGB (1931) conversion, D65 white point
+#' @export
+XYZtoRGB <- function(im) {
+    .Call('imager_XYZtoRGB', PACKAGE = 'imager', im)
+}
+
 #' @describeIn imager.colourspaces HSL to RGB conversion 
 #' @export
 HSLtoRGB <- function(im) {

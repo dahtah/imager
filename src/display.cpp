@@ -17,14 +17,15 @@ void display_(NumericVector im,bool rescale=true)
      {
        norm = 0;
      }
+   img.disp("",norm,false,false);
    CImgDisplay disp(img,"",norm,false,false);
    while (true)
       {
-	if (disp.is_closed() or disp.is_key(cimg::keyESC))
-	  {
-	    break;
-	  }
-	Rcpp::checkUserInterrupt();
+   	if (disp.is_closed() or disp.is_key(cimg::keyESC))
+   	  {
+   	    break;
+   	  }
+   	Rcpp::checkUserInterrupt();
       }
 
    return;
@@ -34,7 +35,7 @@ void display_(NumericVector im,bool rescale=true)
 void display_list(List imlist)
 {
    CImgList<double> L = sharedCImgList(imlist);
-   L.display();
+   L.display("",false);
    return;
 }
 

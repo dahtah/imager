@@ -7,9 +7,11 @@
 \alias{RGBtoHSI}
 \alias{RGBtoHSL}
 \alias{RGBtoHSV}
+\alias{RGBtoXYZ}
 \alias{RGBtoYCbCr}
 \alias{RGBtoYUV}
 \alias{RGBtosRGB}
+\alias{XYZtoRGB}
 \alias{YCbCrtoRGB}
 \alias{YUVtoRGB}
 \alias{imager.colourspaces}
@@ -17,6 +19,10 @@
 \title{Colour space conversions in imager}
 \usage{
 RGBtoHSL(im)
+
+RGBtoXYZ(im)
+
+XYZtoRGB(im)
 
 HSLtoRGB(im)
 
@@ -49,6 +55,10 @@ All functions listed here assume the input image has three colour channels (spec
 \section{Functions}{
 \itemize{
 \item \code{RGBtoHSL}: RGB to HSL conversion
+
+\item \code{RGBtoXYZ}: CIE RGB to CIE XYZ (1931) conversion, D65 white point
+
+\item \code{XYZtoRGB}: CIE XYZ to CIE RGB (1931) conversion, D65 white point
 
 \item \code{HSLtoRGB}: HSL to RGB conversion
 

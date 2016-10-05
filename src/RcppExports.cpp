@@ -17,6 +17,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RGBtoXYZ
+NumericVector RGBtoXYZ(NumericVector im);
+RcppExport SEXP imager_RGBtoXYZ(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(RGBtoXYZ(im));
+    return rcpp_result_gen;
+END_RCPP
+}
+// XYZtoRGB
+NumericVector XYZtoRGB(NumericVector im);
+RcppExport SEXP imager_XYZtoRGB(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(XYZtoRGB(im));
+    return rcpp_result_gen;
+END_RCPP
+}
 // HSLtoRGB
 NumericVector HSLtoRGB(NumericVector im);
 RcppExport SEXP imager_HSLtoRGB(SEXP imSEXP) {

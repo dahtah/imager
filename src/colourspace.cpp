@@ -12,6 +12,25 @@ NumericVector RGBtoHSL(NumericVector im) {
   return wrap(img);
 }
 
+//' @describeIn imager.colourspaces CIE RGB to CIE XYZ (1931) conversion, D65 white point
+//' @export
+// [[Rcpp::export]]
+NumericVector RGBtoXYZ(NumericVector im) {
+  CId img = as<CId >(im);
+  img.RGBtoXYZ();
+  return wrap(img);
+}
+
+//' @describeIn imager.colourspaces CIE XYZ to CIE RGB (1931) conversion, D65 white point
+//' @export
+// [[Rcpp::export]]
+NumericVector XYZtoRGB(NumericVector im) {
+  CId img = as<CId >(im);
+  img.XYZtoRGB();
+  return wrap(img);
+}
+
+
 //' @describeIn imager.colourspaces HSL to RGB conversion 
 //' @export
 // [[Rcpp::export]]
