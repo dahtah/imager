@@ -17,7 +17,6 @@ void display_(NumericVector im,bool rescale=true)
      {
        norm = 0;
      }
-   img.disp("",norm,false,false);
    CImgDisplay disp(img,"",norm,false,false);
    while (true)
       {
