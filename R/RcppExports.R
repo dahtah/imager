@@ -157,7 +157,7 @@ deriche <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
 #' @param im an image
 #' @param sigma standard deviation of the Gaussian filter
 #' @param order the order of the filter 0,1,2,3
-#' @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
+#' @param axis Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
 #' @param neumann If true, use Neumann boundary conditions (default false, Dirichlet)
 #' @references
 #'       From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
