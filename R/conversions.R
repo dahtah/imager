@@ -6,7 +6,7 @@
 ##' 
 ##' @param x an image of class cimg
 ##' @param ... arguments passed to pixel.grid
-##' @param wide if "c" or "d" return a data.frame that is wide along colour or depth (for example with rgb values along columns). The default is FALSE, with each pixel forming a seperate entry. 
+##' @param wide if "c" or "d" return a data.frame that is wide along colour or depth (for example with rgb values along columns). The default is FALSE, with each pixel forming a separate entry. 
 ##' @return a data.frame
 ##' @author Simon Barthelme
 ##' @examples
