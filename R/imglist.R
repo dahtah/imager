@@ -48,7 +48,7 @@ as.list.imlist <- function(x,...) { class(x) <- "list"; x }
 ##' Convert image list to data.frame
 ##'
 ##' @param x an image list (an imlist object)
-##' @param index Name of the colum containing the index (or name) of the image in the list. Default: "im"
+##' @param index Name of the column containing the index (or name) of the image in the list. Default: "im"
 ##' @param ... Passed on to as.data.frame.cimg
 ##' @examples
 ##' #Transform the image gradient into a data.frame
