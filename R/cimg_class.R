@@ -1050,7 +1050,7 @@ display.cimg <- function(x,...,rescale=TRUE)
 
 ##' Display object using CImg library
 ##'
-##' CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in Rstudio.
+##' CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in RStudio.
 ##' @param x an image or a list of images
 ##' @param ... ignored
 ##' @seealso display.cimg, display.imlist
