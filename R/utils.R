@@ -2,7 +2,7 @@
 
 ##' Compute the periodic part of an image, using the periodic/smooth decomposition of Moisan (2009)
 ##'
-##' Moisan (2009) defines an additive image decomposition
+##' Moisan (2011) defines an additive image decomposition
 ##' im = periodic + smooth
 ##' where the periodic part shouldn't be too far from the original image. The periodic part can be used in frequency-domain analyses, to reduce the artifacts induced by non-periodicity.
 ##' 
