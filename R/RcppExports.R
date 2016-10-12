@@ -724,7 +724,7 @@ save_image <- function(im, fname) {
 #' @param im an image 
 #' @param axis the axis along which to split (for example 'c')
 #' @param nb number of objects to split into. 
-#' if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels
+#' if nb=-1 (the default) the maximum number of splits is used, i.e. split(im,"c") produces a list containing all individual colour channels
 #' @seealso imappend (the reverse operation)
 im_split <- function(im, axis, nb = -1L) {
     .Call('imager_im_split', PACKAGE = 'imager', im, axis, nb)
