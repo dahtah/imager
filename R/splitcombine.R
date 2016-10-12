@@ -70,7 +70,7 @@ iiply <- function(im,axis,fun,...)
 ##' @param im an image 
 ##' @param axis the axis along which to split (for example 'c')
 ##' @param nb number of objects to split into. 
-##' if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels.
+##' if nb=-1 (the default) the maximum number of splits is used, i.e. split(im,"c") produces a list containing all individual colour channels.
 ## if nb = -px, with px > 1 split into blocks of px pixels.
 ##' @seealso imappend (the reverse operation)
 ##' @examples
