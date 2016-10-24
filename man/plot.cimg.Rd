@@ -6,7 +6,8 @@
 \usage{
 \method{plot}{cimg}(x, frame, xlim = c(1, width(x)), ylim = c(height(x), 1),
   xlab = "x", ylab = "y", rescale = TRUE, colourscale = NULL,
-  colorscale = NULL, interpolate = TRUE, ...)
+  colorscale = NULL, interpolate = TRUE, axes = TRUE, xaxs = "i",
+  yaxs = "i", asp = 1, ...)
 }
 \arguments{
 \item{x}{the image}
@@ -26,6 +27,14 @@
 \item{colourscale, colorscale}{an optional colour scale (default is gray or rgb)}
 
 \item{interpolate}{should the image be plotted with antialiasing (default TRUE)}
+
+\item{axes}{Whether to draw axes (default TRUE)}
+
+\item{xaxs}{The style of axis interval calculation to be used for the x-axis. See ?par}
+
+\item{yaxs}{The style of axis interval calculation to be used for the y-axis. See ?par}
+
+\item{asp}{aspect ratio. The default value (1) means that the aspect ratio of the image will be kept regardless of the dimensions of the plot. A numeric value other than one changes the aspect ratio, but it will be kept the same regardless of dimensions. Setting asp="varing" means the aspect ratio will depend on plot dimensions (this used to be the default in versions of imager < 0.40)}
 
 \item{...}{other parameters to be passed to plot.default (eg "main")}
 }

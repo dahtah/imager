@@ -85,16 +85,6 @@ YUVtoRGB <- function(im) {
     .Call('imager_YUVtoRGB', PACKAGE = 'imager', im)
 }
 
-#' Convert an RGB image to grayscale 
-#' 
-#' This function converts from RGB to grayscale by first converting to HSL and keeping only the L channel
-#' @param im an RGB image 
-#' @return a grayscale image (spectrum == 1)
-#' @export
-grayscale <- function(im) {
-    .Call('imager_grayscale', PACKAGE = 'imager', im)
-}
-
 getXc <- function(x, y, z, c) {
     .Call('imager_getXc', PACKAGE = 'imager', x, y, z, c)
 }
@@ -639,15 +629,14 @@ imrotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
 #' @param angle Rotation angle, in degrees.
 #' @param cx X-coordinate of the rotation center.
 #' @param cy Y-coordinate of the rotation center.
-#' @param zoom Zoom factor.
 #' @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
 #' @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
 #' @examples
 #' rotate_xy(boats,30,200,400) %>% plot
 #' rotate_xy(boats,30,200,400,boundary=2) %>% plot
 #' @export
-rotate_xy <- function(im, angle, cx, cy, zoom = 1, interpolation = 1L, boundary_conditions = 0L) {
-    .Call('imager_rotate_xy', PACKAGE = 'imager', im, angle, cx, cy, zoom, interpolation, boundary_conditions)
+rotate_xy <- function(im, angle, cx, cy, interpolation = 1L, boundary_conditions = 0L) {
+    .Call('imager_rotate_xy', PACKAGE = 'imager', im, angle, cx, cy, interpolation, boundary_conditions)
 }
 
 #' Mirror image content along specified axis 

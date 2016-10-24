@@ -51,7 +51,6 @@ NumericVector imrotate(NumericVector im,float  	angle,
 //' @param angle Rotation angle, in degrees.
 //' @param cx X-coordinate of the rotation center.
 //' @param cy Y-coordinate of the rotation center.
-//' @param zoom Zoom factor.
 //' @param interpolation Interpolation type. 0=nearest | 1=linear | 2=cubic 
 //' @param boundary_conditions Boundary conditions. 0=dirichlet | 1=neumann | 2=periodic 
 //' @examples
@@ -61,7 +60,7 @@ NumericVector imrotate(NumericVector im,float  	angle,
 // [[Rcpp::export]]
 NumericVector rotate_xy(NumericVector im,
 			float  	angle,
-			float cx,float cy, float zoom=1,
+			float cx,float cy,
 			unsigned int interpolation = 1,
 			unsigned int boundary_conditions = 0)
 {
@@ -70,7 +69,7 @@ NumericVector rotate_xy(NumericVector im,
 
 
   try{
-    out.rotate(angle,cx,cy,zoom,interpolation,boundary_conditions);
+    out.rotate(angle,cx,cy,interpolation,boundary_conditions);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);

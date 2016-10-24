@@ -50,7 +50,7 @@ flattenAlpha <- function(im)
 ##' #You can change the rendering of the initial image
 ##' im <- grayscale(boats)
 ##' draw.fun <- function() text(150,50,"Boats!!!",cex=3)
-##' out <- implot(im,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
+##' out <- implot(im/255,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
 ##' plot(out)
 ##' @author Simon Barthelme
 implot <- function(im,expr,...)

@@ -96,6 +96,10 @@ NULL
 ##' @param xlab x axis label
 ##' @param ylab y axis label
 ##' @param interpolate should the image be plotted with antialiasing (default TRUE)
+##' @param asp aspect ratio. The default value (1) means that the aspect ratio of the image will be kept regardless of the dimensions of the plot. A numeric value other than one changes the aspect ratio, but it will be kept the same regardless of dimensions. Setting asp="varing" means the aspect ratio will depend on plot dimensions (this used to be the default in versions of imager < 0.40)
+##' @param xaxs The style of axis interval calculation to be used for the x-axis. See ?par
+##' @param yaxs The style of axis interval calculation to be used for the y-axis. See ?par
+##' @param axes Whether to draw axes (default TRUE)
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster, as.raster, which converts images to R raster objects
 ##' @export
@@ -134,7 +138,7 @@ NULL
 ##' boats.small <- imresize(boats,.3)
 ##' plot(boats.small,interp=TRUE)
 ##' plot(boats.small,interp=FALSE)
-plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,...)
+plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,axes=TRUE,xaxs="i",yaxs="i",asp=1,...)
     {
         im <- x
         if (depth(im) > 1)
@@ -152,8 +156,24 @@ plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",yl
         }
         else
         {
-            plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",...)
-            as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
+            if (is.character(asp) && asp == "varying")
+            {
+                plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",xaxs=xaxs,yaxs=yaxs,axes=axes,...)
+                as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
+            }
+            else if (is.numeric(asp))
+            {
+                plot.new()
+                plot.window(xlim = xlim, ylim = ylim,asp=asp,xaxs=xaxs,yaxs=yaxs,...)
+                rst <- as.raster(x,rescale=rescale,colorscale=colorscale,colourscale=colourscale)
+                rasterImage(rst, 1, nrow(rst), ncol(rst), 1)
+                if (axes) { axis(1); axis(2) }
+            }
+            else
+            {
+                stop("Invalid value for parameter asp")
+            }
+            
         }
     }
 
@@ -547,7 +567,7 @@ load.image <- function(file)
                 dim(bmp) <- c(dim(bmp),1,1)
             }
             bmp <- cimg(bmp) %>% mirror("x") %>% imrotate(-90)
-            bmp
+            255*bmp
         }
         else #Loading with read.bitmap has failed, try with ImageMagick
         {

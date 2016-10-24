@@ -160,17 +160,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// grayscale
-NumericVector grayscale(NumericVector im);
-RcppExport SEXP imager_grayscale(SEXP imSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
-    rcpp_result_gen = Rcpp::wrap(grayscale(im));
-    return rcpp_result_gen;
-END_RCPP
-}
 // getXc
 NumericVector getXc(int x, int y, int z, int c);
 RcppExport SEXP imager_getXc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
@@ -945,8 +934,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // rotate_xy
-NumericVector rotate_xy(NumericVector im, float angle, float cx, float cy, float zoom, unsigned int interpolation, unsigned int boundary_conditions);
-RcppExport SEXP imager_rotate_xy(SEXP imSEXP, SEXP angleSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP zoomSEXP, SEXP interpolationSEXP, SEXP boundary_conditionsSEXP) {
+NumericVector rotate_xy(NumericVector im, float angle, float cx, float cy, unsigned int interpolation, unsigned int boundary_conditions);
+RcppExport SEXP imager_rotate_xy(SEXP imSEXP, SEXP angleSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP interpolationSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -954,10 +943,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type angle(angleSEXP);
     Rcpp::traits::input_parameter< float >::type cx(cxSEXP);
     Rcpp::traits::input_parameter< float >::type cy(cySEXP);
-    Rcpp::traits::input_parameter< float >::type zoom(zoomSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type interpolation(interpolationSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type boundary_conditions(boundary_conditionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(rotate_xy(im, angle, cx, cy, zoom, interpolation, boundary_conditions));
+    rcpp_result_gen = Rcpp::wrap(rotate_xy(im, angle, cx, cy, interpolation, boundary_conditions));
     return rcpp_result_gen;
 END_RCPP
 }

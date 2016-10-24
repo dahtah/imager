@@ -132,17 +132,11 @@ NumericVector YUVtoRGB(NumericVector im) {
   return wrap(img);
 }
 
-//' Convert an RGB image to grayscale 
-//' 
-//' This function converts from RGB to grayscale by first converting to HSL and keeping only the L channel
-//' @param im an RGB image 
-//' @return a grayscale image (spectrum == 1)
-//' @export
-// [[Rcpp::export]]
-NumericVector grayscale(NumericVector im) {
-  CId img = as<CId >(im);
-  return wrap(img.RGBtoHSL().get_channel(2));
-}
+
+// NumericVector grayscale_(NumericVector im) {
+//   CId img = as<CId >(im);
+//   return wrap(img.RGBtoHSL().get_channel(2));
+// }
 
 
 

@@ -400,3 +400,51 @@ as.matrix.cimg <- function(x,...) {
             stop("Too many non-empty dimensions")
         }
 }
+
+##' Convert an RGB image to grayscale 
+##' 
+##' This function converts from RGB images to grayscale 
+##' @param im an RGB image
+##' @param method either "Luma", in which case a linear approximation to luminance is used, or "XYZ", in which case the image is assumed to be in sRGB color space and CIE luminance is used.
+##' @param drop if TRUE returns an image with a single channel, otherwise keep the three channels (default TRUE)
+##' @param rescale if TRUE images with RGB values in 0..1 are rescaled to 0..255 internally. Default TRUE. 
+##' @return a grayscale image (spectrum == 1)
+##' @examples
+##' grayscale(boats) %>% plot
+##' #In many pictures, the difference between Luma and XYZ conversion is subtle 
+##' grayscale(boats,method="XYZ") %>% plot
+##' grayscale(boats,method="XYZ",drop=FALSE) %>% dim
+##' @export
+grayscale <- function(im,method="Luma",rescale=TRUE,drop=TRUE)
+{
+    if (rescale)
+    {
+        if (max(im) <= 1) im <- 255*im
+    }
+    if (method=="XYZ")
+    {
+        xyz <- sRGBtoRGB(im) %>% RGBtoXYZ 
+        im <- add.colour(G(xyz)) %>% XYZtoRGB %>% RGBtosRGB
+        if (drop)
+        {
+            R(im)
+        }
+        else
+        {
+            im
+        }
+    }
+    else if (method=="Luma")
+    {
+        bw <- .3*R(im)+.59*G(im)+.11*B(im)
+        if (drop)
+        {
+            bw
+        }
+        else
+        {
+            add.colour(bw)
+        }
+    }
+}
+
