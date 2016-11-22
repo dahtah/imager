@@ -4,6 +4,7 @@
 \alias{add}
 \alias{average}
 \alias{enorm}
+\alias{equal}
 \alias{imager.combine}
 \alias{mult}
 \alias{parmax}
@@ -29,6 +30,8 @@ parmin.abs(x)
 parmin(x)
 
 enorm(x)
+
+equal(x)
 
 which.parmax(x)
 
@@ -58,6 +61,8 @@ The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 othe
 \item \code{parmin}: Parallel min over images
 
 \item \code{enorm}: Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
+
+\item \code{equal}: Test equality
 
 \item \code{which.parmax}: index of parallel maxima
 

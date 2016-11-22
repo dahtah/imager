@@ -459,3 +459,42 @@ boundary <- function(px,depth=1,high_connexity=FALSE)
     bd <- bdistance_transform(px,FALSE)
     (bd <= depth*a) & px
 }
+
+
+
+highlight <- function(px,col="red",mode="contour",...)
+{
+    if (spectrum(px) == 1)
+    {
+        contours(px) %>% purrr::walk(function(v) lines(v$x,v$y,col=col,...))
+    }
+    else
+    {
+        contours(px) %>% purrr::flatten %>% purrr::walk(function(v) lines(v$x,v$y,col=col,...))
+    }
+}
+
+#' Select a region of homogeneous colour 
+#'
+#' Select pixels that are similar to a seed pixel. The underlying algorithm is the same as the bucket fill (AKA flood fill). Unlike with the bucket fill, the image isn't changed, the function simply returns a pixel set containing the selected pixels.
+#'
+#' Old name: selectSimilar, now an alias.
+#' 
+#' @param im an image
+#' @param x X-coordinate of the starting point of the region to flood
+#' @param y Y-coordinate of the starting point of the region to flood
+#' @param z Z-coordinate of the starting point of the region to flood
+#' @param sigma Tolerance concerning neighborhood values.
+#' @param high_connexity Use 8-connexity (only for 2d images, default FALSE).
+#' @export
+#' @examples
+#' #Select part of a sail 
+#' px <- px.flood(boats,x=169,y=179,sigma=.2) 
+#' plot(boats)
+#' highlight(px)
+#' @seealso bucketfill
+#' @export
+px.flood <- function(im,x,y,z=1,sigma=0,high_connexity=FALSE)
+    {
+        bucket_select(im,x,y,z,sigma,high_connexity)
+    }

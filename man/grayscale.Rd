@@ -4,14 +4,12 @@
 \alias{grayscale}
 \title{Convert an RGB image to grayscale}
 \usage{
-grayscale(im, method = "Luma", rescale = TRUE, drop = TRUE)
+grayscale(im, method = "Luma", drop = TRUE)
 }
 \arguments{
 \item{im}{an RGB image}
 
 \item{method}{either "Luma", in which case a linear approximation to luminance is used, or "XYZ", in which case the image is assumed to be in sRGB color space and CIE luminance is used.}
-
-\item{rescale}{if TRUE images with RGB values in 0..1 are rescaled to 0..255 internally. Default TRUE.}
 
 \item{drop}{if TRUE returns an image with a single channel, otherwise keep the three channels (default TRUE)}
 }
