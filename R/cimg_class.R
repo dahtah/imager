@@ -1072,7 +1072,7 @@ NULL
 #' Press escape or close the window to exit.
 #'
 #' @param x an image (cimg object)
-#' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
+#' @param rescale if true pixel values are rescaled to [0-1] (default TRUE)
 #' @param ... ignored
 #' @export
 #' @examples
@@ -1083,7 +1083,7 @@ NULL
 #' ##display(boats/2,FALSE) #Normalisation off, so different from above
 display.cimg <- function(x,...,rescale=TRUE)
 {
-    display_(x,rescale)
+    display_(x*255,rescale)
 }
 
 ##' Display object using CImg library
