@@ -225,7 +225,7 @@ grow <- function(px,x,y=x,z=x,boundary=TRUE)
 {
     if (is.cimg(x) || is.pixset(x))
     {
-        bdilate(px,as.pixset(x),boundary=boundary)
+        bdilate(px,as.pixset(x),boundary_conditions=boundary)
     }
     else if (x==y && y==z)
     {
@@ -236,7 +236,7 @@ grow <- function(px,x,y=x,z=x,boundary=TRUE)
         else
         {
             msk <- array(TRUE,ifelse(dim(px) > 1,x,1)) %>% as.pixset
-            bdilate(px,msk,boundary=FALSE)
+            bdilate(px,msk,boundary_conditions=FALSE)
         }
     }
     else
@@ -248,7 +248,7 @@ grow <- function(px,x,y=x,z=x,boundary=TRUE)
         else
         {
             msk <- array(TRUE,ifelse(dim(px) > 1,c(x,y,z,1),1)) %>% as.pixset
-            bdilate(px,msk,boundary=FALSE)
+            bdilate(px,msk,boundary_conditions=FALSE)
         }
     }
 }
@@ -299,7 +299,7 @@ shrink <- function(px,x,y=x,z=x,boundary=TRUE)
 {
     if (is.cimg(x) || is.pixset(x))
     {
-        berode(px,as.pixset(x),boundary=boundary)
+        berode(px,as.pixset(x),boundary_conditions=boundary)
     }
     else if (x==y && y==z)
     {
@@ -310,7 +310,7 @@ shrink <- function(px,x,y=x,z=x,boundary=TRUE)
         else
         {
             msk <- array(TRUE,ifelse(dim(px) > 1,x,1)) %>% as.pixset
-            berode(px, msk,boundary=FALSE)
+            berode(px, msk,boundary_conditions=FALSE)
         }
     }
     else
@@ -322,7 +322,7 @@ shrink <- function(px,x,y=x,z=x,boundary=TRUE)
         else
         {
             msk <- array(TRUE,ifelse(dim(px) > 1,c(x,y,z,1),1)) %>% as.pixset
-            berode(px,msk,boundary=FALSE)
+            berode(px,msk,boundary_conditions=FALSE)
         }
     }
 }
@@ -461,7 +461,22 @@ boundary <- function(px,depth=1,high_connexity=FALSE)
 }
 
 
-
+##' Highlight pixel set on image
+##'
+##' Overlay an image plot with the contours of a pixel set. Note that this function doesn't do the image plotting, just the highlighting. 
+##' 
+##' @param px a pixel set 
+##' @param col color of the contours
+##' @param ... passed to the "lines" function
+##' @author Simon Barthelme
+##' @examples
+##' #Select similar pixels around point (180,200)
+##' px <- px.flood(boats,180,200,sigma=.08)
+##' plot(boats)
+##' #Highlight selected set
+##' highlight(px)
+##' px.flood(boats,18,50,sigma=.08) %>% highlight(col="white",lwd=3)
+##' @export
 highlight <- function(px,col="red",mode="contour",...)
 {
     if (spectrum(px) == 1)
@@ -478,7 +493,7 @@ highlight <- function(px,col="red",mode="contour",...)
 #'
 #' Select pixels that are similar to a seed pixel. The underlying algorithm is the same as the bucket fill (AKA flood fill). Unlike with the bucket fill, the image isn't changed, the function simply returns a pixel set containing the selected pixels.
 #'
-#' Old name: selectSimilar, now an alias.
+#' Old name: selectSimilar (deprecated)
 #' 
 #' @param im an image
 #' @param x X-coordinate of the starting point of the region to flood

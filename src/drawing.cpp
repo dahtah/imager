@@ -20,7 +20,7 @@ NumericVector bucket_fill(NumericVector im,int x,int y,int z,NumericVector color
 NumericVector bucket_select(NumericVector im,int x,int y,int z,float sigma=0,bool high_connexity=false)
 {
   CId img = as<CId >(im);
-  CIb out(img);
+  CIb out;
 
   try{
     NumericVector color(img.spectrum());
@@ -29,7 +29,6 @@ NumericVector bucket_select(NumericVector im,int x,int y,int z,float sigma=0,boo
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
-    
   }
   return wrap(out);
 }

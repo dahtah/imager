@@ -23,7 +23,7 @@ px.flood(im, x, y, z = 1, sigma = 0, high_connexity = FALSE)
 Select pixels that are similar to a seed pixel. The underlying algorithm is the same as the bucket fill (AKA flood fill). Unlike with the bucket fill, the image isn't changed, the function simply returns a pixel set containing the selected pixels.
 }
 \details{
-Old name: selectSimilar, now an alias.
+Old name: selectSimilar (deprecated)
 }
 \examples{
 #Select part of a sail 
