@@ -160,6 +160,72 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LabtoRGB
+NumericVector LabtoRGB(NumericVector im);
+RcppExport SEXP imager_LabtoRGB(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(LabtoRGB(im));
+    return rcpp_result_gen;
+END_RCPP
+}
+// RGBtoLab
+NumericVector RGBtoLab(NumericVector im);
+RcppExport SEXP imager_RGBtoLab(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(RGBtoLab(im));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LabtoXYZ
+NumericVector LabtoXYZ(NumericVector im);
+RcppExport SEXP imager_LabtoXYZ(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(LabtoXYZ(im));
+    return rcpp_result_gen;
+END_RCPP
+}
+// XYZtoLab
+NumericVector XYZtoLab(NumericVector im);
+RcppExport SEXP imager_XYZtoLab(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(XYZtoLab(im));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LabtosRGB
+NumericVector LabtosRGB(NumericVector im);
+RcppExport SEXP imager_LabtosRGB(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(LabtosRGB(im));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sRGBtoLab
+NumericVector sRGBtoLab(NumericVector im);
+RcppExport SEXP imager_sRGBtoLab(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(sRGBtoLab(im));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getXc
 NumericVector getXc(int x, int y, int z, int c);
 RcppExport SEXP imager_getXc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {

@@ -407,7 +407,6 @@ as.matrix.cimg <- function(x,...) {
 ##' @param im an RGB image
 ##' @param method either "Luma", in which case a linear approximation to luminance is used, or "XYZ", in which case the image is assumed to be in sRGB color space and CIE luminance is used.
 ##' @param drop if TRUE returns an image with a single channel, otherwise keep the three channels (default TRUE)
-##' @param rescale if TRUE images with RGB values in 0..1 are rescaled to 0..255 internally. Default TRUE. 
 ##' @return a grayscale image (spectrum == 1)
 ##' @examples
 ##' grayscale(boats) %>% plot
@@ -415,11 +414,16 @@ as.matrix.cimg <- function(x,...) {
 ##' grayscale(boats,method="XYZ") %>% plot
 ##' grayscale(boats,method="XYZ",drop=FALSE) %>% dim
 ##' @export
-grayscale <- function(im,method="Luma",rescale=TRUE,drop=TRUE)
+grayscale <- function(im,method="Luma",drop=TRUE)
 {
-    if (rescale)
+    if (spectrum(im)==1)
     {
-        if (max(im) <= 1) im <- 255*im
+        warning("Image appears to already be in grayscale mode")
+        im
+    }
+    else  if (spectrum(im) != 3)
+    {
+        stop("Image should have three colour channels")
     }
     if (method=="XYZ")
     {

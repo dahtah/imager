@@ -8,7 +8,7 @@
 ##' @name grab
 ##' @param im an image
 ##' @param coord if TRUE, return coordinates. if FALSE, content
-##' @return either a vector of coordinates, or an image
+##' @return either a vector of coordinates, or an image with a "coords" attribute
 ##' @seealso display
 ##' @examples
 ##' ##Not run: interactive only 
@@ -37,7 +37,9 @@ grabLine <- function(im,coord=TRUE)
         }
         else
         {
-            interp.line(im,cs[1],cs[2],cs[3],cs[4])
+            out <- interp.line(im,cs[1],cs[2],cs[3],cs[4])
+            attr(out,"coords") <- cs
+            out
         }
     }
 }
@@ -61,7 +63,9 @@ grabRect <- function(im,coord=TRUE)
         }
         else
         {
-            subim(im, x %inr% c(cs[1],cs[3]), y %inr% c(cs[2],cs[4]))
+            out <- subim(im, x %inr% c(cs[1],cs[3]), y %inr% c(cs[2],cs[4]))
+            attr(out,"coords") <- cs
+            cs
         }
     }
 }
@@ -88,12 +92,14 @@ grabPoint <- function(im,coord=TRUE)
         {
             if (spectrum(im) > 1)
             {
-                color.at(im,cs[1],cs[2]) %>% setNames(c('r','g','b'))
+                out <- color.at(im,cs[1],cs[2]) %>% setNames(c('r','g','b'))
             }
             else
             {
-                at(im,cs[1],cs[2])
+                out <- at(im,cs[1],cs[2])
             }
+            attr(out,"coords") <- cs
+            out
         }
     }
 }

@@ -19,7 +19,7 @@ grabPoint(im, coord = TRUE)
 \item{coord}{if TRUE, return coordinates. if FALSE, content}
 }
 \value{
-either a vector of coordinates, or an image
+either a vector of coordinates, or an image with a "coords" attribute
 }
 \description{
 These functions let you select a shape in an image (a point, a line, or a rectangle)

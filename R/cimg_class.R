@@ -8,7 +8,7 @@
 NULL
 
 #' @useDynLib imager
-#' @importFrom grDevices as.raster col2rgb dev.capture gray rgb
+#' @importFrom grDevices as.raster col2rgb dev.capture gray rgb contourLines
 #' @importFrom utils file_test
 #' @importFrom graphics axis plot rasterImage layout
 #' @importFrom stats quantile rnorm kmeans setNames
@@ -166,7 +166,7 @@ plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",yl
                 plot.new()
                 plot.window(xlim = xlim, ylim = ylim,asp=asp,xaxs=xaxs,yaxs=yaxs,...)
                 rst <- as.raster(x,rescale=rescale,colorscale=colorscale,colourscale=colourscale)
-                rasterImage(rst, 1, nrow(rst), ncol(rst), 1)
+                rasterImage(rst, 1, nrow(rst), ncol(rst), 1,interpolate=interpolate)
                 if (axes) { axis(1); axis(2) }
             }
             else
@@ -653,7 +653,7 @@ save.image <- function(im,file)
         {
             if (has.magick())
             {
-                save_image(im,path.expand(file))
+                save_image(255*im,path.expand(file))
             }
             else
             {

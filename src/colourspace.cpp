@@ -7,7 +7,7 @@ using namespace cimg_library;
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSL(NumericVector im) {
-  CId img = as<CId >(im);
+  CId img = as<CId >(im)*255;
   img.RGBtoHSL();
   return wrap(img);
 }
@@ -16,7 +16,7 @@ NumericVector RGBtoHSL(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoXYZ(NumericVector im) {
-  CId img = as<CId >(im);
+  CId img = as<CId >(im)*255;
   img.RGBtoXYZ();
   return wrap(img);
 }
@@ -27,7 +27,7 @@ NumericVector RGBtoXYZ(NumericVector im) {
 NumericVector XYZtoRGB(NumericVector im) {
   CId img = as<CId >(im);
   img.XYZtoRGB();
-  return wrap(img);
+  return wrap(img/255);
 }
 
 
@@ -37,14 +37,14 @@ NumericVector XYZtoRGB(NumericVector im) {
 NumericVector HSLtoRGB(NumericVector im) {
   CId img = as<CId >(im);
   img.HSLtoRGB();
-  return wrap(img);
+  return wrap(img/255);
 }
 
 //' @describeIn imager.colourspaces RGB to HSV conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSV(NumericVector im) {
-  CId img = as<CId >(im);
+  CId img = as<CId >(im)*255;
   img.RGBtoHSV();
   return wrap(img);
 }
@@ -55,7 +55,7 @@ NumericVector RGBtoHSV(NumericVector im) {
 NumericVector HSVtoRGB(NumericVector im) {
   CId img = as<CId >(im);
   img.HSVtoRGB();
-  return wrap(img);
+  return wrap(img/255);
 }
 
 
@@ -64,7 +64,7 @@ NumericVector HSVtoRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoHSI(NumericVector im) {
-  CId img = as<CId >(im);
+  CId img = as<CId >(im)*255;
   img.RGBtoHSI();
   return wrap(img);
 }
@@ -75,14 +75,14 @@ NumericVector RGBtoHSI(NumericVector im) {
 NumericVector HSItoRGB(NumericVector im) {
   CId img = as<CId >(im);
   img.HSItoRGB();
-  return wrap(img);
+  return wrap(img/255);
 }
 
 //' @describeIn imager.colourspaces RGB to sRGB conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtosRGB(NumericVector im) {
-  CId img = as<CId >(im);
+  CId img = as<CId >(im)*255;
   img.RGBtosRGB();
   return wrap(img);
 }
@@ -93,14 +93,14 @@ NumericVector RGBtosRGB(NumericVector im) {
 NumericVector sRGBtoRGB(NumericVector im) {
   CId img = as<CId >(im);
   img.sRGBtoRGB();
-  return wrap(img);
+  return wrap(img/255);
 }
 
 //' @describeIn imager.colourspaces RGB to YCbCr conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoYCbCr(NumericVector im) {
-  CId img = as<CId >(im);
+  CId img = as<CId >(im)*255;
   img.RGBtoYCbCr();
   return wrap(img);
 }
@@ -111,14 +111,14 @@ NumericVector RGBtoYCbCr(NumericVector im) {
 NumericVector YCbCrtoRGB(NumericVector im) {
   CId img = as<CId >(im);
   img.YCbCrtoRGB();
-  return wrap(img);
+  return wrap(img/255);
 }
 
 //' @describeIn imager.colourspaces RGB to YUV conversion 
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtoYUV(NumericVector im) {
-  CId img = as<CId >(im);
+  CId img = as<CId >(im)*255;
   img.RGBtoYUV();
   return wrap(img);
 }
@@ -129,8 +129,66 @@ NumericVector RGBtoYUV(NumericVector im) {
 NumericVector YUVtoRGB(NumericVector im) {
   CId img = as<CId >(im);
   img.YUVtoRGB();
+  return wrap(img/255);
+}
+
+//' @describeIn imager.colourspaces Lab to RGB (linear)
+//' @export
+// [[Rcpp::export]]
+NumericVector LabtoRGB(NumericVector im) {
+  CId img = as<CId >(im);
+  img.LabtoRGB();
+  return wrap(img/255);
+}
+
+//' @describeIn imager.colourspaces RGB (linear) to Lab
+//' @export
+// [[Rcpp::export]]
+NumericVector RGBtoLab(NumericVector im) {
+  CId img = as<CId >(im)*255;
+  img.RGBtoLab();
   return wrap(img);
 }
+
+//' @describeIn imager.colourspaces Lab to XYZ
+//' @export
+// [[Rcpp::export]]
+NumericVector LabtoXYZ(NumericVector im) {
+  CId img = as<CId >(im);
+  img.LabtoXYZ();
+  return wrap(img);
+}
+
+//' @describeIn imager.colourspaces XYZ to Lab
+//' @export
+// [[Rcpp::export]]
+NumericVector XYZtoLab(NumericVector im) {
+  CId img = as<CId >(im);
+  img.XYZtoLab();
+  return wrap(img);
+}
+
+//' @describeIn imager.colourspaces Lab to sRGB
+//' @export
+// [[Rcpp::export]]
+NumericVector LabtosRGB(NumericVector im) {
+  CId img = as<CId >(im);
+  img.LabtoRGB().RGBtosRGB();
+  return wrap(img/255);
+}
+
+//' @describeIn imager.colourspaces sRGB to Lab
+//' @export
+// [[Rcpp::export]]
+NumericVector sRGBtoLab(NumericVector im) {
+  CId img = as<CId >(im)*255;
+  img.sRGBtoRGB().RGBtoLab();
+  return wrap(img);
+}
+
+
+
+
 
 
 // NumericVector grayscale_(NumericVector im) {

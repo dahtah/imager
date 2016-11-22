@@ -85,6 +85,42 @@ YUVtoRGB <- function(im) {
     .Call('imager_YUVtoRGB', PACKAGE = 'imager', im)
 }
 
+#' @describeIn imager.colourspaces Lab to RGB (linear)
+#' @export
+LabtoRGB <- function(im) {
+    .Call('imager_LabtoRGB', PACKAGE = 'imager', im)
+}
+
+#' @describeIn imager.colourspaces RGB (linear) to Lab
+#' @export
+RGBtoLab <- function(im) {
+    .Call('imager_RGBtoLab', PACKAGE = 'imager', im)
+}
+
+#' @describeIn imager.colourspaces Lab to XYZ
+#' @export
+LabtoXYZ <- function(im) {
+    .Call('imager_LabtoXYZ', PACKAGE = 'imager', im)
+}
+
+#' @describeIn imager.colourspaces XYZ to Lab
+#' @export
+XYZtoLab <- function(im) {
+    .Call('imager_XYZtoLab', PACKAGE = 'imager', im)
+}
+
+#' @describeIn imager.colourspaces Lab to sRGB
+#' @export
+LabtosRGB <- function(im) {
+    .Call('imager_LabtosRGB', PACKAGE = 'imager', im)
+}
+
+#' @describeIn imager.colourspaces sRGB to Lab
+#' @export
+sRGBtoLab <- function(im) {
+    .Call('imager_sRGBtoLab', PACKAGE = 'imager', im)
+}
+
 getXc <- function(x, y, z, c) {
     .Call('imager_getXc', PACKAGE = 'imager', x, y, z, c)
 }

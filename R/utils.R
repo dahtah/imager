@@ -740,3 +740,66 @@ cimg.use.openmp <- function(mode="adaptive")
         }
     NULL
 }
+
+##' Return contours of image/pixset
+##'
+##' This is just a light interface over contourLines. See help for contourLines for details.
+##' If the image has more than one colour channel, return a list with the contour lines in each channel.
+##' Does not work on 3D images. 
+##' @param x an image or pixset
+##' @param nlevels number of contour levels. For pixsets this can only equal two. 
+##' @param ... extra parameters passed to contourLines
+##' @return a list of contours
+##' @author Simon Barthelmé
+##' @seealso highlight
+##' @examples
+##' boats.gs <- grayscale(boats)
+##' ct <- contours(boats.gs,nlevels=3)
+##' plot(boats.gs)
+##' #Add contour lines
+##' sapply(ct,function(v) lines(v$x,v$y,col="red"))
+##' #Contours of a pixel set
+##' px <- boats.gs > .8
+##' plot(boats.gs)
+##' ct <- contours(px)
+##' #Highlight pixset
+##' sapply(ct,function(v) lines(v$x,v$y,col="red"))
+contours <- function(x, ...) {
+   UseMethod("contours", x)
+ }
+
+
+contours.cimg <- function(x,nlevels=10,...)
+{
+    if (spectrum(x) > 1)
+    {
+        channels(x) %>% map(contours)
+    }
+    else if (depth(x) > 1)
+    {
+        stop("This function only works on 2D images")
+    }
+    else
+        {
+            out <- as.matrix(x) %>% contourLines(1:width(x),1:height(x),.,nlevels=nlevels,...)
+            out
+        }
+}
+
+
+contours.pixset <- function(x)
+{
+    if (spectrum(x) > 1)
+    {
+        channels(x) %>% map(contours)
+    }
+    else if (depth(x) > 1)
+    {
+        stop("This function only works on 2D pixel sets")
+    }
+    else
+        {
+            out <- as.matrix(x) %>% contourLines(1:width(x),1:height(x),.,nlevels=2,levels=c(0,1))
+            out
+        }
+}

@@ -190,6 +190,27 @@ parmin <- function(x) Reduce(pmin, x)
 ##' @export
 enorm <- function(x) Map(function(v) v^2,x) %>% add %>% sqrt
 
+##' @describeIn imager.combine Test equality
+##' @export
+equal <- function(x)
+{
+    if (length(x) == 1)
+    {
+        stop("x has only one element")
+    }
+    else
+    {
+        acc <- px.all(x[[1]])
+        v <- x[[1]]
+        x <- x[-1]
+        for (xv in x)
+        {
+            acc[xv!=v] <- FALSE
+        }
+        acc
+    }
+}
+
 ##' @describeIn imager.combine index of parallel maxima
 ##' @export
 which.parmax <- function(x) maxmin.ind(x,max=TRUE)
