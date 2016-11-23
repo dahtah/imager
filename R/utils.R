@@ -702,7 +702,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 #' #the pixel won't get cropped. A fix is to do a bucket fill first
 #' padded <- isoblur(padded,10)
 #' autocrop(padded) %>% plot
-#' padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=20)
+#' padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=.1)
 #' autocrop(padded2) %>% plot
 autocrop <- function(im,color=color.at(im,1,1),axes="zyx")
 {
@@ -764,11 +764,13 @@ cimg.use.openmp <- function(mode="adaptive")
 ##' ct <- contours(px)
 ##' #Highlight pixset
 ##' sapply(ct,function(v) lines(v$x,v$y,col="red"))
+##' @export
 contours <- function(x, ...) {
    UseMethod("contours", x)
  }
 
 
+##' @export
 contours.cimg <- function(x,nlevels=10,...)
 {
     if (spectrum(x) > 1)
@@ -787,11 +789,12 @@ contours.cimg <- function(x,nlevels=10,...)
 }
 
 
+##' @export
 contours.pixset <- function(x)
 {
     if (spectrum(x) > 1)
     {
-        channels(x) %>% map(contours)
+        channels(x) %>% map(as.pixset) %>% map(contours)
     }
     else if (depth(x) > 1)
     {

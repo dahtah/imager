@@ -139,43 +139,44 @@ NULL
 ##' plot(boats.small,interp=TRUE)
 ##' plot(boats.small,interp=FALSE)
 plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,axes=TRUE,xaxs="i",yaxs="i",asp=1,...)
+{
+    if (nPix(x) == 0) stop("Empty image")
+    im <- x
+    if (depth(im) > 1)
     {
-        im <- x
-        if (depth(im) > 1)
+        if (missing(frame))
         {
-            if (missing(frame))
-            {
-                warning("Showing first frame")
-                frame <- 1
-            }
-            im <- frame(x,frame)
+            warning("Showing first frame")
+            frame <- 1
         }
-        if (1 %in% dim(im)[1:2]) #Image has a single spatial dimension
-        {
-            plot.singleton(im,...)
+        im <- frame(x,frame)
+    }
+    if (1 %in% dim(im)[1:2]) #Image has a single spatial dimension
+    {
+        plot.singleton(im,...)
         }
-        else
-        {
-            if (is.character(asp) && asp == "varying")
+    else
+    {
+        if (is.character(asp) && asp == "varying")
             {
                 plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",xaxs=xaxs,yaxs=yaxs,axes=axes,...)
                 as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
             }
-            else if (is.numeric(asp))
-            {
-                plot.new()
-                plot.window(xlim = xlim, ylim = ylim,asp=asp,xaxs=xaxs,yaxs=yaxs,...)
-                rst <- as.raster(x,rescale=rescale,colorscale=colorscale,colourscale=colourscale)
-                rasterImage(rst, 1, nrow(rst), ncol(rst), 1,interpolate=interpolate)
-                if (axes) { axis(1); axis(2) }
-            }
-            else
-            {
-                stop("Invalid value for parameter asp")
-            }
-            
+        else if (is.numeric(asp))
+        {
+            plot.new()
+            plot.window(xlim = xlim, ylim = ylim,asp=asp,xaxs=xaxs,yaxs=yaxs,...)
+            rst <- as.raster(x,rescale=rescale,colorscale=colorscale,colourscale=colourscale)
+            rasterImage(rst, 1, nrow(rst), ncol(rst), 1,interpolate=interpolate)
+            if (axes) { axis(1); axis(2) }
         }
+        else
+        {
+            stop("Invalid value for parameter asp")
+        }
+        
     }
+}
 
 #Plots one-dimensional images
 plot.singleton <- function(im,...)
@@ -567,7 +568,7 @@ load.image <- function(file)
                 dim(bmp) <- c(dim(bmp),1,1)
             }
             bmp <- cimg(bmp) %>% mirror("x") %>% imrotate(-90)
-            255*bmp
+            bmp
         }
         else #Loading with read.bitmap has failed, try with ImageMagick
         {

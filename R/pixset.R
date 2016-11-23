@@ -131,8 +131,8 @@ check.pixset <- function(x)
 #'
 #' @param x a pixset
 #' @examples
-#' #All pixel locations with value greater than 254
-#' where(boats > 254) 
+#' #All pixel locations with value greater than .99
+#' where(boats > .99) 
 #' @export
 where <- function(x)
     {
@@ -485,7 +485,7 @@ highlight <- function(px,col="red",mode="contour",...)
     }
     else
     {
-        contours(px) %>% purrr::flatten %>% purrr::walk(function(v) lines(v$x,v$y,col=col,...))
+        contours(px) %>% { purrr::flatten(.) } %>% purrr::walk(function(v) lines(v$x,v$y,col=col,...))
     }
 }
 
@@ -511,5 +511,13 @@ highlight <- function(px,col="red",mode="contour",...)
 #' @export
 px.flood <- function(im,x,y,z=1,sigma=0,high_connexity=FALSE)
     {
-        bucket_select(im,x,y,z,sigma,high_connexity)
+        out <- bucket_select(im,x,y,z,sigma,high_connexity)
+        if (spectrum(im) > 1)
+        {
+            imappend(map(1:spectrum(im),~ out),"c") %>% as.pixset
+        }
+        else
+        {
+            out
+        }
     }

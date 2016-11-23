@@ -13,7 +13,7 @@ where(x)
 Return locations in pixel set
 }
 \examples{
-#All pixel locations with value greater than 254
-where(boats > 254) 
+#All pixel locations with value greater than .99
+where(boats > .99) 
 }
 

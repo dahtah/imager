@@ -21,14 +21,16 @@ NumericVector bucket_select(NumericVector im,int x,int y,int z,float sigma=0,boo
 {
   CId img = as<CId >(im);
   CIb out;
-
+  NumericVector v; //container for future output
   try{
     NumericVector color(img.spectrum());
     float opacity=1;
     img.draw_fill(x-1,y-1,z-1,color.begin(),opacity,out,sigma,high_connexity);
-    }
+    v = wrap(out);
+
+  }
   catch(CImgException &e){
     forward_exception_to_r(e);
   }
-  return wrap(out);
+  return v;
 }

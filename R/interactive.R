@@ -65,7 +65,7 @@ grabRect <- function(im,coord=TRUE)
         {
             out <- subim(im, x %inr% c(cs[1],cs[3]), y %inr% c(cs[2],cs[4]))
             attr(out,"coords") <- cs
-            cs
+            out
         }
     }
 }
