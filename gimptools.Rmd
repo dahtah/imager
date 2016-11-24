@@ -1,0 +1,97 @@
+---
+title: "Imager as image editor"
+output:
+  html_document:
+    fig_width: 6.5
+    fig_height: 6
+    toc: true
+    number_sections: true
+---
+
+Many people will be familiar with the set of tools available in Photoshop and the Gimp (various forms of selections, brushes, erasers, etc.). Here's a screenshot of what the Gimp has to offer:
+
+The goal of this document is to show how to do all these operations in imager. 
+
+# Selection
+
+## Rectangular selections
+
+To directly obtain a rectangular image subset use imsub:
+
+```{r}
+#A rectangular selection from (10,30) to (150,100)
+imsub(parrots,x %inr% c(30,150),y %inr% c(10,100)) %>% plot
+```
+
+If what you need is a pixset, here's a way:
+
+```{r}
+px <- (Xc(parrots) %inr% c(30,150)) & (Yc(parrots) %inr% c(10,100))
+plot(parrots)
+highlight(px)
+```
+
+There's also a function to do this interactively called "grabRect". 
+
+## Circular selections
+
+Use coordinates and the equation for a circle:
+
+```{r}
+plot(parrots)
+px <- (Xc(parrots) - 200)^2 + (Yc(parrots) - 350)^2 < 150^2
+highlight(px)
+```
+
+## Image color at a point
+
+Use color.at:
+
+```{r}
+color.at(parrots,24,55)
+```
+
+
+## Selection by similarity
+
+For grayscale images this is easy: we want the set of locations $x,y$, such that
+
+$$ \vert I(x,y) - c \vert < \eps $$
+
+where $c$ is our target grayscale level, and $\eps$ is a tolerance. 
+We begin by computing the difference to the target:
+
+```{r}
+boats.gs <- grayscale(boats)
+val <- at(boats.gs,180,216) #Grab pixel value at coord (240,220)
+D <- abs(boats.gs-val) #A difference map
+plot(D,main="Difference to target value")
+```
+
+The distance map can then be thresholded to yield a pixel set:
+
+```{r}
+plot(boats.gs)
+highlight(D < .05) # epsilon = .05
+```
+
+Due to noise the regions may be very irregular. Better results can often be obtained using smoothing: 
+
+```{r}
+plot(boats.gs)
+isoblur(boats.gs,2) %>% { abs(. - val) < .05 } %>% highlight
+```
+
+## Fuzzy selection (magic wand)
+
+Flood selection selects all similar pixels around an initial point:
+
+```{r}
+plot(parrots)
+px.flood(parrots,100,100,sigma=.1) %>% highlight
+#Higher tolerance
+px.flood(parrots,100,100,sigma=.14) %>% highlight(col="darkred")
+#Different initial point
+px.flood(parrots,300,100,sigma=.1) %>% highlight(col="blue")
+
+```

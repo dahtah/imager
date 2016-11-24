@@ -1,0 +1,8 @@
+The following is a collection of incidental art produced by imager. 
+
+
+# Chronos devouring a forest
+
+```{r}
+grayscale(boats) %>% threshold %>% distance_transform(0) %>% cannyEdges(0.01,0.5) %>% plot
+```

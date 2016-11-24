@@ -10,11 +10,12 @@ output:
 
 [Simon Barthelmé](http://sites.google.com/site/simonbarthelme) (GIPSA-lab, CNRS)
 
-The idea for this tutorial is borrowed from a [blog post](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/) by David Tschumperlé. The goal is to select by hand a few points in the foreground of an image, a few points in the background, and let software do the rest. 
+Foreground-background separation is a segmentation task, where the goal is to split the image into foreground and background. In semi-interactive settings, the user marks some pixels as "foreground", a few others as "background", and it's up to the algorithm to classify the rest of the pixels. 
+
 ```{r init,echo=FALSE}
 library(imager)
-file <- system.file('extdata/parrots.png',package='imager')
-parrots <- load.image(file)
+
+parrots <- load.example("parrots")
 
 detect.edges <- function(im,sigma=1)
     {
@@ -37,6 +38,91 @@ fg <- data.frame(x=c(541,482,499,670),y=c(189,353,465,394))
 bg <- data.frame(x=c(337,532,185,380),y=c(218,55,409,413))
 
 ```
+
+
+# K-nearest neighbour approach 
+
+The first approach is similar to the [SIOX](http://www.siox.org/) algorithm implemented in the Gimp. It assumes that foreground and background have different colours, and models the segmentation task as a (supervised) classification problem, where the user has provided examples of foreground pixels, examples of background pixels, and we need to classify the rest of the pixels according to colour. Since we do not have a parametric model in mind, a simple and robust approach is to use k-nearest neighbour classification. 
+
+There are many implementations of the kNN algorithm available for R but the fastest one I've found is in the *nabor* package. The following function implements (binary) knn classification:
+
+```{r}
+##X is training data 
+##Xp is test data
+##cl: labels for the rows of X
+##k = number of neighbours
+##Returns average value of k nearest neighbours
+fknn <- function(X,Xp,cl,k=1)
+{
+    out <- nabor::knn(X,Xp,k=k)
+    cl[as.vector(out$nn.idx)] %>% matrix(dim(out$nn.idx)) %>% rowMeans
+}
+```
+
+The picture we'll use comes from Wikipedia:
+
+```{r}
+im <- load.image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG")
+plot(im)
+```
+
+I hand-selected background and foreground regions (you can do so as well using grabRect):
+
+```{r}
+#Coordinates of a foreground rectangle (x0,y0,x1,y1)
+fg <- c(510,521,670,671 )
+#Background
+bg <- c(791,   28, 1020,  194 )
+#Corresponding pixel sets
+px.fg <- ((Xc(im) %inr% fg[c(1,3)]) & (Yc(im) %inr% fg[c(2,4)]))
+px.bg <- ((Xc(im) %inr% bg[c(1,3)]) & (Yc(im) %inr% bg[c(2,4)]))
+
+plot(im)
+highlight(px.fg)
+highlight(px.bg,col="blue")
+```
+
+Next we form our training and test data. These need to be triplets of colour values, and for such purposes the CIELAB colour space works well. 
+
+```{r}
+im.lab <- sRGBtoLab(im)
+#Reshape image data into matrix with 3 columns 
+cvt.mat <- function(px) matrix(im.lab[px],sum(px)/3,3)
+fgMat <- cvt.mat(px.fg)
+bgMat <- cvt.mat(px.bg)
+labels <- c(rep(1,nrow(fgMat)),rep(0,nrow(bgMat)))
+
+```
+
+For the test data we'll use all the pixels in the image. It's redundant (some of those pixels are already categorised) but saves us some reshaping later on:
+
+```{r}
+testMat <- cvt.mat(px.all(im))
+```
+
+We're now ready to run the knn algorithm:
+
+```{r}
+out <- fknn(rbind(fgMat,bgMat),testMat,cl=labels,k=5)
+```
+
+out gives the proportion of foreground pixels among the k-nearest neighbours: it works as a confidence measure. We reshape the output into a mask:
+
+```{r}
+msk <- as.cimg(rep(out,3),dim=dim(im))
+plot(msk)
+```
+
+Here's the final result:
+
+```{r}
+plot(im*msk)
+```
+
+# Gradient-based algorithm
+
+The idea for this algorithm is borrowed from a [blog post](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/) by David Tschumperlé. The goal is to select by hand a few points in the foreground of an image, a few points in the background, and let software do the rest. 
+
 The initial locations (blue and red dots) are called seed points. The way the algorithm works is by spreading region labels outwards from the seed points, but stopping at object boundaries.
 The first step is to do some edge detection, in order to infer object boundaries. Edges are regions in the image where the luminance changes a lot, so a traditional recipe for edge detection is to use the image gradient:
 
