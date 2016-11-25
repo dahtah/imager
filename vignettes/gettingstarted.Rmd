@@ -77,9 +77,8 @@ If you don't want imager to rescale the colours automatically, set rescale to FA
 
 ```{r}
 layout(t(1:2))
-boats.s <- boats/255 #scale to 0..1
-plot(boats.s,rescale=FALSE)
-plot(boats.s/2,rescale=FALSE)
+plot(boats,rescale=FALSE)
+plot(boats/2,rescale=FALSE)
 ```
 
 If you'd like tighter control over how imager converts pixel values into colours, you can specify a colour scale. R likes its colours defined as hex codes, like so:
@@ -92,7 +91,7 @@ The function rgb is a colour scale, i.e., it takes pixel values and returns colo
 
 ```{r}
 cscale <- function(r,g,b) rgb(g,r,b)
-plot(boats.s,colourscale=cscale,rescale=FALSE)
+plot(boats,colourscale=cscale,rescale=FALSE)
 ```
 
 In grayscale images pixels have only one value, so that the colour map is simpler: it takes a single value and returns a colour. In the next example we convert the image to grayscale
@@ -561,6 +560,7 @@ as.cimg(array(1,c(10,10))) #Assumes it's a grayscale image you want
 as.cimg(array(1:9,c(10,10,3))) #Assumes it's a colour image (last dimension 3)
 as.cimg(array(1:9,c(10,10,4))) #Assumes it's a grayscale video with 4 frames (last dimension != 3)
 ```
+
 
 # imager functions by theme
 

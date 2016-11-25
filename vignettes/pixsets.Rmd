@@ -1,0 +1,46 @@
+---
+title: "Pixsets: representing pixel sets in imager"
+author: "Simon Barthelmé"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{getting_started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+---
+
+
+If you've already gone through the "Getting started" vignette, you know about image objects ("cimg" class). This vignette introduces pixsets, which is the other important kind of objects. Pixsets represent sets of pixels, or equivalently binary images, AKA "masks". 
+
+A pixset is what you get if you run a test on an image: 
+
+```{r}
+im <- load.example('parrots') %>% grayscale
+px <- im > .6 #Select pixels with high luminance
+px
+plot(px)
+```
+
+Internally, a pixel set is just an array of logical (boolean) values:
+
+```{r}
+str(px)
+```
+
+The "TRUE" values correspond to pixels in the set, and "FALSE" to pixels not in the set. 
+
+The "highlight" function is a good way of visualising pixel sets:
+
+```{r}
+layout(t(1:2))
+plot(im)
+px <- (isoblur(im,4)  > .5 )
+highlight(px)
+plot(px)
+```
+
+highlight extracts the contours of the pixset (see ?contours) and plots them. 

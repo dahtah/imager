@@ -1,3 +1,12 @@
+# imager 0.40 Major release
+   * added pixset class to represent sets of pixels in an image (implemented as binary images). A test on an image (e.g., im > 0) results in a pixset object. Pixsets come with many convenience functions for plotting, manipulation, morphology, etc. 
+   * unified RGB representations so that every function expects RGB values to be in the [0-1] range. There used to be a conflict in expectations here, with R expecting [0-1] and CImg [0-255]. *This might break existing code* (in minor ways). 
+   * improved interactive functions for grabbing image regions (grabRect, grabLine, etc.)
+   * improved grayscale conversion
+   * improved plotting. The default is now to have a constant aspect ratio that matches the aspect ratio of the image. 
+   * improved documentation and examples
+   * added functions for conversion to/from CIELAB 
+   
 # imager 0.31 Minor release
    * fixed inline C++ plugin, this time for OS X systems
    * added interpolation option to plot.cimg (to prevent systematic antialiasing when plotting small images)
