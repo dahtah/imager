@@ -4,11 +4,11 @@
 ##'
 ##' These functions let you select a shape in an image (a point, a line, or a rectangle)
 ##' They either return the coordinates of the shape (default), or the contents.
-##' In case of lines contents are interpolated. 
+##' In case of lines contents are interpolated. Note that grabLine does not support the "pixset" return type. 
 ##' @name grab
 ##' @param im an image
-##' @param coord if TRUE, return coordinates. if FALSE, content
-##' @return either a vector of coordinates, or an image with a "coords" attribute
+##' @param output one of "im","pixset","coord","value". Default "coord"
+##' @return Depending on the value of the output parameter. Either a vector of coordinates (output = "coord"), an image (output = "im"), a pixset (output = "pixset"), or a vector of values (output = "value"). grabLine and grabPoint support the "value" output mode and not the "im" output. 
 ##' @seealso display
 ##' @examples
 ##' ##Not run: interactive only 
@@ -19,7 +19,7 @@ NULL
 
 ##' @rdname grab
 ##' @export 
-grabLine <- function(im,coord=TRUE)
+grabLine <- function(im,output="coord")
 {
     if (depth(im) > 1)
     {
@@ -31,22 +31,26 @@ grabLine <- function(im,coord=TRUE)
         cs <- c(out)[-c(3,6)]
         cs <- cs+1
         names(cs) <- c("x0","y0","x1","y1")
-        if (coord)
+        if (output=="coord")
         {
             cs
         }
-        else
+        else if (output=="value")
         {
             out <- interp.line(im,cs[1],cs[2],cs[3],cs[4])
             attr(out,"coords") <- cs
             out
+        }
+        else
+        {
+            stop("Unknown output mode")
         }
     }
 }
 
 ##' @rdname grab
 ##' @export 
-grabRect <- function(im,coord=TRUE)
+grabRect <- function(im,output="coord")
 {
     if (depth(im) > 1)
     {
@@ -57,22 +61,32 @@ grabRect <- function(im,coord=TRUE)
         out <- select(im)
         cs <- c(out)[-c(3,6)] + 1
         names(cs) <- c("x0","y0","x1","y1")
-        if (coord)
+        if (output=="coord")
         {
             cs
         }
-        else
+        else if (output == "im" | output == "image")
         {
             out <- subim(im, x %inr% c(cs[1],cs[3]), y %inr% c(cs[2],cs[4]))
             attr(out,"coords") <- cs
             out
+        }
+        else if (output == "px" | output == "pixset")
+        {
+            out <- (Xc(im) %inr% c(cs[1],cs[3])) & (Yc(im) %inr% c(cs[2],cs[4]))
+            attr(out,"coords") <- cs
+            out
+        }
+        else
+        {
+            stop("Unknown output mode")
         }
     }
 }
 
 ##' @rdname grab
 ##' @export 
-grabPoint <- function(im,coord=TRUE)
+grabPoint <- function(im,output="coord")
 {
     if (depth(im) > 1)
     {
@@ -84,11 +98,11 @@ grabPoint <- function(im,coord=TRUE)
         cs <- c(out)[1:2]
         cs <- cs+1
         names(cs) <- c("x","y")
-        if (coord)
+        if (output=="coord")
         {
             cs
         }
-        else
+        else if (output=="value")
         {
             if (spectrum(im) > 1)
             {
@@ -100,6 +114,16 @@ grabPoint <- function(im,coord=TRUE)
             }
             attr(out,"coords") <- cs
             out
+        }
+        else if (output=="px" | output == "pixset")
+        {
+            out <- px.none(im)
+            out[cs[1],cs[2],1,] <- TRUE
+            out
+        }
+        else
+        {
+            stop("Unknown output mode")
         }
     }
 }

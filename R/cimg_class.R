@@ -556,6 +556,12 @@ load.image <- function(file)
         {
             stop("File not found")
         }
+        if (is.url)
+        {
+            url <- file
+            file <- tempfile()
+            downloader::download(url,file)
+        }
         bmp <- try(read.bitmap(file),silent=TRUE)
         if (class(bmp) != "try-error") #Loaded succesfully
         {
