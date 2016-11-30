@@ -799,22 +799,12 @@ im_split <- function(im, axis, nb = -1L) {
     .Call('imager_im_split', PACKAGE = 'imager', im, axis, nb)
 }
 
-#' Combine a list of images into a single image 
-#' 
-#' All images will be concatenated along the x,y,z, or c axis.
-#' 
-#' @param imlist a list of images (all elements must be of class cimg) 
-#' @param axis the axis along which to concatenate (for example 'c')
-#' @seealso imsplit (the reverse operation)
-#' @export
-#' @examples
-#' imappend(list(boats,boats),"x") %>% plot
-#' imappend(list(boats,boats),"y") %>% plot
-#' plyr::rlply(3,imnoise(100,100)) %>% imappend("c") %>% plot
-#' boats.gs <- grayscale(boats)
-#' plyr::llply(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) %>% imappend("c") %>% plot
-imappend <- function(imlist, axis) {
-    .Call('imager_imappend', PACKAGE = 'imager', imlist, axis)
+im_append <- function(imlist, axis) {
+    .Call('imager_im_append', PACKAGE = 'imager', imlist, axis)
+}
+
+px_append <- function(imlist, axis) {
+    .Call('imager_px_append', PACKAGE = 'imager', imlist, axis)
 }
 
 #' Pixel-wise evaluation of a CImg expression
@@ -918,5 +908,9 @@ set_cimg_omp <- function(mode) {
 
 has_omp <- function() {
     .Call('imager_has_omp', PACKAGE = 'imager')
+}
+
+px_split <- function(im, axis, nb = -1L) {
+    .Call('imager_px_split', PACKAGE = 'imager', im, axis, nb)
 }
 

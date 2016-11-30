@@ -521,3 +521,38 @@ px.flood <- function(im,x,y,z=1,sigma=0,high_connexity=FALSE)
             out
         }
     }
+
+##' Split pixset into connected components
+##'
+##' Compute connected components (using "label"), then split into as many sets as there are components.
+##' Useful for segmentation
+##' @param px a pixset
+##' @param ... further arguments passed to label
+##' @seealso label
+##' @return a list of pixsets
+##' px <- isoblur(grayscale(boats),5) > .75
+##' plot(px)
+##' spl <- split.connected(px)
+##' plot(spl[[1]])
+##' px <- isoblur(grayscale(boats),5) > .75
+##' plot(px)
+##' spl <- split.connected(px)
+##' plot(spl[[1]])
+##' @author Simon Barthelme
+##' @export
+split.connected <- function(px)
+{
+    if (sum(px)==0)
+    {
+        stop("Pixset is empty")
+    }
+    else
+        {
+            lab <- label(px,...)
+            (1:max(lab)) %>% map(function(v) lab==v)
+        }
+}
+
+#' @export
+display.pixset <- function(x,...) display(as.cimg(x),...)
+

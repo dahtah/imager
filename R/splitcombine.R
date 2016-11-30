@@ -81,23 +81,34 @@ iiply <- function(im,axis,fun,...)
 ##' imsplit(im,"z",2) %>% imappend("z") #Split and reshape into a single image
 ##' @export
 imsplit <- function(im,axis,nb=-1)
+{
+    if (is.cimg(im))
     {
         l <- im_split(im,axis,nb)
-        d.ind <- index.coords[[axis]]
-        d <- dim(im)
-        if (nb!=-1)
-            {
-                b.end <- laply(l,function(v) dim(v)[d.ind]) %>% cumsum
-                b.start <- c(1,b.end[-length(l)]+1)
-                b.str <- sprintf("= %i - %i",b.start,b.end)
-                names(l) <- paste(axis,b.str)
-            }
-        else
-            {
-                names(l) <- paste(axis,1:length(l),sep=" = ")
-            }
-        l
     }
+    else if (is.pixset(im))
+    {
+        l <- px_split(im,axis,nb)
+    }
+    else
+    {
+        stop("im must be either an image or pixset")
+    }
+    d.ind <- index.coords[[axis]]
+    d <- dim(im)
+    if (nb!=-1)
+    {
+        b.end <- laply(l,function(v) dim(v)[d.ind]) %>% cumsum
+        b.start <- c(1,b.end[-length(l)]+1)
+        b.str <- sprintf("= %i - %i",b.start,b.end)
+        names(l) <- paste(axis,b.str)
+    }
+    else
+    {
+        names(l) <- paste(axis,1:length(l),sep=" = ")
+    }
+    l
+}
 
 
 imsplit.recur <- function(im,spl,nb=-1)
@@ -263,4 +274,35 @@ maxmin.ind <- function(L,max=TRUE)
         cmax[v] <- L[[ind]][v]
     }
     pind
+}
+
+#' Combine a list of images into a single image 
+#' 
+#' All images will be concatenated along the x,y,z, or c axis.
+#' 
+#' @param imlist a list of images (all elements must be of class cimg) 
+#' @param axis the axis along which to concatenate (for example 'c')
+#' @seealso imsplit (the reverse operation)
+#' @export
+#' @examples
+#' imappend(list(boats,boats),"x") %>% plot
+#' imappend(list(boats,boats),"y") %>% plot
+#' plyr::rlply(3,imnoise(100,100)) %>% imappend("c") %>% plot
+#' boats.gs <- grayscale(boats)
+#' plyr::llply(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) %>% imappend("c") %>% plot
+##' @export 
+imappend <- function(imlist,axis)
+{
+    if (all(map(imlist,is.cimg) ))
+    {
+        im_append(imlist,axis)
+    }
+    else if (all(map(imlist,is.pixset) ))
+    {
+        px_append(imlist,axis)
+    }
+    else
+    {
+        stop("List contains unknown image type (must be all images, or all pixsets)")
+    }
 }

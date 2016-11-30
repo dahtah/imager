@@ -1,7 +1,7 @@
 
 ##' Image list
 ##'
-##' An imlist object is simply a list of images (of class cimg). For convenience, some generic functions are defined that wouldn't work on plain lists, like plot, display and as.data.frame.
+##' An imlist object is simply a list of images (of class cimg). For convenience, some generic functions are defined that wouldn't work on plain lists, like plot, display and as.data.frame
 ##' DEPRECATION NOTE: in v0.30 of imager, the original behaviour of the "imlist" function was to take a list and turn it into an image list. This behaviour has now been changed to make "imlist" be more like "list". If you wish to turn a list into an image list, use as.imlist.  
 ##' @param ... images to be included in the image list
 ##' @export
@@ -24,9 +24,9 @@ is.imlist <- function(x) is(x,"imlist")
 ##' @export
 as.imlist.list <- function(x,...)
     {
-        if (!(map_lgl(x,is.cimg) %>% all))
+        if (!(map_lgl(x,is.cimg) %>% all) || !(map_lgl(x,is.pixset) %>% all))
         {
-            stop("The list may only contain images (objects with class cimg)")
+            stop("The list may only contain images (objects with class cimg) or pixsets")
         }
         else
         {

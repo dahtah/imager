@@ -1159,15 +1159,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// imappend
-NumericVector imappend(List imlist, char axis);
-RcppExport SEXP imager_imappend(SEXP imlistSEXP, SEXP axisSEXP) {
+// im_append
+NumericVector im_append(List imlist, char axis);
+RcppExport SEXP imager_im_append(SEXP imlistSEXP, SEXP axisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type imlist(imlistSEXP);
     Rcpp::traits::input_parameter< char >::type axis(axisSEXP);
-    rcpp_result_gen = Rcpp::wrap(imappend(imlist, axis));
+    rcpp_result_gen = Rcpp::wrap(im_append(imlist, axis));
+    return rcpp_result_gen;
+END_RCPP
+}
+// px_append
+LogicalVector px_append(List imlist, char axis);
+RcppExport SEXP imager_px_append(SEXP imlistSEXP, SEXP axisSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type imlist(imlistSEXP);
+    Rcpp::traits::input_parameter< char >::type axis(axisSEXP);
+    rcpp_result_gen = Rcpp::wrap(px_append(imlist, axis));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1324,6 +1336,19 @@ BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(has_omp());
+    return rcpp_result_gen;
+END_RCPP
+}
+// px_split
+List px_split(LogicalVector im, char axis, int nb);
+RcppExport SEXP imager_px_split(SEXP imSEXP, SEXP axisSEXP, SEXP nbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< char >::type axis(axisSEXP);
+    Rcpp::traits::input_parameter< int >::type nb(nbSEXP);
+    rcpp_result_gen = Rcpp::wrap(px_split(im, axis, nb));
     return rcpp_result_gen;
 END_RCPP
 }

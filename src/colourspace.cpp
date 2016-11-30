@@ -82,7 +82,7 @@ NumericVector HSItoRGB(NumericVector im) {
 //' @export
 // [[Rcpp::export]]
 NumericVector RGBtosRGB(NumericVector im) {
-  CId img = as<CId >(im)*255;
+  CId img = as<CId >(im);
   img.RGBtosRGB();
   return wrap(img);
 }
@@ -93,7 +93,7 @@ NumericVector RGBtosRGB(NumericVector im) {
 NumericVector sRGBtoRGB(NumericVector im) {
   CId img = as<CId >(im);
   img.sRGBtoRGB();
-  return wrap(img/255);
+  return wrap(img);
 }
 
 //' @describeIn imager.colourspaces RGB to YCbCr conversion 

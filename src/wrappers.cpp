@@ -56,18 +56,56 @@ CId sharedCImg(SEXP inp) {
     return img;		
   }
 
+CIb sharedCImg_bool(SEXP inp) {
+    Rcpp::LogicalVector Rvec(inp);
+    IntegerVector d = Rvec.attr("dim");
+    if (d.length() < 4)
+      {
+	Rcpp::stop("Expecting a four-dimensional array");
+      }
+    CIb img((bool *) Rvec.begin(),d[0],d[1],d[2],d[3],true);
+    return img;		
+  }
+
+
 //Return a CImg object for in-place modification
-CImgList<double> sharedCImgList(SEXP inp) {
+CImgList<double > sharedCImgList(SEXP inp) {
   Rcpp::List L(inp);
   int n = L.length();
-  CImgList<double> CL;
-  CId tmp;
+  CImgList<double > CL;
+  CImg<double > tmp;
   for (int i=0;i < n;i++)
     {
       CL.insert(sharedCImg(L[i]),i,true);
     }
   return CL;
 }
+
+//Return a CImg object for in-place modification
+CImgList<bool > sharedCImgList_bool(SEXP inp) {
+  Rcpp::List L(inp);
+  int n = L.length();
+  CImgList<bool > CL;
+  CImg<bool > tmp;
+  for (int i=0;i < n;i++)
+    {
+      CL.insert(sharedCImg_bool(L[i]),i,true);
+    }
+  return CL;
+}
+
+
+// CImgList<double> sharedCImgList(SEXP inp) {
+//   Rcpp::List L(inp);
+//   int n = L.length();
+//   CImgList<double> CL;
+//   CId tmp;
+//   for (int i=0;i < n;i++)
+//     {
+//       CL.insert(sharedCImg(L[i]),i,true);
+//     }
+//   return CL;
+// }
 
 
 
