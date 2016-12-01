@@ -120,10 +120,18 @@ $(document).ready(function () {
 
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#thresholding-and-correcting-for-varying-luminance"><span class="toc-section-number">1</span> Thresholding, and correcting for varying luminance</a></li>
+<li><a href="#morphological-operations-on-pixsets"><span class="toc-section-number">2</span> Morphological operations on pixsets</a></li>
+</ul>
+</div>
 
 <p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<div id="thresholding-and-correcting-for-varying-luminance" class="section level1">
+<h1><span class="header-section-number">1</span> Thresholding, and correcting for varying luminance</h1>
 <p>Our first example will be based on a sketch by Leonardo. Let’s say we want to extract an outline of the birds:</p>
-<pre class="r"><code>im &lt;- load.image(system.file(&#39;extdata/Leonardo_Birds.jpg&#39;,package=&#39;imager&#39;))
+<pre class="r"><code>im &lt;- load.example(&quot;birds&quot;)
 plot(im)</code></pre>
 <p><img src="morphology_files/figure-html/birds-1.png" width="595.2" /></p>
 <pre class="r"><code>im.g &lt;- grayscale(im)
@@ -138,12 +146,12 @@ threshold(im.g,&quot;10%&quot;) %&gt;% plot</code></pre>
 <p>The problem is that there is a luminance trend in the image (it is noticeably lighter at the bottom), so that a fixed threshold doesn’t work very well. Fortunately we can remove that trend using a linear model. We’re going to use R’s built-in lm function. The first step is to convert the image data to a data.frame, then fit a model:</p>
 <pre class="r"><code>df &lt;- as.data.frame(im.g)
 head(df,5) </code></pre>
-<pre><code>##   x y       value
-## 1 1 1 0.001553249
-## 2 2 1 0.001876201
-## 3 3 1 0.001760861
-## 4 4 1 0.001883891
-## 5 5 1 0.001868512</code></pre>
+<pre><code>##   x y     value
+## 1 1 1 0.3917255
+## 2 2 1 0.4740784
+## 3 3 1 0.4485098
+## 4 4 1 0.4829412
+## 5 5 1 0.4790196</code></pre>
 <pre class="r"><code>m &lt;- lm(value ~ x + y,data=df) #linear trend
 summary(m)</code></pre>
 <pre><code>## 
@@ -151,20 +159,20 @@ summary(m)</code></pre>
 ## lm(formula = value ~ x + y, data = df)
 ## 
 ## Residuals:
-##        Min         1Q     Median         3Q        Max 
-## -2.329e-03  6.542e-05  3.030e-04  4.220e-04  9.074e-04 
+##      Min       1Q   Median       3Q      Max 
+## -0.59713  0.01637  0.07833  0.10800  0.23080 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 1.542e-03  4.222e-06   365.3   &lt;2e-16 ***
-## x           2.058e-06  1.563e-08   131.7   &lt;2e-16 ***
-## y           2.114e-06  9.512e-09   222.3   &lt;2e-16 ***
+## (Intercept) 3.959e-01  1.082e-03   365.9   &lt;2e-16 ***
+## x           5.333e-04  4.006e-06   133.1   &lt;2e-16 ***
+## y           5.334e-04  2.438e-06   218.8   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.0007207 on 204737 degrees of freedom
-## Multiple R-squared:  0.2459, Adjusted R-squared:  0.2459 
-## F-statistic: 3.337e+04 on 2 and 204737 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.1847 on 204737 degrees of freedom
+## Multiple R-squared:  0.2427, Adjusted R-squared:  0.2427 
+## F-statistic: 3.28e+04 on 2 and 204737 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>We can extract fitted values to remove the luminance trend:</p>
 <pre class="r"><code>layout(t(1:2))
 im.f &lt;- im.g-fitted(m)
@@ -172,15 +180,36 @@ plot(im.g,main=&quot;Before&quot;)
 plot(im.f,main=&quot;After trend removal&quot;)</code></pre>
 <p><img src="morphology_files/figure-html/remove_trend_B-1.png" width="1152" /></p>
 <p>It’s now easier to threshold the image:</p>
-<pre class="r"><code>layout(t(1:3))
-l_ply(paste0(c(20,15,10),&quot;%&quot;),function(v) threshold(im.f,v) %&gt;% plot(main=v))</code></pre>
+<pre class="r"><code>#Note the use of map_il, which is a kind of &quot;lapply&quot; that returns an image list
+#map_il wraps map, from the purrr package
+paste0(c(20,15,10),&quot;%&quot;) %&gt;% map_il(~ threshold(im.f,.)) %&gt;% plot(layout=&quot;row&quot;)</code></pre>
 <p><img src="morphology_files/figure-html/threshold2-1.png" width="1728" /></p>
-<p>We’ll go on with a thresholding at 16%, and we can start to play with some morphological operations. “Morphological closing” will help get rid of some of the blotches:</p>
+</div>
+<div id="morphological-operations-on-pixsets" class="section level1">
+<h1><span class="header-section-number">2</span> Morphological operations on pixsets</h1>
+<p>We’ll go on with a thresholding at 16%, and we can start to play with some morphological operations.</p>
 <pre class="r"><code>im.t &lt;- threshold(im.f,&quot;16%&quot;)
-layout(t(1:2))
-plot(im.t,main=&quot;Before&quot;)
-mclosing_square(im.t,4) %&gt;% plot(main=&quot;After morphological closing&quot;)</code></pre>
+px &lt;- as.pixset(1-im.t) #Convert to pixset
+plot(px)</code></pre>
 <p><img src="morphology_files/figure-html/mclosing-1.png" width="1152" /></p>
+<p>Black and white images can be converted to “pixset” objects, which come with many convenience functions. In the image above, the pixels in white define the pixset.</p>
+<p>“grow” (morphological dilation) enlarges a pixset:</p>
+<pre class="r"><code>grow(px,3) %&gt;% plot(main=&quot;Growing by 3 pixels&quot;)</code></pre>
+<p><img src="morphology_files/figure-html/unnamed-chunk-1-1.png" width="595.2" /></p>
+<p>“shrink” shrinks it:</p>
+<pre class="r"><code>shrink(px,3) %&gt;% plot(main=&quot;Shrinking by 3 pixels&quot;)</code></pre>
+<p><img src="morphology_files/figure-html/unnamed-chunk-2-1.png" width="595.2" /></p>
+<p>Note how “shrink” removes all the isolated dots. “grow” and “shrink” aren’t inverse operations: indeed, if we combine “shrink” followed by “grow”, we can clean up pixsets.</p>
+<pre class="r"><code>shrink(px,3) %&gt;% grow(3) %&gt;% plot(main=&quot;Shrink, then grow&quot;)</code></pre>
+<p><img src="morphology_files/figure-html/unnamed-chunk-3-1.png" width="595.2" /></p>
+<p>There’s a shortcut for that called “clean”.</p>
+<p>The opposite tends to fill in holes:</p>
+<pre class="r"><code>layout(t(1:2))
+plot(px,main=&quot;Original&quot;)
+grow(px,3) %&gt;% shrink(3) %&gt;% plot(main=&quot;Grow, then shrink&quot;)</code></pre>
+<p><img src="morphology_files/figure-html/unnamed-chunk-4-1.png" width="595.2" /></p>
+<p>The shortcut is called “fill”.</p>
+</div>
 
 
 

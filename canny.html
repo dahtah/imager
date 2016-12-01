@@ -197,9 +197,9 @@ t2 &lt;- quantile(mag,.96)
 t1 &lt;- quantile(mag,.90)
 layout(t(1:2))
 
-strong &lt;- as.cimg(mag&gt;t2)
+strong &lt;- mag&gt;t2
 plot(strong,main=&quot;Initial set of strong edges&quot;)
-weak &lt;- as.cimg(mag %inr% c(t1,t2))
+weak &lt;- mag %inr% c(t1,t2)
 plot(weak,main=&quot;Initial set of weak edges&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
 <p>Weak edges have a high chance of being false positives, but less so if there’s a strong edge somewhere nearby, because edges are usually continuous.</p>
@@ -223,10 +223,10 @@ plot(weak,main=&quot;Initial set of weak edges&quot;)</code></pre>
                         #we have to mind boundary conditions
                         if (nx &gt; 0 &amp;&amp; nx &lt;= max.x &amp;&amp; ny &gt; 0 &amp;&amp; ny &lt;= max.y)
                         {
-                            if (at(weak,nx,ny)==1)
+                            if (at(weak,nx,ny)==TRUE)
                             {
-                                at(weak,nx,ny) &lt;- 0
-                                at(strong,nx,ny) &lt;- 1
+                                at(weak,nx,ny) &lt;- FALSE
+                                at(strong,nx,ny) &lt;- TRUE
                                 queue[[length(queue)+1]] &lt;- index.coord(strong,data.frame(x=nx,y=ny))
                             }
                         }
@@ -241,18 +241,20 @@ canny &lt;- hyst.loop(strong,weak)
 plot(canny,main=&quot;Edges after hystereris&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-11-1.png" width="624" /></p>
 <p>R is impractically slow for such a process (try running hyst.loop on a large image).</p>
-<p>We can do much better by using morphological dilation as our computational primitive. <a href="https://en.wikipedia.org/wiki/Dilation_(morphology)">Morphological dilation</a> takes a B&amp;W image and expands the set of white pixels by using a “structuring element”. In the simplest case the structuring element is a square and dilation corresponds to a kind of convolution: we move the square around, and we label the central element white if there is another white pixel in the square. Here it is at work on a small noise image:</p>
-<pre class="r"><code>imn &lt;- as.cimg(imnoise(100,100) &gt; 1)
-list(imn,dilate_square(imn,2)) %&gt;% imlist %&gt;% plot(layout=&quot;row&quot;)</code></pre>
+<p>We can do much better by using morphological dilation as our computational primitive. <a href="https://en.wikipedia.org/wiki/Dilation_(morphology)">Morphological dilation</a> takes a B&amp;W image and expands the set of white pixels by using a “structuring element”. In the simplest case the structuring element is a square and dilation corresponds to a kind of convolution: we move the square around, and we label the central element white if there is another white pixel in the square. This operation is called “grow” in imager, when applied to pixel sets. See <a href="morphology.html">here</a> for more on morphology. Here it is at work on a small noise image:</p>
+<pre class="r"><code>px &lt;- imnoise(100,100) &gt; 1
+layout(t(1:2))
+plot(px,&quot;Original&quot;)
+plot(grow(px,3),&quot;Dilated Set&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
 <p>Morphological dilation gives us a way of implementing hysteresis. We start from the set of strong edges, expand it with dilation, and check its overlap with the set of weak-edges. Any points in the overlap can now be labelled “strong”:</p>
-<pre class="r"><code>overlap &lt;- dilate_square(strong,3)*weak 
-strong.new &lt;- strong + overlap
+<pre class="r"><code>overlap &lt;- grow(strong,3) &amp; weak 
+strong.new &lt;- strong | overlap
 plot(strong.new,main=&quot;New set of strong edges&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-13-1.png" width="624" /></p>
 <pre class="r"><code>delta &lt;- sum(strong.new)-sum(strong)
 delta</code></pre>
-<pre><code>## [1] 202</code></pre>
+<pre><code>## [1] 188</code></pre>
 <p>We have labelled 202 formerly weak edges as strong. There’s no reason to stop here: we can repeat the operation until the set of weak edges stops growing. The hysteresis operation is thus a fixed point iteration, an computation we go on doing until the results stop changing. The package “fixedpoint” provides a convenient mechanism for turning a function into a fixed point iteration.</p>
 <pre class="r"><code>#run devtools::install_github(&quot;dahtah/fixedpoints&quot;)
 library(fixedpoints)
@@ -274,9 +276,9 @@ g(3) #Run the fixed point iteration from 3.</code></pre>
 #and returns the expanded strong set and the (shrunk) weak set
 expandStrong &lt;- function(ws)
     {
-        overlap &lt;- dilate_square(ws$strong,3)*ws$weak
-        ws$strong &lt;- ws$strong + overlap
-        ws$weak &lt;- ws$weak-overlap
+        overlap &lt;- grow(ws$strong,3) &amp; ws$weak
+        ws$strong[overlap] &lt;- TRUE
+        ws$weak[overlap] &lt;- FALSE
         ws
     }
 
@@ -288,12 +290,12 @@ hystFP &lt;- fp(expandStrong)
 #Call hystFP
 out &lt;- list(strong=strong,weak=weak) %&gt;% hystFP
 out</code></pre>
-<pre><code>## Result after 70 iterations. Converged:  TRUE.
+<pre><code>## Result after 71 iterations. Converged:  TRUE.
 ## $strong
-## Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 
+## Pixel set of size 5587. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1 
 ## 
 ## $weak
-## Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1</code></pre>
+## Pixel set of size 4244. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1</code></pre>
 <pre class="r"><code>canny &lt;- out$strong
 plot(canny,main=&quot;Canny edges&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-15-1.png" width="624" /></p>
@@ -304,17 +306,16 @@ plot(im1,main=&quot;Bucket fill initialised at red point&quot;)
 points(80,80,col=&quot;red&quot;)
 bucketfill(im1,80,80,color=1,high_connex=TRUE) %&gt;% plot(main=&quot;Result&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-16-1.png" width="768" /></p>
-<p>The bucketfill has a tolerance parameter, which sets a stopping criterion: if nearby pixels are more than “sigma” apart in value, they won’t be filled. The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we’ll have rescued all the weak edges that need to be rescued. To identify all strong regions, we use “label”:</p>
-<pre class="r"><code>labs &lt;- label(strong,high=TRUE)
-suppressWarnings((labs*strong) %&gt;% plot(.,colourscale=scales::div_gradient_pal()))</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-17-1.png" width="624" /></p>
-<p>label gives each distinct, connected region an integer label. To obtain a starting pixel inside each region, we use dplyr:</p>
-<pre class="r"><code>lab &lt;- label(strong,TRUE)*strong
-loc &lt;- as.data.frame(lab) %&gt;% dplyr::filter(value &gt; 0)%&gt;%
-    dplyr::group_by(value) %&gt;%
-    dplyr::summarize(x=x[1],y=y[1])
+<p>The bucketfill has a tolerance parameter, which sets a stopping criterion: if nearby pixels are more than “sigma” apart in value, they won’t be filled. The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we’ll have rescued all the weak edges that need to be rescued. split.connected splits a pixel set into its connected regions:</p>
+<pre class="r"><code>pxs &lt;- split.connected(strong,high_connectivity=TRUE)
+length(pxs)</code></pre>
+<pre><code>## [1] 125</code></pre>
+<p>Each element in pxs is a pixel set representing a set of connected strong edge pixels.</p>
+<p>We need seed pixels from each region, which we can collect using purrr’s map function:</p>
+<pre class="r"><code>#Collect seed pixels and plot their location
 plot(strong)
-points(loc$x,loc$y,col=&quot;red&quot;)</code></pre>
+library(purrr)
+map_df(pxs,~ where(.)[1,]) %$% points(x,y,col=&quot;red&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-18-1.png" width="624" /></p>
 <p>For the bucket fill trick to work we need to be able to spread the value of strong pixels to their weak neighbour (but not elsewhere). We assign different values to strong and weak pixels:</p>
 <pre class="r"><code>v &lt;- strong
@@ -332,24 +333,23 @@ imsplit(boats,&quot;c&quot;) %&gt;% reduce(function(acc,l) imappend(list(acc,l),
 <p><img src="canny_files/figure-html/unnamed-chunk-20-1.png" width="624" /></p>
 <pre class="r"><code>#Gives a set of initial locations for the bucket fill
 fillInit &lt;- function(strong)
-    {
-        lab &lt;- label(strong,TRUE)*strong
-        as.data.frame(lab) %&gt;% dplyr::filter(value &gt; 0) %&gt;% dplyr::group_by(value) %&gt;% dplyr::summarize(x=x[1],y=y[1])
-
-    }
+{
+    pxs &lt;- split.connected(strong,high_connectivity=TRUE)
+    map_df(pxs,~ where(.)[1,])
+}
 
 #Starts a fill at each successive location, and accumulates the results
 rescueFill &lt;- function(strong,weak)
     {
         v &lt;- strong
-        v[weak==1] &lt;- .9
+        v[weak] &lt;- .9
         loc &lt;- fillInit(strong)
         #Transform the data.frame into a list of locations
-        loc &lt;- dplyr::select(loc,-value) %&gt;% transpose
+        loc &lt;- transpose(loc)
         #Fold
         out &lt;- reduce(loc,function(v,l) bucketfill(v,l$x,l$y,color=1,sigma=.1,high=TRUE),
                       .init=v)
-        as.cimg(out==1)
+        out==1
     }
 
 canny2 &lt;- rescueFill(strong,weak)
@@ -358,51 +358,10 @@ all.equal(canny,canny2)</code></pre>
 <p>The second function is much faster, at least on this image (for this particular choice of thresholds):</p>
 <pre class="r"><code>system.time(hystFP(list(strong=strong,weak=weak)))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.727   0.008   0.736</code></pre>
+##   0.616   0.024   0.637</code></pre>
 <pre class="r"><code>system.time(rescueFill(strong,weak))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.051   0.000   0.051</code></pre>
-<p>A full implementation of the Canny edge detector is below:</p>
-<pre class="r"><code>nonmax &lt;- function(gr)
-    {
-        mag &lt;- with(gr,sqrt(x^2+y^2))
-        ang &lt;- with(gr,atan2(y,x))
-        grs &lt;- list(x=gr$x/mag,y=gr$y/mag)
-        X &lt;- Xc(gr$x)
-        Y &lt;- Yc(gr$y)
-        val.bwd &lt;- interp(mag,data.frame(x=as.vector(X-grs$x),
-                                         y=as.vector(Y -grs$y)))
-        val.fwd &lt;- interp(mag,data.frame(x=as.vector(X+grs$x),
-                                         y=as.vector(Y+grs$y)))
-        
-        throw &lt;- (mag &lt; val.bwd) | (mag &lt; val.fwd)
-        mag[throw] &lt;- 0
-        mag
-    }
-
-cannyEdges &lt;- function(im,t1,t2,method=&quot;fp&quot;)
-    {
-        mag &lt;- imgradient(im,&quot;xy&quot;) %&gt;% nonmax
-        strong &lt;- as.cimg(mag&gt;t2)
-        weak &lt;- as.cimg(mag %inr% c(t1,t2))
-        if (method==&quot;fp&quot;)
-            {
-                
-                hystFP(list(strong=strong,weak=weak))$strong
-            }
-        else if (method==&quot;loop&quot;)
-            {
-                hyst.loop(strong,weak)
-            }
-        else if (method==&quot;bucket&quot;)
-            {
-                rescueFill(strong,weak)
-            }
-    }
-
-parrots &lt;- load.example(&quot;parrots&quot;)*255 
-grayscale(parrots) %&gt;% cannyEdges(.01,.1,method=&quot;bucket&quot;)  %&gt;% plot</code></pre>
-<p><img src="canny_files/figure-html/unnamed-chunk-23-1.png" width="624" /></p>
+##   0.144   0.012   0.153</code></pre>
 </div>
 
 

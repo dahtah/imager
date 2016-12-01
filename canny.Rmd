@@ -115,9 +115,9 @@ t2 <- quantile(mag,.96)
 t1 <- quantile(mag,.90)
 layout(t(1:2))
 
-strong <- as.cimg(mag>t2)
+strong <- mag>t2
 plot(strong,main="Initial set of strong edges")
-weak <- as.cimg(mag %inr% c(t1,t2))
+weak <- mag %inr% c(t1,t2)
 plot(weak,main="Initial set of weak edges")
 ```
 
@@ -146,10 +146,10 @@ hyst.loop <- function(strong,weak)
                         #we have to mind boundary conditions
                         if (nx > 0 && nx <= max.x && ny > 0 && ny <= max.y)
                         {
-                            if (at(weak,nx,ny)==1)
+                            if (at(weak,nx,ny)==TRUE)
                             {
-                                at(weak,nx,ny) <- 0
-                                at(strong,nx,ny) <- 1
+                                at(weak,nx,ny) <- FALSE
+                                at(strong,nx,ny) <- TRUE
                                 queue[[length(queue)+1]] <- index.coord(strong,data.frame(x=nx,y=ny))
                             }
                         }
@@ -167,19 +167,22 @@ plot(canny,main="Edges after hystereris")
 
 R is impractically slow for such a process (try running hyst.loop on a large image). 
 
-We can do much better by using morphological dilation as our computational primitive. [Morphological dilation](https://en.wikipedia.org/wiki/Dilation_(morphology)) takes a B&W image and expands the set of white pixels by using a "structuring element". In the simplest case the structuring element is a square and dilation corresponds to a kind of convolution: we move the square around, and we label the central element white if there is another white pixel in the square. 
+We can do much better by using morphological dilation as our computational primitive. [Morphological dilation](https://en.wikipedia.org/wiki/Dilation_(morphology)) takes a B&W image and expands the set of white pixels by using a "structuring element". In the simplest case the structuring element is a square and dilation corresponds to a kind of convolution: we move the square around, and we label the central element white if there is another white pixel in the square. This operation is called "grow" in imager, when applied to pixel sets. 
+See [here](morphology.html) for more on morphology. 
 Here it is at work on a small noise image: 
 
 ```{r}
-imn <- as.cimg(imnoise(100,100) > 1)
-list(imn,dilate_square(imn,2)) %>% imlist %>% plot(layout="row")
+px <- imnoise(100,100) > 1
+layout(t(1:2))
+plot(px,"Original")
+plot(grow(px,3),"Dilated Set")
 ```
 
 Morphological dilation gives us a way of implementing hysteresis. We start from the set of strong edges, expand it with dilation, and check its overlap with the set of weak-edges. Any points in the overlap can now be labelled "strong": 
 
 ```{r}
-overlap <- dilate_square(strong,3)*weak 
-strong.new <- strong + overlap
+overlap <- grow(strong,3) & weak 
+strong.new <- strong | overlap
 plot(strong.new,main="New set of strong edges")
 delta <- sum(strong.new)-sum(strong)
 delta
@@ -209,9 +212,9 @@ In our case the mapping to iterate is the "expansion, relabelling" operation we 
 #and returns the expanded strong set and the (shrunk) weak set
 expandStrong <- function(ws)
     {
-        overlap <- dilate_square(ws$strong,3)*ws$weak
-        ws$strong <- ws$strong + overlap
-        ws$weak <- ws$weak-overlap
+        overlap <- grow(ws$strong,3) & ws$weak
+        ws$strong[overlap] <- TRUE
+        ws$weak[overlap] <- FALSE
         ws
     }
 
@@ -240,23 +243,25 @@ bucketfill(im1,80,80,color=1,high_connex=TRUE) %>% plot(main="Result")
 ```
 
 The bucketfill has a tolerance parameter, which sets a stopping criterion: if nearby pixels are more than "sigma" apart in value, they won't be filled. 
-The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we'll have rescued all the weak edges that need to be rescued. To identify all strong regions, we use "label":
+The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we'll have rescued all the weak edges that need to be rescued. 
+split.connected splits a pixel set into its connected regions:
 
 ```{r}
-labs <- label(strong,high=TRUE)
-suppressWarnings((labs*strong) %>% plot(.,colourscale=scales::div_gradient_pal()))
+pxs <- split.connected(strong,high_connectivity=TRUE)
+length(pxs)
 ```
 
-label gives each distinct, connected region an integer label. To obtain a starting pixel inside each region, we use dplyr: 
+Each element in pxs is a pixel set representing a set of connected strong edge pixels. 
 
-```{r}
-lab <- label(strong,TRUE)*strong
-loc <- as.data.frame(lab) %>% dplyr::filter(value > 0)%>%
-    dplyr::group_by(value) %>%
-    dplyr::summarize(x=x[1],y=y[1])
+We need seed pixels from each region, which we can collect using purrr's map function:
+
+```{r message=FALSE}
+#Collect seed pixels and plot their location
 plot(strong)
-points(loc$x,loc$y,col="red")
+library(purrr)
+map_df(pxs,~ where(.)[1,]) %$% points(x,y,col="red")
 ```
+
 
 For the bucket fill trick to work we need to be able to spread the value of strong pixels to their weak neighbour (but not elsewhere). We assign different values to strong and weak pixels: 
 
@@ -286,24 +291,23 @@ imsplit(boats,"c") %>% reduce(function(acc,l) imappend(list(acc,l),"x")) %>% plo
 ```{r}
 #Gives a set of initial locations for the bucket fill
 fillInit <- function(strong)
-    {
-        lab <- label(strong,TRUE)*strong
-        as.data.frame(lab) %>% dplyr::filter(value > 0) %>% dplyr::group_by(value) %>% dplyr::summarize(x=x[1],y=y[1])
-
-    }
+{
+    pxs <- split.connected(strong,high_connectivity=TRUE)
+    map_df(pxs,~ where(.)[1,])
+}
 
 #Starts a fill at each successive location, and accumulates the results
 rescueFill <- function(strong,weak)
     {
         v <- strong
-        v[weak==1] <- .9
+        v[weak] <- .9
         loc <- fillInit(strong)
         #Transform the data.frame into a list of locations
-        loc <- dplyr::select(loc,-value) %>% transpose
+        loc <- transpose(loc)
         #Fold
         out <- reduce(loc,function(v,l) bucketfill(v,l$x,l$y,color=1,sigma=.1,high=TRUE),
                       .init=v)
-        as.cimg(out==1)
+        out==1
     }
 
 canny2 <- rescueFill(strong,weak)
@@ -317,47 +321,4 @@ system.time(hystFP(list(strong=strong,weak=weak)))
 system.time(rescueFill(strong,weak))
 ```
 
-A full implementation of the Canny edge detector is below: 
-
-```{r}
-nonmax <- function(gr)
-    {
-        mag <- with(gr,sqrt(x^2+y^2))
-        ang <- with(gr,atan2(y,x))
-        grs <- list(x=gr$x/mag,y=gr$y/mag)
-        X <- Xc(gr$x)
-        Y <- Yc(gr$y)
-        val.bwd <- interp(mag,data.frame(x=as.vector(X-grs$x),
-                                         y=as.vector(Y -grs$y)))
-        val.fwd <- interp(mag,data.frame(x=as.vector(X+grs$x),
-                                         y=as.vector(Y+grs$y)))
-        
-        throw <- (mag < val.bwd) | (mag < val.fwd)
-        mag[throw] <- 0
-        mag
-    }
-
-cannyEdges <- function(im,t1,t2,method="fp")
-    {
-        mag <- imgradient(im,"xy") %>% nonmax
-        strong <- as.cimg(mag>t2)
-        weak <- as.cimg(mag %inr% c(t1,t2))
-        if (method=="fp")
-            {
-                
-                hystFP(list(strong=strong,weak=weak))$strong
-            }
-        else if (method=="loop")
-            {
-                hyst.loop(strong,weak)
-            }
-        else if (method=="bucket")
-            {
-                rescueFill(strong,weak)
-            }
-    }
-
-parrots <- load.example("parrots")*255 
-grayscale(parrots) %>% cannyEdges(.01,.1,method="bucket")  %>% plot
-```
 

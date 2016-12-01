@@ -18,8 +18,7 @@ The first step is to compute a gradient, using imgradient:
 
 ```{r}
 library(imager)
-#The 255 factor isn't stricly needed, it's for the luminance values to be properly scaled
-im <- (255*load.example("parrots")) %>% grayscale %>% imresize(.3)
+im <- load.example("parrots") %>% grayscale %>% imresize(.3)
 gr <- imgradient(im,"xy")
 ```
 

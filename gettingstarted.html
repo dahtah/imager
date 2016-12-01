@@ -173,9 +173,9 @@ plot(boats)</code></pre>
 <pre class="r"><code>log(boats)+3*sqrt(boats)</code></pre>
 <pre><code>Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 3 </code></pre>
 <pre class="r"><code>mean(boats)</code></pre>
-<pre><code>[1] 129.7711</code></pre>
+<pre><code>[1] 0.5089061</code></pre>
 <pre class="r"><code>sd(boats)</code></pre>
-<pre><code>[1] 36.92322</code></pre>
+<pre><code>[1] 0.144797</code></pre>
 <p>Now you might wonder why the following two images look exactly the same:</p>
 <pre class="r"><code>layout(t(1:2))
 plot(boats)
@@ -235,10 +235,10 @@ plot(parrots)</code></pre>
 <pre class="r"><code>library(ggplot2)
 bdf &lt;- as.data.frame(boats)
 head(bdf,3)</code></pre>
-<pre><code>  x y cc    value
-1 1 1  1 99.00000
-2 2 1  1 98.39513
-3 3 1  1 98.15985</code></pre>
+<pre><code>  x y cc     value
+1 1 1  1 0.3882353
+2 2 1  1 0.3858633
+3 3 1  1 0.3849406</code></pre>
 <pre class="r"><code>bdf &lt;- plyr::mutate(bdf,channel=factor(cc,labels=c(&#39;R&#39;,&#39;G&#39;,&#39;B&#39;)))
 ggplot(bdf,aes(value,col=channel))+geom_histogram(bins=30)+facet_wrap(~ channel)</code></pre>
 <p><img src="gettingstarted_files/figure-html/unnamed-chunk-17-1.jpeg" width="384" /></p>
@@ -261,7 +261,7 @@ plot(f,main=&quot;Empirical CDF of luminance values&quot;)</code></pre>
 <p><img src="gettingstarted_files/figure-html/unnamed-chunk-20-1.jpeg" width="384" /></p>
 <p>Now the only problem is that ecdf is base R, and unaware of our cimg objects. The function f took an image and returned a vector:</p>
 <pre class="r"><code>f(boats.g) %&gt;% str</code></pre>
-<pre><code> num [1:98304] 0.175 0.169 0.168 0.168 0.17 ...</code></pre>
+<pre><code> num [1:98304] 0.171 0.165 0.163 0.164 0.165 ...</code></pre>
 <p>If we wish to get an image back we can just use as.cimg:</p>
 <pre class="r"><code>f(boats.g) %&gt;% as.cimg(dim=dim(boats.g)) %&gt;% plot(main=&quot;With histogram equalisation&quot;)</code></pre>
 <p><img src="gettingstarted_files/figure-html/unnamed-chunk-22-1.jpeg" width="384" /></p>
@@ -307,8 +307,8 @@ plot(grad.mag,main=&quot;Gradient magnitude&quot;)</code></pre>
 <pre class="r"><code>l &lt;- imgradient(boats.g,&quot;xy&quot;)
 str(l)</code></pre>
 <pre><code>List of 2
- $ x: cimg [1:256, 1:384, 1, 1] 0.002784 0.002879 -0.000485 -0.000331 0.000134 ...
- $ y: cimg [1:256, 1:384, 1, 1] 0.00483 0.011 0.01502 0.01439 0.01358 ...
+ $ x: cimg [1:256, 1:384, 1, 1] 0.002885 0.002968 -0.000495 -0.000315 0.000121 ...
+ $ y: cimg [1:256, 1:384, 1, 1] 0.00493 0.01123 0.01534 0.01472 0.0139 ...
  - attr(*, &quot;class&quot;)= chr [1:2] &quot;imlist&quot; &quot;list&quot;</code></pre>
 <p>And the second takes a list of images and computes the Euclidean norm pixel-wise, i.e.:</p>
 <pre class="r"><code>enorm(list(3,2))</code></pre>
@@ -342,20 +342,20 @@ p+scale_y_reverse()</code></pre>
 <p><img src="gettingstarted_files/figure-html/unnamed-chunk-35-1.jpeg" width="624" /></p>
 <p>Plotting channels separately may be useful on occasion, but usually we’d want the original colours. We can tell as.data.frame to return a “wide” format:</p>
 <pre class="r"><code>as.data.frame(boats,wide=&quot;c&quot;) %&gt;% head</code></pre>
-<pre><code>  x y      c.1      c.2      c.3
-1 1 1 99.00000 99.00000 99.00000
-2 2 1 98.39513 98.39513 98.39513
-3 3 1 98.15985 98.15985 98.15985
-4 4 1 98.23828 98.23828 98.23828
-5 5 1 98.43990 98.43990 98.43990
-6 6 1 98.31671 98.31671 98.31671</code></pre>
+<pre><code>  x y       c.1       c.2       c.3
+1 1 1 0.3882353 0.3882353 0.3882353
+2 2 1 0.3858633 0.3858633 0.3858633
+3 3 1 0.3849406 0.3849406 0.3849406
+4 4 1 0.3852481 0.3852481 0.3852481
+5 5 1 0.3860388 0.3860388 0.3860388
+6 6 1 0.3855557 0.3855557 0.3855557</code></pre>
 <p>The three colour channels are now stacked along columns, which lets us do the following:</p>
 <pre class="r"><code>df &lt;- as.data.frame(boats,wide=&quot;c&quot;) %&gt;% mutate(rgb.val=rgb(c.1/255,c.2/255,c.3/255))
 head(df,3)</code></pre>
-<pre><code>  x y      c.1      c.2      c.3 rgb.val
-1 1 1 99.00000 99.00000 99.00000 #636363
-2 2 1 98.39513 98.39513 98.39513 #626262
-3 3 1 98.15985 98.15985 98.15985 #626262</code></pre>
+<pre><code>  x y       c.1       c.2       c.3 rgb.val
+1 1 1 0.3882353 0.3882353 0.3882353 #000000
+2 2 1 0.3858633 0.3858633 0.3858633 #000000
+3 3 1 0.3849406 0.3849406 0.3849406 #000000</code></pre>
 <p>We can now plot our image using ggplot’s identity scale:</p>
 <pre class="r"><code>p &lt;- ggplot(df,aes(x,y))+geom_raster(aes(fill=rgb.val))+scale_fill_identity()
 p+scale_y_reverse()</code></pre>

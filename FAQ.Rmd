@@ -49,3 +49,11 @@ list(a,b) %>% imappend("x") %>% plot
 ```
 
 For more flexibility, you can also pad the image and use imdraw. 
+
+# How do I swap axes? 
+
+Use permute_axes:
+
+```{r}
+permute_axes(boats,"yxzc") %>% plot
+```

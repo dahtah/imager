@@ -14,10 +14,12 @@ library(imager)
 [Simon Barthelmé](http://sites.google.com/site/simonbarthelme) (GIPSA-lab, CNRS)
 
 
+# Thresholding, and correcting for varying luminance 
+
 Our first example will be based on a sketch by Leonardo. Let's say we want to extract an outline of the birds: 
 
 ```{r birds}
-im <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
+im <- load.example("birds")
 plot(im)
 im.g <- grayscale(im)
 plot(im.g)
@@ -53,16 +55,60 @@ plot(im.f,main="After trend removal")
 It's now easier to threshold the image:
 
 ```{r threshold2,fig.width=18}
-layout(t(1:3))
-l_ply(paste0(c(20,15,10),"%"),function(v) threshold(im.f,v) %>% plot(main=v))
+#Note the use of map_il, which is a kind of "lapply" that returns an image list
+#map_il wraps map, from the purrr package
+paste0(c(20,15,10),"%") %>% map_il(~ threshold(im.f,.)) %>% plot(layout="row")
 ```
 
-We'll go on with a thresholding at 16%, and we can start to play with some morphological operations. "Morphological closing" will help get rid of some of the blotches: 
+# Morphological operations on pixsets 
+
+We'll go on with a thresholding at 16%, and we can start to play with some morphological operations. 
 
 ```{r mclosing,fig.width=12}
 im.t <- threshold(im.f,"16%")
-layout(t(1:2))
-plot(im.t,main="Before")
-mclosing_square(im.t,4) %>% plot(main="After morphological closing")
+px <- as.pixset(1-im.t) #Convert to pixset
+plot(px)
 ```
 
+Black and white images can be converted to "pixset" objects, which come with many convenience functions. In the image above, the pixels in white define the pixset.
+
+"grow" (morphological dilation) enlarges a pixset:
+
+```{r}
+grow(px,3) %>% plot(main="Growing by 3 pixels")
+```
+
+"shrink" shrinks it:
+
+```{r}
+shrink(px,3) %>% plot(main="Shrinking by 3 pixels")
+```
+
+Note how "shrink" removes all the isolated dots. "grow" and "shrink" aren't inverse operations: indeed, if we combine "shrink" followed by "grow", we can clean up pixsets. 
+
+```{r}
+layout(t(1:2))
+plot(px,main="Original")
+shrink(px,3) %>% grow(3) %>% plot(main="Shrink, then grow")
+
+```
+
+There's a shortcut for that called "clean". 
+
+The opposite tends to fill in holes:
+
+```{r}
+layout(t(1:2))
+plot(px,main="Original")
+grow(px,3) %>% shrink(3) %>% plot(main="Grow, then shrink")
+```
+
+The shortcut is called "fill". 
+
+Combining these operations we can get a pretty good outline for the birds:
+
+```{r}
+plot(im)
+fill(px,5) %>% clean(3) %>% highlight
+
+```
