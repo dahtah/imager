@@ -79,6 +79,8 @@ iiply <- function(im,axis,fun,...)
 ##' imsplit(im,"z",2) #Split along the z axis into two groups
 ##' imsplit(boats,"x",-200) %>% plot #Blocks of 200 pix. along x
 ##' imsplit(im,"z",2) %>% imappend("z") #Split and reshape into a single image
+##' #You can also split pixsets
+##' imsplit(boats > .5,"c") %>% plot
 ##' @export
 imsplit <- function(im,axis,nb=-1)
 {
@@ -290,14 +292,16 @@ maxmin.ind <- function(L,max=TRUE)
 #' plyr::rlply(3,imnoise(100,100)) %>% imappend("c") %>% plot
 #' boats.gs <- grayscale(boats)
 #' plyr::llply(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) %>% imappend("c") %>% plot
+#' #imappend also works on pixsets
+#' imsplit(boats > .5,"c") %>% imappend("x") %>% plot
 ##' @export 
 imappend <- function(imlist,axis)
 {
-    if (all(map(imlist,is.cimg) ))
+    if (all(map_lgl(imlist,is.cimg)))
     {
         im_append(imlist,axis)
     }
-    else if (all(map(imlist,is.pixset) ))
+    else if (all(map_lgl(imlist,is.pixset)))
     {
         px_append(imlist,axis)
     }

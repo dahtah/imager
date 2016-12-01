@@ -74,7 +74,7 @@ NumericVector im_append(List imlist,char axis)
 LogicalVector px_append(List imlist,char axis)
 {
   try{
-      CImgList<bool> ilist = sharedCImgList_bool(imlist);
+      CImgList<int> ilist = sharedCImgList_bool(imlist);
       CIb out(ilist.get_append(axis));
       return wrap(out);
     }

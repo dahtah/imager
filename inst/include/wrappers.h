@@ -68,6 +68,18 @@ namespace Rcpp {
     out.attr("class") = CharacterVector::create("imlist","list");
     return Rcpp::wrap(out);
   }
+
+  template <> inline SEXP wrap(const cimg_library::CImgList<bool > &ilist) 
+  {
+    Rcpp::List out(ilist.size());
+    for (int i = 0;i < ilist.size(); i++)
+      {
+	out[i] = wrap(ilist(i));
+      }
+    out.attr("class") = CharacterVector::create("imlist","list");
+    return Rcpp::wrap(out);
+  }
+
 }
 //#else
 /* namespace Rcpp { */
