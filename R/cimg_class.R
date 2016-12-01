@@ -10,7 +10,7 @@ NULL
 #' @useDynLib imager
 #' @importFrom grDevices as.raster col2rgb dev.capture gray rgb contourLines
 #' @importFrom utils file_test
-#' @importFrom graphics axis plot rasterImage layout
+#' @importFrom graphics axis plot rasterImage layout lines plot.new plot.window
 #' @importFrom stats quantile rnorm kmeans setNames
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom purrr map map_dbl map_lgl map_df map2

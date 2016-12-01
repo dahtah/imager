@@ -4,7 +4,7 @@
 \alias{split.connected}
 \title{Split pixset into connected components}
 \usage{
-\method{split}{connected}(px)
+\method{split}{connected}(px, ...)
 }
 \arguments{
 \item{px}{a pixset}

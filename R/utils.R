@@ -769,13 +769,13 @@ contours <- function(x, ...) {
    UseMethod("contours", x)
  }
 
-
+##' @describeIn contours
 ##' @export
 contours.cimg <- function(x,nlevels=10,...)
 {
     if (spectrum(x) > 1)
     {
-        channels(x) %>% map(contours)
+        channels(x) %>% map(function(v) contours(v,nlevels=nlevels,...))
     }
     else if (depth(x) > 1)
     {
@@ -789,12 +789,13 @@ contours.cimg <- function(x,nlevels=10,...)
 }
 
 
+##' @describeIn contours
 ##' @export
-contours.pixset <- function(x)
+contours.pixset <- function(x,...)
 {
     if (spectrum(x) > 1)
     {
-        channels(x) %>% map(as.pixset) %>% map(contours)
+        channels(x) %>% map(as.pixset) %>% map(function(v) contours(v,...))
     }
     else if (depth(x) > 1)
     {

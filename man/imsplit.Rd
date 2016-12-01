@@ -24,6 +24,8 @@ imsplit(im,"z") #Split along the z axis into a list with 5 elements
 imsplit(im,"z",2) #Split along the z axis into two groups
 imsplit(boats,"x",-200) \%>\% plot #Blocks of 200 pix. along x
 imsplit(im,"z",2) \%>\% imappend("z") #Split and reshape into a single image
+#You can also split pixsets
+imsplit(boats > .5,"c") \%>\% plot
 }
 \seealso{
 imappend (the reverse operation)

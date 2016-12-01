@@ -24,14 +24,14 @@ is.imlist <- function(x) is(x,"imlist")
 ##' @export
 as.imlist.list <- function(x,...)
     {
-        if (!(map_lgl(x,is.cimg) %>% all) || !(map_lgl(x,is.pixset) %>% all))
-        {
-            stop("The list may only contain images (objects with class cimg) or pixsets")
-        }
-        else
+        if (all(map_lgl(x,is.cimg)) || all(map_lgl(x,is.pixset)))
         {
             class(x) <- c("imlist","list")
             x
+        }
+        else
+        {
+             stop("The list may only contain images (objects with class cimg) or pixsets")
         }
     }
 

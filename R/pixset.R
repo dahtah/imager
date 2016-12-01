@@ -539,16 +539,17 @@ px.flood <- function(im,x,y,z=1,sigma=0,high_connexity=FALSE)
 ##' spl <- split.connected(px)
 ##' plot(spl[[1]])
 ##' @author Simon Barthelme
-##' @export
-split.connected <- function(px)
+##' @export split.connected
+split.connected <- function(px,...)
 {
     if (sum(px)==0)
     {
-        stop("Pixset is empty")
+        stop("Pixset is empty, can't split")
     }
     else
         {
             lab <- label(px,...)
+            lab <- lab*as.cimg(px)
             (1:max(lab)) %>% map(function(v) lab==v)
         }
 }

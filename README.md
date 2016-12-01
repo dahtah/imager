@@ -84,7 +84,12 @@ For out-of-memory processing of videos, see the experimental package [imagerstre
 
 Imager is fully functional but still young, so the API might change. Open an issue on Github or email me if you've found a bug or would like to suggest a feature.
 
+## Contributing to imager
+
+If you want to add features or fix a bug, just fork this repository and send me a pull request (they're welcome). Documentation is great too: imager has got quite large over time, and it's in need of how-to's and tutorials! 
+
 ## Test pictures
 
 Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field. 
 The test video comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
+
