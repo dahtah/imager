@@ -27,12 +27,6 @@ Add colour channels to a grayscale image or pixel set
 \examples{
 grayscale(boats) #No more colour channels
 add.colour(grayscale(boats)) #Image has depth = 3 (but contains only grays)
-#A pixel set defined on the grayscale channel only:
-px <- grayscale(boats) > .8
-#The following won't work: px and boats have different dimensions
-try(boats[px])
-#This does work
-head(boats[add.colour(px)])
 }
 \author{
 Simon Barthelme

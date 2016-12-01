@@ -60,7 +60,8 @@ as.pixset.cimg <- function(x,...) pixset(x!=0)
 #' @export
 as.cimg.pixset <- function(obj,...) obj+0
 
-
+#' @export
+as.pixset.pixset <- function(obj,...) obj
 
 #' @export
 as.logical.pixset <- function(x,...) { class(x) <- "logical"; x }
@@ -557,3 +558,91 @@ split.connected <- function(px,...)
 #' @export
 display.pixset <- function(x,...) display(as.cimg(x),...)
 
+
+
+##' @export
+`[.pixset` <- function(x,...) {
+    args <- as.list(substitute(list(...)))[-1L];
+    drop <- TRUE
+    
+    hasdrop <- ("drop"%in%names(args))
+    if (hasdrop)
+    {
+        drop <- args$drop
+    }
+    l <- length(args) -hasdrop
+
+
+        #Call default method for arrays
+    if (l==1 | l ==4)
+    {
+        out <- NextMethod()
+    }
+    else if (l<=4)
+    {
+        d <- dim(x)
+        
+        ar <- list(1,1,1,1)
+        nsd <- which(dim(x) > 1)
+        if (l == length(nsd))
+        {
+            ar[nsd] <- args[1:length(nsd)]
+            if (!drop) ar$drop <- FALSE
+            out <- do.call('[',c(list(x),c(ar)))
+        }
+        else
+        {
+            stop('Ambiguous call to .subset')
+        }
+    }
+    else
+    {
+        stop('Too many arguments')
+    }
+    if (hasdrop)
+    {
+        if (!args$drop)
+        {
+            pixset(out)
+        }
+    }
+    else
+    {
+        out
+    }
+}
+
+##' @export
+`[<-.pixset` <- function(x,...,value) {
+    args <- as.list(substitute(list(...)))[-1L];
+    l <- length(args) 
+
+    #Call default method for arrays
+    if (l==1 | l ==4)
+    {
+            out <- NextMethod()
+    }
+    else if (l<=4)
+    {
+        d <- dim(x)
+        
+        ar <- list(1,1,1,1)
+        nsd <- which(dim(x) > 1)
+        if (l == length(nsd))
+        {
+            ar[nsd] <- args[1:length(nsd)]
+            ar$value <- value
+#            browser()
+            out <- do.call('[<-',c(list(x),c(ar)))
+        }
+        else
+        {
+            stop('Ambiguous call to .subset')
+        }
+    }
+    else
+    {
+        stop('Too many arguments')
+    }
+    pixset(out)
+}

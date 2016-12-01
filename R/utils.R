@@ -757,13 +757,13 @@ cimg.use.openmp <- function(mode="adaptive")
 ##' ct <- contours(boats.gs,nlevels=3)
 ##' plot(boats.gs)
 ##' #Add contour lines
-##' sapply(ct,function(v) lines(v$x,v$y,col="red"))
+##' purrr::walk(ct,function(v) lines(v$x,v$y,col="red"))
 ##' #Contours of a pixel set
 ##' px <- boats.gs > .8
 ##' plot(boats.gs)
 ##' ct <- contours(px)
 ##' #Highlight pixset
-##' sapply(ct,function(v) lines(v$x,v$y,col="red"))
+##' purrr::walk(ct,function(v) lines(v$x,v$y,col="red"))
 ##' @export
 contours <- function(x, ...) {
    UseMethod("contours", x)

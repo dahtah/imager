@@ -300,7 +300,7 @@ channels <- function(im,index,drop=FALSE)
             {
                 index <- 1:spectrum(im)
             }
-        res <- imsplit(im[,,,index,drop=FALSE],"c")
+        res <- imsplit(im,"c")[index]
         nm <- paste('c',index,sep=".")
         names(res) <- nm
         if (drop)
@@ -720,12 +720,6 @@ squeeze <- function(x) {
 ##' @examples
 ##' grayscale(boats) #No more colour channels
 ##' add.colour(grayscale(boats)) #Image has depth = 3 (but contains only grays)
-##' #A pixel set defined on the grayscale channel only:
-##' px <- grayscale(boats) > .8
-##' #The following won't work: px and boats have different dimensions
-##' try(boats[px])
-##' #This does work
-##' head(boats[add.colour(px)])
 ##' @export
 add.colour <- function(im,simple=TRUE)
 {

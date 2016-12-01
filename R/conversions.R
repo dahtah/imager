@@ -60,9 +60,6 @@ as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
 ##' #By default as.raster rescales input values, so that:
 ##' all.equal(as.raster(boats),as.raster(boats/2)) #TRUE
 ##' #Setting rescale to FALSE changes that
-##' try(as.raster(boats,rescale=FALSE))
-##' #The above fails because the pixel values are in the wrong range
-##' boats <- boats/255 #Rescale to 0..1
 ##' as.raster(boats,rescale=FALSE) %>% plot
 ##' as.raster(boats/2,rescale=FALSE) %>% plot
 ##' #For grayscale images, a colourmap should take a single value and
