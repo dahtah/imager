@@ -316,7 +316,7 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
             {
                 stop("Map should be a function with arguments x,y or x,y,z")
             }
-        wf <- llply(out,function(v) array(v,c(dim(im)[1:3],1))) %>% imappend("c")
+        wf <- purrr::map(out,function(v) array(v,c(dim(im)[1:3],1))) %>% { purrr::map(.,as.cimg) } %>% imappend("c")
         mode <- (direction=="forward")*2+(coordinates=="relative")
         warp(im,wf,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary_conditions=switch(boundary,dirichlet=0,neumann=1,periodic=2))
     }
