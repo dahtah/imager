@@ -1,22 +1,3 @@
-#The following two functions are taken from the Cairo package
-#CRAN complains if they get called via :::
-
-cairo.ptr.to.raw <- function (ptr, begin, length)
-{
-    .Call("ptr_to_raw", ptr, begin, length, PACKAGE = "Cairo")
-}
-
-cairo.image <- function (device) 
-{
-    a <- .Call("get_img_backplane", device, PACKAGE = "Cairo")
-    names(a) <- c("ref", "info")
-    a$width <- a[[2]][1]
-    a$height <- a[[2]][2]
-    a$format <- c("ARGB", "RGB", "A8", "A1", "dep", "RGB16")[a[[2]][3] + 
-        1]
-    class(a) <- "CairoImageRef"
-    a
-}
 
 mplot <- function(im,...)
     {
@@ -50,9 +31,10 @@ flattenAlpha <- function(im)
 ##' #You can change the rendering of the initial image
 ##' im <- grayscale(boats)
 ##' draw.fun <- function() text(150,50,"Boats!!!",cex=3)
-##' out <- implot(im/255,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
+##' out <- implot(im,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
 ##' plot(out)
 ##' @author Simon Barthelme
+##' @export
 implot <- function(im,expr,...)
     {
         w <- width(im)
@@ -61,8 +43,6 @@ implot <- function(im,expr,...)
         out <- try({
             mplot(im,interp=FALSE,...)
             eval(expr,parent.frame())
-            ptr <- cairo.image(grDevices::dev.cur())
-            b <- cairo.ptr.to.raw(ptr$ref,0,ptr$width*ptr$height*4) %>% as.integer
             },TRUE)
         if (is(out,"try-error"))
             {
@@ -70,14 +50,11 @@ implot <- function(im,expr,...)
                 stop(out)
             }
         else
-            {
-                grDevices::dev.off()
-                
-                ## ch <- c(3,2,1,0)
-                ## ind <- seq_along(b)
-                ## im <- map(ch, ~ b[(ind %% 4)==.]) %>% map(~ as.cimg(.,dim=c(w,h,1,1))) %>% imappend("c")
-                mat <- t(matrix(b,4,length(b)/4)[c(3,2,1,4),])
-                dim(mat) <- c(w,h,1,4)
-                as.cimg(mat) %>% flattenAlpha 
-            }
+        {
+            out <- capture.plot()
+            grDevices::dev.off()
+            out
+        }
     }
+
+

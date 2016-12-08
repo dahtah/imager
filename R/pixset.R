@@ -61,7 +61,7 @@ as.pixset.cimg <- function(x,...) pixset(x!=0)
 as.cimg.pixset <- function(obj,...) obj+0
 
 #' @export
-as.pixset.pixset <- function(obj,...) obj
+as.pixset.pixset <- function(x,...) x
 
 #' @export
 as.logical.pixset <- function(x,...) { class(x) <- "logical"; x }
@@ -478,7 +478,7 @@ boundary <- function(px,depth=1,high_connexity=FALSE)
 ##' highlight(px)
 ##' px.flood(boats,18,50,sigma=.08) %>% highlight(col="white",lwd=3)
 ##' @export
-highlight <- function(px,col="red",mode="contour",...)
+highlight <- function(px,col="red",...)
 {
     if (spectrum(px) == 1)
     {
@@ -533,15 +533,15 @@ px.flood <- function(im,x,y,z=1,sigma=0,high_connexity=FALSE)
 ##' @return a list of pixsets
 ##' px <- isoblur(grayscale(boats),5) > .75
 ##' plot(px)
-##' spl <- split.connected(px)
+##' spl <- split_connected(px)
 ##' plot(spl[[1]])
 ##' px <- isoblur(grayscale(boats),5) > .75
 ##' plot(px)
-##' spl <- split.connected(px)
+##' spl <- split_connected(px)
 ##' plot(spl[[1]])
 ##' @author Simon Barthelme
-##' @export split.connected
-split.connected <- function(px,...)
+##' @export split_connected
+split_connected <- function(px,...)
 {
     if (sum(px)==0)
     {
