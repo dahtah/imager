@@ -4,7 +4,7 @@
 \alias{highlight}
 \title{Highlight pixel set on image}
 \usage{
-highlight(px, col = "red", mode = "contour", ...)
+highlight(px, col = "red", ...)
 }
 \arguments{
 \item{px}{a pixel set}

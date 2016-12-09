@@ -166,7 +166,7 @@ plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",yl
         {
             plot.new()
             plot.window(xlim = xlim, ylim = ylim,asp=asp,xaxs=xaxs,yaxs=yaxs,...)
-            rst <- as.raster(x,rescale=rescale,colorscale=colorscale,colourscale=colourscale)
+            rst <- as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale)
             rasterImage(rst, 1, nrow(rst), ncol(rst), 1,interpolate=interpolate)
             if (axes) { axis(1); axis(2) }
         }
@@ -549,53 +549,75 @@ subs <- function(im,cl,consts,envir=parent.frame())
 ##' #Load the R logo directly from the CRAN webpage
 ##' #load.image("https://cran.r-project.org/Rlogo.jpg") %>% plot
 ##' @export
-load.image <- function(file)
+load.image <- function(file) wrap.url(file,load.image.internal)
+
+load.image.internal <- function(file)
+{
+    bmp <- try(read.bitmap(file),silent=TRUE)
+    if (class(bmp) != "try-error") #Loaded succesfully
     {
-        is.url <- grepl("^(http|ftp)s?://", file)
-        if (!file_test("-f",file) & !is.url)
+        if (length(dim(bmp)) == 3) #Has colour
         {
-            stop("File not found")
-        }
-        if (is.url)
-        {
-            url <- file
-            file <- tempfile()
-            downloader::download(url,file)
-        }
-        bmp <- try(read.bitmap(file),silent=TRUE)
-        if (class(bmp) != "try-error") #Loaded succesfully
-        {
-            if (length(dim(bmp)) == 3) #Has colour
-            {
-                dim(bmp) <- c(dim(bmp)[1:2],1,dim(bmp)[3]) #Make array 4D
+            dim(bmp) <- c(dim(bmp)[1:2],1,dim(bmp)[3]) #Make array 4D
             }
-            else 
-            {
-                dim(bmp) <- c(dim(bmp),1,1)
-            }
-            bmp <- cimg(bmp) %>% mirror("x") %>% imrotate(-90)
-            bmp
-        }
-        else #Loading with read.bitmap has failed, try with ImageMagick
+        else 
         {
-            if (has.magick())
+            dim(bmp) <- c(dim(bmp),1,1)
+        }
+        bmp <- cimg(bmp) %>% mirror("x") %>% imrotate(-90)
+        bmp
+    }
+    else #Loading with read.bitmap has failed, try with ImageMagick
+    {
+        if (has.magick())
+        {
+            if (is.url)
             {
-                if (is.url)
-                {
-                    load_image(file)
-                }
-                else
-                {
-                    file <- normalizePath(file,mustWork=TRUE)
-                    load_image(file)
-                }
+                load_image(file)
             }
             else
             {
-                stop("Unsupported file format. Please convert to jpeg/png/bmp or install image magick")
+                file <- normalizePath(file,mustWork=TRUE)
+                load_image(file)
             }
         }
+        else
+        {
+            stop("Unsupported file format. Please convert to jpeg/png/bmp or install image magick")
+        }
     }
+}
+
+wrap.url <- function(file,fun)
+{
+    is.url <- grepl("^(http|ftp)s?://", file)
+    if (is.url)
+    {
+        url <- file
+        file <- tempfile()
+        downloader::download(url,file)
+        out <- fun(file)
+        unlink(file)
+        out
+    }
+    else
+    {
+        if (!file_test("-f",file))
+        {
+            stop("File not found")
+        }
+        else
+        {
+            fun(file)
+        }
+    }
+
+}
+
+has.ffmpeg <- function()
+{
+    Sys.which("ffmpeg") %>% { nchar(.) > 0 }
+}
 
 has.magick <- function()
 {

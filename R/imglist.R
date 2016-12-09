@@ -237,3 +237,12 @@ map_il <- function(...)
 {
     map(...) %>% as.imlist
 }
+
+
+#' @export
+`[.imlist` <- function(x,...)
+{
+    out <- NextMethod()
+    as.imlist(out)
+}
+
