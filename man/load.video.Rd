@@ -40,4 +40,7 @@ fname <- system.file('extdata/tennis_sif.mpeg',package='imager')
 \author{
 Simon Barthelme
 }
+\seealso{
+save.video, make.video
+}
 

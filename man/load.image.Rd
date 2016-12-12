@@ -21,7 +21,7 @@ an object of class 'cimg'
 \description{
 PNG, JPEG and BMP are supported via the readbitmap package. You'll need to install ImageMagick for other formats. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s).
 
-PNG, JPEG and BMP are supported via the readbitmap package. You'll need to install ImageMagick for other formats. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s).
+PNG, JPEG and BMP are supported via the readbitmap package. You'll need to install ImageMagick for other formats. If the path is actually a URL, it should start with http(s) or ftp(s).
 }
 \examples{
 #Find path to example file from package
