@@ -12,6 +12,7 @@
 ##' @param extra.args extra arguments to be passed to ffmpeg (default "", none)
 ##' @param verbose if TRUE, show ffmpeg output (default FALSE)
 ##' @return an image with the extracted frames along the "z" coordinates
+##' @seealso save.video, make.video
 ##' @examples
 ##' 
 ##' fname <- system.file('extdata/tennis_sif.mpeg',package='imager')
@@ -30,7 +31,7 @@ load.video.internal <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,e
     if (!is.null(frames)) extra.args <- sprintf("%s -vframes %i ",extra.args,frames)
     if (!is.null(fps)) extra.args <- sprintf("%s -vf fps=%.4d ",extra.args,fps)
     
-    arg <- sprintf("-i %s %s -ss %s ",fname,extra.args,as.character(skip.to)) %>% paste0(dd,"/image-%03d.bmp")
+    arg <- sprintf("-i %s %s -ss %s ",fname,extra.args,as.character(skip.to)) %>% paste0(dd,"/image-%d.bmp")
     tryCatch({
     dir.create(dd)
     system2("ffmpeg",arg,stdout=verbose,stderr=verbose)
@@ -58,7 +59,7 @@ load.video.internal <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,e
 ##' Load image from file or URL
 ##'
 ##'
-##' PNG, JPEG and BMP are supported via the readbitmap package. You'll need to install ImageMagick for other formats. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s). 
+##' PNG, JPEG and BMP are supported via the readbitmap package. You'll need to install ImageMagick for other formats. If the path is actually a URL, it should start with http(s) or ftp(s). 
 ##' 
 ##' @param file path to file or URL
 ##' @return an object of class 'cimg'
@@ -108,6 +109,7 @@ load.image.internal <- function(file)
         }
     }
 }
+
 
 wrap.url <- function(file,fun)
 {
@@ -236,5 +238,91 @@ convert.im.toPNG <- function(A)
 
 
 
+##' Load example image
+##'
+##' Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another (birds) is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field (hubble).
+##' The test video ("tennis") comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
+##' @param name name of the example
+##' @return an image
+##' @author Simon Barthelme
+##' @examples
+##' load.example("hubble") %>% plot
+##' load.example("birds") %>% plot
+##' load.example("parrots") %>% plot
+##' @export
+load.example <- function(name)
+{
+    fnames <- list(parrots="parrots.png",hubble="HubbleDeepField.jpg",
+                   tennis="tennis_sif.mpeg",birds="Leonardo_Birds.jpg")
+    if (name %in% names(fnames))
+    {
+        fp <- paste0('extdata/',fnames[name]) %>% system.file(package='imager')
+        if (name=="tennis_sig.mpeg")
+        {
+            load.video(fp)
+        }
+        else
+        {
+            load.video(fp)
+        }
+    }
+    else
+    {
+        msg <- 'Unknown example picture. Available: %s'
+        msg <- sprintf(msg,paste(names(fnames),collapse=","))
+        stop(msg)
+    }
+}
 
+##' Make/save a video using ffmpeg
+##'
+##' You need to have ffmpeg on your path for this to work. This function uses ffmpeg to combine individual frames into a video.
+##' save.video can be called directly with an image or image list as input. 
+##' make.video takes as argument a directory that contains a sequence of images representing individual frames to be combined into a video.
+##' @param im an image or image list
+##' @param fname name of the output file. The format is determined automatically from the name (example "a.mpeg" will have MPEG format)
+##' @param dname name of a directory containing individual files
+##' @param pattern pattern of filename for frames (default "image-%d.png", matching "image-1.png", "image-2.png", etc.)
+##' @param fps frames per second (default 25)
+##' @param extra.args extra arguments to be passed to ffmpeg (default "", none)
+##' @param verbose if TRUE, show ffmpeg output (default FALSE)
+##' @seealso load.video
+##' @examples
+##' 
+##' 
+##' ##Not run
+##' ## iml <- map_il(seq(0,20,l=60),~ isoblur(boats,.))
+##' ## f <- tempfile(fileext=".avi")
+##' ## save.video(iml,f)
+##' ## load.video(f) %>% play
+##' ## #Making a video from a directory
+##' ## dd <- tempdir()
+##' ## for (i in 1:length(iml)) {
+##' ## png(sprintf("%s/image-%i.png",dd,i));
+##' ## plot(iml[[i]]); dev.off() }
+##' ## make.video(dd,f)
+##' ## load.video(f) %>% play
+##' @author Simon Barthelme
+##' @export
+make.video <- function(dname,fname,pattern="image-%d.png",fps=25,extra.args="",verbose=FALSE)
+{
+    arg <- if (!is.null(fps)) sprintf("%s -framerate %.4d ",extra.args,fps) else ""
+    arg <- sprintf("%s -i %s/%s",arg,dname,pattern)
+    arg <- sprintf("%s %s -y ",arg,extra.args) %>% paste0(fname)
+    system2("ffmpeg",arg,stdout=verbose,stderr=verbose)
+}
 
+#' @describeIn make.video 
+save.video <- function(im,fname,...)
+{
+    if (!has.ffmpeg()) stop("Can't find ffmpeg. Please install.")
+    dd <- paste0(tempdir(),"/vid")
+    tryCatch({
+        dir.create(dd)
+        im <- if (is.imlist(im)) im else imsplit(im,"z") 
+        nms <- sprintf("%s/image-%i.png",dd,seq_along(l))
+        purrr::map2(im,nms,~ save.png(.x,.y))
+        make.video(dname=dd,fname=fname,...)
+    }, finally=unlink(dd,recursive=TRUE))
+    
+}
