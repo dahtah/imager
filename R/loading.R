@@ -288,9 +288,7 @@ load.example <- function(name)
 ##' @param verbose if TRUE, show ffmpeg output (default FALSE)
 ##' @seealso load.video
 ##' @examples
-##' 
-##' 
-##' ##Not run
+##' ## Not run
 ##' ## iml <- map_il(seq(0,20,l=60),~ isoblur(boats,.))
 ##' ## f <- tempfile(fileext=".avi")
 ##' ## save.video(iml,f)
@@ -312,7 +310,7 @@ make.video <- function(dname,fname,pattern="image-%d.png",fps=25,extra.args="",v
     system2("ffmpeg",arg,stdout=verbose,stderr=verbose)
 }
 
-#' @describeIn make.video 
+#' @describeIn make.video Save a video using ffmpeg
 save.video <- function(im,fname,...)
 {
     if (!has.ffmpeg()) stop("Can't find ffmpeg. Please install.")
