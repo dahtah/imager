@@ -257,7 +257,7 @@ load.example <- function(name)
     if (name %in% names(fnames))
     {
         fp <- paste0('extdata/',fnames[name]) %>% system.file(package='imager')
-        if (name=="tennis_sig.mpeg")
+        if (name=="tennis")
         {
             load.video(fp)
         }
@@ -311,6 +311,7 @@ make.video <- function(dname,fname,pattern="image-%d.png",fps=25,extra.args="",v
 }
 
 #' @describeIn make.video Save a video using ffmpeg
+#' @export
 save.video <- function(im,fname,...)
 {
     if (!has.ffmpeg()) stop("Can't find ffmpeg. Please install.")
