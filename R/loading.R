@@ -263,7 +263,7 @@ load.example <- function(name)
         }
         else
         {
-            load.video(fp)
+            load.image(fp)
         }
     }
     else

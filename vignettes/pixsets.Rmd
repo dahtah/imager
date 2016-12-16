@@ -31,7 +31,18 @@ Internally, a pixel set is just an array of logical (boolean) values:
 str(px)
 ```
 
-The "TRUE" values correspond to pixels in the set, and "FALSE" to pixels not in the set. 
+The "TRUE" values correspond to pixels in the set, and "FALSE" to pixels not in the set. The dimensions of the pixset are the same as that of the original image:
+
+```{r}
+all(dim(px) == dim(im))
+```
+
+To count the number of pixels in the set, use sum:
+
+```{r}
+sum(px) #Number of pixels in set
+mean(px) #Proportion
+```
 
 The "highlight" function is a good way of visualising pixel sets:
 
@@ -44,3 +55,11 @@ plot(px)
 ```
 
 highlight extracts the contours of the pixset (see ?contours) and plots them. 
+
+The *where* function returns coordinates for pixels in the set:
+
+```{r}
+where(px) %>% head
+```
+
+where returns a data.frame, and 
