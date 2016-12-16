@@ -160,13 +160,13 @@ pos &lt;- cbind(pos.x,pos.y)</code></pre>
 <pre class="r"><code>val &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2]))
 head(val,3)</code></pre>
 <pre><code>## $`1`
-## [1] 0.4558431 0.4567059 0.4738431
+## [1] 0.2984706 0.2655686 0.3075686
 ## 
 ## $`2`
-## [1] 0.1699216 0.1752941 0.1648235
+## [1] 0.6576078 0.6465098 0.6579216
 ## 
 ## $`3`
-## [1] 0.4963137 0.4963137 0.4845490</code></pre>
+## [1] 0.9035294 0.9004706 0.9004706</code></pre>
 <p>In each element of the list, the first value corresponds to the value of the central pixel, the second to the left-hand neighbour and the third to the right-hand neighbour. We transform the list to a matrix and plot the value of the neighbours as a function of the value of the central pixel:</p>
 <pre class="r"><code>mat &lt;- do.call(rbind,val)
 plot(mat[,1],mat[,2],xlab=&quot;Central value&quot;,ylab=&quot;Left-hand neighbour&#39;s value&quot; )</code></pre>
@@ -176,9 +176,9 @@ plot(mat[,1],mat[,2],xlab=&quot;Central value&quot;,ylab=&quot;Left-hand neighbo
 <p>As the scatterplots suggest, neighbouring pixels tend to be highly correlated:</p>
 <pre class="r"><code>cor(mat)</code></pre>
 <pre><code>##           [,1]      [,2]      [,3]
-## [1,] 1.0000000 0.9892815 0.9776264
-## [2,] 0.9892815 1.0000000 0.9603045
-## [3,] 0.9776264 0.9603045 1.0000000</code></pre>
+## [1,] 1.0000000 0.9897364 0.9929170
+## [2,] 0.9897364 1.0000000 0.9780861
+## [3,] 0.9929170 0.9780861 1.0000000</code></pre>
 <p>We can repeat the analysis using neighbours that are further away:</p>
 <pre class="r"><code>stencil &lt;- data.frame(dx=c(0,-4,4),dy=c(0,0,0)) #Selects neighbours that are 4 pixels away in x direction
 pos.x &lt;- round(runif(500,5,width(im)-4))
@@ -186,9 +186,9 @@ pos &lt;- cbind(pos.x,pos.y)
 mat &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2])) %&gt;% do.call(rbind,.)
 cor(mat)</code></pre>
 <pre><code>##           [,1]      [,2]      [,3]
-## [1,] 1.0000000 0.9006662 0.9186726
-## [2,] 0.9006662 1.0000000 0.8498228
-## [3,] 0.9186726 0.8498228 1.0000000</code></pre>
+## [1,] 1.0000000 0.9551855 0.9019763
+## [2,] 0.9551855 1.0000000 0.8771801
+## [3,] 0.9019763 0.8771801 1.0000000</code></pre>
 <p>Here the correlation coefficients (1,2) and (1,3) represent correlations between pixels that are 4 units away (~ 98%), while coefficient (2,3) represents a correlation between pixels that are 8 units away (~ 94%). Correlation then seems to drop as a function of distance. We can make a more systematic analysis using a wider stencil:</p>
 <pre class="r"><code>stencil &lt;- expand.grid(dx=seq(-10,10,1),dy=seq(-10,10,1))
 head(stencil,4)</code></pre>
@@ -216,8 +216,8 @@ df &lt;- data.frame(dist.x = c(Dx),dist.y = c(Dy), cor = c(C))
 head(df,3)</code></pre>
 <pre><code>##   dist.x dist.y       cor
 ## 1      0      0 1.0000000
-## 2      1      0 0.9818014
-## 3      2      0 0.9505041</code></pre>
+## 2      1      0 0.9844819
+## 3      2      0 0.9583342</code></pre>
 <p>Plotting the results:</p>
 <pre class="r"><code>library(ggplot2)
 ggplot(df,aes(dist.x,dist.y))+geom_point(aes(size=cor))</code></pre>
@@ -263,8 +263,6 @@ make.im(vec) %&gt;% plot #vec is now a cimg object</code></pre>
 <p>We can use that trick to plot the first 5 principal components as a single image:</p>
 <pre class="r"><code>scaled.pc &lt;- function(ind) scale(evd$vec[,ind]) %&gt;% make.im
 llply(1:5,scaled.pc) %&gt;% imappend(&quot;x&quot;) %&gt;% plot(main=&quot;5 principal components&quot;) </code></pre>
-<pre><code>## Warning in all(map(imlist, is.cimg)): conversion automatique d&#39;un argument
-## de type &#39;list&#39; en booléen (logical)</code></pre>
 <p><img src="image_stats_files/figure-html/first_five-1.png" width="624" /></p>
 <p>The first principal components in images usual have a center-surround or gradient structure. What that tells us is the same thing we could already tell from the correlogram: images are spatially smooth, so that the way they can vary locally is pretty constrained.</p>
 </div>

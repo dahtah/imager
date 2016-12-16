@@ -14,7 +14,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE,
                comment=NA, verbose=TRUE,dev='jpeg')
 ```
 
-This documentation covers imager version 0.20. Some functions may be unavailable in older versions. Follow imager development on [github](https://github.com/dahtah/imager).
+This documentation covers imager version 0.40. Some functions may be unavailable in older versions. Follow imager development on [github](https://github.com/dahtah/imager).
 
 Beginners: have a look at the [tutorial](gettingstarted.html) first. 
 
@@ -49,7 +49,7 @@ layout(matrix(1:2,1,2));
 grayscale(im) %>% get_gradient(axes="xy") %>% l_ply(plot)
 
 #If ffmpeg is present, we can load videos as well:
-tennis <- load.image(system.file('extdata/tennis_sif.mpeg',package='imager'))
+tennis <- load.video(system.file('extdata/tennis_sif.mpeg',package='imager'))
 
 plot(tennis,frame=1)
 plot(tennis,frame=5)
@@ -69,9 +69,9 @@ In an interactive session you can run play(combined) to view the results.
 imsplit(combined,"z") %>% l_ply(plot)
 ```
 
-# Loading and saving
+# Loading and saving images
 
-Use load.image and save.image. imager supports PNG, JPEG and BMP natively. If you need to access images in other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) for images, and [ffmpeg](http://ffmpeg.org/download.html) for videos. 
+Use load.image and save.image. imager supports PNG, JPEG and BMP natively. If you need to access images in other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php).
 
 ```{r load_save}
 file <- system.file('extdata/parrots.png',package='imager')
@@ -95,6 +95,61 @@ urls <- search %>% html_nodes("img") %>% html_attr("src") #Get urls of parrot pi
 load.image(urls[1]) %>% plot()
 ```
 
+# Loading and saving videos 
+
+If you need to load and save videos please install [ffmpeg](http://ffmpeg.org/download.html) for videos. 
+
+To load videos, use load.video:
+
+```{r}
+fname <- system.file('extdata/tennis_sif.mpeg',package='imager')
+tennis <- load.video(fname)
+```
+
+Use *skip.to* to set the initial frame, and *frames* to set the number of frames to grab: 
+
+```{r}
+#Skip to time = 2s, and grab the next 3 frames
+vid <- load.video(fname,skip.to=2,frames=4)
+#Display individual frames (see imsplit below)
+imsplit(vid,"z") %>% plot
+```
+
+Use *fps* to set the frame acquisition rate:
+
+```{r}
+vid <- load.video(fname,fps=1) #1 frame per sec
+#The result is 6 frames, one per sec
+imsplit(vid,"z") %>% plot
+```
+
+To save videos, use save.video:
+
+```{r}
+f <- tempfile(fileext=".avi")
+save.video(f,vid)
+load.video(f) %>% imsplit("z") %>% plot
+unlink(f)
+```
+
+One problem with videos is that they very quickly won't fit in memory anymore, so you might have to deal with them piecewise. make.video lets you make a video from a directory containing images representing individual frames:
+
+```{r}
+
+dd <- tempdir()
+iml <- map_il(seq(0,20,l=60),~ isoblur(boats,.))
+#Generate file names
+fnames <- sprintf("%s/image-%i.png",dd,1:length(iml))
+#Save each frame in a different file
+invisible(purrr::map2(iml,fnames,function(im,f) imager::save.image(im,f)))
+f <- tempfile(fileext=".avi")
+
+make.video(dd,f)
+
+```
+
+See also the [animation](https://cran.r-project.org/web/packages/animation/index.html) package for more along these lines. 
+
 # Displaying images and videos 
 
 To get a standard R plot use the plot function:
@@ -111,8 +166,8 @@ If you'd like to use an external viewer, you can save the image to a temporary f
 tmp <- tempfile(fileext=".png") #Open temp. file
 imager::save.image(boats,tmp) #Save image to temp. file
 #Call "eog [temp file]" to open in external viewer (Linux only)
-paste("eog",tmp) %>% system
-#On a mac: try system(paste("open",tmp))
+system2("eog",tmp)
+#On a mac: try system2("open",tmp)
 unlink(tmp) #Delete temp. file
 ```
 
@@ -242,10 +297,11 @@ imgradient(parrots,"xy") %>% as.data.frame %>% head
 
 where the "im" column indexes the image in the list. 
 
-To make an image list from a list, use "imlist"
+To make an image list directly, use "imlist" or as.imlist
 
 ```{r}
-list(a=parrots,b=3*parrots) %>% imlist
+imlist(a=parrots,b=3*parrots)
+list(a=parrots,b=3*parrots) %>% as.imlist
 ```
 
 
@@ -600,15 +656,5 @@ periodic.part(parrots) %>% plot(main="Periodic part of parrots")
 See ?periodic.smooth for details.
 
 # Morphology
-
-The following functions are available:
-
-- dilate (variants: dilate_rect,dilate_square)
-- mopening,mclosing, (variants: mopening_square,mclosing_square)
-- erode (variants: erode_rect, erode_square)
-
-For image segmentation the following functions will be useful:
-
-- distance_transform,watershed, label
 
 See the vignette on  [morphology](morphology.html). 

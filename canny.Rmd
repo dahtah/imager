@@ -244,10 +244,10 @@ bucketfill(im1,80,80,color=1,high_connex=TRUE) %>% plot(main="Result")
 
 The bucketfill has a tolerance parameter, which sets a stopping criterion: if nearby pixels are more than "sigma" apart in value, they won't be filled. 
 The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we'll have rescued all the weak edges that need to be rescued. 
-split.connected splits a pixel set into its connected regions:
+split_connected splits a pixel set into its connected regions:
 
 ```{r}
-pxs <- split.connected(strong,high_connectivity=TRUE)
+pxs <- split_connected(strong,high_connectivity=TRUE)
 length(pxs)
 ```
 
@@ -292,7 +292,7 @@ imsplit(boats,"c") %>% reduce(function(acc,l) imappend(list(acc,l),"x")) %>% plo
 #Gives a set of initial locations for the bucket fill
 fillInit <- function(strong)
 {
-    pxs <- split.connected(strong,high_connectivity=TRUE)
+    pxs <- split_connected(strong,high_connectivity=TRUE)
     map_df(pxs,~ where(.)[1,])
 }
 

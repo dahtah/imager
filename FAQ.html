@@ -127,6 +127,7 @@ $(document).ready(function () {
 <li><a href="#i-tried-loading-a-video-and-my-computer-froze"><span class="toc-section-number">3</span> I tried loading a video and my computer froze</a></li>
 <li><a href="#how-do-i-access-file-metadata"><span class="toc-section-number">4</span> How do I access file metadata?</a></li>
 <li><a href="#how-do-i-overlaystack-images"><span class="toc-section-number">5</span> How do I overlay/stack images?</a></li>
+<li><a href="#how-do-i-swap-axes"><span class="toc-section-number">6</span> How do I swap axes?</a></li>
 </ul>
 </div>
 
@@ -160,10 +161,14 @@ $(document).ready(function () {
 <pre class="r"><code>a &lt;- load.example(&quot;parrots&quot;)
 b &lt;- boats/255
 list(a,b) %&gt;% imappend(&quot;x&quot;) %&gt;% plot</code></pre>
-<pre><code>## Warning in all(map(imlist, is.cimg)): conversion automatique d&#39;un argument
-## de type &#39;list&#39; en booléen (logical)</code></pre>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
 <p>For more flexibility, you can also pad the image and use imdraw.</p>
+</div>
+<div id="how-do-i-swap-axes" class="section level1">
+<h1><span class="header-section-number">6</span> How do I swap axes?</h1>
+<p>Use permute_axes:</p>
+<pre class="r"><code>permute_axes(boats,&quot;yxzc&quot;) %&gt;% plot</code></pre>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
 </div>
 
 
