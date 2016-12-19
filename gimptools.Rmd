@@ -12,7 +12,23 @@ Many people will be familiar with the set of tools available in Photoshop and th
 
 The goal of this document is to show how to do all these operations in imager. 
 
+```{r init, echo=FALSE}
+library(imager)
+parrots <- load.example("parrots")
+
+```
+
 # Selection
+
+## Colour picker 
+
+This tool looks up the colour value at a certain location: in imager,
+
+```{r}
+color.at(parrots,230,30)
+```
+
+You can also try grabPoint, which is interactive. 
 
 ## Rectangular selections
 
@@ -82,6 +98,53 @@ plot(boats.gs)
 isoblur(boats.gs,2) %>% { abs(. - val) < .05 } %>% highlight
 ```
 
+To select regions by colour similarity, the procedure is very similar, but we now need to compare values channel-by-channel and then sum:
+
+```{r}
+
+#Select a colour on the red coat of the right-hand parrot
+cl <- color.at(parrots,598,232)
+
+#Produces an image of the same size as "parrots"
+#filled with colour "cl"
+cmp <- imfill(dim=dim(parrots),val=cl)
+
+#Blur, compare, split across channels, compute Euclidean norm
+d <- isoblur(parrots,2) %>% { . - cmp } %>% imsplit("c") %>% enorm
+plot(d,main="Distance map")
+points(598,232,col="red")
+plot(parrots)
+#Select 10% most similar pixels
+(!threshold(d,"10%")) %>% highlight(col="black")
+```
+
+Here's a function that does all this:
+
+```{r}
+selectSimilar <- function(im,cl,thr="auto",sigma=2)
+    {
+        d <- isoblur(im,sigma) %>% { . - imfill(dim=dim(im),val=cl) } %>% imsplit("c") %>% enorm
+        !threshold(d,thr)
+    }
+plot(parrots)
+selectSimilar(parrots,cl,thr="10%",sigma=5) %>% highlight(col="blue")
+```
+
+Since the selection is by similarity of colour, CIELab space is more appropriate:
+
+```{r}
+plot(parrots)
+sRGBtoLab(parrots) %>%
+    selectSimilar(color.at(.,330,457),thr="3%",sigma=2) %>%
+    highlight(col="green")
+    
+parrots %>%
+    selectSimilar(color.at(.,330,457),thr="3%",sigma=2) %>%
+    highlight(col="red")
+ 
+```
+
+
 ## Fuzzy selection (magic wand)
 
 Flood selection selects all similar pixels around an initial point:
@@ -94,4 +157,19 @@ px.flood(parrots,100,100,sigma=.14) %>% highlight(col="darkred")
 #Different initial point
 px.flood(parrots,300,100,sigma=.1) %>% highlight(col="blue")
 
+```
+
+# Drawing curves, text, etc. 
+
+To draw stuff on an image you can use the base R plotting tools along with "implot". implot uses the image as canvas for an R plot, and returns an image:
+
+```{r}
+#Let's add some text
+parrots.mod <- implot(parrots,{ text(100,100,"ABCDEF",cex=4,col="red") })
+plot(parrots.mod)
+
+#Let's plot some random data
+implot(parrots,
+{ points(width(parrots)*runif(50),height(parrots)*runif(50),col="darkblue",pch=24) }) %>%
+    plot
 ```
