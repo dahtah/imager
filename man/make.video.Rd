@@ -15,7 +15,7 @@ save.video(im, fname, ...)
 
 \item{fname}{name of the output file. The format is determined automatically from the name (example "a.mpeg" will have MPEG format)}
 
-\item{pattern}{pattern of filename for frames (default "image-%d.png", matching "image-1.png", "image-2.png", etc.)}
+\item{pattern}{pattern of filename for frames (the default matches "image-1.png", "image-2.png", etc.. See ffmpeg documentation for more).}
 
 \item{fps}{frames per second (default 25)}
 

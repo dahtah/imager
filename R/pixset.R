@@ -49,6 +49,10 @@ is.pixset <- function(x) is(x,"pixset")
 #' @export
 as.pixset <- function(x,...) UseMethod("as.pixset")
 
+#' @export
+as.pixset.array <- function(x,...) pixset(x)
+
+#' @export
 as.pixset.logical <- function(x,...) pixset(x)
 
 #' @describeIn as.pixset convert cimg to pixset

@@ -282,7 +282,7 @@ load.example <- function(name)
 ##' @param im an image or image list
 ##' @param fname name of the output file. The format is determined automatically from the name (example "a.mpeg" will have MPEG format)
 ##' @param dname name of a directory containing individual files
-##' @param pattern pattern of filename for frames (default "image-%d.png", matching "image-1.png", "image-2.png", etc.)
+##' @param pattern pattern of filename for frames (the default matches "image-1.png", "image-2.png", etc.. See ffmpeg documentation for more).
 ##' @param fps frames per second (default 25)
 ##' @param extra.args extra arguments to be passed to ffmpeg (default "", none)
 ##' @param verbose if TRUE, show ffmpeg output (default FALSE)

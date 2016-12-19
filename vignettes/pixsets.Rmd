@@ -62,4 +62,10 @@ The *where* function returns coordinates for pixels in the set:
 where(px) %>% head
 ```
 
-where returns a data.frame, and 
+where returns a data.frame. That format is especially convenient if you want to compute some statistics on the coordinates, e.g., the center of mass of a region defined by a pixset:
+
+```{r}
+where(px) %>% dplyr::summarise(mx=mean(x),my=mean(y))
+```
+
+
