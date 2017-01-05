@@ -71,12 +71,11 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
 	//Time to update the display
 	if ((dt >= delay) and (!pause))
 	  {
-	    img.get_slice(i).display(disp);
-	    if (i == n)
+	    if (i == n-1)
 	      {
 		if (loop)
 		  {
-		    i = 0;
+		    i = -1;
 		  }
 		else {
 		  break;
@@ -84,6 +83,8 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
 	      }
 	    t0 = cimg::time();
 	    i++;
+	    img.get_slice(i).display(disp);
+
 	  }
 	
 	if (disp.is_closed() or disp.is_key(cimg::keyESC))
