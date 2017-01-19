@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Imager as image editor</title>
+
+<script src="gimptools_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="gimptools_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="gimptools_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="gimptools_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="gimptools_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="gimptools_files/highlight/default.css"
+      type="text/css" />
+<script src="gimptools_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="gimptools_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Imager as image editor</h1>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#selection"><span class="toc-section-number">1</span> Selection</a><ul>
+<li><a href="#colour-picker"><span class="toc-section-number">1.1</span> Colour picker</a></li>
+<li><a href="#rectangular-selections"><span class="toc-section-number">1.2</span> Rectangular selections</a></li>
+<li><a href="#circular-selections"><span class="toc-section-number">1.3</span> Circular selections</a></li>
+<li><a href="#image-color-at-a-point"><span class="toc-section-number">1.4</span> Image color at a point</a></li>
+<li><a href="#selection-by-similarity"><span class="toc-section-number">1.5</span> Selection by similarity</a></li>
+<li><a href="#fuzzy-selection-magic-wand"><span class="toc-section-number">1.6</span> Fuzzy selection (magic wand)</a></li>
+</ul></li>
+<li><a href="#drawing-curves-text-etc."><span class="toc-section-number">2</span> Drawing curves, text, etc.</a></li>
+</ul>
+</div>
+
+<p>Many people will be familiar with the set of tools available in Photoshop and the Gimp (various forms of selections, brushes, erasers, etc.). Here’s a screenshot of what the Gimp has to offer:</p>
+<p>The goal of this document is to show how to do all these operations in imager.</p>
+<div id="selection" class="section level1">
+<h1><span class="header-section-number">1</span> Selection</h1>
+<div id="colour-picker" class="section level2">
+<h2><span class="header-section-number">1.1</span> Colour picker</h2>
+<p>This tool looks up the colour value at a certain location: in imager,</p>
+<pre class="r"><code>color.at(parrots,230,30)</code></pre>
+<pre><code>## [1] 0.3098039 0.3058824 0.2196078</code></pre>
+<p>You can also try grabPoint, which is interactive.</p>
+</div>
+<div id="rectangular-selections" class="section level2">
+<h2><span class="header-section-number">1.2</span> Rectangular selections</h2>
+<p>To directly obtain a rectangular image subset use imsub:</p>
+<pre class="r"><code>#A rectangular selection from (10,30) to (150,100)
+imsub(parrots,x %inr% c(30,150),y %inr% c(10,100)) %&gt;% plot</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
+<p>If what you need is a pixset, here’s a way:</p>
+<pre class="r"><code>px &lt;- (Xc(parrots) %inr% c(30,150)) &amp; (Yc(parrots) %inr% c(10,100))
+plot(parrots)
+highlight(px)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
+<p>There’s also a function to do this interactively called “grabRect”.</p>
+</div>
+<div id="circular-selections" class="section level2">
+<h2><span class="header-section-number">1.3</span> Circular selections</h2>
+<p>Use coordinates and the equation for a circle:</p>
+<pre class="r"><code>plot(parrots)
+px &lt;- (Xc(parrots) - 200)^2 + (Yc(parrots) - 350)^2 &lt; 150^2
+highlight(px)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+</div>
+<div id="image-color-at-a-point" class="section level2">
+<h2><span class="header-section-number">1.4</span> Image color at a point</h2>
+<p>Use color.at:</p>
+<pre class="r"><code>color.at(parrots,24,55)</code></pre>
+<pre><code>## [1] 0.5647059 0.5568627 0.4039216</code></pre>
+</div>
+<div id="selection-by-similarity" class="section level2">
+<h2><span class="header-section-number">1.5</span> Selection by similarity</h2>
+<p>For grayscale images this is easy: we want the set of locations <span class="math inline">\(x,y\)</span>, such that</p>
+<p><span class="math display">\[ \vert I(x,y) - c \vert &lt; \eps \]</span></p>
+<p>where <span class="math inline">\(c\)</span> is our target grayscale level, and <span class="math inline">\(\eps\)</span> is a tolerance. We begin by computing the difference to the target:</p>
+<pre class="r"><code>boats.gs &lt;- grayscale(boats)
+val &lt;- at(boats.gs,180,216) #Grab pixel value at coord (240,220)
+D &lt;- abs(boats.gs-val) #A difference map
+plot(D,main=&quot;Difference to target value&quot;)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-6-1.png" width="624" /></p>
+<p>The distance map can then be thresholded to yield a pixel set:</p>
+<pre class="r"><code>plot(boats.gs)
+highlight(D &lt; .05) # epsilon = .05</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-7-1.png" width="624" /></p>
+<p>Due to noise the regions may be very irregular. Better results can often be obtained using smoothing:</p>
+<pre class="r"><code>plot(boats.gs)
+isoblur(boats.gs,2) %&gt;% { abs(. - val) &lt; .05 } %&gt;% highlight</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-8-1.png" width="624" /></p>
+<p>To select regions by colour similarity, the procedure is very similar, but we now need to compare values channel-by-channel and then sum:</p>
+<pre class="r"><code>#Select a colour on the red coat of the right-hand parrot
+cl &lt;- color.at(parrots,598,232)
+
+#Produces an image of the same size as &quot;parrots&quot;
+#filled with colour &quot;cl&quot;
+cmp &lt;- imfill(dim=dim(parrots),val=cl)
+
+#Blur, compare, split across channels, compute Euclidean norm
+d &lt;- isoblur(parrots,2) %&gt;% { . - cmp } %&gt;% imsplit(&quot;c&quot;) %&gt;% enorm
+plot(d,main=&quot;Distance map&quot;)
+points(598,232,col=&quot;red&quot;)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-9-1.png" width="624" /></p>
+<pre class="r"><code>plot(parrots)
+#Select 10% most similar pixels
+(!threshold(d,&quot;10%&quot;)) %&gt;% highlight(col=&quot;black&quot;)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-9-2.png" width="624" /></p>
+<p>Here’s a function that does all this:</p>
+<pre class="r"><code>selectSimilar &lt;- function(im,cl,thr=&quot;auto&quot;,sigma=2)
+    {
+        d &lt;- isoblur(im,sigma) %&gt;% { . - imfill(dim=dim(im),val=cl) } %&gt;% imsplit(&quot;c&quot;) %&gt;% enorm
+        !threshold(d,thr)
+    }
+plot(parrots)
+selectSimilar(parrots,cl,thr=&quot;10%&quot;,sigma=5) %&gt;% highlight(col=&quot;blue&quot;)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
+<p>Since the selection is by similarity of colour, CIELab space is more appropriate:</p>
+<pre class="r"><code>plot(parrots)
+sRGBtoLab(parrots) %&gt;%
+    selectSimilar(color.at(.,330,457),thr=&quot;3%&quot;,sigma=2) %&gt;%
+    highlight(col=&quot;green&quot;)
+    
+parrots %&gt;%
+    selectSimilar(color.at(.,330,457),thr=&quot;3%&quot;,sigma=2) %&gt;%
+    highlight(col=&quot;red&quot;)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-11-1.png" width="624" /></p>
+</div>
+<div id="fuzzy-selection-magic-wand" class="section level2">
+<h2><span class="header-section-number">1.6</span> Fuzzy selection (magic wand)</h2>
+<p>Flood selection selects all similar pixels around an initial point:</p>
+<pre class="r"><code>plot(parrots)
+px.flood(parrots,100,100,sigma=.1) %&gt;% highlight
+#Higher tolerance
+px.flood(parrots,100,100,sigma=.14) %&gt;% highlight(col=&quot;darkred&quot;)
+#Different initial point
+px.flood(parrots,300,100,sigma=.1) %&gt;% highlight(col=&quot;blue&quot;)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
+</div>
+</div>
+<div id="drawing-curves-text-etc." class="section level1">
+<h1><span class="header-section-number">2</span> Drawing curves, text, etc.</h1>
+<p>To draw stuff on an image you can use the base R plotting tools along with “implot”. implot uses the image as canvas for an R plot, and returns an image. You only need to provide a</p>
+<pre class="r"><code>#Let&#39;s add some text
+parrots.mod &lt;- implot(parrots,{ text(100,100,&quot;ABCDEF&quot;,cex=4,col=&quot;red&quot;) })
+plot(parrots.mod)</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-13-1.png" width="624" /></p>
+<pre class="r"><code>#Let&#39;s plot some random data
+implot(parrots.mod,
+{ points(width(parrots)*runif(50),height(parrots)*runif(50),col=&quot;darkblue&quot;,pch=24) }) %&gt;%
+    plot</code></pre>
+<p><img src="gimptools_files/figure-html/unnamed-chunk-13-2.png" width="624" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

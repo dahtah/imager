@@ -306,8 +306,8 @@ plot(im1,main=&quot;Bucket fill initialised at red point&quot;)
 points(80,80,col=&quot;red&quot;)
 bucketfill(im1,80,80,color=1,high_connex=TRUE) %&gt;% plot(main=&quot;Result&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-16-1.png" width="768" /></p>
-<p>The bucketfill has a tolerance parameter, which sets a stopping criterion: if nearby pixels are more than “sigma” apart in value, they won’t be filled. The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we’ll have rescued all the weak edges that need to be rescued. split.connected splits a pixel set into its connected regions:</p>
-<pre class="r"><code>pxs &lt;- split.connected(strong,high_connectivity=TRUE)
+<p>The bucketfill has a tolerance parameter, which sets a stopping criterion: if nearby pixels are more than “sigma” apart in value, they won’t be filled. The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we’ll have rescued all the weak edges that need to be rescued. split_connected splits a pixel set into its connected regions:</p>
+<pre class="r"><code>pxs &lt;- split_connected(strong,high_connectivity=TRUE)
 length(pxs)</code></pre>
 <pre><code>## [1] 125</code></pre>
 <p>Each element in pxs is a pixel set representing a set of connected strong edge pixels.</p>
@@ -318,7 +318,7 @@ library(purrr)
 map_df(pxs,~ where(.)[1,]) %$% points(x,y,col=&quot;red&quot;)</code></pre>
 <p><img src="canny_files/figure-html/unnamed-chunk-18-1.png" width="624" /></p>
 <p>For the bucket fill trick to work we need to be able to spread the value of strong pixels to their weak neighbour (but not elsewhere). We assign different values to strong and weak pixels:</p>
-<pre class="r"><code>v &lt;- strong
+<pre class="r"><code>v &lt;- as.cimg(strong)
 v[weak==1] &lt;- .9 #Strong pixels have value 1, weak .9, and the rest are 0.</code></pre>
 <p>Finally we need to go through the list of seed pixels, and apply bucket fill every time. We could write a loop, but to keep with the functional style we have used so far, we’ll cast this operation as a <em>fold</em>, using <em>reduce</em> from the <a href="https://github.com/hadley/purrr">purrr</a> package. <em>reduce</em> takes a function of two arguments (an accumulator and an item), and reduces a list to a single item by accumulating. It’s best illustrated by example:</p>
 <pre class="r"><code>library(purrr)
@@ -334,14 +334,14 @@ imsplit(boats,&quot;c&quot;) %&gt;% reduce(function(acc,l) imappend(list(acc,l),
 <pre class="r"><code>#Gives a set of initial locations for the bucket fill
 fillInit &lt;- function(strong)
 {
-    pxs &lt;- split.connected(strong,high_connectivity=TRUE)
+    pxs &lt;- split_connected(strong,high_connectivity=TRUE)
     map_df(pxs,~ where(.)[1,])
 }
 
 #Starts a fill at each successive location, and accumulates the results
 rescueFill &lt;- function(strong,weak)
     {
-        v &lt;- strong
+        v &lt;- as.cimg(strong)
         v[weak] &lt;- .9
         loc &lt;- fillInit(strong)
         #Transform the data.frame into a list of locations
@@ -358,10 +358,10 @@ all.equal(canny,canny2)</code></pre>
 <p>The second function is much faster, at least on this image (for this particular choice of thresholds):</p>
 <pre class="r"><code>system.time(hystFP(list(strong=strong,weak=weak)))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.616   0.024   0.637</code></pre>
+##   0.460   0.008   0.468</code></pre>
 <pre class="r"><code>system.time(rescueFill(strong,weak))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.144   0.012   0.153</code></pre>
+##   0.183   0.000   0.183</code></pre>
 </div>
 
 

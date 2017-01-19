@@ -49,7 +49,7 @@ highlight(px)
 
 There's also a function to do this interactively called "grabRect". 
 
-## Circular selections
+## Circular/elliptical selections
 
 Use coordinates and the equation for a circle:
 
@@ -58,6 +58,26 @@ plot(parrots)
 px <- (Xc(parrots) - 200)^2 + (Yc(parrots) - 350)^2 < 150^2
 highlight(px)
 ```
+
+Similarly, you can use an elliptical equation to select an ellipse:
+
+```{r}
+plot(parrots)
+px <- ((Xc(parrots) - 200)/3)^2 + (Yc(parrots) - 350)^2 < 150^2
+highlight(px)
+```
+
+A change of coordinates is often useful: here we select a circle centered at the center of the image
+
+```{r}
+#Define a new coordinate system with 0 at the center of the image
+Xcc <- function(im) Xc(im) - width(im)/2
+Ycc <- function(im) Yc(im) - height(im)/2
+px <- (Xcc(parrots)^2+Ycc(parrots)^2) < 100^2
+plot(parrots)
+highlight(px)
+```
+
 
 ## Image color at a point
 
@@ -144,6 +164,18 @@ parrots %>%
  
 ```
 
+## Magic scissors
+
+```{r}
+
+magic.scissors <- function(im,ed,a,b)
+    {
+        ed <- channel(ed,1)
+        nn <- where(ed) %>% { nabor::knn(.,t(a),k=1)$nn.idx } %>% coord.index(ed,.)
+        bucketfill(ed,nn$x,nn$y,color=2)
+    }
+
+```
 
 ## Fuzzy selection (magic wand)
 
@@ -161,7 +193,8 @@ px.flood(parrots,300,100,sigma=.1) %>% highlight(col="blue")
 
 # Drawing curves, text, etc. 
 
-To draw stuff on an image you can use the base R plotting tools along with "implot". implot uses the image as canvas for an R plot, and returns an image:
+To draw stuff on an image you can use the base R plotting tools along with "implot". implot uses the image as canvas for an R plot, and returns an image. 
+You only need to provide a piece of code that plots whatever you'd like to plot. Note that the coordinate system is the default one for images, i.e. (1...width)x(1...height). 
 
 ```{r}
 #Let's add some text
@@ -169,7 +202,8 @@ parrots.mod <- implot(parrots,{ text(100,100,"ABCDEF",cex=4,col="red") })
 plot(parrots.mod)
 
 #Let's plot some random data
-implot(parrots,
+implot(parrots.mod,
 { points(width(parrots)*runif(50),height(parrots)*runif(50),col="darkblue",pch=24) }) %>%
     plot
 ```
+

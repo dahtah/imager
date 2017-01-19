@@ -126,10 +126,12 @@ imsplit(vid,"z") %>% plot
 To save videos, use save.video:
 
 ```{r}
+
 f <- tempfile(fileext=".avi")
-save.video(f,vid)
+save.video(vid,f)
 load.video(f) %>% imsplit("z") %>% plot
 unlink(f)
+
 ```
 
 One problem with videos is that they very quickly won't fit in memory anymore, so you might have to deal with them piecewise. make.video lets you make a video from a directory containing images representing individual frames:
@@ -147,6 +149,20 @@ f <- tempfile(fileext=".avi")
 make.video(dd,f)
 
 ```
+
+
+```{r echo=FALSE}
+iml <- map_il(seq(0,20,l=60),~ isoblur(boats,.))
+save.video(iml,"increasing_blur.webm")
+```
+
+<video width="500"  controls loop>
+<source src="imager_files/figure-html/increasing_blur.webm" />
+<p>
+video of increasing blur levels
+</p>
+
+
 
 See also the [animation](https://cran.r-project.org/web/packages/animation/index.html) package for more along these lines. 
 

@@ -266,7 +266,7 @@ map_df(pxs,~ where(.)[1,]) %$% points(x,y,col="red")
 For the bucket fill trick to work we need to be able to spread the value of strong pixels to their weak neighbour (but not elsewhere). We assign different values to strong and weak pixels: 
 
 ```{r}
-v <- strong
+v <- as.cimg(strong)
 v[weak==1] <- .9 #Strong pixels have value 1, weak .9, and the rest are 0.
 ```
 
@@ -299,7 +299,7 @@ fillInit <- function(strong)
 #Starts a fill at each successive location, and accumulates the results
 rescueFill <- function(strong,weak)
     {
-        v <- strong
+        v <- as.cimg(strong)
         v[weak] <- .9
         loc <- fillInit(strong)
         #Transform the data.frame into a list of locations
