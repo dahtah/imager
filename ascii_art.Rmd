@@ -1,0 +1,108 @@
+---
+title: "Generating ASCII art using imager and ggplot2"
+output:
+  html_document:
+    fig_width: 6.5
+    fig_height: 6
+    toc: true
+    number_sections: true
+---
+
+
+[ASCII art](https://en.wikipedia.org/wiki/ASCII_art) is the art of drawing pictures using text (specifically, the 128 characters allowed by standard ASCII). In this example we'll see how to use imager to render pictures into ASCII, in the manner of image-to-ASCII converters like *AAlib*. 
+
+We'll be using imager and tools from the tidyverse, and an image of a flower as an example: 
+```{r}
+library(tidyverse)
+library(imager)
+##Optional: cowplot has nicer defaults for ggplot
+library(cowplot) 
+im <- load.image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG") 
+plot(im)
+```
+
+The first strategy we'll explore is to render pixels as characters, using darker characters for darker pixels. 
+
+First, we generate a set of ASCII characters:
+
+```{r}
+asc <- gtools::chr(38:126) #We use a subset of ASCII, R doesn't render the rest
+head(asc,10)
+```
+
+Next, we measure how dark these characters by having R draw them on an image, then by computing the average image lightness: for this we use imager's implot function, which uses R base graphics to plot things on images. 
+
+
+```{r}
+#Draw some text on a white background: 
+txt <- imfill(50,50,val=1) %>% implot(text(20,20,"Blah")) 
+txt
+plot(txt,interp=FALSE)
+
+##A function that plots a single character and measures its lightness
+
+g.chr <- function(chr) implot(imfill(50,50,val=1),text(25,25,chr,cex=5)) %>% grayscale %>% mean
+g <- map_dbl(asc,g.chr)
+n <- length(g)
+plot(1:n,sort(g),type="n",xlab="Order",ylab="Lightness")
+text(1:n,sort(g),asc[order(g)])
+```
+
+The plot shows the characters on an axis of increasing lightness. To render the image we'll quantise the grayscale levels into as many bins as we have characters, and plot the result:
+```{r}
+#Sort the characters by increasing lightness
+char <- asc[order(g)]
+#Convert image to grayscale, resize, convert to data.frame
+d <- grayscale(im) %>% imresize(.1)  %>% as.data.frame
+#Quantise
+d <- mutate(d,qv=cut_number(value,n) %>% as.integer)
+#Assign a character to each quantised level
+d <- mutate(d,char=char[qv])
+#Plot
+ggplot(d,aes(x,y))+geom_text(aes(label=char),size=1)+scale_y_reverse()
+```
+
+More sophisticated:
+
+```{r}
+##im <- load.example("parrots") %>% grayscale
+##im <- boats %>% grayscale 
+##im <- load.example("birds") %>% grayscale %>% threshold
+im <- load.image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG") %>% grayscale
+
+psize <- 5
+cen <- ceiling(psize/2)
+gr <- pixel.grid(im) %>% filter((x %% psize)==cen,(y %% psize) == cen) 
+ptch <- extract_patches(im,gr$x,gr$y,psize,psize)
+cptch <- function(chr) implot(imfill(psize,psize,val=1),text(cen,cen,chr,cex=1)) %>% grayscale
+ptch.c <- map(asc,cptch)
+Pim <- map(ptch,as.vector) %>% do.call(rbind,.) 
+Pc <- map(ptch.c,as.vector) %>% do.call(rbind,.)
+nn <- nabor::knn(Pc,Pim,1)$nn.idx
+mutate(gr,char=asc[nn]) %>% ggplot(aes(x,y))+geom_text(aes(label=char),size=1)+scale_y_reverse()
+```
+
+```{r}
+exptch <- function(im,psize=5)
+    {
+        cen <- ceiling(psize/2)
+        gr <- pixel.grid(R(im)) %>% filter((x %% psize)==cen,(y %% psize) == cen) 
+        extract_patches(im,gr$x,gr$y,psize,psize)
+    }
+
+match.patches <- function(a,b,psize=11)
+{
+    #Make sure image can be cut into integer number of patches
+    b <- imsub(b,x <= ((width %/% psize)*psize),y <= ((height %/% psize)*psize)) 
+    pa <- exptch(a,psize)
+    pb <- exptch(b,psize)
+    Pa <- map(pa,as.vector) %>% do.call(rbind,.)
+    Pb <- map(pb,as.vector) %>% do.call(rbind,.)
+    nn <- nabor::knn(Pa,Pb,1)$nn.idx
+    cen <- ceiling(psize/2)
+    gr <- pixel.grid(b) %>% filter((x %% psize)==cen,(y %% psize) == cen)
+    nim <- 0*b
+    imappend(pa[nn],"x") %>% imsplit("x",-width(b)) %>% imappend("y") 
+}
+
+```
