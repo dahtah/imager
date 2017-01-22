@@ -123,37 +123,12 @@ $(document).ready(function () {
 
 <p><a href="https://en.wikipedia.org/wiki/ASCII_art">ASCII art</a> is the art of drawing pictures using text (specifically, the 128 characters allowed by standard ASCII). In this example we’ll see how to use imager to render pictures into ASCII, in the manner of image-to-ASCII converters like <em>AAlib</em>.</p>
 <p>We’ll be using imager and tools from the tidyverse, and an image of a flower as an example:</p>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Loading tidyverse: ggplot2
-## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr
-## Loading tidyverse: dplyr</code></pre>
-<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
-<pre><code>## add():       magrittr, .GlobalEnv, imager
-## arrange():   dplyr, plyr
-## compact():   purrr, plyr
-## count():     dplyr, plyr
-## failwith():  dplyr, plyr
-## fill():      tidyr, imager
-## filter():    dplyr, stats
-## id():        dplyr, plyr
-## lag():       dplyr, stats
-## last():      dplyr, .GlobalEnv
-## mutate():    dplyr, plyr
-## rename():    dplyr, plyr
-## summarise(): dplyr, plyr
-## summarize(): dplyr, plyr</code></pre>
-<pre class="r"><code>library(imager)
+<pre class="r"><code>##The tidyverse package loads dplyr, purrr, etc. 
+library(tidyverse)
+library(imager)
 ##Optional: cowplot has nicer defaults for ggplot
-library(cowplot) </code></pre>
-<pre><code>## 
-## Attaching package: &#39;cowplot&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
-## 
-##     ggsave</code></pre>
-<pre class="r"><code>im &lt;- load.image(&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG&quot;) 
+library(cowplot) 
+im &lt;- load.image(&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG&quot;) 
 plot(im)</code></pre>
 <p><img src="ascii_art_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
 <p>The first strategy we’ll explore is to render pixels as characters, using darker characters for darker pixels.</p>
@@ -188,23 +163,69 @@ d &lt;- mutate(d,char=char[qv])
 #Plot
 ggplot(d,aes(x,y))+geom_text(aes(label=char),size=1)+scale_y_reverse()</code></pre>
 <p><img src="ascii_art_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
-<p>More sophisticated:</p>
-<pre class="r"><code>##im &lt;- load.example(&quot;parrots&quot;) %&gt;% grayscale
-##im &lt;- boats %&gt;% grayscale 
-##im &lt;- load.example(&quot;birds&quot;) %&gt;% grayscale %&gt;% threshold
-im &lt;- load.image(&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG&quot;) %&gt;% grayscale
-
+<p>So far we have matched pixels to characters based on their average lightness. We could go on to match <em>image patches</em> to characters, finding the character that is most similar to each image patch. The following piece of code implements this idea, but, for a change, instead of ASCII characters we’ll use R’s set of plotting symbols.</p>
+<p>The first step is to divide the image into patches:</p>
+<pre class="r"><code>#psize is the patch size in pixels (we&#39;ll use odd patch sizes for simplicity)
 psize &lt;- 5
+#center of the patch
 cen &lt;- ceiling(psize/2)
-gr &lt;- pixel.grid(im) %&gt;% filter((x %% psize)==cen,(y %% psize) == cen) 
+
+#produces a grid of coordinates for the center of each patch
+gr &lt;- grayscale(im) %&gt;% pixel.grid %&gt;%
+    filter((x %% psize)==cen,(y %% psize) == cen)
+
+plot(im,xlim=c(200,250),ylim=c(200,250))
+with(gr,points(x,y,cex=1,col=&quot;red&quot;))</code></pre>
+<p><img src="ascii_art_files/figure-html/unnamed-chunk-5-1.png" width="624" /></p>
+<pre class="r"><code>#extract an image patch at each point on the grid
 ptch &lt;- extract_patches(im,gr$x,gr$y,psize,psize)
-cptch &lt;- function(chr) implot(imfill(psize,psize,val=1),text(cen,cen,chr,cex=1)) %&gt;% grayscale
-ptch.c &lt;- map(asc,cptch)
+
+#NB: ptch is an image list, in which each element is an image patch
+ptch</code></pre>
+<pre><code>## Image list of size 41205</code></pre>
+<p>The second step is to render all characters as image patches of the same size:</p>
+<pre class="r"><code>syms &lt;- 1:25
+##render &lt;- function(chr) implot(imfill(psize,psize,val=1),text(cen,cen,chr,cex=.8)) %&gt;% grayscale
+render &lt;- function(sym) implot(imfill(psize,psize,val=1),points(cen,cen,pch=sym,cex=1)) %&gt;% grayscale
+ptch.c &lt;- map(syms,render)
+plot(ptch.c[[4]],interp=FALSE)</code></pre>
+<p><img src="ascii_art_files/figure-html/unnamed-chunk-6-1.png" width="624" /></p>
+<p>Of course at that resolution the rendering of each letter is bound to be pretty crummy (the above is supposed to be “A”).</p>
+<p>The third step is to match each image patch to the character it most resembles. For that we’ll use the excellent nearest neighbour function from the <em>nabor</em> package:</p>
+<pre class="r"><code>#Convert patches to a long matrix 
 Pim &lt;- map(ptch,as.vector) %&gt;% do.call(rbind,.) 
 Pc &lt;- map(ptch.c,as.vector) %&gt;% do.call(rbind,.)
 nn &lt;- nabor::knn(Pc,Pim,1)$nn.idx
-mutate(gr,char=asc[nn]) %&gt;% ggplot(aes(x,y))+geom_text(aes(label=char),size=1)+scale_y_reverse()</code></pre>
-<p><img src="ascii_art_files/figure-html/unnamed-chunk-5-1.png" width="624" /></p>
+mutate(gr,sym=syms[nn]) %$% plot(x,y,pch=sym,cex=.2,ylim=c(height(im),1))</code></pre>
+<p><img src="ascii_art_files/figure-html/unnamed-chunk-7-1.png" width="624" /></p>
+<p>These aren’t the prettiest flowers, but there you go.</p>
+<p>For the reader’s entertainment, I’m adding a last piece of code along the same lines: it reconstructs an image using a collection of patches (for instance, patches extracted from another image).</p>
+<pre class="r"><code>##Extract patches of a given size
+extract.all &lt;- function(im,psize=5)
+    {
+        cen &lt;- ceiling(psize/2)
+        gr &lt;- pixel.grid(R(im)) %&gt;% filter((x %% psize)==cen,(y %% psize) == cen) 
+        extract_patches(im,gr$x,gr$y,psize,psize)
+    }
+
+match.patches &lt;- function(dict,im)
+{
+    psize &lt;- height(dict[[1]]) #Patches are assumed to be square
+    ##Resize to make sure the image can be cut into an integer number of patches
+    im &lt;- resize(im,(width(im) %/% psize)*psize,(height(im) %/% psize)*psize)
+    
+    pim &lt;- extract.all(im,psize)
+    Pa &lt;- map(dict,as.vector) %&gt;% do.call(rbind,.)
+    Pb &lt;-  map(pim,as.vector) %&gt;% do.call(rbind,.)
+    nn &lt;- nabor::knn(Pa,Pb,1)$nn.idx %&gt;% c
+    imappend(dict[nn],&quot;x&quot;) %&gt;% imsplit(&quot;x&quot;,-width(im)) %&gt;% imappend(&quot;y&quot;) 
+}
+
+##Render the R logo using image patches extracted from the &quot;parrots&quot; image
+dict &lt;- load.example(&quot;parrots&quot;) %&gt;% extract.all(7)
+im &lt;- imager::load.image(&quot;https://cran.r-project.org/Rlogo.jpg&quot;)
+match.patches(dict,im) %&gt;% plot</code></pre>
+<p><img src="ascii_art_files/figure-html/unnamed-chunk-8-1.png" width="624" /></p>
 
 
 

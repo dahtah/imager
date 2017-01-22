@@ -12,7 +12,8 @@ output:
 [ASCII art](https://en.wikipedia.org/wiki/ASCII_art) is the art of drawing pictures using text (specifically, the 128 characters allowed by standard ASCII). In this example we'll see how to use imager to render pictures into ASCII, in the manner of image-to-ASCII converters like *AAlib*. 
 
 We'll be using imager and tools from the tidyverse, and an image of a flower as an example: 
-```{r}
+```{r message=FALSE}
+##The tidyverse package loads dplyr, purrr, etc. 
 library(tidyverse)
 library(imager)
 ##Optional: cowplot has nicer defaults for ggplot
@@ -62,47 +63,93 @@ d <- mutate(d,char=char[qv])
 ggplot(d,aes(x,y))+geom_text(aes(label=char),size=1)+scale_y_reverse()
 ```
 
-More sophisticated:
+So far we have matched pixels to characters based on their average lightness. We could go on to match *image patches* to characters, finding the character that is most similar to each image patch. The following piece of code implements this idea, but, for a change, instead of ASCII characters we'll use R's set of plotting symbols. 
+
+The first step is to divide the image into patches: 
 
 ```{r}
-##im <- load.example("parrots") %>% grayscale
-##im <- boats %>% grayscale 
-##im <- load.example("birds") %>% grayscale %>% threshold
-im <- load.image("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG") %>% grayscale
-
+#psize is the patch size in pixels (we'll use odd patch sizes for simplicity)
 psize <- 5
+#center of the patch
 cen <- ceiling(psize/2)
-gr <- pixel.grid(im) %>% filter((x %% psize)==cen,(y %% psize) == cen) 
+
+#produces a grid of coordinates for the center of each patch
+gr <- grayscale(im) %>% pixel.grid %>%
+    filter((x %% psize)==cen,(y %% psize) == cen)
+
+plot(im,xlim=c(200,250),ylim=c(200,250))
+with(gr,points(x,y,cex=1,col="red"))
+
+#extract an image patch at each point on the grid
 ptch <- extract_patches(im,gr$x,gr$y,psize,psize)
-cptch <- function(chr) implot(imfill(psize,psize,val=1),text(cen,cen,chr,cex=1)) %>% grayscale
-ptch.c <- map(asc,cptch)
+
+#NB: ptch is an image list, in which each element is an image patch
+ptch
+```
+
+The second step is to render all characters as image patches of the same size:
+
+```{r}
+syms <- 1:25
+
+render <- function(sym) implot(imfill(psize,psize,val=1),points(cen,cen,pch=sym,cex=1)) %>% grayscale
+ptch.c <- map(syms,render)
+plot(ptch.c[[4]],interp=FALSE)
+```
+
+Of course at that resolution the rendering of each letter is bound to be pretty crummy (the above is supposed to be "A"). 
+
+The third step is to match each image patch to the character it most resembles. For that we'll use the excellent nearest neighbour function from the *nabor* package: 
+
+```{r}
+#Convert patches to a long matrix 
 Pim <- map(ptch,as.vector) %>% do.call(rbind,.) 
 Pc <- map(ptch.c,as.vector) %>% do.call(rbind,.)
 nn <- nabor::knn(Pc,Pim,1)$nn.idx
-mutate(gr,char=asc[nn]) %>% ggplot(aes(x,y))+geom_text(aes(label=char),size=1)+scale_y_reverse()
+mutate(gr,sym=syms[nn]) %$% plot(x,y,pch=sym,cex=.2,ylim=c(height(im),1))
 ```
 
+I'll admit, this isn't the prettiest flower, but there you go. Feel free to improve.
+
+
+For the reader's entertainment, I'm adding a last piece of code along the same lines: it reconstructs an image using a collection of patches (for instance, patches extracted from another image). 
+
 ```{r}
-exptch <- function(im,psize=5)
+##Extract patches of a given size
+extract.all <- function(im,psize=5)
     {
         cen <- ceiling(psize/2)
         gr <- pixel.grid(R(im)) %>% filter((x %% psize)==cen,(y %% psize) == cen) 
         extract_patches(im,gr$x,gr$y,psize,psize)
     }
 
-match.patches <- function(a,b,psize=11)
+match.patches <- function(dict,im)
 {
-    #Make sure image can be cut into integer number of patches
-    b <- imsub(b,x <= ((width %/% psize)*psize),y <= ((height %/% psize)*psize)) 
-    pa <- exptch(a,psize)
-    pb <- exptch(b,psize)
-    Pa <- map(pa,as.vector) %>% do.call(rbind,.)
-    Pb <- map(pb,as.vector) %>% do.call(rbind,.)
-    nn <- nabor::knn(Pa,Pb,1)$nn.idx
-    cen <- ceiling(psize/2)
-    gr <- pixel.grid(b) %>% filter((x %% psize)==cen,(y %% psize) == cen)
-    nim <- 0*b
-    imappend(pa[nn],"x") %>% imsplit("x",-width(b)) %>% imappend("y") 
+    psize <- height(dict[[1]]) #Patches are assumed to be square
+    ##Resize to make sure the image can be cut into an integer number of patches
+    im <- resize(im,(width(im) %/% psize)*psize,(height(im) %/% psize)*psize)
+    
+    pim <- extract.all(im,psize)
+    Pa <- map(dict,as.vector) %>% do.call(rbind,.)
+    Pb <-  map(pim,as.vector) %>% do.call(rbind,.)
+    nn <- nabor::knn(Pa,Pb,1)$nn.idx %>% c
+    imappend(dict[nn],"x") %>% imsplit("x",-width(im)) %>% imappend("y") 
 }
 
+##Render the R logo using image patches extracted from the "parrots" image
+dict <- load.example("parrots") %>% extract.all(7)
+im <- imager::load.image("https://cran.r-project.org/Rlogo.jpg")
+match.patches(dict,im) %>% plot
+
+##Render "tennis" as ASCII art
+render <- function(chr) implot(imfill(psize,psize,val=1),text(cen,cen,chr,cex=.8)) %>% grayscale
+tennis <- load.example("tennis")/255
+dict <- map_il(asc,render)
+tennis.asc <- imsplit(tennis,"z") %>% map(~ match.patches(dict,.))  %>% imappend("z")
 ```
+
+<video width="500"  controls loop>
+<source src="ascii_art_files/tennis_ascii.webm" />
+<p>
+The tennis video, rendered in ASCII
+</p>
