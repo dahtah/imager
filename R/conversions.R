@@ -416,7 +416,7 @@ grayscale <- function(im,method="Luma",drop=TRUE)
     if (spectrum(im)==1)
     {
         warning("Image appears to already be in grayscale mode")
-        im
+        return(im)
     }
     else  if (spectrum(im) != 3)
     {

@@ -37,6 +37,8 @@ load.video.internal <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,e
     system2("ffmpeg",arg,stdout=verbose,stderr=verbose)
     fls <- dir(dd,full.names=TRUE)
     if (length(fls)==0) stop("No output was generated")
+    ordr <- stringr::str_extract(fls,"(\\d)+\\.bmp") %>% stringr::str_split(stringr::fixed(".")) %>% purrr::map_int(~ as.integer(.[[1]])) %>% order
+    fls <- fls[ordr]
     #Check total size
     imsz <- load.image(fls[[1]]) %>% dim %>% prod
     tsz <- ((imsz*8)*length(fls))/(1024^3)
@@ -195,11 +197,11 @@ save.image <- function(im,file)
         ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
         if (ftype == "png")
         {
-            save.png(im,file)
+            save.png(255*im,file)
         }
         else if (ftype == "jpeg" | ftype == "jpg")
         {
-            save.jpeg(im,file)
+            save.jpeg(255*im,file)
         }
         else
         {
@@ -319,7 +321,7 @@ save.video <- function(im,fname,...)
     tryCatch({
         dir.create(dd)
         im <- if (is.imlist(im)) im else imsplit(im,"z") 
-        nms <- sprintf("%s/image-%i.png",dd,seq_along(l))
+        nms <- sprintf("%s/image-%i.png",dd,seq_along(im))
         purrr::map2(im,nms,~ save.png(.x,.y))
         make.video(dname=dd,fname=fname,...)
     }, finally=unlink(dd,recursive=TRUE))

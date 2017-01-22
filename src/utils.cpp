@@ -235,7 +235,8 @@ List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerV
 	  out[i] = wrap(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2)); 
 	}
     }
-  return out;
+  out.attr("class") = CharacterVector::create("imlist","list");
+  return wrap(out);
 }
 
 //' @param cz vector of z coordinates for patch centers 
@@ -272,6 +273,7 @@ List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,Intege
 	  out[i] = img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cz(i)-wz(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2,cz(i)+wz(i)/2);
 	}
     }
+  out.attr("class") = CharacterVector::create("imlist","list");
   return out;
 }
 

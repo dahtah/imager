@@ -51,7 +51,7 @@ implot <- function(im,expr,...)
             }
         else
         {
-            out <- capture.plot()
+            out <- capture.plot()/255
             grDevices::dev.off()
             out
         }

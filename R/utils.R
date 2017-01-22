@@ -401,7 +401,7 @@ imdirac <- function(dims,x,y,z=1,cc=1)
 ##' @param im the image
 ##' @param thr a threshold, either numeric, or "auto", or a string for quantiles 
 ##' @param approx Skip pixels when computing quantiles in large images (default TRUE)
-##' @return a thresholded image
+##' @return a pixset with the selected pixels 
 ##' @examples
 ##' im <- load.example("birds")
 ##' im.g <- grayscale(im)
@@ -435,10 +435,8 @@ threshold <- function(im,thr="auto",approx=TRUE)
                 }
         }
         a <- im > thr
-        b <- im <= thr
-        im[a] <- 1
-        im[b] <- 0
-        im
+        attr(a,"threshold") <- thr
+        a
     }
 
 #Find a cut-off point for a bimodal distribution using kmeans (similar to Otsu's method)
