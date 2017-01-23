@@ -80,10 +80,14 @@ load.image.internal <- function(file)
     bmp <- try(read.bitmap(file),silent=TRUE)
     if (class(bmp) != "try-error") #Loaded succesfully
     {
+        if (!is.null(attr(bmp,"header"))) #We have a BMP file, rescale
+        {
+            bmp <- bmp/255
+        }
         if (length(dim(bmp)) == 3) #Has colour
         {
             dim(bmp) <- c(dim(bmp)[1:2],1,dim(bmp)[3]) #Make array 4D
-            }
+        }
         else 
         {
             dim(bmp) <- c(dim(bmp),1,1)

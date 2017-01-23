@@ -972,6 +972,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pmedian
+NumericVector pmedian(List x);
+RcppExport SEXP imager_pmedian(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(pmedian(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// reduce_list
+NumericVector reduce_list(List x, int summary);
+RcppExport SEXP imager_reduce_list(SEXP xSEXP, SEXP summarySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type summary(summarySEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_list(x, summary));
+    return rcpp_result_gen;
+END_RCPP
+}
 // autocrop_
 NumericVector autocrop_(NumericVector im, NumericVector color, std::string axes);
 RcppExport SEXP imager_autocrop_(SEXP imSEXP, SEXP colorSEXP, SEXP axesSEXP) {
