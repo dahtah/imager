@@ -642,21 +642,32 @@ mclosing <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
     .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
 }
 
-#' Compute the pixel-wise median across an image list
-#' 
-#' Similarly to other reductions like "average", "parmax", and "parmin", this function computes the pixel-wise median in an image list (i.e., the median value for each pixel when comparing pixels across the list).
-#' Images of different sizes are supported, in which case all images will be aligned to the first image, and padded with zeros.
-#' @param x an image list
-#' @examples
-#' #Compute median values across colour channels
-#' imsplit(boats,"c") %>% pmedian %>% plot
-#' @export
-pmedian <- function(x) {
-    .Call('imager_pmedian', PACKAGE = 'imager', x)
+reduce_sum <- function(x) {
+    .Call('imager_reduce_sum', PACKAGE = 'imager', x)
+}
+
+reduce_wsum <- function(x, w) {
+    .Call('imager_reduce_wsum', PACKAGE = 'imager', x, w)
+}
+
+reduce_prod <- function(x, summary = 0L) {
+    .Call('imager_reduce_prod', PACKAGE = 'imager', x, summary)
 }
 
 reduce_list <- function(x, summary = 0L) {
     .Call('imager_reduce_list', PACKAGE = 'imager', x, summary)
+}
+
+psort <- function(x, increasing = TRUE) {
+    .Call('imager_psort', PACKAGE = 'imager', x, increasing)
+}
+
+porder <- function(x, increasing = TRUE) {
+    .Call('imager_porder', PACKAGE = 'imager', x, increasing)
+}
+
+prank <- function(x, increasing = TRUE) {
+    .Call('imager_prank', PACKAGE = 'imager', x, increasing)
 }
 
 autocrop_ <- function(im, color, axes = "zyx") {

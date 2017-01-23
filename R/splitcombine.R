@@ -143,65 +143,111 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##'
 ##' These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
 ##' The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign. 
-##' 
+##' "parsort","parrank" and "parorder" aren't really reductions because they return a list of the same size. They perform a pixel-wise sort (resp. order and rank) across the list. 
 ##' @name imager.combine
 ##' @param x a list of images
 ##' @examples
 ##' im1 <- as.cimg(function(x,y) x,100,100)
 ##' im2 <- as.cimg(function(x,y) y,100,100)
 ##' im3 <- as.cimg(function(x,y) cos(x/10),100,100)
-##' l <- list(im1,im2,im3)
+##' l <- imlist(im1,im2,im3)
 ##' add(l) %>% plot #Add the images
 ##' average(l) %>% plot #Average the images
 ##' mult(l) %>% plot #Multiply
+##' wsum(l,c(.1,8,.1)) %>% plot #Weighted sum
 ##' parmax(l) %>% plot #Parallel max
 ##' parmin(l) %>% plot #Parallel min
-##' #Edge detection
+##' parmed(l) %>% plot #Parallel median
+##' parsd(l) %>% plot #Parallel std. dev
+##' #parsort can also be used to produce parallel max. and min
+##' (parsort(l)[[1]]) %>% plot("Parallel min")
+##' (parsort(l)[[length(l)]]) %>% plot("Parallel max")
+##' #Edge detection (Euclidean norm of gradient)
 ##' imgradient(boats,"xy") %>% enorm %>% plot
 ##' #Pseudo-artistic effects
-##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% parmin %>% plot
-##' llply(seq(1,35,5),function(v) boxblur(boats,v)) %>% average %>% plot
-##'
+##' l <- map_il(seq(1,35,5),~ boxblur(boats,.))
+##' parmin(l) %>% plot
+##' average(l) %>% plot
+##' mult(l) %>% plot
 ##' #At each pixel, which colour channel has the maximum value?
 ##' imsplit(boats,"c") %>% which.parmax %>% table
-##' 
+##' #Same thing using parorder (ties are broken differently)!!!
+##' imsplit(boats,"c") %>% { parorder(.)[[length(.)]] } %>% table
 ##' @author Simon Barthelme
 ##' @seealso imsplit,Reduce
 NULL
 
+check.reduce <- function(l)
+{
+    l <- as.imlist(l)
+    if (length(l) > 1) #Check dimensions
+    {
+        ok <- sapply(l,dim) %>% { apply(.,1,sd) == 0 } %>% all
+        if (!ok)
+        {
+            stop("Images must all be the same size")
+        }
+    }
+    l
+}
+
+
 ##' @describeIn imager.combine Add images
 ##' @export
-add <- function(x) Reduce("+", x)
+add <- function(x) check.reduce(x) %>% reduce_sum
+
+##' @describeIn imager.combine Weighted sum of images
+##' @param w weights (must be the same length as the list)
+##' @export
+wsum <- function(x,w)
+{
+    if (length(w)!=length(x)) stop("weights must the same length as input")
+    check.reduce(x) %>% reduce_wsum(w)
+}
+
 
 ##' @describeIn imager.combine Average images
 ##' @export
-average <- function(x) Reduce("+", x)/length(x)
+average <- function(x) add(x)/length(x)
 
 ##' @describeIn imager.combine Multiply images (pointwise)
 ##' @export
-mult <- function(x) Reduce("*", x)
+mult <- function(x) check.reduce(x) %>% reduce_prod
 
 ##' @describeIn imager.combine Parallel max over images 
 ##' @export
-parmax <- function(x) Reduce(pmax, x)
+parmax <- function(x) check.reduce(x) %>% reduce_list(2)
 
 ##' @describeIn imager.combine Parallel max in absolute value over images, 
 ##' @export
 parmax.abs <- function(x) maxmin.abs(x,TRUE)
     
 
-##' @describeIn imager.combine Parallel max in absolute value over images, 
+##' @describeIn imager.combine Parallel min in absolute value over images, 
 ##' @export
 parmin.abs <- function(x) maxmin.abs(x,FALSE)
 
 
 ##' @describeIn imager.combine Parallel min over images 
 ##' @export
-parmin <- function(x) Reduce(pmin, x)
+parmin <- function(x) check.reduce(x) %>% reduce_list(1)
 
 ##' @describeIn imager.combine Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
 ##' @export
-enorm <- function(x) Map(function(v) v^2,x) %>% add %>% sqrt
+enorm <- function(x) check.reduce(x) %>% reduce_list(5)
+
+##' @describeIn imager.combine Median
+##' @export
+parmed <- function(x) check.reduce(x) %>% reduce_list(3)
+
+##' @describeIn imager.combine Variance
+##' @export
+parvar <- function(x) check.reduce(x) %>% reduce_list(4)
+
+##' @describeIn imager.combine Std. deviation 
+##' @export
+parsd <- function(x) parvar(x) %>% sqrt
+
 
 ##' @describeIn imager.combine Test equality
 ##' @export
@@ -231,6 +277,21 @@ which.parmax <- function(x) maxmin.ind(x,max=TRUE)
 ##' @describeIn imager.combine index of parallel minima
 ##' @export
 which.parmin <- function(x) maxmin.ind(x,max=FALSE)
+
+
+##' @describeIn imager.combine pixel-wise sort 
+##' @export
+parsort <- function(x,increasing=TRUE) check.reduce(x) %>% psort(increasing)
+
+##' @describeIn imager.combine pixel-wise order 
+##' @export
+parorder <- function(x,increasing=TRUE) check.reduce(x) %>% porder(increasing)
+
+##' @describeIn imager.combine pixel-wise rank
+##' @export
+parrank <- function(x,increasing=TRUE) check.reduce(x) %>% prank(increasing)
+
+
 
 
 

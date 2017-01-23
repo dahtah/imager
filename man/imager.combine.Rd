@@ -9,13 +9,22 @@
 \alias{mult}
 \alias{parmax}
 \alias{parmax.abs}
+\alias{parmed}
 \alias{parmin}
 \alias{parmin.abs}
+\alias{parorder}
+\alias{parrank}
+\alias{parsd}
+\alias{parsort}
+\alias{parvar}
 \alias{which.parmax}
 \alias{which.parmin}
+\alias{wsum}
 \title{Combining images}
 \usage{
 add(x)
+
+wsum(x, w)
 
 average(x)
 
@@ -31,22 +40,39 @@ parmin(x)
 
 enorm(x)
 
+parmed(x)
+
+parvar(x)
+
+parsd(x)
+
 equal(x)
 
 which.parmax(x)
 
 which.parmin(x)
+
+parsort(x, increasing = TRUE)
+
+parorder(x, increasing = TRUE)
+
+parrank(x, increasing = TRUE)
 }
 \arguments{
 \item{x}{a list of images}
+
+\item{w}{weights (must be the same length as the list)}
 }
 \description{
 These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
-The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign.
+The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign. 
+"parsort","parrank" and "parorder" aren't really reductions because they return a list of the same size. They perform a pixel-wise sort (resp. order and rank) across the list.
 }
 \section{Functions}{
 \itemize{
 \item \code{add}: Add images
+
+\item \code{wsum}: Weighted sum of images
 
 \item \code{average}: Average images
 
@@ -56,37 +82,57 @@ The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 othe
 
 \item \code{parmax.abs}: Parallel max in absolute value over images,
 
-\item \code{parmin.abs}: Parallel max in absolute value over images,
+\item \code{parmin.abs}: Parallel min in absolute value over images,
 
 \item \code{parmin}: Parallel min over images
 
 \item \code{enorm}: Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
+
+\item \code{parmed}: Median
+
+\item \code{parvar}: Variance
+
+\item \code{parsd}: Std. deviation
 
 \item \code{equal}: Test equality
 
 \item \code{which.parmax}: index of parallel maxima
 
 \item \code{which.parmin}: index of parallel minima
+
+\item \code{parsort}: pixel-wise sort
+
+\item \code{parorder}: pixel-wise order
+
+\item \code{parrank}: pixel-wise rank
 }}
 \examples{
 im1 <- as.cimg(function(x,y) x,100,100)
 im2 <- as.cimg(function(x,y) y,100,100)
 im3 <- as.cimg(function(x,y) cos(x/10),100,100)
-l <- list(im1,im2,im3)
+l <- imlist(im1,im2,im3)
 add(l) \%>\% plot #Add the images
 average(l) \%>\% plot #Average the images
 mult(l) \%>\% plot #Multiply
+wsum(l,c(.1,8,.1)) \%>\% plot #Weighted sum
 parmax(l) \%>\% plot #Parallel max
 parmin(l) \%>\% plot #Parallel min
-#Edge detection
+parmed(l) \%>\% plot #Parallel median
+parsd(l) \%>\% plot #Parallel std. dev
+#parsort can also be used to produce parallel max. and min
+(parsort(l)[[1]]) \%>\% plot("Parallel min")
+(parsort(l)[[length(l)]]) \%>\% plot("Parallel max")
+#Edge detection (Euclidean norm of gradient)
 imgradient(boats,"xy") \%>\% enorm \%>\% plot
 #Pseudo-artistic effects
-llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% parmin \%>\% plot
-llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% average \%>\% plot
-
+l <- map_il(seq(1,35,5),~ boxblur(boats,.))
+parmin(l) \%>\% plot
+average(l) \%>\% plot
+mult(l) \%>\% plot
 #At each pixel, which colour channel has the maximum value?
 imsplit(boats,"c") \%>\% which.parmax \%>\% table
-
+#Same thing using parorder (ties are broken differently)!!!
+imsplit(boats,"c") \%>\% { parorder(.)[[length(.)]] } \%>\% table
 }
 \author{
 Simon Barthelme

@@ -972,14 +972,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pmedian
-NumericVector pmedian(List x);
-RcppExport SEXP imager_pmedian(SEXP xSEXP) {
+// reduce_sum
+NumericVector reduce_sum(List x);
+RcppExport SEXP imager_reduce_sum(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(pmedian(x));
+    rcpp_result_gen = Rcpp::wrap(reduce_sum(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// reduce_wsum
+NumericVector reduce_wsum(List x, NumericVector w);
+RcppExport SEXP imager_reduce_wsum(SEXP xSEXP, SEXP wSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_wsum(x, w));
+    return rcpp_result_gen;
+END_RCPP
+}
+// reduce_prod
+NumericVector reduce_prod(List x, int summary);
+RcppExport SEXP imager_reduce_prod(SEXP xSEXP, SEXP summarySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type summary(summarySEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_prod(x, summary));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -992,6 +1016,42 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type summary(summarySEXP);
     rcpp_result_gen = Rcpp::wrap(reduce_list(x, summary));
+    return rcpp_result_gen;
+END_RCPP
+}
+// psort
+List psort(List x, bool increasing);
+RcppExport SEXP imager_psort(SEXP xSEXP, SEXP increasingSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type increasing(increasingSEXP);
+    rcpp_result_gen = Rcpp::wrap(psort(x, increasing));
+    return rcpp_result_gen;
+END_RCPP
+}
+// porder
+List porder(List x, bool increasing);
+RcppExport SEXP imager_porder(SEXP xSEXP, SEXP increasingSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type increasing(increasingSEXP);
+    rcpp_result_gen = Rcpp::wrap(porder(x, increasing));
+    return rcpp_result_gen;
+END_RCPP
+}
+// prank
+List prank(List x, bool increasing);
+RcppExport SEXP imager_prank(SEXP xSEXP, SEXP increasingSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type increasing(increasingSEXP);
+    rcpp_result_gen = Rcpp::wrap(prank(x, increasing));
     return rcpp_result_gen;
 END_RCPP
 }

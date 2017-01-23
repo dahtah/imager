@@ -4,33 +4,48 @@ using namespace Rcpp;
 using namespace cimg_library;
 
 
-//' Compute the pixel-wise median across an image list
-//' 
-//' Similarly to other reductions like "average", "parmax", and "parmin", this function computes the pixel-wise median in an image list (i.e., the median value for each pixel when comparing pixels across the list).
-//' Images of different sizes are supported, in which case all images will be aligned to the first image, and padded with zeros.
-//' @param x an image list
-//' @examples
-//' #Compute median values across colour channels
-//' imsplit(boats,"c") %>% pmedian %>% plot
-//' @export
+
+
 // [[Rcpp::export]]
-NumericVector pmedian(List x)
+NumericVector reduce_sum(List x)
 {
   CImgList<double> L = sharedCImgList(x);
-  CId out(L.at(0));
+  CId out(L.at(0),false);
   int n = x.size();
-  cimg_pragma_openmp(parallel for cimg_openmp_if(out.size()>=65536))
-  cimg_forXYZC(out,x,y,z,c)
+  for (int i = 1;  i < n; i++)
     {
-      CId vec(n,1,1,1);
-      for (int i = 0; i <n; i++)
-	{
-	  vec(i) = L.atNXYZC(i,x,y,z,c);
-	}
-      out(x,y,z,c) = vec.median();
+      out += L.at(i);
     }
   return wrap(out);
 }
+
+// [[Rcpp::export]]
+NumericVector reduce_wsum(List x,NumericVector w)
+{
+  CImgList<double> L = sharedCImgList(x);
+  CId out(L.at(0),false);
+  int n = x.size();
+  for (int i = 1;  i < n; i++)
+    {
+      out += w(i)*L.at(i);
+    }
+  return wrap(out);
+}
+
+
+// [[Rcpp::export]]
+NumericVector reduce_prod(List x,int summary = 0)
+{
+  CImgList<double> L = sharedCImgList(x);
+  CId out(L.at(0),false);
+  int n = x.size();
+  for (int i = 1;  i < n; i++)
+    {
+      out = out.mul(L.at(i));
+    }
+  return wrap(out);
+}
+
 
 // [[Rcpp::export]]
 NumericVector reduce_list(List x,int summary = 0)
@@ -44,12 +59,11 @@ NumericVector reduce_list(List x,int summary = 0)
       CId vec(n,1,1,1);
       for (int i = 0; i <n; i++)
 	{
-	  vec[i] = L.atNXYZC(i,x,y,z,c);
+	  vec[i] = L.at(i)(x,y,z,c);
+	  //	  vec[i] = L.atNXYZC(i,x,y,z,c);
 	}
       switch (summary)
 	{
-	case 0:
-	  out(x,y,z,c) = vec.sum(); break;
 	case 1:
 	  out(x,y,z,c) = vec.min(); break;
 	case 2:
@@ -59,11 +73,87 @@ NumericVector reduce_list(List x,int summary = 0)
 	case 4:
 	  out(x,y,z,c) = vec.variance(); break;
 	case 5:
-	  out(x,y,z,c) = vec.mean(); break;
-	case 6:
 	  out(x,y,z,c) = sqrt(vec.pow(2).sum()); break;
-
 	}
+    }
+  return wrap(out);
+}
+
+// [[Rcpp::export]]
+List psort(List x,bool increasing = true)
+{
+  CImgList<double> L = sharedCImgList(x);
+  CImgList<double> out(L,false);
+  int n = x.size();
+  cimg_pragma_openmp(parallel for cimg_openmp_if(out.size()>=65536))
+    cimg_forXYZC(L.at(0),x,y,z,c)
+    {
+      CId vec(n,1,1,1),perm(n,1,1,1);
+      
+      for (int i = 0; i <n; i++)
+	{
+	  vec[i] = L.at(i)(x,y,z,c);
+	  //	  vec[i] = L.atNXYZC(i,x,y,z,c);
+	}
+      vec.sort(perm,increasing);
+      for (int i = 0; i <n; i++)
+	{
+	  out.at(i)(x,y,z,c) = vec[i];
+	}
+
+    }
+  return wrap(out);
+}
+
+// [[Rcpp::export]]
+List porder(List x,bool increasing = true)
+{
+  CImgList<double> L = sharedCImgList(x);
+  CImgList<double> out(L,false);
+  int n = x.size();
+  cimg_pragma_openmp(parallel for cimg_openmp_if(out.size()>=65536))
+    cimg_forXYZC(L.at(0),x,y,z,c)
+    {
+      CId vec(n,1,1,1),perm(n,1,1,1);
+      
+      for (int i = 0; i <n; i++)
+	{
+	  vec[i] = L.at(i)(x,y,z,c);
+	  //	  vec[i] = L.atNXYZC(i,x,y,z,c);
+	}
+      vec.sort(perm,increasing);
+      for (int i = 0; i <n; i++)
+	{
+	  out.at(i)(x,y,z,c) = perm[i] + 1;
+	}
+
+    }
+  return wrap(out);
+}
+
+
+// [[Rcpp::export]]
+List prank(List x,bool increasing = true)
+{
+  CImgList<double> L = sharedCImgList(x);
+  CImgList<double> out(L,false);
+  int n = x.size();
+  cimg_pragma_openmp(parallel for cimg_openmp_if(out.size()>=65536))
+    cimg_forXYZC(L.at(0),x,y,z,c)
+    {
+      CId vec(n,1,1,1),perm(n,1,1,1);
+      
+      for (int i = 0; i <n; i++)
+	{
+	  vec[i] = L.at(i)(x,y,z,c);
+	  //	  vec[i] = L.atNXYZC(i,x,y,z,c);
+	}
+      vec.sort(perm,increasing);
+      for (int i = 0; i <n; i++)
+	{
+	  out.at(perm(i))(x,y,z,c) = i + 1;
+	}
+
     }
   return wrap(out);
 }
