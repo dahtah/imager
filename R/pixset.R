@@ -555,7 +555,7 @@ split_connected <- function(px,...)
         {
             lab <- label(px,...)
             lab <- lab*as.cimg(px)
-            (1:max(lab)) %>% map(function(v) lab==v)
+            unique(lab) %>% { .[. > 0] } %>% map_il(function(v) lab==v)
         }
 }
 

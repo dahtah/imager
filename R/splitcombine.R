@@ -249,6 +249,15 @@ parvar <- function(x) check.reduce(x) %>% reduce_list(4)
 parsd <- function(x) parvar(x) %>% sqrt
 
 
+##' @describeIn imager.combine Parallel all (for pixsets)
+##' @export
+parall <- function(x) check.reduce(x) %>% Reduce(function(a,b) a & b,.)
+
+##' @describeIn imager.combine Parallel any (for pixsets)
+##' @export
+parany <- function(x) check.reduce(x) %>% Reduce(function(a,b) a | b,.)
+
+
 ##' @describeIn imager.combine Test equality
 ##' @export
 equal <- function(x)

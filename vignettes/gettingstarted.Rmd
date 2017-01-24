@@ -268,12 +268,11 @@ l <- imgradient(boats.g,"xy")
 str(l)
 ```
 
-And the second takes a list of images and computes the Euclidean norm pixel-wise, i.e.:
+And the second takes a list of images and computes the Euclidean norm pixel-wise, i.e., the i-th pixel of the output equals:
 
-```{r}
-enorm(list(3,2))
-sqrt(3^2+2^2)
-```
+$$ u_i = \sqrt( \sum_j x_{ij}^2) $$
+
+where $x_ij$ is the value of pixel $i$ in the $j-th$ element of the list. 
 
 enorm is an example of a "reduction" function. They're useful for combining pixel values over several images. We'll see another example below when we look at blob detection.
 
@@ -561,6 +560,14 @@ as.cimg(array(1:9,c(10,10,3))) #Assumes it's a colour image (last dimension 3)
 as.cimg(array(1:9,c(10,10,4))) #Assumes it's a grayscale video with 4 frames (last dimension != 3)
 ```
 
+# Learning more
+
+The next step is to learn about pixsets, which have their own vignette: 
+``` vignette("pixsets") ```
+
+pixsets represent sets of pixels and are all-around quite useful. 
+
+After that, you can have a browse around the [website](http://dahtah.github.io/imager). 
 
 # imager functions by theme
 
@@ -651,6 +658,3 @@ All functions are documented.
 
 - displacement, diffusion_tensors
 
-# Learning more
-
-Have a look around the [website](http://dahtah.github.io/imager). 
