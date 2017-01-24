@@ -7,6 +7,8 @@
 \alias{equal}
 \alias{imager.combine}
 \alias{mult}
+\alias{parall}
+\alias{parany}
 \alias{parmax}
 \alias{parmax.abs}
 \alias{parmed}
@@ -45,6 +47,10 @@ parmed(x)
 parvar(x)
 
 parsd(x)
+
+parall(x)
+
+parany(x)
 
 equal(x)
 
@@ -93,6 +99,10 @@ The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 othe
 \item \code{parvar}: Variance
 
 \item \code{parsd}: Std. deviation
+
+\item \code{parall}: Parallel all (for pixsets)
+
+\item \code{parany}: Parallel any (for pixsets)
 
 \item \code{equal}: Test equality
 
