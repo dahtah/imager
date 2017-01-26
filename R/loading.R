@@ -99,6 +99,7 @@ load.image.internal <- function(file)
     {
         if (has.magick())
         {
+            is.url <- grepl("^(http|ftp)s?://", file)
             if (is.url)
             {
                 load_image(file)
