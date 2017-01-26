@@ -1019,6 +1019,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// reduce_quantile
+NumericVector reduce_quantile(List l, NumericVector prob);
+RcppExport SEXP imager_reduce_quantile(SEXP lSEXP, SEXP probSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type l(lSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type prob(probSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_quantile(l, prob));
+    return rcpp_result_gen;
+END_RCPP
+}
 // psort
 List psort(List x, bool increasing);
 RcppExport SEXP imager_psort(SEXP xSEXP, SEXP increasingSEXP) {

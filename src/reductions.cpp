@@ -79,6 +79,29 @@ NumericVector reduce_list(List x,int summary = 0)
   return wrap(out);
 }
 
+
+// [[Rcpp::export]]
+NumericVector reduce_quantile(List l,NumericVector prob)
+{
+  CImgList<double> L = sharedCImgList(l);
+  CId out(L.at(0),false);
+  Environment stats("package:stats");
+  Function quantile = stats["quantile"];
+  int n = l.size();
+  //  cimg_pragma_openmp(parallel for cimg_openmp_if(out.size()>=65536))
+  cimg_forXYZC(out,x,y,z,c)
+    {
+      NumericVector vec(n);
+      for (int i = 0; i <n; i++)
+	{
+	  vec(i) = L.at(i)(x,y,z,c);
+	}
+      out(x,y,z,c) = as<double>(quantile(vec,prob));
+    }
+  return wrap(out);
+}
+
+
 // [[Rcpp::export]]
 List psort(List x,bool increasing = true)
 {

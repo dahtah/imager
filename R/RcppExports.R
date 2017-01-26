@@ -658,6 +658,10 @@ reduce_list <- function(x, summary = 0L) {
     .Call('imager_reduce_list', PACKAGE = 'imager', x, summary)
 }
 
+reduce_quantile <- function(l, prob) {
+    .Call('imager_reduce_quantile', PACKAGE = 'imager', l, prob)
+}
+
 psort <- function(x, increasing = TRUE) {
     .Call('imager_psort', PACKAGE = 'imager', x, increasing)
 }

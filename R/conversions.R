@@ -113,6 +113,25 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NUL
     }
 }
 
+##' Convert a raster object to a cimg object
+##'
+##' R's native object for representing images is a "raster". This function converts raster objects to cimg objects. 
+##' @param obj a raster object
+##' @param ... ignored
+##' @return a cimg object
+##' @author Simon Barthelmé
+##' @examples
+##' rst <- as.raster(matrix((1:4)/4,2,2))
+##' as.cimg(rst) %>% plot(int=FALSE)
+##' all.equal(rst,as.raster(as.cimg(rst)))
+##'
+##' @export
+as.cimg.raster <- function(obj,...)
+    {
+        map_il(1:3,~ col2rgb(obj)[.,] %>% matrix(dim(obj),byrow=TRUE) %>% as.cimg) %>% imappend("c") %>% imrotate(90) %>% mirror("x") 
+    }
+
+
 ##' Convert cimg to spatstat im object
 ##'
 ##' The spatstat library uses a different format for images, which have class "im". This utility converts a cimg object to an im object. spatstat im objects are limited to 2D grayscale images, so if the image has depth or spectrum > 1 a list is returned for the separate frames or channels (or both, in which case a list of lists is returned, with frames at the higher level and channels at the lower one).
