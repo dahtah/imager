@@ -320,6 +320,34 @@ imlist(a=parrots,b=3*parrots)
 list(a=parrots,b=3*parrots) %>% as.imlist
 ```
 
+# Pixel sets (pixsets)
+
+Another important datatype in imager is the pixel set (AKA pixset, introduced in imager v0.40). A pixset is a set of pixels, represented as a binary image, and that's what you get when you test properties on images, e.g.: 
+
+```{r}
+grayscale(parrots) > .8
+```
+
+Internally a pixset is just a array of logicals, so it's no different from what you'd get from running a test on a vector, e.g.: 
+
+```{r}
+1:4  >= 2
+```
+
+Compared to logical arrays, however, pixsets come with many convenience functions, for plotting, splitting, morphological operations, etc. 
+
+As an example, the following bit of code generates random shapes by filtering & thresholding a random image, splitting it into connected components, and removing the smaller ones:
+
+```{r}
+set.seed(1)
+imnoise(100,100) %>% isoblur(3) %>%
+    threshold(0) %>% split_connected %>%
+    purrr::keep(~ sum(.) > 200) %>% plot
+
+```
+
+
+Pixsets are covered elsewhere, in the vignette ``` vignette('pixsets') ```, and in the [morphology tutorial](morphology.Rmd). 
 
 
 # Splitting and concatenating images

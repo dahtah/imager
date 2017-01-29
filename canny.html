@@ -358,10 +358,10 @@ all.equal(canny,canny2)</code></pre>
 <p>The second function is much faster, at least on this image (for this particular choice of thresholds):</p>
 <pre class="r"><code>system.time(hystFP(list(strong=strong,weak=weak)))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.460   0.008   0.468</code></pre>
+##   0.470   0.012   0.482</code></pre>
 <pre class="r"><code>system.time(rescueFill(strong,weak))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.183   0.000   0.183</code></pre>
+##   0.177   0.012   0.189</code></pre>
 </div>
 
 

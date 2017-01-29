@@ -248,6 +248,11 @@ invisible(purrr::map2(iml,fnames,function(im,f) imager::save.image(im,f)))
 f &lt;- tempfile(fileext=&quot;.avi&quot;)
 
 make.video(dd,f)</code></pre>
+<video width="500"  controls loop>
+<source src="imager_files/figure-html/increasing_blur.webm" />
+<p>
+video of increasing blur levels
+</p>
 <p>See also the <a href="https://cran.r-project.org/web/packages/animation/index.html">animation</a> package for more along these lines.</p>
 </div>
 <div id="displaying-images-and-videos" class="section level1">
@@ -387,7 +392,7 @@ mutate(df,value=cos(sin(x+y)^2)) %&gt;% as.cimg</code></pre>
 <pre><code>[1] &quot;imlist&quot; &quot;list&quot;  </code></pre>
 <p>The imlist class comes with a few convenience functions, for example:</p>
 <pre class="r"><code>imgradient(parrots,&quot;xy&quot;) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-10-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-11-1.jpeg" width="624" /></p>
 <p>and:</p>
 <pre class="r"><code>imgradient(parrots,&quot;xy&quot;) %&gt;% as.data.frame %&gt;% head</code></pre>
 <pre><code>  im x y cc        value
@@ -415,12 +420,12 @@ mutate(df,value=cos(sin(x+y)^2)) %&gt;% as.cimg</code></pre>
 <pre><code>[1] 0.3666948 0.3682700 0.3697508 0.3705525 0.3707925 0.3708410</code></pre>
 <p>imsplit contains an additional argument, called “nb”. When “nb” is positive imsplit cuts the image into “nb” chunks, along the axis “axis”:</p>
 <pre class="r"><code>imsplit(parrots,&quot;x&quot;,4) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-13-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-14-1.jpeg" width="624" /></p>
 <pre class="r"><code>imsplit(parrots,&quot;y&quot;,3) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-13-2.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-14-2.jpeg" width="624" /></p>
 <p>When “nb” is negative, “nb” pixels defines the chunk size:</p>
 <pre class="r"><code>imsplit(parrots,&quot;x&quot;,-250) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-14-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-15-1.jpeg" width="624" /></p>
 <p>That last panel looks crummy because it’s a long-and-thin image stretched into a square.</p>
 <p>The inverse operation to imsplit is called imappend: it takes a list of images and concatenates them along the dimension of your choice.</p>
 <pre class="r"><code>#Sample functions and turn them into separate R,G,B channels
@@ -482,7 +487,7 @@ parrots.cp &lt;- load.example(&quot;parrots&quot;)
 G(parrots.cp) &lt;- 0
 B(parrots.cp) &lt;- 0
 plot(parrots.cp)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-15-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-16-1.jpeg" width="624" /></p>
 <p>If you need to access a specific frame, use frame:</p>
 <pre class="r"><code>frame(tennis,1)</code></pre>
 <pre><code>Image. Width: 352 pix Height: 240 pix Depth: 1 Colour channels: 3 </code></pre>
@@ -490,9 +495,9 @@ plot(parrots.cp)</code></pre>
 frame(tennis,1) &lt;- isoblur(frame(tennis,1),10)</code></pre>
 <p>If you need pixel values along rows and columns use:</p>
 <pre class="r"><code>imrow(R(parrots),10) %&gt;% plot(main=&quot;Red channel along 10th row&quot;,type=&quot;l&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-17-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-18-1.jpeg" width="624" /></p>
 <pre class="r"><code>imcol(B(parrots),10) %&gt;% plot(main=&quot;Blue channel along 10th line&quot;,type=&quot;l&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-17-2.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-18-2.jpeg" width="624" /></p>
 <p>Individual pixels can be accessed using <em>at</em> and <em>color.at</em>:</p>
 <pre class="r"><code>at(parrots,x=20,y=20,cc=1:3)</code></pre>
 <pre><code>[1] 0.6313725 0.5882353 0.4941176</code></pre>
@@ -610,18 +615,18 @@ imwarp(parrots,map=map,direction=&quot;forward&quot;) %&gt;% plot()</code></pre>
 <p>imager has the usual correlate and convolve operations:</p>
 <pre class="r"><code>flt &lt;- as.cimg(matrix(1,4,4)) #4x4 box filter
 grayscale(parrots) %&gt;% correlate(flt) %&gt;% plot(main=&quot;Filtering with box filter&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-20-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-21-1.jpeg" width="624" /></p>
 <pre class="r"><code>#Here the filter is symmetrical so convolution and correlation should be the same. Check:
 a &lt;- grayscale(parrots) %&gt;% correlate(flt)
 b &lt;- grayscale(parrots) %&gt;% imager::convolve(flt)
 all.equal(a,b)</code></pre>
-<pre><code>[1] TRUE</code></pre>
+<pre><code>[1] &quot;Mean relative difference: 0.02401757&quot;</code></pre>
 <p>CImg includes fast implementations of Gaussian (and derivative-of-Gaussian) filters. They are available via the “deriche” and “vanvliet” functions.</p>
 <pre class="r"><code>im &lt;- grayscale(parrots)
 layout(t(1:2))
 deriche(im,sigma=4,order=2,axis=&quot;y&quot;) %&gt;% plot(main=&quot;2nd deriv of Gaussian along y&quot;)
 vanvliet(im,sigma=4,order=2,axis=&quot;y&quot;) %&gt;% plot(main=&quot;2nd deriv of Gaussian along y&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-21-1.jpeg" width="1152" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-22-1.jpeg" width="1152" /></p>
 <p>The Vanvliet-Young filter is typically a better approximation. We can establish this by looking at the impulse response (which should be Gaussian). Here’s the one-dimensional case:</p>
 <pre class="r"><code>n &lt;- 1e3
 xv &lt;- seq(0,1,l=n) #1D Grid
@@ -635,15 +640,15 @@ imp.true &lt;- dnorm(xv,sd=sig/n,m=.5) #True impulse response
 plot(xv,imp.true/max(imp.true),type=&quot;l&quot;,lwd=2,xlab=&quot;x&quot;,ylab=&quot;Impulse response&quot;)
 lines(xv,imp.vv/max(imp.vv),col=&quot;blue&quot;,lwd=2)
 lines(xv,imp.dr/max(imp.dr),col=&quot;red&quot;,lwd=2)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-22-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-23-1.jpeg" width="624" /></p>
 <p>The ideal filter is in black, the Vanvliet-Young filter in blue, the Deriche filter in red. Vanvliet-Young is clearly more accurate, but slightly slower:</p>
 <pre class="r"><code>im &lt;- imfill(3e3,3e3)
 system.time(deriche(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.108   0.148   0.188 </code></pre>
+  0.107   0.001   0.043 </code></pre>
 <pre class="r"><code>system.time(vanvliet(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.211   0.069   0.148 </code></pre>
+  0.207   0.000   0.067 </code></pre>
 <p>In both cases computation time is independent of filter bandwidth, which is a very nice feature (the filters are IIR).</p>
 </div>
 <div id="ffts-and-the-periodicsmooth-decomposition" class="section level1">

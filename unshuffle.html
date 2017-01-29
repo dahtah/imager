@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Unshuffling an image</title>
+
+<script src="unshuffle_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="unshuffle_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="unshuffle_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="unshuffle_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="unshuffle_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="unshuffle_files/highlight/default.css"
+      type="text/css" />
+<script src="unshuffle_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="unshuffle_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Unshuffling an image</h1>
+
+</div>
+
+
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<p>This note is inspired by Robin Houston’s <a href="https://github.com/robinhouston/image-unshredding">image unshredding demo</a>. I’ll show how imager and the seriation package let you do the same thing in about 5 lines of R code.</p>
+<p>The goal is to reconstruct an image whose columns have been scrambled. The scrambling is easy enough to implement:</p>
+<pre class="r"><code>library(imager)
+library(purrr)
+set.seed(2)
+
+##reorder the columns of an image
+scramble &lt;- function(im)
+{
+    imsplit(im,&quot;x&quot;) %&gt;% { .[sample(length(.))] } %&gt;% imappend(&quot;x&quot;) 
+}
+scramble(boats) %&gt;% plot</code></pre>
+<p><img src="unshuffle_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
+<p>We can test it on Robin’s demo image (CC licensed by Falcon® Photography), a picture of the Louvre at night.</p>
+<pre class="r"><code>im &lt;- load.image(&quot;https://camo.githubusercontent.com/7d413e9a343e8ceaa507d68a1a6e93247d5f7853/68747470733a2f2f726f62696e686f7573746f6e2e6769746875622e696f2f696d6167652d756e736872656464696e672f696d616765732f6f726967696e616c2f626c75652d686f75722d70617269732e706e67&quot;)
+
+imlist(im,scramble(im)) %&gt;% plot(layout=&quot;row&quot;)</code></pre>
+<p><img src="unshuffle_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
+<p>The unshuffling relies on the spatial structure of images: adjacent columns tend to be similar. If we compute a distance matrix that compare all pairs of rows, we should be able to pick out an order that minimises the total distance. That’s a seriation problem, and R has a whole <a href="https://cran.r-project.org/web/packages/seriation/index.html">package</a> dedicated to seriation. There are many was of solving seriation problems (see the package’s vignette), and one of them is to cast seriation as an instance of the Traveling Salesman Problem, as Robin does. In this case it works wonders and is trivially easy to implement :</p>
+<pre class="r"><code>library(seriation)
+
+unscramble &lt;- function(im.s,method=&quot;TSP&quot;,...)
+{
+    cols &lt;- imsplit(im.s,&quot;x&quot;)
+    #Compute a distance matrix (using L1 - Manhattan - distance)
+    #Each entry D_ij compares column i to column j  
+    D &lt;- map(cols,as.vector) %&gt;% do.call(rbind,.) %&gt;% dist(method=&quot;manhattan&quot;)
+    out &lt;- seriate(D,method=method,...)
+    cols[get_order(out)] %&gt;% imappend(&quot;x&quot;) 
+}
+
+scramble(boats) %&gt;% unscramble %&gt;% plot(main=&quot;Unscrambled image&quot;)</code></pre>
+<p><img src="unshuffle_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
+<p>Almost correct, but the TSP solver probably hit a local minimum there.</p>
+<p>On Robin’s example we get:</p>
+<pre class="r"><code>im.s &lt;- load.image(&quot;https://camo.githubusercontent.com/30709185ecac2da439ff5e2b8327906fcc43c4b0/68747470733a2f2f726f62696e686f7573746f6e2e6769746875622e696f2f696d6167652d756e736872656464696e672f696d616765732f73687566666c65642f626c75652d686f75722d70617269732e706e67&quot;)
+out &lt;- unscramble(im.s)
+plot(out)</code></pre>
+<p><img src="unshuffle_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+<pre class="r"><code>#Load Robin&#39;s output image and compare
+check &lt;- load.image(&quot;https://camo.githubusercontent.com/2011433d1be1f1895c8dd3d2b74e9d7b57ba29f1/68747470733a2f2f726f62696e686f7573746f6e2e6769746875622e696f2f696d6167652d756e736872656464696e672f696d616765732f73616e67616c696e652f626c75652d686f75722d70617269732e706e67&quot;)
+#get rid of alpha channel
+check &lt;- imsub(check,cc &lt; 4)
+
+mean(abs(out-im))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>mean(abs(check-im))</code></pre>
+<pre><code>## [1] 0.003633105</code></pre>
+<p>Turns out we’re doing even a wee bit better (surprisingly, since the TSP solver used is probably poorer).</p>
+<p>The double scramble (rows then columns) is an easy generalisation away:</p>
+<pre class="r"><code>scramble &lt;- function(im,axis=&quot;x&quot;)
+{
+    imsplit(im,axis) %&gt;% { .[sample(length(.))] } %&gt;% imappend(axis) 
+}
+
+
+unscramble &lt;- function(im.s,axis=&quot;x&quot;,method=&quot;TSP&quot;,...)
+{
+    cols &lt;- imsplit(im.s,axis)
+    #Compute a distance matrix (using L1 - Manhattan - distance)
+    #Each entry D_ij compares column i to column j  
+    D &lt;- map(cols,as.vector) %&gt;% do.call(rbind,.) %&gt;% dist(method=&quot;manhattan&quot;)
+    out &lt;- seriate(D,method=method,...)
+    cols[get_order(out)] %&gt;% imappend(axis) 
+}
+
+im.s &lt;- scramble(im,&quot;x&quot;) %&gt;% scramble(&quot;y&quot;)
+
+#The double scramble produces an unrecognisable mess
+plot(im.s)</code></pre>
+<p><img src="unshuffle_files/figure-html/unnamed-chunk-5-1.png" width="624" /></p>
+<pre class="r"><code>#Incredibly enough, we can invert it: 
+unscramble(im.s,&quot;y&quot;) %&gt;% unscramble(&quot;x&quot;) %&gt;% plot</code></pre>
+<p><img src="unshuffle_files/figure-html/unnamed-chunk-5-2.png" width="624" /></p>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

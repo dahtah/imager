@@ -8,7 +8,9 @@ output:
     number_sections: true
 ---
 
-Many people will be familiar with the set of tools available in Photoshop and the Gimp (various forms of selections, brushes, erasers, etc.). Here's a screenshot of what the Gimp has to offer:
+Many people will be familiar with the set of tools available in Photoshop and the Gimp (various forms of selections, brushes, erasers, etc.). Here's a screenshot of what the Gimp has to offer: 
+
+![gimp-toolbox-icons.png](gimp-toolbox-icons.png)
 
 The goal of this document is to show how to do all these operations in imager. 
 
@@ -166,16 +168,38 @@ parrots %>%
 
 ## Magic scissors
 
-```{r}
+This one does something fairly sophisticated and is left as an exercise to the reader. Roughly speaking, the idea is to find a path from point A to point B that's orthogonal at every point to the gradient of the image. Here's something to get you started, using the igraph package (which I don't know all that well, which is why this bit of code can certainly be improved on). We convert the image to an adjacency graph, where each pixel is a node and there are edges between adjacent pixels. The edge weight is the difference in pixel values. 
 
-magic.scissors <- function(im,ed,a,b)
-    {
-        ed <- channel(ed,1)
-        nn <- where(ed) %>% { nabor::knn(.,t(a),k=1)$nn.idx } %>% coord.index(ed,.)
-        bucketfill(ed,nn$x,nn$y,color=2)
-    }
 
+```{r message=FALSE}
+library(purrr)
+library(igraph)
+
+                                        #im <- grayscale(boats) %>% imresize(.5) %>% crop.borders(2)
+im <- grayscale(parrots) %>% imresize(.5) %>% crop.borders(2)
+##The following function makes a data.frame of links between pixel (x,y) and pixel (x+dx,y+dy)
+##I'm sure there's a better way of doing things
+make.df <- function(dx,dy) (abs(im-imshift(im,dx,dy)))%>%
+                               as.data.frame%>%
+                               mutate(x.to=x-dx,y.to=y-dy,id.from=paste(x,y,sep=","),id.to=paste(x.to,y.to,sep=",")) %>%
+                               dplyr::select(id.from,id.to,value) %>%
+                               dplyr::rename(weight=value)
+
+##Get all neighbours, convert data.frame to graph
+G <- cross2(-1:1,-1:1,function(a,b) abs(a) +abs(b) == 0) %>%
+    map_df(lift(function(dx,dy) mutate(make.df(dx,dy),dx=dx,dy=dy))) %>%
+    graph_from_data_frame
+
+#Extract shortest from x=10,y=180 to x=120,y=100, convert back to coordinates
+path <- shortest_paths(G,"10,180","120,100") %$% V(G)[vpath[[1]]]%>%
+    names %>% stringr::str_split(",") %>%
+    map_df(~ data.frame(x=as.integer(.[[1]]),y=as.integer(.[[2]])))
+
+plot(im)
+lines(path$x,path$y,col="red",lty=2,lwd=2)
 ```
+
+Notice how the path follows image regions of similar grayscale value. 
 
 ## Fuzzy selection (magic wand)
 

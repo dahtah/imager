@@ -37,14 +37,14 @@ Try iminfo (needs imagemagick).
 For overlaying, see imdraw:
 
 ```{r}
-load.example("parrots") %>% imdraw(boats/255,opacity=.5) %>% plot
+load.example("parrots") %>% imdraw(boats,opacity=.5) %>% plot
 ```
 
 For stacking, use imappend:
 
 ```{r}
 a <- load.example("parrots")
-b <- boats/255
+b <- boats
 list(a,b) %>% imappend("x") %>% plot
 ```
 
@@ -57,3 +57,14 @@ Use permute_axes:
 ```{r}
 permute_axes(boats,"yxzc") %>% plot
 ```
+
+# How do I convert images in magick format? 
+
+*magick* is another R package for image processing, interfacing the ImageMagick library. magick uses its own internal format for images, so there's no way to directly convert images for use with imager, but you can go through R's raster format: 
+
+```{r}
+library(magick)
+frink <- image_read("https://jeroenooms.github.io/images/frink.png")
+as.raster(frink) %>% as.cimg %>% plot
+```
+

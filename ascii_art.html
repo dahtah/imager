@@ -185,7 +185,7 @@ ptch</code></pre>
 <pre><code>## Image list of size 41205</code></pre>
 <p>The second step is to render all characters as image patches of the same size:</p>
 <pre class="r"><code>syms &lt;- 1:25
-##render &lt;- function(chr) implot(imfill(psize,psize,val=1),text(cen,cen,chr,cex=.8)) %&gt;% grayscale
+
 render &lt;- function(sym) implot(imfill(psize,psize,val=1),points(cen,cen,pch=sym,cex=1)) %&gt;% grayscale
 ptch.c &lt;- map(syms,render)
 plot(ptch.c[[4]],interp=FALSE)</code></pre>
@@ -198,7 +198,7 @@ Pc &lt;- map(ptch.c,as.vector) %&gt;% do.call(rbind,.)
 nn &lt;- nabor::knn(Pc,Pim,1)$nn.idx
 mutate(gr,sym=syms[nn]) %$% plot(x,y,pch=sym,cex=.2,ylim=c(height(im),1))</code></pre>
 <p><img src="ascii_art_files/figure-html/unnamed-chunk-7-1.png" width="624" /></p>
-<p>These aren’t the prettiest flowers, but there you go.</p>
+<p>I’ll admit, this isn’t the prettiest flower, but there you go. Feel free to improve.</p>
 <p>For the reader’s entertainment, I’m adding a last piece of code along the same lines: it reconstructs an image using a collection of patches (for instance, patches extracted from another image).</p>
 <pre class="r"><code>##Extract patches of a given size
 extract.all &lt;- function(im,psize=5)
@@ -226,6 +226,16 @@ dict &lt;- load.example(&quot;parrots&quot;) %&gt;% extract.all(7)
 im &lt;- imager::load.image(&quot;https://cran.r-project.org/Rlogo.jpg&quot;)
 match.patches(dict,im) %&gt;% plot</code></pre>
 <p><img src="ascii_art_files/figure-html/unnamed-chunk-8-1.png" width="624" /></p>
+<pre class="r"><code>##Render &quot;tennis&quot; as ASCII art
+render &lt;- function(chr) implot(imfill(psize,psize,val=1),text(cen,cen,chr,cex=.8)) %&gt;% grayscale
+tennis &lt;- load.example(&quot;tennis&quot;)/255
+dict &lt;- map_il(asc,render)
+tennis.asc &lt;- imsplit(tennis,&quot;z&quot;) %&gt;% map(~ match.patches(dict,.))  %&gt;% imappend(&quot;z&quot;)</code></pre>
+<video width="500"  controls loop>
+<source src="ascii_art_files/tennis_ascii.webm" />
+<p>
+The tennis video, rendered in ASCII
+</p>
 
 
 
