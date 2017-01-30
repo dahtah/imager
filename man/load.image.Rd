@@ -9,7 +9,7 @@ load.image(file)
 load.image(file)
 }
 \arguments{
-\item{file}{path to file or URL}
+\item{file}{path or URL}
 
 \item{file}{path to file or URL}
 }

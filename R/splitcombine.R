@@ -182,7 +182,7 @@ check.reduce <- function(l)
     l <- as.imlist(l)
     if (length(l) > 1) #Check dimensions
     {
-        ok <- sapply(l,dim) %>% { apply(.,1,sd) == 0 } %>% all
+        ok <- sapply(l,dim) %>% { apply(.,1,stats::sd) == 0 } %>% all
         if (!ok)
         {
             stop("Images must all be the same size")
@@ -288,7 +288,8 @@ which.parmax <- function(x) maxmin.ind(x,max=TRUE)
 which.parmin <- function(x) maxmin.ind(x,max=FALSE)
 
 
-##' @describeIn imager.combine pixel-wise sort 
+##' @describeIn imager.combine pixel-wise sort
+##' @param increasing if TRUE, sort in increasing order (default TRUE)
 ##' @export
 parsort <- function(x,increasing=TRUE) check.reduce(x) %>% psort(increasing)
 

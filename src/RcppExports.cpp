@@ -1019,15 +1019,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// reduce_quantile
-NumericVector reduce_quantile(List l, NumericVector prob);
-RcppExport SEXP imager_reduce_quantile(SEXP lSEXP, SEXP probSEXP) {
+// reduce_list2
+NumericVector reduce_list2(List x, int summary);
+RcppExport SEXP imager_reduce_list2(SEXP xSEXP, SEXP summarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type l(lSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type prob(probSEXP);
-    rcpp_result_gen = Rcpp::wrap(reduce_quantile(l, prob));
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type summary(summarySEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_list2(x, summary));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1080,9 +1080,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// imrotate
-NumericVector imrotate(NumericVector im, float angle, unsigned int interpolation, unsigned int boundary);
-RcppExport SEXP imager_imrotate(SEXP imSEXP, SEXP angleSEXP, SEXP interpolationSEXP, SEXP boundarySEXP) {
+// rotate
+NumericVector rotate(NumericVector im, float angle, unsigned int interpolation, unsigned int boundary);
+RcppExport SEXP imager_rotate(SEXP imSEXP, SEXP angleSEXP, SEXP interpolationSEXP, SEXP boundarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1090,7 +1090,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type angle(angleSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type interpolation(interpolationSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type boundary(boundarySEXP);
-    rcpp_result_gen = Rcpp::wrap(imrotate(im, angle, interpolation, boundary));
+    rcpp_result_gen = Rcpp::wrap(rotate(im, angle, interpolation, boundary));
     return rcpp_result_gen;
 END_RCPP
 }

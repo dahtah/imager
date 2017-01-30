@@ -658,8 +658,8 @@ reduce_list <- function(x, summary = 0L) {
     .Call('imager_reduce_list', PACKAGE = 'imager', x, summary)
 }
 
-reduce_quantile <- function(l, prob) {
-    .Call('imager_reduce_quantile', PACKAGE = 'imager', l, prob)
+reduce_list2 <- function(x, summary = 0L) {
+    .Call('imager_reduce_list2', PACKAGE = 'imager', x, summary)
 }
 
 psort <- function(x, increasing = TRUE) {
@@ -687,8 +687,8 @@ autocrop_ <- function(im, color, axes = "zyx") {
 #' @param interpolation Type of interpolation. Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
 #' @param boundary Boundary conditions. Can be <tt>{  0=dirichlet | 1=neumann | 2=periodic }</tt>.
 #' @export
-imrotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
-    .Call('imager_imrotate', PACKAGE = 'imager', im, angle, interpolation, boundary)
+rotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
+    .Call('imager_rotate', PACKAGE = 'imager', im, angle, interpolation, boundary)
 }
 
 #' Rotate image by an arbitrary angle, around a center point.

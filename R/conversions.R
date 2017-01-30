@@ -119,7 +119,7 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NUL
 ##' @param obj a raster object
 ##' @param ... ignored
 ##' @return a cimg object
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @examples
 ##' rst <- as.raster(matrix((1:4)/4,2,2))
 ##' as.cimg(rst) %>% plot(int=FALSE)

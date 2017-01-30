@@ -24,6 +24,8 @@ save.video(im, fname, ...)
 \item{verbose}{if TRUE, show ffmpeg output (default FALSE)}
 
 \item{im}{an image or image list}
+
+\item{...}{extra arguments to save.video, passed on to make.video}
 }
 \description{
 You need to have ffmpeg on your path for this to work. This function uses ffmpeg to combine individual frames into a video.

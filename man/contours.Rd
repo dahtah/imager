@@ -4,14 +4,14 @@
 \alias{contours}
 \title{Return contours of image/pixset}
 \usage{
-contours(x, ...)
+contours(x, nlevels, ...)
 }
 \arguments{
 \item{x}{an image or pixset}
 
-\item{...}{extra parameters passed to contourLines}
-
 \item{nlevels}{number of contour levels. For pixsets this can only equal two.}
+
+\item{...}{extra parameters passed to contourLines}
 }
 \value{
 a list of contours
@@ -35,7 +35,7 @@ ct <- contours(px)
 purrr::walk(ct,function(v) lines(v$x,v$y,col="red"))
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
 \seealso{
 highlight

@@ -68,6 +68,8 @@ parrank(x, increasing = TRUE)
 \item{x}{a list of images}
 
 \item{w}{weights (must be the same length as the list)}
+
+\item{increasing}{if TRUE, sort in increasing order (default TRUE)}
 }
 \description{
 These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.

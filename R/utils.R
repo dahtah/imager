@@ -721,7 +721,7 @@ cimg.use.openmp <- function(mode="adaptive")
 ##' @param nlevels number of contour levels. For pixsets this can only equal two. 
 ##' @param ... extra parameters passed to contourLines
 ##' @return a list of contours
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @seealso highlight
 ##' @examples
 ##' boats.gs <- grayscale(boats)
@@ -736,7 +736,7 @@ cimg.use.openmp <- function(mode="adaptive")
 ##' #Highlight pixset
 ##' purrr::walk(ct,function(v) lines(v$x,v$y,col="red"))
 ##' @export
-contours <- function(x, ...) {
+contours <- function(x,nlevels, ...) {
    UseMethod("contours", x)
  }
 
@@ -762,7 +762,7 @@ contours.cimg <- function(x,nlevels=10,...)
 
 ##' @describeIn contours
 ##' @export
-contours.pixset <- function(x,...)
+contours.pixset <- function(x,nlevels=NULL,...)
 {
     if (spectrum(x) > 1)
     {

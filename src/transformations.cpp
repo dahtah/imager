@@ -28,7 +28,7 @@ NumericVector autocrop_(NumericVector im,NumericVector color,std::string axes = 
 //' @param boundary Boundary conditions. Can be <tt>{  0=dirichlet | 1=neumann | 2=periodic }</tt>.
 //' @export
 // [[Rcpp::export]]
-NumericVector imrotate(NumericVector im,float  	angle,
+NumericVector rotate(NumericVector im,float  	angle,
 		     unsigned int interpolation = 1,
 		     unsigned int boundary = 0)
 {

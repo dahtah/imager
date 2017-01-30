@@ -293,6 +293,7 @@ load.example <- function(name)
 ##' @param fps frames per second (default 25)
 ##' @param extra.args extra arguments to be passed to ffmpeg (default "", none)
 ##' @param verbose if TRUE, show ffmpeg output (default FALSE)
+##' @param ... extra arguments to save.video, passed on to make.video
 ##' @seealso load.video
 ##' @examples
 ##' ## Not run

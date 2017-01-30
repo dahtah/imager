@@ -80,26 +80,41 @@ NumericVector reduce_list(List x,int summary = 0)
 }
 
 
+//OpenMP seems not to do anything for these functions on certain platforms. Don't know why yet. 
+
 // [[Rcpp::export]]
-NumericVector reduce_quantile(List l,NumericVector prob)
+NumericVector reduce_list2(List x,int summary = 0)
 {
-  CImgList<double> L = sharedCImgList(l);
+  CImgList<double> L = sharedCImgList(x);
   CId out(L.at(0),false);
-  Environment stats("package:stats");
-  Function quantile = stats["quantile"];
-  int n = l.size();
-  //  cimg_pragma_openmp(parallel for cimg_openmp_if(out.size()>=65536))
+  int n = x.size();
+  cimg_pragma_openmp(parallel for collapse(2))
   cimg_forXYZC(out,x,y,z,c)
     {
-      NumericVector vec(n);
+      CId vec(n,1,1,1);
       for (int i = 0; i <n; i++)
 	{
-	  vec(i) = L.at(i)(x,y,z,c);
+	  vec[i] = L.at(i)(x,y,z,c);
+	  //	  vec[i] = L.atNXYZC(i,x,y,z,c);
 	}
-      out(x,y,z,c) = as<double>(quantile(vec,prob));
+      switch (summary)
+	{
+	case 1:
+	  out(x,y,z,c) = vec.min(); break;
+	case 2:
+	  out(x,y,z,c) = vec.max(); break;
+	case 3:
+	  out(x,y,z,c) = vec.median(); break;
+	case 4:
+	  out(x,y,z,c) = vec.variance(); break;
+	case 5:
+	  out(x,y,z,c) = sqrt(vec.pow(2).sum()); break;
+	}
     }
   return wrap(out);
 }
+
+
 
 
 // [[Rcpp::export]]

@@ -246,3 +246,27 @@ map_il <- function(...)
     as.imlist(out)
 }
 
+##' Replicate images
+##'
+##' Kinda like rep, for images. Copy image n times and (optionally), append.
+##' 
+##' @param x an image
+##' @param n number of replications 
+##' @param axis axis to append along (one of NULL, "x","y","z","c"). Default: NULL
+##' @return either an image or an image list
+##' @author Simon Barthelme
+##' @examples
+##' #Result is a list
+##' imrep(boats,3) %>% plot
+##' #Result is an image 
+##' imrep(boats,3,"x") %>% plot
+##' #Make an animation by repeating each frame 10x
+##' #map_il(1:5,~ isoblur(boats,.) %>% imrep(10,"z")) %>%
+##' #                       imappend("z") %>% play
+##' @export
+imrep <- function(x,n=1,axis=NULL)
+{
+    if (n < 1) stop("n should be larger than 1") 
+    l <- map_il(seq_len(n),~ x)
+    if (!is.null(axis)) imappend(l,axis) else l
+}
