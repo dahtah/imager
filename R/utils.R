@@ -740,7 +740,6 @@ contours <- function(x,nlevels, ...) {
    UseMethod("contours", x)
  }
 
-##' @describeIn contours
 ##' @export
 contours.cimg <- function(x,nlevels=10,...)
 {
@@ -760,7 +759,6 @@ contours.cimg <- function(x,nlevels=10,...)
 }
 
 
-##' @describeIn contours
 ##' @export
 contours.pixset <- function(x,nlevels=NULL,...)
 {

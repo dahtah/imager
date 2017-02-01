@@ -184,11 +184,13 @@ load.jpeg <- function(file)
 
 ##' Save image
 ##'
-##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
+##' You'll need ImageMagick for formats other than PNG and JPEG. 
 ##'
 ##' @param im an image (of class cimg)
 ##' @param file path to file. The format is determined by the file's name
+##' @param quality (JPEG only) default 0.7. Higher quality means less compression. 
 ##' @return nothing
+##' @seealso save.video
 ##' @export
 ##' @examples
 ##' #Create temporary file
@@ -197,38 +199,39 @@ load.jpeg <- function(file)
 ##' save.image(boats,tmpF)
 ##' #Read back and display
 ##' load.image(tmpF) %>% plot
-save.image <- function(im,file)
+save.image <- function(im,file,quality=.7)
+{
+    if (depth(im) > 1) warning("using save.image for videos is deprecated, please switch to save.video")
+    ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
+    if (ftype == "png")
     {
-        ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
-        if (ftype == "png")
+        save.png(im,file)
+    }
+    else if (ftype == "jpeg" | ftype == "jpg")
+    {
+            save.jpeg(im,file,quality=quality)
+    }
+    else
+    {
+        if (has.magick())
         {
-            save.png(255*im,file)
-        }
-        else if (ftype == "jpeg" | ftype == "jpg")
-        {
-            save.jpeg(255*im,file)
+            save_image(255*im,path.expand(file))
         }
         else
         {
-            if (has.magick())
-            {
-                save_image(255*im,path.expand(file))
-            }
-            else
-            {
-                stop("Unsupported output file format. Use jpg/png or install ImageMagick")
-            }
+            stop("Unsupported output file format. Use jpg/png or install ImageMagick")
         }
     }
+}
 
 save.png <- function(im,file)
     {
         convert.im.toPNG(im) %>% png::writePNG(file) 
     }
 
-save.jpeg <- function(im,file)
+save.jpeg <- function(im,file,quality=.7)
     {
-        convert.im.toPNG(im) %>% jpeg::writeJPEG(file)
+        convert.im.toPNG(im) %>% jpeg::writeJPEG(file,quality=quality)
     }
 
 convert.im.toPNG <- function(A)
