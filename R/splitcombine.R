@@ -146,6 +146,7 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' "parsort","parrank" and "parorder" aren't really reductions because they return a list of the same size. They perform a pixel-wise sort (resp. order and rank) across the list. 
 ##' @name imager.combine
 ##' @param x a list of images
+##' @param na.rm ignore NAs (default FALSE)
 ##' @examples
 ##' im1 <- as.cimg(function(x,y) x,100,100)
 ##' im2 <- as.cimg(function(x,y) y,100,100)
@@ -194,29 +195,33 @@ check.reduce <- function(l)
 
 ##' @describeIn imager.combine Add images
 ##' @export
-add <- function(x) check.reduce(x) %>% reduce_sum
+add <- function(x,na.rm=FALSE) {
+    x <- check.reduce(x)
+    reduce_wsum(x,rep(1,length(x)),na_rm=na.rm)
+}
 
 ##' @describeIn imager.combine Weighted sum of images
 ##' @param w weights (must be the same length as the list)
 ##' @export
-wsum <- function(x,w)
+wsum <- function(x,w,na.rm=FALSE)
 {
     if (length(w)!=length(x)) stop("weights must the same length as input")
-    check.reduce(x) %>% reduce_wsum(w)
+    check.reduce(x) %>% reduce_wsum(w,na_rm=na.rm)
 }
 
 
 ##' @describeIn imager.combine Average images
 ##' @export
-average <- function(x) add(x)/length(x)
+average <- function(x,na.rm=FALSE) check.reduce(x) %>% reduce_average(na_rm=na.rm)
+
 
 ##' @describeIn imager.combine Multiply images (pointwise)
 ##' @export
-mult <- function(x) check.reduce(x) %>% reduce_prod
+mult <- function(x,na.rm=FALSE) check.reduce(x) %>% reduce_prod(na_rm=na.rm)
 
 ##' @describeIn imager.combine Parallel max over images 
 ##' @export
-parmax <- function(x) check.reduce(x) %>% reduce_list(2)
+parmax <- function(x,na.rm=FALSE) check.reduce(x) %>% reduce_minmax(na_rm=na.rm,max=TRUE)
 
 ##' @describeIn imager.combine Parallel max in absolute value over images, 
 ##' @export
@@ -230,7 +235,8 @@ parmin.abs <- function(x) maxmin.abs(x,FALSE)
 
 ##' @describeIn imager.combine Parallel min over images 
 ##' @export
-parmin <- function(x) check.reduce(x) %>% reduce_list(1)
+parmin <- function(x,na.rm=FALSE) check.reduce(x) %>% reduce_minmax(na_rm=na.rm,max=FALSE)
+
 
 ##' @describeIn imager.combine Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
 ##' @export
@@ -238,7 +244,7 @@ enorm <- function(x) check.reduce(x) %>% reduce_list(5)
 
 ##' @describeIn imager.combine Median
 ##' @export
-parmed <- function(x) check.reduce(x) %>% reduce_list(3)
+parmed <- function(x,na.rm=FALSE) check.reduce(x) %>% reduce_med(na_rm=na.rm)
 
 ##' @describeIn imager.combine Variance
 ##' @export

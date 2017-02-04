@@ -6,16 +6,7 @@
 \usage{
 rotate(im, angle, interpolation = 1L, boundary = 0L)
 }
-\arguments{
-\item{im}{an image}
-
-\item{angle}{Rotation angle, in degrees.}
-
-\item{interpolation}{Type of interpolation. Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.}
-
-\item{boundary}{Boundary conditions. Can be <tt>{  0=dirichlet | 1=neumann | 2=periodic }</tt>.}
-}
 \description{
-Most of the time, the size of the image is modified.
+Rotate image by an arbitrary angle.
 }
 

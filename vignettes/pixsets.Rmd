@@ -141,7 +141,7 @@ boundary(px) %>% where %$% { points(x,y,cex=.1,col="red") }
 
 # Growing, shrinking, morphological operations
 
-The grow and shrink operators let you grow and shrink pixsets using morphological operators (dilation and erosion, resp.). Have a look at the article on (morphology)[https:://dahtah.github.io/imager/morphology.html] for more:
+The grow and shrink operators let you grow and shrink pixsets using morphological operators (dilation and erosion, resp.). Have a look at the article on (morphology)[https://dahtah.github.io/imager/morphology.html] for more:
 ```{r}
 plot(im)
 highlight(px)

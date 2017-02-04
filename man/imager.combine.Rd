@@ -24,25 +24,25 @@
 \alias{wsum}
 \title{Combining images}
 \usage{
-add(x)
+add(x, na.rm = FALSE)
 
-wsum(x, w)
+wsum(x, w, na.rm = FALSE)
 
-average(x)
+average(x, na.rm = FALSE)
 
-mult(x)
+mult(x, na.rm = FALSE)
 
-parmax(x)
+parmax(x, na.rm = FALSE)
 
 parmax.abs(x)
 
 parmin.abs(x)
 
-parmin(x)
+parmin(x, na.rm = FALSE)
 
 enorm(x)
 
-parmed(x)
+parmed(x, na.rm = FALSE)
 
 parvar(x)
 
@@ -66,6 +66,8 @@ parrank(x, increasing = TRUE)
 }
 \arguments{
 \item{x}{a list of images}
+
+\item{na.rm}{ignore NAs (default FALSE)}
 
 \item{w}{weights (must be the same length as the list)}
 

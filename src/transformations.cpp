@@ -20,13 +20,6 @@ NumericVector autocrop_(NumericVector im,NumericVector color,std::string axes = 
 
 //' Rotate image by an arbitrary angle.
 //'
-//' Most of the time, the size of the image is modified.
-//'
-//' @param im an image
-//' @param angle Rotation angle, in degrees.
-//' @param interpolation Type of interpolation. Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
-//' @param boundary Boundary conditions. Can be <tt>{  0=dirichlet | 1=neumann | 2=periodic }</tt>.
-//' @export
 // [[Rcpp::export]]
 NumericVector rotate(NumericVector im,float  	angle,
 		     unsigned int interpolation = 1,

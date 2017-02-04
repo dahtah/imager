@@ -7,7 +7,7 @@
 \method{plot}{cimg}(x, frame, xlim = c(1, width(x)), ylim = c(height(x), 1),
   xlab = "x", ylab = "y", rescale = TRUE, colourscale = NULL,
   colorscale = NULL, interpolate = TRUE, axes = TRUE, xaxs = "i",
-  yaxs = "i", asp = 1, ...)
+  yaxs = "i", asp = 1, col.na = rgb(0, 0, 0, 0), ...)
 }
 \arguments{
 \item{x}{the image}

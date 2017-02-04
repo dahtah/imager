@@ -47,7 +47,7 @@ cimg <- function(X)
             {
                 X <- X+0.0
             }
-        class(X) <-c("cimg","numeric")
+        class(X) <-c("cimg","imager_array","numeric")
         X
     }
 
@@ -138,7 +138,7 @@ NULL
 ##' boats.small <- imresize(boats,.3)
 ##' plot(boats.small,interp=TRUE)
 ##' plot(boats.small,interp=FALSE)
-plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,axes=TRUE,xaxs="i",yaxs="i",asp=1,...)
+plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,axes=TRUE,xaxs="i",yaxs="i",asp=1,col.na=rgb(0,0,0,0),...)
 {
     if (nPix(x) == 0) stop("Empty image")
     im <- x
@@ -160,13 +160,13 @@ plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",yl
         if (is.character(asp) && asp == "varying")
             {
                 plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",xaxs=xaxs,yaxs=yaxs,axes=axes,...)
-                as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
+                as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale,col.na=col.na) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
             }
         else if (is.numeric(asp))
         {
             plot.new()
             plot.window(xlim = xlim, ylim = ylim,asp=asp,xaxs=xaxs,yaxs=yaxs,...)
-            rst <- as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale)
+            rst <- as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale,col.na=col.na)
             rasterImage(rst, 1, nrow(rst), ncol(rst), 1,interpolate=interpolate)
             if (axes) { axis(1); axis(2) }
         }

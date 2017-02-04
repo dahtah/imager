@@ -972,38 +972,53 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// reduce_sum
-NumericVector reduce_sum(List x);
-RcppExport SEXP imager_reduce_sum(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(reduce_sum(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // reduce_wsum
-NumericVector reduce_wsum(List x, NumericVector w);
-RcppExport SEXP imager_reduce_wsum(SEXP xSEXP, SEXP wSEXP) {
+NumericVector reduce_wsum(List x, NumericVector w, bool na_rm);
+RcppExport SEXP imager_reduce_wsum(SEXP xSEXP, SEXP wSEXP, SEXP na_rmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
-    rcpp_result_gen = Rcpp::wrap(reduce_wsum(x, w));
+    Rcpp::traits::input_parameter< bool >::type na_rm(na_rmSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_wsum(x, w, na_rm));
     return rcpp_result_gen;
 END_RCPP
 }
-// reduce_prod
-NumericVector reduce_prod(List x, int summary);
-RcppExport SEXP imager_reduce_prod(SEXP xSEXP, SEXP summarySEXP) {
+// reduce_average
+NumericVector reduce_average(List x, bool na_rm);
+RcppExport SEXP imager_reduce_average(SEXP xSEXP, SEXP na_rmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type summary(summarySEXP);
-    rcpp_result_gen = Rcpp::wrap(reduce_prod(x, summary));
+    Rcpp::traits::input_parameter< bool >::type na_rm(na_rmSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_average(x, na_rm));
+    return rcpp_result_gen;
+END_RCPP
+}
+// reduce_prod
+NumericVector reduce_prod(List x, bool na_rm);
+RcppExport SEXP imager_reduce_prod(SEXP xSEXP, SEXP na_rmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type na_rm(na_rmSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_prod(x, na_rm));
+    return rcpp_result_gen;
+END_RCPP
+}
+// reduce_minmax
+NumericVector reduce_minmax(List x, bool na_rm, bool max);
+RcppExport SEXP imager_reduce_minmax(SEXP xSEXP, SEXP na_rmSEXP, SEXP maxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type na_rm(na_rmSEXP);
+    Rcpp::traits::input_parameter< bool >::type max(maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_minmax(x, na_rm, max));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1028,6 +1043,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type summary(summarySEXP);
     rcpp_result_gen = Rcpp::wrap(reduce_list2(x, summary));
+    return rcpp_result_gen;
+END_RCPP
+}
+// reduce_med
+NumericVector reduce_med(List x, bool na_rm);
+RcppExport SEXP imager_reduce_med(SEXP xSEXP, SEXP na_rmSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type na_rm(na_rmSEXP);
+    rcpp_result_gen = Rcpp::wrap(reduce_med(x, na_rm));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -642,16 +642,20 @@ mclosing <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
     .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
 }
 
-reduce_sum <- function(x) {
-    .Call('imager_reduce_sum', PACKAGE = 'imager', x)
+reduce_wsum <- function(x, w, na_rm = FALSE) {
+    .Call('imager_reduce_wsum', PACKAGE = 'imager', x, w, na_rm)
 }
 
-reduce_wsum <- function(x, w) {
-    .Call('imager_reduce_wsum', PACKAGE = 'imager', x, w)
+reduce_average <- function(x, na_rm = FALSE) {
+    .Call('imager_reduce_average', PACKAGE = 'imager', x, na_rm)
 }
 
-reduce_prod <- function(x, summary = 0L) {
-    .Call('imager_reduce_prod', PACKAGE = 'imager', x, summary)
+reduce_prod <- function(x, na_rm = FALSE) {
+    .Call('imager_reduce_prod', PACKAGE = 'imager', x, na_rm)
+}
+
+reduce_minmax <- function(x, na_rm = FALSE, max = TRUE) {
+    .Call('imager_reduce_minmax', PACKAGE = 'imager', x, na_rm, max)
 }
 
 reduce_list <- function(x, summary = 0L) {
@@ -660,6 +664,10 @@ reduce_list <- function(x, summary = 0L) {
 
 reduce_list2 <- function(x, summary = 0L) {
     .Call('imager_reduce_list2', PACKAGE = 'imager', x, summary)
+}
+
+reduce_med <- function(x, na_rm = FALSE) {
+    .Call('imager_reduce_med', PACKAGE = 'imager', x, na_rm)
 }
 
 psort <- function(x, increasing = TRUE) {
@@ -680,13 +688,6 @@ autocrop_ <- function(im, color, axes = "zyx") {
 
 #' Rotate image by an arbitrary angle.
 #'
-#' Most of the time, the size of the image is modified.
-#'
-#' @param im an image
-#' @param angle Rotation angle, in degrees.
-#' @param interpolation Type of interpolation. Can be <tt>{ 0=nearest | 1=linear | 2=cubic }</tt>.
-#' @param boundary Boundary conditions. Can be <tt>{  0=dirichlet | 1=neumann | 2=periodic }</tt>.
-#' @export
 rotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
     .Call('imager_rotate', PACKAGE = 'imager', im, angle, interpolation, boundary)
 }

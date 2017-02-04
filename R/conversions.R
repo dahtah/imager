@@ -50,6 +50,7 @@ as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
 ##' @param rescale rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE
 ##' @param colourscale a function that returns RGB values in hexadecimal
 ##' @param colorscale same as above in American spelling
+##' @param col.na which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour. 
 ##' @param ... ignored
 ##' @return a raster object
 ##' @seealso plot.cimg, rasterImage
@@ -68,7 +69,8 @@ as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
 ##' cscale <- function(v) hsv(.5,v,1)
 ##' grayscale(boats) %>% as.raster(colourscale=cscale) %>% plot
 ##' @export
-as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NULL,...)
+as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,
+                           colorscale=NULL,col.na=rgb(0,0,0,0),...)
 {
     if (is.null(colorscale) && is.null(colourscale))
     {
@@ -91,6 +93,12 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NUL
     if (depth(im) == 1)
     {
         if (rescale) im <- renorm(im,0,1)
+        nas <- is.na(im)
+        has.na <- any(nas)
+        if (has.na)
+        {
+            im[nas] <- 0
+        }
         if (spectrum(im) == 1) #BW
         {
             dim(im) <- dim(im)[1:2]
@@ -103,6 +111,12 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NUL
             r <- colourscale(v[[1]],v[[2]],v[[3]])
             dim(r) <- dim(im)[2:1]
             class(r) <- "raster"
+        }
+        if (has.na)
+        {
+            #Insert col.na where appropriate
+            ii <- where(nas)
+            r[cbind(ii$y,ii$x)] <- col.na
         }
         r
     }

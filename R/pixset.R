@@ -21,7 +21,7 @@ pixset <- function(x)
     {
         if (is.logical(x) && is.array(x) && (length(dim(x)) == 4 ))
             {
-                class(x) <-c("pixset","logical")
+                class(x) <-c("pixset","imager_array","logical")
                 x
             }
         else
@@ -168,22 +168,21 @@ print.pixset <- function(x,...)
         invisible(x)
     }
 
-#' @export
-Ops.cimg <- function(e1, e2)
-{
-    out <- NextMethod(.Generic)
-    if (is.logical(out) && length(dim(out))==4)
-        {
-            as.pixset(out)
-        }
-    else
-        {
-            out
-        }
-}
+## Ops.cimg <- function(e1, e2)
+## {
+##     out <- NextMethod(.Generic)
+##     if (is.logical(out) && length(dim(out))==4)
+##         {
+##             as.pixset(out)
+##         }
+##     else
+##         {
+##             out
+##         }
+## }
 
 #' @export
-Ops.pixset <- function(e1, e2)
+Ops.imager_array <- function(e1, e2)
 {
     
     e1 <- unclass(e1)

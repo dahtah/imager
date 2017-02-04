@@ -5,7 +5,7 @@
 \title{Convert a cimg object to a raster object for plotting}
 \usage{
 \method{as.raster}{cimg}(x, frames, rescale = TRUE, colourscale = NULL,
-  colorscale = NULL, ...)
+  colorscale = NULL, col.na = rgb(0, 0, 0, 0), ...)
 }
 \arguments{
 \item{x}{an image (of class cimg)}
@@ -17,6 +17,8 @@
 \item{colourscale}{a function that returns RGB values in hexadecimal}
 
 \item{colorscale}{same as above in American spelling}
+
+\item{col.na}{which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour.}
 
 \item{...}{ignored}
 }

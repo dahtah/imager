@@ -187,11 +187,11 @@ imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
 ##' renorm(-5:5) #Same as above
 renorm <- function(x,min=0,max=255)
     {
-        rg <- range(x)
-        if (any(!is.finite(rg)))
-            {
-                stop('Image contains non-finite values or NAs')
-            }
+        rg <- range(x,na.rm=TRUE)
+        ## if (any(!is.finite(rg)))
+        ##     {
+        ##         stop('Image contains non-finite values or NAs')
+        ##     }
         dr <- diff(rg)
         if (dr!=0)
             {

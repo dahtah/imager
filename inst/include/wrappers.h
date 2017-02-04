@@ -37,7 +37,8 @@ namespace Rcpp {
     dims[2] = img.depth();
     dims[3] = img.spectrum();
     Rcpp::NumericVector out(img.begin(),img.end());
-    out.attr("class") = "cimg";
+    //    out.attr("class") = "cimg";
+    out.attr("class") = CharacterVector::create("cimg","imager_array","numeric");
     out.attr("dim") = dims;
     return Rcpp::wrap(out);
   }
@@ -51,7 +52,8 @@ namespace Rcpp {
     dims[2] = img.depth();
     dims[3] = img.spectrum();
     Rcpp::LogicalVector out(img.begin(),img.end());
-    out.attr("class") = "pixset";
+    //    out.attr("class") = "pixset";
+    out.attr("class") = CharacterVector::create("pixset","imager_array","numeric");
     out.attr("dim") = dims;
     return Rcpp::wrap(out);
   }
