@@ -71,7 +71,6 @@ which(px) %>% head
 The "highlight" function is a good way of visualising pixel sets:
 
 ```{r}
-layout(t(1:2))
 plot(im)
 px <- (isoblur(im,4)  > .5 )
 highlight(px)

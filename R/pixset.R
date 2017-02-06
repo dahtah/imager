@@ -664,6 +664,7 @@ display.pixset <- function(x,...) display(as.cimg(x),...)
 ##' highlight(bbox(px))
 ##' highlight(px,col="green")
 ##' @author Simon Barthelme
+##' @export
 bbox <- function(px)
 {
     w <- where(px)
