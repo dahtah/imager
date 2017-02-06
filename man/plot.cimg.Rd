@@ -36,6 +36,8 @@
 
 \item{asp}{aspect ratio. The default value (1) means that the aspect ratio of the image will be kept regardless of the dimensions of the plot. A numeric value other than one changes the aspect ratio, but it will be kept the same regardless of dimensions. Setting asp="varing" means the aspect ratio will depend on plot dimensions (this used to be the default in versions of imager < 0.40)}
 
+\item{col.na}{which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour.}
+
 \item{...}{other parameters to be passed to plot.default (eg "main")}
 }
 \description{

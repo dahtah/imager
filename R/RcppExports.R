@@ -686,8 +686,6 @@ autocrop_ <- function(im, color, axes = "zyx") {
     .Call('imager_autocrop_', PACKAGE = 'imager', im, color, axes)
 }
 
-#' Rotate image by an arbitrary angle.
-#'
 rotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
     .Call('imager_rotate', PACKAGE = 'imager', im, angle, interpolation, boundary)
 }

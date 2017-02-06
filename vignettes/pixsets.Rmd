@@ -13,7 +13,10 @@ vignette: >
 
 ---
 
-
+```{r init,echo=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE, 
+               comment=NA, verbose=TRUE, fig.width=6, fig.height=6,dev='jpeg')
+```
 If you've already gone through the "Getting started" vignette, you know about image objects ("cimg" class). This vignette introduces pixsets, which is the other important kind of objects. Pixsets represent sets of pixels, or equivalently binary images, AKA "masks". 
 
 # From images to pixsets and back
@@ -149,6 +152,10 @@ highlight(px)
 grow(px,5) %>% highlight(col="green")
 #Shrink by 5 pixels
 shrink(px,5) %>% highlight(col="blue")
+
+#Compute bounding box
+bbox(px) %>% highlight(col="yellow")
+
 ```
 
 # Common pixsets
@@ -164,6 +171,8 @@ plot(im)
 px.borders(im,10) %>% highlight
 #Left-hand border (5 pixels), see also px.top, px.bottom, etc.
 px.left(im,5) %>% highlight(col="green")
+
+
 
 ```
 

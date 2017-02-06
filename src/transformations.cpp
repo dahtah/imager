@@ -18,8 +18,6 @@ NumericVector autocrop_(NumericVector im,NumericVector color,std::string axes = 
    return wrap(out);
 }
 
-//' Rotate image by an arbitrary angle.
-//'
 // [[Rcpp::export]]
 NumericVector rotate(NumericVector im,float  	angle,
 		     unsigned int interpolation = 1,

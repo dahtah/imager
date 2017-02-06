@@ -100,6 +100,7 @@ NULL
 ##' @param xaxs The style of axis interval calculation to be used for the x-axis. See ?par
 ##' @param yaxs The style of axis interval calculation to be used for the y-axis. See ?par
 ##' @param axes Whether to draw axes (default TRUE)
+##' @param col.na which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour. 
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster, as.raster, which converts images to R raster objects
 ##' @export

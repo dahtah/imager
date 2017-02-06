@@ -649,3 +649,44 @@ display.pixset <- function(x,...) display(as.cimg(x),...)
     }
     pixset(out)
 }
+
+
+##' Compute the bounding box of a pixset 
+##'
+##' This function returns the bounding box of a pixset as another pixset. If the image has more than one frame, a bounding cube is returned.
+##' If the image has several colour channels, the bounding box is computed separately in each channel. 
+##' @param px a pixset
+##' @return a pixset object
+##' @examples
+##' im <- grayscale(boats)
+##' px <- im > .85
+##' plot(im)
+##' highlight(bbox(px))
+##' highlight(px,col="green")
+##' @author Simon Barthelme
+bbox <- function(px)
+{
+    w <- where(px)
+    #Compute separately across colour channels 
+    if (spectrum(px) > 1)
+    {
+        imsplit(px,"c") %>% bbox %>% imappend("c")
+    }
+    
+    if (sum(px) == 0)
+    {
+        px
+    }
+    else
+        {
+            if (depth(px)==1)
+            {
+                (Xc(px) %inr% range(w$x)) & (Yc(px) %inr% range(w$y))
+            }
+            else
+            {
+                (Xc(px) %inr% range(w$x)) & (Yc(px) %inr% range(w$y)) & (Zc(px) %inr% range(w$z))
+            }
+        }
+}
+
