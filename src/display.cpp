@@ -60,7 +60,8 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
   else
     {
       norm = 0;
-     }
+      img = 255*img;
+    }
   
   CImgDisplay disp(img.get_slice(0),"Video player",norm,false,false);
   int i = 0,n=img.depth();

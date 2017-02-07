@@ -202,7 +202,7 @@ load.jpeg <- function(file)
 save.image <- function(im,file,quality=.7)
 {
     if (depth(im) > 1) warning("using save.image for videos is deprecated, please switch to save.video")
-    ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
+    ftype <- stringr::str_match(file,"\\.([^.]+)$")[1,2]
     if (ftype == "png")
     {
         save.png(im,file)
