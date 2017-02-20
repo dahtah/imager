@@ -432,6 +432,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// imlap
+NumericVector imlap(NumericVector im);
+RcppExport SEXP imager_imlap(SEXP imSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    rcpp_result_gen = Rcpp::wrap(imlap(im));
+    return rcpp_result_gen;
+END_RCPP
+}
 // boxblur_xy
 NumericVector boxblur_xy(NumericVector im, float sx, float sy, bool neumann);
 RcppExport SEXP imager_boxblur_xy(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP neumannSEXP) {

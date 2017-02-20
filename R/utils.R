@@ -776,3 +776,62 @@ contours.pixset <- function(x,nlevels=NULL,...)
             out
         }
 }
+
+##' Remove alpha channel and store as attribute
+##'
+##' @param im 
+##' @return an image with only three colour channels and the alpha channel as attribute
+##' #An image with 4 colour channels (RGBA)
+##' im <- imfill(2,2,val=c(0,0,0,0))
+##' #Remove fourth channel
+##' rm.alpha(im) 
+##' attr(rm.alpha(im),"alpha")
+##' @author Simon Barthelme
+##' @seealso flatten.alpha
+##' @export
+rm.alpha <- function(im)
+{
+    if (spectrum(im)==4)
+    {
+        alpha <- imsub(im,cc==4)
+        im <- imsub(im,cc<=3)
+        attr(im,"alpha") <- alpha
+    }
+    im
+}
+
+##' Flatten alpha channel
+##'
+##' @param im an image (with 4 RGBA colour channels)
+##' @param bg background: either an RGB image, or a vector of colour values, or a string (e.g. "blue"). Default: white background.
+##' @return a blended image
+##' @seealso rm.alpha
+##' @examples
+##' #Add alpha channel
+##' alpha <- Xc(grayscale(boats))/width(boats)
+##' boats.a <- imlist(boats,alpha) %>% imappend("c")
+##' flatten.alpha(boats.a) %>% plot
+##' flatten.alpha(boats.a,"darkgreen") %>% plot
+##' @author Simon Barthelme
+##' @export
+flatten.alpha <- function(im,bg="white")
+{
+    if (spectrum(im)==4)
+    {
+        a <- channel(im,4) %>% add.colour
+        im <- rm.alpha(im)
+        if (is.vector(bg) || is.string(bg))
+        {
+            bg <- imfill(dim=dim(im),val=bg)
+        }
+        else
+        {
+            stop("Unrecognised format for bg argument")
+        }
+        im*a + bg*(1-a)
+    }
+    else
+    {
+        im
+    }
+}

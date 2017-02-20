@@ -261,6 +261,17 @@ boxblur <- function(im, boxsize, neumann = TRUE) {
     .Call('imager_boxblur', PACKAGE = 'imager', im, boxsize, neumann)
 }
 
+#' Compute image Laplacian
+#'
+#' The Laplacian is the sum of second derivatives, approximated here using finite differences.
+#' @param im an image
+#' @examples
+#' imlap(boats) %>% plot
+#' @export
+imlap <- function(im) {
+    .Call('imager_imlap', PACKAGE = 'imager', im)
+}
+
 #' Blur image with a box filter.
 #'
 #' This is a recursive algorithm, not depending on the values of the box kernel size.

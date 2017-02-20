@@ -146,6 +146,26 @@ NumericVector boxblur(NumericVector im,float boxsize,bool neumann=true) {
 }
 
 
+//' Compute image Laplacian
+//'
+//' The Laplacian is the sum of second derivatives, approximated here using finite differences.
+//' @param im an image
+//' @examples
+//' imlap(boats) %>% plot
+//' @export
+// [[Rcpp::export]]
+NumericVector imlap(NumericVector im) {
+  CId img = as<CId >(im);
+  try{
+    img.laplacian();
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+  }
+  return wrap(img);
+}
+
+
 //' Blur image with a box filter.
 //'
 //' This is a recursive algorithm, not depending on the values of the box kernel size.

@@ -584,6 +584,8 @@ PACKAGE_URL=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 CXXFLAGS
+TIFF_LIBS
+TIFF_CFLAGS
 HAVE_FFTW
 FFTW_LIBS
 FFTW_CFLAGS
@@ -3218,6 +3220,109 @@ $as_echo "FFTW library not found, please install fftw3 for better FFT support." 
 fi
 
 
+#check for libtiff (from rtiff package)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for TIFFOpen in -ltiff" >&5
+$as_echo_n "checking for TIFFOpen in -ltiff... " >&6; }
+if ${ac_cv_lib_tiff_TIFFOpen+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ltiff  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char TIFFOpen ();
+int
+main ()
+{
+return TIFFOpen ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_tiff_TIFFOpen=yes
+else
+  ac_cv_lib_tiff_TIFFOpen=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_tiff_TIFFOpen" >&5
+$as_echo "$ac_cv_lib_tiff_TIFFOpen" >&6; }
+if test "x$ac_cv_lib_tiff_TIFFOpen" = xyes; then :
+  have_tiff=yes
+else
+  have_tiff=no
+fi
+
+if test "x${have_tiff}" = xyes; then
+TIFF_LIBS="-ltiff"
+TIFF_CFLAGS="-Dcimg_use_tiff"
+else
+  ## version for Mac OS X, static libtiff 4.0.x
+  unset ac_cv_lib_tiff_TIFFOpen
+  echo 'Try static libs needed on OS X'
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for TIFFOpen in -ltiff" >&5
+$as_echo_n "checking for TIFFOpen in -ltiff... " >&6; }
+if ${ac_cv_lib_tiff_TIFFOpen+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ltiff -llzma -ljpeg -lz $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char TIFFOpen ();
+int
+main ()
+{
+return TIFFOpen ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_tiff_TIFFOpen=yes
+else
+  ac_cv_lib_tiff_TIFFOpen=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_tiff_TIFFOpen" >&5
+$as_echo "$ac_cv_lib_tiff_TIFFOpen" >&6; }
+if test "x$ac_cv_lib_tiff_TIFFOpen" = xyes; then :
+  have_tiff=yes
+else
+  have_tiff=no
+fi
+
+  if test "x${have_tiff}" = xyes; then
+    TIFF_CFLAGS="-Dcimg_use_tiff"
+    TIFF_LIBS="-ltiff -llzma -ljpeg -lz"
+  else
+    echo Could not find libtiff. Install libtiff for better tiff support
+    TIFF_CFLAGS="
+    TIFF_LIBS="
+  fi
+fi
+
+
 
 # Check for OpenMP (from randomForests package)
 
@@ -3227,6 +3332,9 @@ fi
 
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
+
+
+
 
 
 

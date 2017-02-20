@@ -73,6 +73,28 @@ else
 fi
 
 
+#check for libtiff (from rtiff package)
+AC_CHECK_LIB([tiff], [TIFFOpen], [have_tiff=yes], [have_tiff=no])
+if test "x${have_tiff}" = xyes; then
+TIFF_LIBS="-ltiff"
+TIFF_CFLAGS="-Dcimg_use_tiff"
+else
+  ## version for Mac OS X, static libtiff 4.0.x
+  unset ac_cv_lib_tiff_TIFFOpen
+  echo 'Try static libs needed on OS X'
+  AC_CHECK_LIB([tiff], [TIFFOpen], [have_tiff=yes], [have_tiff=no],
+               [-llzma -ljpeg -lz])
+  if test "x${have_tiff}" = xyes; then
+    TIFF_CFLAGS="-Dcimg_use_tiff"
+    TIFF_LIBS="-ltiff -llzma -ljpeg -lz"
+  else
+    echo Could not find libtiff. Install libtiff for better tiff support
+    TIFF_CFLAGS="
+    TIFF_LIBS="
+  fi
+fi
+
+
 
 # Check for OpenMP (from randomForests package)
 dnl AC_OPENMP
@@ -106,6 +128,9 @@ dnl AC_SUBST(HAVE_OPENMP)
 AC_SUBST(HAVE_FFTW)
 AC_SUBST(FFTW_CFLAGS)
 AC_SUBST(FFTW_LIBS)
+
+AC_SUBST(TIFF_CFLAGS)
+AC_SUBST(TIFF_LIBS)
 
 
 ## --- Output ----------------------------------------------------------------

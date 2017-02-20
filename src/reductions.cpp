@@ -118,7 +118,7 @@ NumericVector reduce_minmax(List x,bool na_rm=false,bool max=true)
       cimg_forXYZC(out,x,y,z,c)
 	{
 	  v = L.at(i)(x,y,z,c);
-	  if (isnan(v))
+	  if (std::isnan(v))
 	    {
 	      if (!na_rm)
 		{
@@ -131,7 +131,7 @@ NumericVector reduce_minmax(List x,bool na_rm=false,bool max=true)
 		{
 		  valid(x,y,z,c) = true;
 		}
-	      if (!isnan(out(x,y,z,c))) //Once NaN, always NaN
+	      if (!std::isnan(out(x,y,z,c))) //Once NaN, always NaN
 		{
 		  if (max)
 		    {
