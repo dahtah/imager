@@ -89,8 +89,8 @@ else
     TIFF_LIBS="-ltiff -llzma -ljpeg -lz"
   else
     echo Could not find libtiff. Install libtiff for better tiff support
-    TIFF_CFLAGS="
-    TIFF_LIBS="
+    TIFF_CFLAGS=""
+    TIFF_LIBS=""
   fi
 fi
 
