@@ -482,3 +482,80 @@ grayscale <- function(im,method="Luma",drop=TRUE)
     }
 }
 
+#Converts a single frame from a magick image
+cvt.frame <- function(f){
+  f <- as.double(f)
+  d <- dim(f)
+  dim(f) <- c(d[1:2],1,4)
+  cimg(f) %>% imrotate(90) %>% mirror("x")
+}
+
+
+
+#' Convert a magick image to a cimg image or image list
+#'
+#' The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects. 
+#' @param obj an object of class "magick-image"
+#' @name magick
+#' @param ... ignored
+#' @return an object of class cimg or imlist
+#' @param alpha what do to with the alpha channel ("rm": remove and store as attribute, "flatten": flatten, "keep": keep). Default: "rm"
+#' @export
+#' @seealso flatten.alpha, rm.alpha
+#' @author Jan Wijffels, Simon Barthelme
+"as.imlist.magick-image" <- function(obj,alpha="rm",...)
+{
+    out <- map_il(seq_len(length(obj)), ~ cvt.frame(obj[[.]]))
+    if (alpha=="rm")
+    {
+        out <- map_il(out,rm.alpha)
+    }
+    else if (alpha=="flatten")
+    {
+        out <- map_il(out,flatten.alpha)
+    }
+    else if (alpha=="keep")
+        {
+            out
+        }
+    else
+    {
+        stop("alpha argument must be one of 'keep','rm','flatten'")
+    }
+}
+
+#' @rdname magick
+#' @export
+"as.cimg.magick-image" <- function(obj,alpha="rm",...)
+{
+    as.imlist(obj,alpha=alpha) %>% imappend("z")
+}
+
+
+
+#' Convert a RasterLayer/RasterBrick to a cimg image/image list
+#'
+#' The raster library stores its data as "RasterLayer" and "RasterBrick" objects. The raster package can store its data  out-of-RAM, so in order not to load too much data the "maxpixels" argument sets a limit on how many pixels are loaded. 
+#' @param obj an object of class "RasterLayer"
+#' @param maxpixels max. number of pixels to load  (default 1e7)
+#' @name RasterPackage
+#' @param ... ignored
+#' @author  Simon Barthelme, adapted from the image method for RasterLayer by Robert J Hijmans
+#' @export
+'as.cimg.RasterLayer' <- function(obj, maxpixels=1e7, ...)  {
+    if (!requireNamespace("raster", quietly = TRUE)) {
+             stop("Package raster is needed for this function to work. Please install it.",
+      call. = FALSE)
+    }
+    x <- raster::sampleRegular(obj, maxpixels, asRaster=TRUE, useGDAL=TRUE)
+    y <- raster::yFromRow(x, nrow(x):1)
+    value <- as.vector(x) %>% t
+    x <- raster::xFromCol(x,1:ncol(x))
+    array(value,c(length(x),length(y),1,1)) %>% as.cimg 
+}
+
+#' @rdname RasterPackage
+#' @export
+'as.imlist.RasterStackBrick' <- function(obj, maxpixels=1e7, ...)  {
+    map(seq_len(raster::nlayers(obj)), ~ raster::raster(obj,.)) %>% map_il(~ as.cimg(.,maxpixels=maxpixels))
+}	

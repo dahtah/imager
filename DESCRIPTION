@@ -17,12 +17,12 @@ Depends:
     R (>= 2.10.0),plyr,magrittr
 URL: http://dahtah.github.io/imager, https://github.com/dahtah/imager
 BugReports: https://github.com/dahtah/imager/issues
-SystemRequirements: fftw3
+SystemRequirements: fftw3,libtiff
 Enhances: spatstat
 LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 5.0.1
 Suggests: knitr,
     rmarkdown,ggplot2,dplyr,scales,
-    testthat,OpenMPController
+    testthat,OpenMPController,raster
 VignetteBuilder: knitr

@@ -690,4 +690,17 @@ bbox <- function(px)
             }
         }
 }
-
+##' A pixset for NA values
+##'
+##' A pixset containing all NA pixels
+##' @param im an image
+##' @return a pixset
+##' @examples
+##' im <- boats
+##' im[1] <- NA
+##' px.na(im)
+##' @export
+px.na <- function(im)
+{
+    is.na(im) %>% pixset
+}

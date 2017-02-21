@@ -7,18 +7,20 @@
 rm.alpha(im)
 }
 \arguments{
-\item{im}{}
+\item{im}{an image with 4 RGBA colour channels}
 }
 \value{
-an image with only three colour channels and the alpha channel as attribute
+an image with only three RGB channels and the alpha channel as attribute
+}
+\description{
+Remove alpha channel and store as attribute
+}
+\examples{
 #An image with 4 colour channels (RGBA)
 im <- imfill(2,2,val=c(0,0,0,0))
 #Remove fourth channel
 rm.alpha(im) 
 attr(rm.alpha(im),"alpha")
-}
-\description{
-Remove alpha channel and store as attribute
 }
 \author{
 Simon Barthelme

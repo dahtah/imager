@@ -8,18 +8,18 @@
 \alias{as.list.imlist}
 \title{Convert various objects to image lists}
 \usage{
-\method{as.imlist}{list}(x, ...)
+\method{as.imlist}{list}(obj, ...)
 
-as.imlist(x, ...)
+as.imlist(obj, ...)
 
 \method{as.list}{imlist}(x, ...)
 
-\method{as.imlist}{imlist}(x, ...)
+\method{as.imlist}{imlist}(obj, ...)
 
-\method{as.imlist}{cimg}(x, ...)
+\method{as.imlist}{cimg}(obj, ...)
 }
 \arguments{
-\item{x}{an image list}
+\item{obj}{an image list}
 
 \item{...}{ignored}
 }
@@ -33,7 +33,7 @@ Convert various objects to image lists
 \itemize{
 \item \code{list}: convert from list
 
-\item \code{imlist}: Convert from list
+\item \code{imlist}: Convert to list
 
 \item \code{imlist}: Convert from imlist (identity)
 

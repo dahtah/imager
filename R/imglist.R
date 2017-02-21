@@ -22,12 +22,12 @@ is.imlist <- function(x) is(x,"imlist")
 
 ##' @describeIn as.imlist convert from list
 ##' @export
-as.imlist.list <- function(x,...)
+as.imlist.list <- function(obj,...)
     {
-        if (all(map_lgl(x,is.cimg)) || all(map_lgl(x,is.pixset)))
+        if (all(map_lgl(obj,is.cimg)) || all(map_lgl(obj,is.pixset)))
         {
-            class(x) <- c("imlist","list")
-            x
+            class(obj) <- c("imlist","list")
+            obj
         }
         else
         {
@@ -88,25 +88,25 @@ ci <- function(...)
 
 ##' Convert various objects to image lists
 ##' 
-##' @param x an image list  
+##' @param obj an image list  
 ##' @param ... ignored
 ##' @return a list
 ##' @export
 ##' @examples
 ##' list(a=boats,b=boats*2) %>% as.imlist
-as.imlist <- function(x,...) UseMethod("as.imlist")
+as.imlist <- function(obj,...) UseMethod("as.imlist")
 
-##' @describeIn as.imlist Convert from list
+##' @describeIn as.imlist Convert to list
 ##' @export
-as.list.imlist <- function(x,...) { class(x) <- "list"; x }
+as.list.imlist <- function(x,...) { class(obj) <- "list"; obj }
 
 ##' @describeIn as.imlist Convert from imlist (identity)
 ##' @export
-as.imlist.imlist <- function(x,...) x
+as.imlist.imlist <- function(obj,...) obj
 
 ##' @describeIn as.imlist Convert from image
 ##' @export
-as.imlist.cimg <- function(x,...) list(x) %>% as.imlist.list
+as.imlist.cimg <- function(obj,...) list(obj) %>% as.imlist.list
 
 
 ##' Convert image list to data.frame

@@ -779,8 +779,9 @@ contours.pixset <- function(x,nlevels=NULL,...)
 
 ##' Remove alpha channel and store as attribute
 ##'
-##' @param im 
-##' @return an image with only three colour channels and the alpha channel as attribute
+##' @param im an image with 4 RGBA colour channels 
+##' @return an image with only three RGB channels and the alpha channel as attribute
+##' @examples
 ##' #An image with 4 colour channels (RGBA)
 ##' im <- imfill(2,2,val=c(0,0,0,0))
 ##' #Remove fourth channel
@@ -820,7 +821,7 @@ flatten.alpha <- function(im,bg="white")
     {
         a <- channel(im,4) %>% add.colour
         im <- rm.alpha(im)
-        if (is.vector(bg) || is.string(bg))
+        if (is.vector(bg) || is.character(bg))
         {
             bg <- imfill(dim=dim(im),val=bg)
         }

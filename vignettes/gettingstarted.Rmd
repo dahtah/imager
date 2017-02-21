@@ -338,7 +338,7 @@ We'll see more interesting uses for ggplot2 later.
 
 # Blob detection/extraction of local maxima, denoising, scale-space
 
-Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for [scikit-image](http://scikit-image.org/docs/dev/auto_examples/plot_blob.html)):
+Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for [scikit-image](http://scikit-image.org/docs/dev/auto_examples/features_detection/plot_blob.html))
 
 ```{r}
 hub <- load.example("hubble") %>% grayscale
