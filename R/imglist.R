@@ -98,7 +98,7 @@ as.imlist <- function(obj,...) UseMethod("as.imlist")
 
 ##' @describeIn as.imlist Convert to list
 ##' @export
-as.list.imlist <- function(x,...) { class(obj) <- "list"; obj }
+as.list.imlist <- function(x,...) { class(x) <- "list"; x }
 
 ##' @describeIn as.imlist Convert from imlist (identity)
 ##' @export

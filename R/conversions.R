@@ -528,7 +528,7 @@ magick2imlist <- function(obj,alpha="rm",...)
 #' @export
 magick2cimg <- function(obj,alpha="rm",...)
 {
-    as.imlist(obj,alpha=alpha) %>% imappend("z")
+    magick2imlist(obj,alpha=alpha) %>% imappend("z")
 }
 
 
