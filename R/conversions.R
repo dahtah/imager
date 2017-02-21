@@ -503,7 +503,7 @@ cvt.frame <- function(f){
 #' @export
 #' @seealso flatten.alpha, rm.alpha
 #' @author Jan Wijffels, Simon Barthelme
-"as.imlist.magick-image" <- function(obj,alpha="rm",...)
+magick2imlist <- function(obj,alpha="rm",...)
 {
     out <- map_il(seq_len(length(obj)), ~ cvt.frame(obj[[.]]))
     if (alpha=="rm")
@@ -526,7 +526,7 @@ cvt.frame <- function(f){
 
 #' @rdname magick
 #' @export
-"as.cimg.magick-image" <- function(obj,alpha="rm",...)
+magick2cimg <- function(obj,alpha="rm",...)
 {
     as.imlist(obj,alpha=alpha) %>% imappend("z")
 }
