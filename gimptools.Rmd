@@ -8,13 +8,20 @@ output:
     number_sections: true
 ---
 
+[Simon Barthelmé](http://sites.google.com/site/simonbarthelme) (GIPSA-lab, CNRS)
+
+```{r init,echo=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE, 
+               comment=NA, verbose=TRUE,dev='jpeg')
+```
+
 Many people will be familiar with the set of tools available in Photoshop and the Gimp (various forms of selections, brushes, erasers, etc.). Here's a screenshot of what the Gimp has to offer: 
 
 ![gimp-toolbox-icons.png](gimp-toolbox-icons.png)
 
-The goal of this document is to show how to do all these operations in imager. 
+The goal of this document is to show how to perform most of these operations in imager, with the help of a few other packages. It's a good way of familiarising yourself with the package.
 
-```{r init, echo=FALSE}
+```{r}
 library(imager)
 parrots <- load.example("parrots")
 
@@ -215,7 +222,9 @@ px.flood(parrots,300,100,sigma=.1) %>% highlight(col="blue")
 
 ```
 
-# Drawing curves, text, etc. 
+# Drawing (paint tools) 
+
+## Curves, text, etc. 
 
 To draw stuff on an image you can use the base R plotting tools along with "implot". implot uses the image as canvas for an R plot, and returns an image. 
 You only need to provide a piece of code that plots whatever you'd like to plot. Note that the coordinate system is the default one for images, i.e. (1...width)x(1...height). 
@@ -230,4 +239,165 @@ implot(parrots.mod,
 { points(width(parrots)*runif(50),height(parrots)*runif(50),col="darkblue",pch=24) }) %>%
     plot
 ```
+
+## Blur & sharpen
+
+Whole-image blurs and sharpens are very easy to do: 
+
+```{r}
+isoblur(parrots,3) %>% plot
+imsharpen(parrots,2) %>% plot
+```
+
+In the Gimp, the blur and sharpen tools allow you to blur and sharpen image regions selectively. In imager, you can do the same thing using masks: 
+
+```{r}
+#Select image region to blur
+px <- px.flood(parrots,200,300,sigma=.58)
+plot(parrots);highlight(px)
+b <- isoblur(parrots,5)
+msk <- as.cimg(px)
+#Use mask to combine the blurred and original images
+plot(parrots*(1-msk)+b*(msk))
+```
+
+## Eraser
+
+Pixsets!
+
+```{r}
+#Erase the first 50 columns
+px <- Xc(parrots) <= 50
+im <- parrots
+im[px] <- 0
+plot(im)
+```
+
+If instead of black, you need to fill in a different colour, use this:
+
+```{r}
+im <- parrots
+#make a uniform image of the same dimensions 
+#using a background colour of R=1,G=1,B=0 (yellow)
+bg <- imfill(dim=dim(parrots),val=c(1,1,0))
+msk <- as.cimg(px)
+plot(bg*msk+(1-msk)*im)
+```
+
+
+## Smudge/dodge/burn/perspective clone etc. 
+
+I *really* doubt you need these ones. They're fun exercises, though.
+
+# Transformations
+
+## Moving things about
+
+Use imshift:
+
+```{r}
+imshift(parrots,20,20) %>% plot
+```
+
+## Rotations
+
+Use imrotate:
+
+```{r}
+imrotate(parrots,35,interp=2) %>% plot
+```
+
+If you wish to shift the center of rotation, use the cx, cy arguments: 
+
+```{r}
+imrotate(parrots,35,cx=20,cy=20) %>% plot
+
+```
+
+# Scaling
+
+Use imresize:
+
+```{r}
+#Make a smaller copy of the image and append it: 
+imlist(parrots,imresize(parrots,.5)) %>%
+    imappend("x") %>% plot
+```
+
+## Flipping
+
+*mirror* is your friend: 
+
+```{r}
+mirror(parrots,"x") %>% plot
+```
+
+## Cropping
+
+Use imsub (see above) for general cropping. autocrop is another valuable tool which crops the outer parts of an image automatically: 
+
+```{r}
+#Define a mask from a pixset
+msk <- px.flood(parrots,100,100,sigma=.28) %>% as.cimg
+plot(parrots*msk)
+#Use autocrop to get rid of extra space
+autocrop(parrots*msk) %>% plot
+```
+
+## Shift, shear and other spatial transformations
+
+General spatial transformations can be implemented via warping. Image warping consists in remapping pixels, ie. you define a function $M(x,y)$ that displaces pixel content from position $x,y$ to position $x',y'$. For example, here's a shift:
+
+```{r}
+#We define an affine map from x,y to x',y'
+map.shift <- function(x,y) list(x=x+10,y=y+30)
+#imwarp performs the mapping
+imwarp(parrots,map=map.shift) %>% plot
+```
+
+And here's a 45° rotation around the origin:
+
+```{r}
+#angle (in radians)
+theta <- pi/4
+map.rot <- function(x,y) list(x=cos(theta)*x-sin(theta)*y,
+                                         y=sin(theta)*x+cos(theta)*y)
+imwarp(parrots,map=map.rot) %>% plot
+```
+
+Notice that the image looks a bit strange, and indeed if we zoom in we see that there are artifacts:
+```{r}
+imwarp(parrots,map=map.rot) %>%
+    imsub(x < 200,y< 200) %>% plot(interp=FALSE)
+```
+
+The reason this happens is that the algorithm works here in forward mode. Each pixel (x,y) is mapped to a new location (x',y') that may be off the image, or in between pixels, so the transformation can't be computed exactly. The forward algorithm ends up painting in between pixels, which creates artifacts. 
+
+The backward algorithm involves specifying the inverse transformation, from (x',y') to (x,y). 
+```{r}
+#the inverse of the rotation above is another rotation 
+theta <- -pi/4
+map.rot <- function(x,y) list(x=cos(theta)*x-sin(theta)*y,
+                                         y=sin(theta)*x+cos(theta)*y)
+imwarp(parrots,map=map.rot,direction="backward") %>% plot
+```
+
+The artifacts are gone because the algorithm doesn't have to paint in-between pixels anymore: if it needs to know the colour of pixel (x',y'), it goes back to the original location (x,y) and interpolates. 
+
+Here's a shear transformation: 
+
+```{r}
+map.shear <- function(x,y) list(x=x+.2*y,
+                                    y=y)
+imwarp(parrots,map=map.shear) %>% plot
+
+map.shear.rev <- function(x,y) list(x=x-.2*y,
+                                    y=y)
+imwarp(parrots,map=map.shear.rev,direction="backward") %>% plot
+
+
+```
+
+I'm leaving the perspective transform for the reader to figure out. 
+
 

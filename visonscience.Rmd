@@ -1,0 +1,26 @@
+```{r}
+nn <- imnoise(200,200) %>% isoblur(4)
+msk <- (px.circle(100,200,200) & !px.circle(50,200,200)) %>% as.cimg
+a <- map_il(seq(0,360,l=30),~ imrotate(msk*nn,.,cx=100,cy=100)) %>% imappend("z")
+b <- imrep(nn2*msk,50,"z")
+imlist(a,b) %>% imappend("z") %>% play(loop=TRUE)
+```
+
+
+
+```{r}
+a <- grayscale(boats)
+b <- imnoise(dim=dim(a))
+
+
+r <- function(v) with(FFT(v),sqrt(real^2 + imag^2))
+theta <- function(v) with(FFT(v),atan2(imag,real))
+synth <- function(r,theta) FFT(r*cos(theta),r*sin(theta),inverse=TRUE)$real
+#Original image
+synth(r(a),theta(a)) %>% plot
+#Random phase
+synth(r(a),theta(b)) %>% plot
+#Random spectrum
+synth(r(b),theta(a)) %>% plot
+```
+

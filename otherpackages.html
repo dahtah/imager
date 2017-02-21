@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Simon Barthelmé" />
+
+
+<title>Interfacing with other R packages for image processing</title>
+
+<script src="otherpackages_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="otherpackages_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="otherpackages_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="otherpackages_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="otherpackages_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="otherpackages_files/highlight/default.css"
+      type="text/css" />
+<script src="otherpackages_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="otherpackages_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Interfacing with other R packages for image processing</h1>
+<h4 class="author"><em>Simon Barthelmé</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#rasters-from-base-graphices-grdevices"><span class="toc-section-number">1</span> rasters from base graphices (grDevices)</a></li>
+<li><a href="#magick"><span class="toc-section-number">2</span> magick</a></li>
+<li><a href="#the-raster-package"><span class="toc-section-number">3</span> The raster package</a></li>
+<li><a href="#spatstats-im-objects"><span class="toc-section-number">4</span> spatstat’s im objects</a></li>
+<li><a href="#other-packages"><span class="toc-section-number">5</span> Other packages</a></li>
+</ul>
+</div>
+
+<p>There are several R packages that provide image processing features and they all use a slightly different format for storing their data. If you need to use imager along with another package, you’ll need functions that convert image data back and forth. I’ll list a few such functions, but I’d welcome contributions for more.</p>
+<div id="rasters-from-base-graphices-grdevices" class="section level1">
+<h1><span class="header-section-number">1</span> rasters from base graphices (grDevices)</h1>
+<p>Objects of class raster are R’s standard way of representing images for plotting. Use:</p>
+<pre class="r"><code>library(imager)
+rst &lt;- as.raster(boats)
+plot(rst)</code></pre>
+<p><img src="otherpackages_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
+<pre class="r"><code>as.cimg(rst) #Convert back</code></pre>
+<pre><code>## Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 3</code></pre>
+</div>
+<div id="magick" class="section level1">
+<h1><span class="header-section-number">2</span> magick</h1>
+<p>Use the following functions (with thanks to Jan Wijffels): because of a bug in R CMD check, they’re called “magick2cimg” and “magick2imlist”, and not “as.cimg” and “as.imlist”.</p>
+<pre class="r"><code>library(magick)
+#A dancing banana
+banana &lt;- image_read(&quot;https://jeroenooms.github.io/images/banana.gif&quot;)
+magick2cimg(banana,alpha=&quot;flatten&quot;) %&gt;% plot</code></pre>
+<pre><code>## Warning in plot.cimg(.): Showing first frame</code></pre>
+<p><img src="otherpackages_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
+<pre class="r"><code>magick2imlist(banana) #frames are stored along z</code></pre>
+<p>Note the “alpha” argument, which determines what to do with the alpha channel. “rm” removes it, “keep” keeps it, and “flatten” flattens the image on a white background.</p>
+</div>
+<div id="the-raster-package" class="section level1">
+<h1><span class="header-section-number">3</span> The raster package</h1>
+<p>Raster objects from the raster package are not to be confused with the “raster” class for plotting (from grDevices). The raster package specialises in spatial data like map tiles.</p>
+<pre class="r"><code>library(raster)</code></pre>
+<pre><code>## Loading required package: sp</code></pre>
+<pre><code>## 
+## Attaching package: &#39;sp&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:imager&#39;:
+## 
+##     bbox</code></pre>
+<pre><code>## 
+## Attaching package: &#39;raster&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:magrittr&#39;:
+## 
+##     extract</code></pre>
+<pre class="r"><code>logo &lt;- raster(system.file(&quot;external/rlogo.grd&quot;, package=&quot;raster&quot;)) 
+as.cimg(logo) %&gt;% plot</code></pre>
+<p><img src="otherpackages_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
+<pre class="r"><code>##Import RasterBrick
+b &lt;- brick(system.file(&quot;external/rlogo.grd&quot;, package=&quot;raster&quot;))
+##Colour channels are stored as layers
+plot(b)</code></pre>
+<p><img src="otherpackages_files/figure-html/unnamed-chunk-3-2.png" width="624" /></p>
+<pre class="r"><code>##Convert and stack
+as.imlist(b) %&gt;% imappend(&quot;c&quot;) %&gt;% plot</code></pre>
+<p><img src="otherpackages_files/figure-html/unnamed-chunk-3-3.png" width="624" /></p>
+<p>There’s no attempt to preserve meta-data in the conversion, so you’ll have to keep track of it yourself. Also, be careful with NAs (missing values), there’s almost no support in imager for them!</p>
+</div>
+<div id="spatstats-im-objects" class="section level1">
+<h1><span class="header-section-number">4</span> spatstat’s im objects</h1>
+<p>spatstat stores images as “im” objects. imager provides cimg2im and im2cimg for conversion.</p>
+<pre class="r"><code>grayscale(boats) %&gt;% cimg2im %&gt;% plot</code></pre>
+<p><img src="otherpackages_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+<p>NB: spatstat only supports grayscale.</p>
+</div>
+<div id="other-packages" class="section level1">
+<h1><span class="header-section-number">5</span> Other packages</h1>
+<p>Generally speaking if your image data is under the form of a matrix (or data.frame) it should be easy enough to get it into imager using as.cimg. Because pixels might be recorded in a different order, you may need some combination of imrotate, mirror and permute_axes to get things the right side up.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

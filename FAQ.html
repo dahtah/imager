@@ -128,6 +128,8 @@ $(document).ready(function () {
 <li><a href="#how-do-i-access-file-metadata"><span class="toc-section-number">4</span> How do I access file metadata?</a></li>
 <li><a href="#how-do-i-overlaystack-images"><span class="toc-section-number">5</span> How do I overlay/stack images?</a></li>
 <li><a href="#how-do-i-swap-axes"><span class="toc-section-number">6</span> How do I swap axes?</a></li>
+<li><a href="#how-do-i-convert-images-from-another-package-e.g.raster-magick-etc."><span class="toc-section-number">7</span> How do I convert images from another package (e.g. raster, magick, etc.)?</a></li>
+<li><a href="#does-imager-support-nas"><span class="toc-section-number">8</span> Does imager support NAs?</a></li>
 </ul>
 </div>
 
@@ -155,11 +157,11 @@ $(document).ready(function () {
 <div id="how-do-i-overlaystack-images" class="section level1">
 <h1><span class="header-section-number">5</span> How do I overlay/stack images?</h1>
 <p>For overlaying, see imdraw:</p>
-<pre class="r"><code>load.example(&quot;parrots&quot;) %&gt;% imdraw(boats/255,opacity=.5) %&gt;% plot</code></pre>
+<pre class="r"><code>load.example(&quot;parrots&quot;) %&gt;% imdraw(boats,opacity=.5) %&gt;% plot</code></pre>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
 <p>For stacking, use imappend:</p>
 <pre class="r"><code>a &lt;- load.example(&quot;parrots&quot;)
-b &lt;- boats/255
+b &lt;- boats
 list(a,b) %&gt;% imappend(&quot;x&quot;) %&gt;% plot</code></pre>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
 <p>For more flexibility, you can also pad the image and use imdraw.</p>
@@ -169,6 +171,30 @@ list(a,b) %&gt;% imappend(&quot;x&quot;) %&gt;% plot</code></pre>
 <p>Use permute_axes:</p>
 <pre class="r"><code>permute_axes(boats,&quot;yxzc&quot;) %&gt;% plot</code></pre>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
+<div id="how-do-i-convert-images-from-another-package-e.g.raster-magick-etc." class="section level1">
+<h1><span class="header-section-number">7</span> How do I convert images from another package (e.g. raster, magick, etc.)?</h1>
+<p>See <a href="other_packages.html">here</a>.</p>
+</div>
+<div id="does-imager-support-nas" class="section level1">
+<h1><span class="header-section-number">8</span> Does imager support NAs?</h1>
+<p>Not really. There’s some <em>very preliminary</em> support in plot, and as.raster, and some reductions, but the limiting factor is that the underlying library <em>does not support NAs at all</em>. Some functions work, others don’t. So if you do have NAs in your data, your best bet is to get rid of them as soon as possible using interpolation. Another solution is to fill in zeros, and keep track of invalid areas using pixel sets. It’s partially a hack.</p>
+<pre class="r"><code>##Which areas are valid after a box blur?
+im &lt;- grayscale(boats)
+im[1:2000] &lt;- NA
+plot(im,col.na=&quot;red&quot;)</code></pre>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+<pre class="r"><code>nas &lt;- px.na(im)
+##Fill in with zeros
+im[nas] &lt;- 0
+out &lt;- boxblur(im,10)
+##Invalid pixels have contributions from NA values.
+invalid &lt;- boxblur(nas,10) &gt; 1e-16
+#We use 1e-16 instead of strict zero because of numerical precision issues
+plot(out)
+highlight(invalid)</code></pre>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-4-2.png" width="624" /></p>
+<p>I’m definitely interested in having better NA support, if only in the form of an optional ‘NA-safe’ mode that scans for NAs before attempting any unsafe operations. If you’re interested in contributing to imager, get in touch.</p>
 </div>
 
 

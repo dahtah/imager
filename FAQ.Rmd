@@ -58,13 +58,29 @@ Use permute_axes:
 permute_axes(boats,"yxzc") %>% plot
 ```
 
-# How do I convert images in magick format? 
+# How do I convert images from another package (e.g. raster, magick, etc.)? 
 
-*magick* is another R package for image processing, interfacing the ImageMagick library. magick uses its own internal format for images, so there's no way to directly convert images for use with imager, but you can go through R's raster format: 
+See [here](other_packages.html). 
+
+# Does imager support NAs? 
+
+Not really. There's some *very preliminary* support in plot, and as.raster, and some reductions, but the limiting factor is that the underlying library *does not support NAs at all*. Some functions work, others don't. So if you do have NAs in your data, your best bet is to get rid of them as soon as possible using interpolation. Another solution is to fill in zeros, and keep track of invalid areas using pixel sets. It's partially a hack.
 
 ```{r}
-library(magick)
-frink <- image_read("https://jeroenooms.github.io/images/frink.png")
-as.raster(frink) %>% as.cimg %>% plot
+##Which areas are valid after a box blur?
+im <- grayscale(boats)
+im[1:2000] <- NA
+plot(im,col.na="red")
+nas <- px.na(im)
+##Fill in with zeros
+im[nas] <- 0
+out <- boxblur(im,10)
+##Invalid pixels have contributions from NA values.
+invalid <- boxblur(nas,10) > 1e-16
+#We use 1e-16 instead of strict zero because of numerical precision issues
+plot(out)
+highlight(invalid)
 ```
 
+
+I'm definitely interested in having better NA support, if only in the form of an optional 'NA-safe' mode that scans for NAs before attempting any unsafe operations. If you're interested in contributing to imager, get in touch. 
