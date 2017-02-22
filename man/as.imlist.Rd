@@ -5,14 +5,11 @@
 \alias{as.imlist.cimg}
 \alias{as.imlist.imlist}
 \alias{as.imlist.list}
-\alias{as.list.imlist}
 \title{Convert various objects to image lists}
 \usage{
 \method{as.imlist}{list}(obj, ...)
 
 as.imlist(obj, ...)
-
-\method{as.list}{imlist}(x, ...)
 
 \method{as.imlist}{imlist}(obj, ...)
 
@@ -32,8 +29,6 @@ Convert various objects to image lists
 \section{Methods (by class)}{
 \itemize{
 \item \code{list}: convert from list
-
-\item \code{imlist}: Convert to list
 
 \item \code{imlist}: Convert from imlist (identity)
 

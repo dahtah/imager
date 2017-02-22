@@ -96,7 +96,6 @@ ci <- function(...)
 ##' list(a=boats,b=boats*2) %>% as.imlist
 as.imlist <- function(obj,...) UseMethod("as.imlist")
 
-##' @describeIn as.imlist Convert to list
 ##' @export
 as.list.imlist <- function(x,...) { class(x) <- "list"; x }
 
