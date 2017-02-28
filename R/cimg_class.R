@@ -7,7 +7,7 @@
 #' @name imager
 NULL
 
-#' @useDynLib imager
+#' @useDynLib imager, .registration=TRUE
 #' @importFrom grDevices as.raster col2rgb dev.capture gray rgb contourLines
 #' @importFrom utils file_test
 #' @importFrom graphics axis plot rasterImage layout lines plot.new plot.window
