@@ -93,3 +93,12 @@ If you want to add features or fix a bug, just fork this repository and send me 
 Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field. 
 The test video comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
 
+## Contributors 
+
+The package's author is Simon Barthelmé (Gipsa-lab, CNRS). The following people have gracefully contributed code, bug fixes or testing:
+- Stefan Roediger
+- Aaron Robotham
+- Martin Roth
+- Jan Wijffels
+
+Let me know if you're missing from the list! 
