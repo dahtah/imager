@@ -126,7 +126,7 @@ parrots <- load.image(fpath)
 plot(parrots)
 ```
 
-**imager** supports JPEG, PNG and BMP natively - for other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/index.php). 
+**imager** supports JPEG, PNG, TIFF and BMP natively - for other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/index.php). 
 
 # Example 1: Histogram equalisation
 
@@ -148,7 +148,7 @@ R(boats) %>% hist(main="Red channel values in boats picture")
 
 Another approach is to turn the image into a `data.frame`, and use `ggplot` to view all channels at once:
 
-```{r fig.width=4, fig.height=2.2}
+```{r fig.width=5, fig.height=3}
 library(ggplot2)
 bdf <- as.data.frame(boats)
 head(bdf,3)
@@ -160,7 +160,7 @@ What we immediately see from these histograms is that the middle values are in a
 
 As an illustration of what this does, see the following example:
 
-```{r fig.width=4, fig.height=2.2}
+```{r fig.width=5, fig.height=3}
 x <- rnorm(100)
 layout(t(1:2))
 hist(x,main="Histogram of x")
@@ -171,7 +171,7 @@ hist(f(x),main="Histogram of ecdf(x)")
 
 We can apply it directly to images as follows: 
 
-```{r fig.width=4, fig.height=2.2}
+```{r fig.width=4, fig.height=3}
 boats.g <- grayscale(boats)
 f <- ecdf(boats.g)
 plot(f,main="Empirical CDF of luminance values")
@@ -181,7 +181,7 @@ Again we're using a standard R function (`ecdf`), which returns another function
 
 If we run the pixel data back through `f` we get a flat histogram:
 
-```{r fig.width=4, fig.height=2.2}
+```{r fig.width=4, fig.height=3}
 f(boats.g) %>% hist(main="Transformed luminance values")
 ```
 
@@ -218,13 +218,13 @@ iiply(boats,"c",hist.eq)
 
 We can use it to check that all channels have been properly normalised:
 
-```{r fig.width=4, fig.height=2.3}
+```{r fig.width=5, fig.height=3}
 iiply(boats,"c",hist.eq) %>% as.data.frame %>% ggplot(aes(value))+geom_histogram(bins=30)+facet_wrap(~ cc)
 ```
 
 Our trick worked.
 
-## Example 2: Edge detection
+# Example 2: Edge detection
 
 Edge detection relies on image gradients, which **imager** returns via:
 
@@ -308,7 +308,7 @@ p+scale_fill_gradient(low="black",high="white")
 
 Colour images are a bit trickier. We could plot each channel separately:
 
-```{r}
+```{r fig.width=7}
 df <- as.data.frame(boats) 
 p <- ggplot(df,aes(x,y))+geom_raster(aes(fill=value))+facet_wrap(~ cc)
 p+scale_y_reverse()
@@ -323,7 +323,7 @@ as.data.frame(boats,wide="c") %>% head
 The three colour channels are now stacked along columns, which lets us do the following:
 
 ```{r}
-df <- as.data.frame(boats,wide="c") %>% mutate(rgb.val=rgb(c.1/255,c.2/255,c.3/255))
+df <- as.data.frame(boats,wide="c") %>% mutate(rgb.val=rgb(c.1,c.2,c.3))
 head(df,3)
 ```
 
