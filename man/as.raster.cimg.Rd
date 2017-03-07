@@ -5,7 +5,7 @@
 \title{Convert a cimg object to a raster object for plotting}
 \usage{
 \method{as.raster}{cimg}(x, frames, rescale = TRUE, colourscale = NULL,
-  colorscale = NULL, ...)
+  colorscale = NULL, col.na = rgb(0, 0, 0, 0), ...)
 }
 \arguments{
 \item{x}{an image (of class cimg)}
@@ -17,6 +17,8 @@
 \item{colourscale}{a function that returns RGB values in hexadecimal}
 
 \item{colorscale}{same as above in American spelling}
+
+\item{col.na}{which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour.}
 
 \item{...}{ignored}
 }
@@ -32,9 +34,6 @@ as.raster(boats) \%>\% str
 #By default as.raster rescales input values, so that:
 all.equal(as.raster(boats),as.raster(boats/2)) #TRUE
 #Setting rescale to FALSE changes that
-try(as.raster(boats,rescale=FALSE))
-#The above fails because the pixel values are in the wrong range
-boats <- boats/255 #Rescale to 0..1
 as.raster(boats,rescale=FALSE) \%>\% plot
 as.raster(boats/2,rescale=FALSE) \%>\% plot
 #For grayscale images, a colourmap should take a single value and

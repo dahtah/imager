@@ -54,32 +54,33 @@ List im_split(NumericVector im,char axis,int nb=-1)
   }
 }
 
-//' Combine a list of images into a single image 
-//' 
-//' All images will be concatenated along the x,y,z, or c axis.
-//' 
-//' @param imlist a list of images (all elements must be of class cimg) 
-//' @param axis the axis along which to concatenate (for example 'c')
-//' @seealso imsplit (the reverse operation)
-//' @export
-//' @examples
-//' imappend(list(boats,boats),"x") %>% plot
-//' imappend(list(boats,boats),"y") %>% plot
-//' plyr::rlply(3,imnoise(100,100)) %>% imappend("c") %>% plot
-//' boats.gs <- grayscale(boats)
-//' plyr::llply(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) %>% imappend("c") %>% plot
+
 // [[Rcpp::export]]
-NumericVector imappend(List imlist,char axis)
+NumericVector im_append(List imlist,char axis)
 {
   try{
-    CImgList<double> ilist = sharedCImgList(imlist);
-    CId out(ilist.get_append(axis));
-    //   out.display();
-    return wrap(out);
-    }
+      CImgList<double> ilist = sharedCImgList(imlist);
+      CId out(ilist.get_append(axis));
+      return wrap(out);
+  }
   catch(CImgException &e){
     forward_exception_to_r(e);
     NumericVector empty;
+    return empty;
+  }
+}
+
+// [[Rcpp::export]]
+LogicalVector px_append(List imlist,char axis)
+{
+  try{
+      CImgList<int> ilist = sharedCImgList_bool(imlist);
+      CIb out(ilist.get_append(axis));
+      return wrap(out);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    LogicalVector empty;
     return empty;
   }
 }
@@ -234,7 +235,8 @@ List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerV
 	  out[i] = wrap(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2)); 
 	}
     }
-  return out;
+  out.attr("class") = CharacterVector::create("imlist","list");
+  return wrap(out);
 }
 
 //' @param cz vector of z coordinates for patch centers 
@@ -271,6 +273,7 @@ List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,Intege
 	  out[i] = img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cz(i)-wz(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2,cz(i)+wz(i)/2);
 	}
     }
+  out.attr("class") = CharacterVector::create("imlist","list");
   return out;
 }
 
@@ -362,3 +365,21 @@ bool has_omp()
   return false;
 #endif
 }
+
+// [[Rcpp::export]]
+List px_split(LogicalVector im,char axis,int nb=-1)
+{
+  try{
+    CIb img = as<CIb >(im);
+    CImgList<bool> out;
+    out = img.get_split(axis,nb);
+    return wrap(out);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    List empty;
+    return empty; //won't happen
+  }
+}
+
+

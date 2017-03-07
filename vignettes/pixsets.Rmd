@@ -1,0 +1,230 @@
+---
+title: "Pixsets: representing pixel sets in imager"
+author: "Simon Barthelmé"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{getting_started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+---
+
+```{r init,echo=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE, 
+               comment=NA, verbose=TRUE, fig.width=6, fig.height=6,dev='jpeg')
+```
+If you've already gone through the "Getting started" vignette, you know about image objects ("cimg" class). This vignette introduces pixsets, which is the other important kind of objects. Pixsets represent sets of pixels, or equivalently binary images, AKA "masks". 
+
+# From images to pixsets and back
+
+A pixset is what you get if you run a test on an image: 
+
+```{r}
+im <- load.example('parrots') %>% grayscale
+px <- im > .6 #Select pixels with high luminance
+px
+plot(px)
+```
+
+Internally, a pixel set is just an array of logical (boolean) values:
+
+```{r}
+str(px)
+```
+
+The "TRUE" values correspond to pixels in the set, and "FALSE" to pixels not in the set. The dimensions of the pixset are the same as that of the original image:
+
+```{r}
+all(dim(px) == dim(im))
+```
+
+To count the number of pixels in the set, use sum:
+
+```{r}
+sum(px) #Number of pixels in set
+mean(px) #Proportion
+```
+
+Converting a pixset to an image results in an image of the same size with zeroes and ones: 
+```{r}
+as.cimg(px)
+##same thing: automatic conversion to a numeric type
+px + 0
+```
+
+# Indexing using pixsets
+
+You can use pixsets the same way you'd normally use an array of logicals, e.g. for indexing:
+
+```{r}
+mean(im[px])
+mean(im[!px])
+which(px) %>% head
+```
+
+# Plotting and visualising pixsets
+
+The "highlight" function is a good way of visualising pixel sets:
+
+```{r}
+plot(im)
+px <- (isoblur(im,4)  > .5 )
+highlight(px)
+```
+
+highlight extracts the contours of the pixset (see ?contours) and plots them. 
+
+You can also use plain old "plot": 
+```{r}
+plot(px)
+```
+
+It converts "px" to an image and uses plot.cimg. 
+
+# Coordinates for pixels in pixsets
+
+The *where* function returns coordinates for pixels in the set:
+
+```{r}
+where(px) %>% head
+```
+
+where returns a data.frame. That format is especially convenient if you want to compute some statistics on the coordinates, e.g., the center of mass of a region defined by a pixset:
+
+```{r}
+where(px) %>% dplyr::summarise(mx=mean(x),my=mean(y))
+```
+
+
+
+# Selecting contiguous regions, splitting into contiguous regions
+
+In segmentation problems one usually wants contiguous regions: px.flood uses the flood fill algorithm (AKA the bucket tool in image editors) to select pixels based on similarity. 
+
+```{r}
+plot(im)
+#Start the fill at location (180,274). sigma sets the tolerance
+px.flood(im,180,274,sigma=.21) %>% highlight
+```
+
+It's also common to want to split a pixset into contiguous regions: use split_connected.
+
+```{r}
+sp <- split_connected(px) #returns an imlist 
+plot(sp[1:4])
+sp
+```
+
+Each element in the list is a connected pixset. 
+You can use split_connected to check connectedness (there are faster ways, of course, but this is simple): 
+
+```{r}
+is.connected <- function(px) length(split_connected(px)) == 1
+sapply(sp,is.connected)
+is.connected(px)
+```
+
+Use the "high_connectivity" argument to extend to diagonal neighbours as well. See ?label for more. 
+
+# Boundaries
+
+The boundary function computes the boundaries of the set:
+
+```{r}
+boundary(px) %>% plot
+##Make your own highlight function:
+plot(im)
+boundary(px) %>% where %$% { points(x,y,cex=.1,col="red") }
+```
+
+# Growing, shrinking, morphological operations
+
+The grow and shrink operators let you grow and shrink pixsets using morphological operators (dilation and erosion, resp.). Have a look at the article on (morphology)[https://dahtah.github.io/imager/morphology.html] for more:
+```{r}
+plot(im)
+highlight(px)
+#Grow by 5 pixels
+grow(px,5) %>% highlight(col="green")
+#Shrink by 5 pixels
+shrink(px,5) %>% highlight(col="blue")
+
+#Compute bounding box
+bbox(px) %>% highlight(col="yellow")
+
+```
+
+# Common pixsets
+
+There's a few convenience functions defining convenience pixsets:
+
+```{r}
+px.none(im) #No pixels
+px.all(im) #All of them
+
+plot(im)
+#Image borders at depth 10
+px.borders(im,10) %>% highlight
+#Left-hand border (5 pixels), see also px.top, px.bottom, etc.
+px.left(im,5) %>% highlight(col="green")
+
+
+
+```
+
+# Splitting and concatenating pixsets
+
+imsplit and imappend both work on pixsets. 
+
+```{r}
+#Split pixset in two along x
+imsplit(px,"x",2) %>% plot(layout="row")
+#Splitting pixsets results into a list of pixsets
+imsplit(px,"x",2) %>% str
+
+#Cut along y, append along x
+imsplit(px,"y",2) %>% imappend("x") %>% plot()
+```
+
+You can use reductions the same way you'd use them on images, which is especially useful when working with colour images. 
+
+# Working with colour images
+
+Be careful: each colour channel is treated as having its own set of pixels, so that a colour pixset has the same dimension as the image it originated from, e.g.: 
+
+```{r}
+px <- boats > .8
+px
+where(px) %>% head
+```
+
+Here "px" tells us the location in all locations and across channels of pixels with values higher than .8. If you plot it you'll see the following:
+
+```{r}
+plot(px)
+```
+
+Red dots correspond to pixels in the red channel, green in the green channel, etc. You can also view the set by splitting: 
+
+```{r}
+imsplit(px,"c") %>% plot
+```
+
+
+If you need to find the pixel locations that have a value of .9 in all channels, use a reduction: 
+
+```{r}
+#parall stands for "parallel-all", and works similarly to parmax, parmin, etc.
+imsplit(px,"c") %>% parall %>% where %>% head
+
+#at each location, test if any channel is in px
+imsplit(px,"c") %>% parany %>% where %>% head
+
+#highlight the set (unsurprisingly, it's mostly white pixels)
+plot(boats)
+imsplit(px,"c") %>% parany %>% highlight
+
+```

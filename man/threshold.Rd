@@ -14,7 +14,7 @@ threshold(im, thr = "auto", approx = TRUE)
 \item{approx}{Skip pixels when computing quantiles in large images (default TRUE)}
 }
 \value{
-a thresholded image
+a pixset with the selected pixels
 }
 \description{
 Thresholding corresponding to setting all values below a threshold to 0, all above to 1.

@@ -18,7 +18,10 @@ Each image in the list will be plotted separately. The layout argument controls 
 }
 \examples{
 imsplit(boats,"c") #Returns an image list
-
+imsplit(boats,"c") \%>\% plot
+imsplit(boats,"c") \%>\% plot(layout="row")
+imsplit(boats,"c") \%>\% plot(layout="col")
+imsplit(boats,"x",5) \%>\% plot(layout="rect")
 }
 \author{
 Simon Barthelme

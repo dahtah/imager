@@ -4,46 +4,86 @@
 \alias{add}
 \alias{average}
 \alias{enorm}
+\alias{equal}
 \alias{imager.combine}
 \alias{mult}
+\alias{parall}
+\alias{parany}
 \alias{parmax}
 \alias{parmax.abs}
+\alias{parmed}
 \alias{parmin}
 \alias{parmin.abs}
+\alias{parorder}
+\alias{parrank}
+\alias{parsd}
+\alias{parsort}
+\alias{parvar}
 \alias{which.parmax}
 \alias{which.parmin}
+\alias{wsum}
 \title{Combining images}
 \usage{
-add(x)
+add(x, na.rm = FALSE)
 
-average(x)
+wsum(x, w, na.rm = FALSE)
 
-mult(x)
+average(x, na.rm = FALSE)
 
-parmax(x)
+mult(x, na.rm = FALSE)
+
+parmax(x, na.rm = FALSE)
 
 parmax.abs(x)
 
 parmin.abs(x)
 
-parmin(x)
+parmin(x, na.rm = FALSE)
 
 enorm(x)
+
+parmed(x, na.rm = FALSE)
+
+parvar(x)
+
+parsd(x)
+
+parall(x)
+
+parany(x)
+
+equal(x)
 
 which.parmax(x)
 
 which.parmin(x)
+
+parsort(x, increasing = TRUE)
+
+parorder(x, increasing = TRUE)
+
+parrank(x, increasing = TRUE)
 }
 \arguments{
 \item{x}{a list of images}
+
+\item{na.rm}{ignore NAs (default FALSE)}
+
+\item{w}{weights (must be the same length as the list)}
+
+\item{increasing}{if TRUE, sort in increasing order (default TRUE)}
 }
 \description{
 These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
-The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign.
+The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign. 
+"parsort","parrank" and "parorder" aren't really reductions because they return a list of the same size. They perform a pixel-wise sort (resp. order and rank) across the list.
+parvar returns an unbiased estimate of the variance (as in the base var function). parsd returns the square root of parvar.
 }
 \section{Functions}{
 \itemize{
 \item \code{add}: Add images
+
+\item \code{wsum}: Weighted sum of images
 
 \item \code{average}: Average images
 
@@ -53,35 +93,61 @@ The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 othe
 
 \item \code{parmax.abs}: Parallel max in absolute value over images,
 
-\item \code{parmin.abs}: Parallel max in absolute value over images,
+\item \code{parmin.abs}: Parallel min in absolute value over images,
 
 \item \code{parmin}: Parallel min over images
 
 \item \code{enorm}: Euclidean norm (i.e. sqrt(A^2 + B^2 + ...))
 
+\item \code{parmed}: Median
+
+\item \code{parvar}: Variance
+
+\item \code{parsd}: Std. deviation
+
+\item \code{parall}: Parallel all (for pixsets)
+
+\item \code{parany}: Parallel any (for pixsets)
+
+\item \code{equal}: Test equality
+
 \item \code{which.parmax}: index of parallel maxima
 
 \item \code{which.parmin}: index of parallel minima
+
+\item \code{parsort}: pixel-wise sort
+
+\item \code{parorder}: pixel-wise order
+
+\item \code{parrank}: pixel-wise rank
 }}
 \examples{
 im1 <- as.cimg(function(x,y) x,100,100)
 im2 <- as.cimg(function(x,y) y,100,100)
 im3 <- as.cimg(function(x,y) cos(x/10),100,100)
-l <- list(im1,im2,im3)
+l <- imlist(im1,im2,im3)
 add(l) \%>\% plot #Add the images
 average(l) \%>\% plot #Average the images
 mult(l) \%>\% plot #Multiply
+wsum(l,c(.1,8,.1)) \%>\% plot #Weighted sum
 parmax(l) \%>\% plot #Parallel max
 parmin(l) \%>\% plot #Parallel min
-#Edge detection
+parmed(l) \%>\% plot #Parallel median
+parsd(l) \%>\% plot #Parallel std. dev
+#parsort can also be used to produce parallel max. and min
+(parsort(l)[[1]]) \%>\% plot("Parallel min")
+(parsort(l)[[length(l)]]) \%>\% plot("Parallel max")
+#Edge detection (Euclidean norm of gradient)
 imgradient(boats,"xy") \%>\% enorm \%>\% plot
 #Pseudo-artistic effects
-llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% parmin \%>\% plot
-llply(seq(1,35,5),function(v) boxblur(boats,v)) \%>\% average \%>\% plot
-
+l <- map_il(seq(1,35,5),~ boxblur(boats,.))
+parmin(l) \%>\% plot
+average(l) \%>\% plot
+mult(l) \%>\% plot
 #At each pixel, which colour channel has the maximum value?
 imsplit(boats,"c") \%>\% which.parmax \%>\% table
-
+#Same thing using parorder (ties are broken differently)!!!
+imsplit(boats,"c") \%>\% { parorder(.)[[length(.)]] } \%>\% table
 }
 \author{
 Simon Barthelme

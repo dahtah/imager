@@ -7,24 +7,24 @@
 \alias{grabRect}
 \title{Select image regions interactively}
 \usage{
-grabLine(im, coord = TRUE)
+grabLine(im, output = "coord")
 
-grabRect(im, coord = TRUE)
+grabRect(im, output = "coord")
 
-grabPoint(im, coord = TRUE)
+grabPoint(im, output = "coord")
 }
 \arguments{
 \item{im}{an image}
 
-\item{coord}{if TRUE, return coordinates. if FALSE, content}
+\item{output}{one of "im","pixset","coord","value". Default "coord"}
 }
 \value{
-either a vector of coordinates, or an image
+Depending on the value of the output parameter. Either a vector of coordinates (output = "coord"), an image (output = "im"), a pixset (output = "pixset"), or a vector of values (output = "value"). grabLine and grabPoint support the "value" output mode and not the "im" output.
 }
 \description{
 These functions let you select a shape in an image (a point, a line, or a rectangle)
 They either return the coordinates of the shape (default), or the contents.
-In case of lines contents are interpolated.
+In case of lines contents are interpolated. Note that grabLine does not support the "pixset" return type.
 }
 \examples{
 ##Not run: interactive only 

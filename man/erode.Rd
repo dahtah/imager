@@ -13,34 +13,34 @@
 \alias{mopening_square}
 \title{Erode/dilate image by a structuring element.}
 \usage{
-erode(im, mask, boundary_conditions = TRUE, normalise = FALSE)
+erode(im, mask, boundary_conditions = TRUE, real_mode = FALSE)
 
 erode_rect(im, sx, sy, sz = 1L)
 
 erode_square(im, size)
 
-dilate(im, mask, boundary_conditions = TRUE, normalise = FALSE)
+dilate(im, mask, boundary_conditions = TRUE, real_mode = FALSE)
 
 dilate_rect(im, sx, sy, sz = 1L)
 
 dilate_square(im, size)
 
-mopening(im, mask, boundary_conditions = TRUE, normalise = FALSE)
+mopening(im, mask, boundary_conditions = TRUE, real_mode = FALSE)
 
 mopening_square(im, size)
 
 mclosing_square(im, size)
 
-mclosing(im, mask, boundary_conditions = TRUE, normalise = FALSE)
+mclosing(im, mask, boundary_conditions = TRUE, real_mode = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{mask}{Structuring element.}
 
-\item{boundary_conditions}{Boundary conditions.}
+\item{boundary_conditions}{Boundary conditions. If FALSE, pixels beyond image boundaries are considered to be 0, if TRUE one. Default: TRUE.}
 
-\item{normalise}{Determines if the closing is locally normalised (default FALSE)}
+\item{real_mode}{If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).}
 
 \item{sx}{Width of the structuring element.}
 

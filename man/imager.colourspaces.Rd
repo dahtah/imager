@@ -4,19 +4,31 @@
 \alias{HSItoRGB}
 \alias{HSLtoRGB}
 \alias{HSVtoRGB}
+\alias{LabtoRGB}
+\alias{LabtoXYZ}
+\alias{LabtosRGB}
 \alias{RGBtoHSI}
 \alias{RGBtoHSL}
 \alias{RGBtoHSV}
+\alias{RGBtoLab}
+\alias{RGBtoXYZ}
 \alias{RGBtoYCbCr}
 \alias{RGBtoYUV}
 \alias{RGBtosRGB}
+\alias{XYZtoLab}
+\alias{XYZtoRGB}
 \alias{YCbCrtoRGB}
 \alias{YUVtoRGB}
 \alias{imager.colourspaces}
+\alias{sRGBtoLab}
 \alias{sRGBtoRGB}
 \title{Colour space conversions in imager}
 \usage{
 RGBtoHSL(im)
+
+RGBtoXYZ(im)
+
+XYZtoRGB(im)
 
 HSLtoRGB(im)
 
@@ -39,6 +51,18 @@ YCbCrtoRGB(im)
 RGBtoYUV(im)
 
 YUVtoRGB(im)
+
+LabtoRGB(im)
+
+RGBtoLab(im)
+
+LabtoXYZ(im)
+
+XYZtoLab(im)
+
+LabtosRGB(im)
+
+sRGBtoLab(im)
 }
 \arguments{
 \item{im}{an image}
@@ -49,6 +73,10 @@ All functions listed here assume the input image has three colour channels (spec
 \section{Functions}{
 \itemize{
 \item \code{RGBtoHSL}: RGB to HSL conversion
+
+\item \code{RGBtoXYZ}: CIE RGB to CIE XYZ (1931) conversion, D65 white point
+
+\item \code{XYZtoRGB}: CIE XYZ to CIE RGB (1931) conversion, D65 white point
 
 \item \code{HSLtoRGB}: HSL to RGB conversion
 
@@ -71,5 +99,17 @@ All functions listed here assume the input image has three colour channels (spec
 \item \code{RGBtoYUV}: RGB to YUV conversion
 
 \item \code{YUVtoRGB}: YUV to RGB conversion
+
+\item \code{LabtoRGB}: Lab to RGB (linear)
+
+\item \code{RGBtoLab}: RGB (linear) to Lab
+
+\item \code{LabtoXYZ}: Lab to XYZ
+
+\item \code{XYZtoLab}: XYZ to Lab
+
+\item \code{LabtosRGB}: Lab to sRGB
+
+\item \code{sRGBtoLab}: sRGB to Lab
 }}
 

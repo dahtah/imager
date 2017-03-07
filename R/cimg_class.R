@@ -7,10 +7,10 @@
 #' @name imager
 NULL
 
-#' @useDynLib imager
-#' @importFrom grDevices as.raster col2rgb dev.capture gray rgb
+#' @useDynLib imager, .registration=TRUE
+#' @importFrom grDevices as.raster col2rgb dev.capture gray rgb contourLines
 #' @importFrom utils file_test
-#' @importFrom graphics axis plot rasterImage layout
+#' @importFrom graphics axis plot rasterImage layout lines plot.new plot.window
 #' @importFrom stats quantile rnorm kmeans setNames
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom purrr map map_dbl map_lgl map_df map2
@@ -27,7 +27,7 @@ names.coords <- c('x','y','z','c','cc')
 index.coords <- list("x"=1,"y"=2,"z"=3,"c"=4,"cc"=4)
 
 ## CRAN sometimes issues spurious warnings about undefined variables
-utils::globalVariables(c(".", "%>%","x","y","z","cc"))
+utils::globalVariables(c(".", "%>%","x","y","z","cc","value"))
 
 ##' cimg is a class for storing image or video/hyperspectral data.  It is designed to provide easy interaction with the CImg library, but in order to use it you need to be aware of how CImg wants its image data stored. 
 ##' Images have up to 4 dimensions, labelled x,y,z,c. x and y are the usual spatial dimensions, z is a depth dimension (which would correspond to time in a movie), and c is a colour dimension. Images are stored linearly in that order, starting from the top-left pixel and going along *rows* (scanline order).
@@ -47,7 +47,7 @@ cimg <- function(X)
             {
                 X <- X+0.0
             }
-        class(X) <-c("cimg","numeric")
+        class(X) <-c("cimg","imager_array","numeric")
         X
     }
 
@@ -96,6 +96,11 @@ NULL
 ##' @param xlab x axis label
 ##' @param ylab y axis label
 ##' @param interpolate should the image be plotted with antialiasing (default TRUE)
+##' @param asp aspect ratio. The default value (1) means that the aspect ratio of the image will be kept regardless of the dimensions of the plot. A numeric value other than one changes the aspect ratio, but it will be kept the same regardless of dimensions. Setting asp="varing" means the aspect ratio will depend on plot dimensions (this used to be the default in versions of imager < 0.40)
+##' @param xaxs The style of axis interval calculation to be used for the x-axis. See ?par
+##' @param yaxs The style of axis interval calculation to be used for the y-axis. See ?par
+##' @param axes Whether to draw axes (default TRUE)
+##' @param col.na which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour. 
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster, as.raster, which converts images to R raster objects
 ##' @export
@@ -134,28 +139,45 @@ NULL
 ##' boats.small <- imresize(boats,.3)
 ##' plot(boats.small,interp=TRUE)
 ##' plot(boats.small,interp=FALSE)
-plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,...)
+plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,axes=TRUE,xaxs="i",yaxs="i",asp=1,col.na=rgb(0,0,0,0),...)
+{
+    if (nPix(x) == 0) stop("Empty image")
+    im <- x
+    if (depth(im) > 1)
     {
-        im <- x
-        if (depth(im) > 1)
+        if (missing(frame))
         {
-            if (missing(frame))
-            {
-                warning("Showing first frame")
-                frame <- 1
-            }
-            im <- frame(x,frame)
+            warning("Showing first frame")
+            frame <- 1
         }
-        if (1 %in% dim(im)[1:2]) #Image has a single spatial dimension
+        im <- frame(x,frame)
+    }
+    if (1 %in% dim(im)[1:2]) #Image has a single spatial dimension
+    {
+        plot.singleton(im,...)
+        }
+    else
+    {
+        if (is.character(asp) && asp == "varying")
+            {
+                plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",xaxs=xaxs,yaxs=yaxs,axes=axes,...)
+                as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale,col.na=col.na) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
+            }
+        else if (is.numeric(asp))
         {
-            plot.singleton(im,...)
+            plot.new()
+            plot.window(xlim = xlim, ylim = ylim,asp=asp,xaxs=xaxs,yaxs=yaxs,...)
+            rst <- as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale,col.na=col.na)
+            rasterImage(rst, 1, nrow(rst), ncol(rst), 1,interpolate=interpolate)
+            if (axes) { axis(1); axis(2) }
         }
         else
         {
-            plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",...)
-            as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
+            stop("Invalid value for parameter asp")
         }
+        
     }
+}
 
 #Plots one-dimensional images
 plot.singleton <- function(im,...)
@@ -279,7 +301,7 @@ channels <- function(im,index,drop=FALSE)
             {
                 index <- 1:spectrum(im)
             }
-        res <- imsplit(im[,,,index,drop=FALSE],"c")
+        res <- imsplit(im,"c")[index]
         nm <- paste('c',index,sep=".")
         names(res) <- nm
         if (drop)
@@ -513,157 +535,6 @@ subs <- function(im,cl,consts,envir=parent.frame())
 
 
 
-##' Load image from file or URL
-##'
-##'
-##' PNG, JPEG and BMP are supported via the readbitmap package. You'll need to install ImageMagick for other formats. If the image is actually a video, you'll need ffmpeg. If the path is actually a URL, it should start with http(s) or ftp(s). 
-##' 
-##' @param file path to file or URL
-##' @return an object of class 'cimg'
-##' @examples
-##' #Find path to example file from package
-##' fpath <- system.file('extdata/Leonardo_Birds.jpg',package='imager') 
-##' im <- load.image(fpath)
-##' plot(im)
-##' #Load the R logo directly from the CRAN webpage
-##' #load.image("https://cran.r-project.org/Rlogo.jpg") %>% plot
-##' @export
-load.image <- function(file)
-    {
-        is.url <- grepl("^(http|ftp)s?://", file)
-        if (!file_test("-f",file) & !is.url)
-        {
-            stop("File not found")
-        }
-        bmp <- try(read.bitmap(file),silent=TRUE)
-        if (class(bmp) != "try-error") #Loaded succesfully
-        {
-            if (length(dim(bmp)) == 3) #Has colour
-            {
-                dim(bmp) <- c(dim(bmp)[1:2],1,dim(bmp)[3]) #Make array 4D
-            }
-            else 
-            {
-                dim(bmp) <- c(dim(bmp),1,1)
-            }
-            bmp <- cimg(bmp) %>% mirror("x") %>% imrotate(-90)
-            bmp
-        }
-        else #Loading with read.bitmap has failed, try with ImageMagick
-        {
-            if (has.magick())
-            {
-                if (is.url)
-                {
-                    load_image(file)
-                }
-                else
-                {
-                    file <- normalizePath(file,mustWork=TRUE)
-                    load_image(file)
-                }
-            }
-            else
-            {
-                stop("Unsupported file format. Please convert to jpeg/png/bmp or install image magick")
-            }
-        }
-    }
-
-has.magick <- function()
-{
-    test.magick <- c('conjure','montage') %>% Sys.which %>% Filter(function(v) nchar(v) > 0,.) %>% length
-    test.magick == 2
-}
-
-convert.im.fromPNG <- function(A)
-    {
-        A <- A*255
-        d <- dim(A)
-        if (length(d) == 3)
-            {
-                dim(A) <- c(d[1:2],1,d[3])
-            }
-        else
-            {
-                dim(A) <- c(d[1:2],1,1)
-            }
-        mirror(A,"x") %>% imrotate(-90)
-    }
-
-load.png <- function(file)
-    {
-        png::readPNG(file) %>% convert.im.fromPNG
-    }
-
-load.jpeg <- function(file)
-    {
-        jpeg::readJPEG(file) %>% convert.im.fromPNG
-    }
-
-
-
-##' Save image
-##'
-##' You'll need ImageMagick for formats other than PNG and JPEG. If the image is actually a video, you'll need ffmpeg.
-##'
-##' @param im an image (of class cimg)
-##' @param file path to file. The format is determined by the file's name
-##' @return nothing
-##' @export
-##' @examples
-##' #Create temporary file
-##' tmpF <- tempfile(fileext=".png")
-##' #Save boats image
-##' save.image(boats,tmpF)
-##' #Read back and display
-##' load.image(tmpF) %>% plot
-save.image <- function(im,file)
-    {
-        ftype <- stringr::str_match(file,"\\.(.+)$")[1,2]
-        if (ftype == "png")
-        {
-            save.png(im,file)
-        }
-        else if (ftype == "jpeg" | ftype == "jpg")
-        {
-            save.jpeg(im,file)
-        }
-        else
-        {
-            if (has.magick())
-            {
-                save_image(im,path.expand(file))
-            }
-            else
-            {
-                stop("Unsupported output file format. Use jpg/png or install ImageMagick")
-            }
-        }
-    }
-
-save.png <- function(im,file)
-    {
-        convert.im.toPNG(im) %>% png::writePNG(file) 
-    }
-
-save.jpeg <- function(im,file)
-    {
-        convert.im.toPNG(im) %>% jpeg::writeJPEG(file)
-    }
-
-convert.im.toPNG <- function(A)
-    {
-        if (any(A > 1) | any(A < 0))
-            {
-                A <-  rn(A)
-            }
-        A <- imrotate(A,90) %>% mirror("x") 
-        dim(A) <- dim(A)[-3]
-        A
-    }
-
-
 
 
 
@@ -684,10 +555,10 @@ squeeze <- function(x) {
 }
 
 
-##' Add colour channels to an grayscale image
+##' Add colour channels to a grayscale image or pixel set
 ##'
 ##' @param im a grayscale image
-##' @param simple if TRUE just stack three copies of the grayscale image, if FALSE treat the image as the L channel in an HSL representation. Default TRUE.
+##' @param simple if TRUE just stack three copies of the grayscale image, if FALSE treat the image as the L channel in an HSL representation. Default TRUE. For pixel sets this option makes no sense and is ignored. 
 ##' @return an image of class cimg
 ##' @author Simon Barthelme
 ##' @examples
@@ -696,16 +567,28 @@ squeeze <- function(x) {
 ##' @export
 add.colour <- function(im,simple=TRUE)
 {
-    if (spectrum(im)!=1) stop('Image already has colour channels')
-    if (simple)
+    if (is.cimg(im))
         {
-            imappend(list(im,im,im),"c")
+            if (spectrum(im)!=1) stop('Image already has colour channels')
+            if (simple)
+            {
+                imappend(list(im,im,im),"c")
+            }
+            else
+            {
+                imappend(list(0*im,0*im,im),"c") %>% HSLtoRGB
+            }
         }
-    else
+    else if (is.pixset(im))
         {
-            imappend(list(0*im,0*im,im),"c") %>% HSLtoRGB
+            if (spectrum(im)!=1) stop('Image already has colour channels')
+            rep(im,3) %>% array(dim=c(dim(im)[1:3],3)) %>% pixset
         }
 }
+
+##' @export
+##' @describeIn add.colour Alias for add.colour
+add.color <- function(im,simple=TRUE) add.colour(im,simple)
 
 inda <- list('x'=1,'y'=2,'z'=3,'c'=4)
 
@@ -772,11 +655,6 @@ pad <- function(im,nPix,axes,pos=0,val=0)
 .onUnload <- function (libpath) {
   library.dynam.unload("imager", libpath)
 }
-
-
-
-
-
 
 
 
@@ -1034,7 +912,7 @@ NULL
 #' Press escape or close the window to exit.
 #'
 #' @param x an image (cimg object)
-#' @param rescale if true pixel values are rescaled to 0...255 (default TRUE)
+#' @param rescale if true pixel values are rescaled to [0-1] (default TRUE)
 #' @param ... ignored
 #' @export
 #' @examples
@@ -1045,7 +923,7 @@ NULL
 #' ##display(boats/2,FALSE) #Normalisation off, so different from above
 display.cimg <- function(x,...,rescale=TRUE)
 {
-    display_(x,rescale)
+    display_(x*255,rescale)
 }
 
 ##' Display object using CImg library

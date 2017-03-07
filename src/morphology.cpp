@@ -39,13 +39,29 @@ double tolerance=0)
   return wrap(img);
 }
 
+// [[Rcpp::export]]
+NumericVector blabel(LogicalVector im,bool high_connectivity=false)
+{
+    CIb img = as<CIb >(im);
+    CId out;
+    try{
+      out = img.get_label(high_connectivity,0);
+    }
+    catch(CImgException &e){
+      forward_exception_to_r(e);
+    }
+    return wrap(out);
+}
+
+
+
 //' Erode/dilate image by a structuring element.
 //'
 //' @param im an image
 //' @param size size of the structuring element.
 //' @param mask Structuring element.
-//' @param boundary_conditions Boundary conditions.
-//' @param normalise Determines if the closing is locally normalised (default FALSE)
+//' @param boundary_conditions Boundary conditions. If FALSE, pixels beyond image boundaries are considered to be 0, if TRUE one. Default: TRUE.
+//' @param real_mode If TRUE, perform erosion as defined on the reals. If FALSE, perform binary erosion (default FALSE).
 //' @export
 //' @examples
 //' fname <- system.file('extdata/Leonardo_Birds.jpg',package='imager')
@@ -60,11 +76,11 @@ double tolerance=0)
 //' plot(dilate_rect(outline,5,10))
 //' plot(dilate_square(outline,5)) 
 // [[Rcpp::export]]
-NumericVector erode(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
+NumericVector erode(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool real_mode=false) {
   CId img = as<CId >(im);
   try{
     CId msk = as<CId >(mask);
-    img.erode(msk,boundary_conditions,normalise);
+    img.erode(msk,boundary_conditions,real_mode);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
@@ -72,6 +88,21 @@ NumericVector erode(NumericVector im,NumericVector mask, bool boundary_condition
   }
   return wrap(img);
 }
+
+
+// [[Rcpp::export]]
+LogicalVector berode(LogicalVector im,LogicalVector mask, bool boundary_conditions=true) {
+  CIb img = as<CIb >(im);
+  try{
+    CIb msk = as<CIb >(mask);
+    img.erode(msk,boundary_conditions,false);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+  }
+  return wrap(img);
+}
+
 
 //' @describeIn erode Erode image by a rectangular structuring element of specified size.
 //' @param sx Width of the structuring element.
@@ -91,6 +122,20 @@ NumericVector erode_rect(NumericVector im,int sx,int sy,int sz=1) {
   return wrap(img);
 }
 
+// [[Rcpp::export]]
+LogicalVector berode_rect(LogicalVector im,int sx,int sy,int sz=1) {
+  CIb img = as<CIb >(im);
+  try{
+    img.erode(sx,sy,sz);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
+
 //' @describeIn erode Erode image by a square structuring element of specified size.
 //'
 //' @export
@@ -107,14 +152,11 @@ NumericVector erode_square(NumericVector im,int size) {
   return wrap(img);
 }
 
-//' @describeIn erode Dilate image by a structuring element.
-//' @export
 // [[Rcpp::export]]
-NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
-  CId img = as<CId >(im);
-  CId msk = as<CId >(mask);
+LogicalVector berode_square(LogicalVector im,int size) {
+  CIb img = as<CIb >(im);
   try{
-    img.dilate(msk,boundary_conditions,normalise);
+    img.erode(size);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
@@ -122,6 +164,38 @@ NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditio
   }
   return wrap(img);
 }
+
+
+//' @describeIn erode Dilate image by a structuring element.
+//' @export
+// [[Rcpp::export]]
+NumericVector dilate(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool real_mode = false) {
+  CId img = as<CId >(im);
+  CId msk = as<CId >(mask);
+  try{
+    img.dilate(msk,boundary_conditions,real_mode);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
+// [[Rcpp::export]]
+LogicalVector bdilate(LogicalVector im,LogicalVector mask, bool boundary_conditions=true) {
+  CIb img = as<CIb >(im);
+  CIb msk = as<CIb >(mask);
+  try{
+    img.dilate(msk,boundary_conditions,false);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
 
 //' @describeIn erode Dilate image by a rectangular structuring element of specified size
 //' @export
@@ -134,6 +208,19 @@ NumericVector dilate_rect(NumericVector im,int sx,int sy,int sz=1) {
   catch(CImgException &e){
     forward_exception_to_r(e);
     
+  }
+  return wrap(img);
+}
+
+
+// [[Rcpp::export]]
+LogicalVector bdilate_rect(LogicalVector im,int sx,int sy,int sz=1) {
+  CIb img = as<CIb >(im);
+  try{
+    img.dilate(sx,sy,sz);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
   }
   return wrap(img);
 }
@@ -152,6 +239,20 @@ NumericVector dilate_square(NumericVector im,int size) {
   }
   return wrap(img);
 }
+
+// [[Rcpp::export]]
+LogicalVector bdilate_square(LogicalVector im,int size) {
+  CIb img = as<CIb >(im);
+  try{
+    img.dilate(size);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+    
+  }
+  return wrap(img);
+}
+
 
 //' Compute watershed transform.
 //'
@@ -223,15 +324,30 @@ NumericVector distance_transform(NumericVector im,double value,unsigned int metr
 }
 
 
+// [[Rcpp::export]]
+NumericVector bdistance_transform(LogicalVector im,bool value=true,unsigned int metric=2)
+{
+  CIb img = as<CIb >(im);
+  CId out;
+  try{
+    out = img.get_distance(value,metric);
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
+  }
+  return wrap(out);
+}
+
+
 //' @describeIn erode Morphological opening (erosion followed by dilation)
 //' @export
 // [[Rcpp::export]]
-NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
+NumericVector mopening(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool real_mode = false) {
   CId img = as<CId >(im);
 
   try{
     CId msk = as<CId >(mask);
-    img.erode(msk,boundary_conditions,normalise).dilate(msk,boundary_conditions,normalise);
+    img.erode(msk,boundary_conditions,real_mode).dilate(msk,boundary_conditions,real_mode);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
@@ -274,12 +390,12 @@ NumericVector mclosing_square(NumericVector im,int size) {
 //' @describeIn erode Morphological closing (dilation followed by erosion)
 //' @export
 // [[Rcpp::export]]
-NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool normalise = false) {
+NumericVector mclosing(NumericVector im,NumericVector mask, bool boundary_conditions=true,bool real_mode = false) {
   CId img = as<CId >(im);
 
   try{
     CId msk = as<CId >(mask);
-    img.dilate(msk,boundary_conditions,normalise).erode(msk,boundary_conditions,normalise);
+    img.dilate(msk,boundary_conditions,real_mode).erode(msk,boundary_conditions,real_mode);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);

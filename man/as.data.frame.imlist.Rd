@@ -11,7 +11,7 @@
 
 \item{...}{Passed on to as.data.frame.cimg}
 
-\item{index}{Name of the colum containing the index (or name) of the image in the list. Default: "im"}
+\item{index}{Name of the column containing the index (or name) of the image in the list. Default: "im"}
 }
 \description{
 Convert image list to data.frame

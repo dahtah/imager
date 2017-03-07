@@ -125,7 +125,7 @@ NumericVector medianblur(NumericVector im,int n, float threshold=0) {
 
 //' Blur image with a box filter (square window)
 //' @param im an image
-//' @param sigma Size of the box window.
+//' @param boxsize Size of the box window (can be subpixel).
 //' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
 //' @seealso deriche(), vanvliet().
 //' @examples
@@ -133,14 +133,34 @@ NumericVector medianblur(NumericVector im,int n, float threshold=0) {
 //' boxblur(boats,5,TRUE) %>% plot(main="Neumann boundary")
 //' @export
 // [[Rcpp::export]]
-NumericVector boxblur(NumericVector im,float sigma,bool neumann=true) {
+NumericVector boxblur(NumericVector im,float boxsize,bool neumann=true) {
   CId img = as<CId >(im);
   try{
-    img.blur_box(sigma,neumann);
+    img.blur_box(boxsize,neumann);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
     
+  }
+  return wrap(img);
+}
+
+
+//' Compute image Laplacian
+//'
+//' The Laplacian is the sum of second derivatives, approximated here using finite differences.
+//' @param im an image
+//' @examples
+//' imlap(boats) %>% plot
+//' @export
+// [[Rcpp::export]]
+NumericVector imlap(NumericVector im) {
+  CId img = as<CId >(im);
+  try{
+    img.laplacian();
+    }
+  catch(CImgException &e){
+    forward_exception_to_r(e);
   }
   return wrap(img);
 }

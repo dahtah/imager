@@ -27,7 +27,7 @@ autocrop(padded) \%>\% plot
 #the pixel won't get cropped. A fix is to do a bucket fill first
 padded <- isoblur(padded,10)
 autocrop(padded) \%>\% plot
-padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=20)
+padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=.1)
 autocrop(padded2) \%>\% plot
 }
 

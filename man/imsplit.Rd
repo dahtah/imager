@@ -12,7 +12,7 @@ imsplit(im, axis, nb = -1)
 \item{axis}{the axis along which to split (for example 'c')}
 
 \item{nb}{number of objects to split into. 
-if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels.}
+if nb=-1 (the default) the maximum number of splits is used, i.e. split(im,"c") produces a list containing all individual colour channels.}
 }
 \description{
 Use this if you need to process colour channels separately, or frames separately, or rows separately, etc. You can also use it to chop up an image into blocks.
@@ -24,6 +24,8 @@ imsplit(im,"z") #Split along the z axis into a list with 5 elements
 imsplit(im,"z",2) #Split along the z axis into two groups
 imsplit(boats,"x",-200) \%>\% plot #Blocks of 200 pix. along x
 imsplit(im,"z",2) \%>\% imappend("z") #Split and reshape into a single image
+#You can also split pixsets
+imsplit(boats > .5,"c") \%>\% plot
 }
 \seealso{
 imappend (the reverse operation)

@@ -50,6 +50,7 @@ as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
 ##' @param rescale rescale so that pixel values are in [0,1]? (subtract min and divide by range). default TRUE
 ##' @param colourscale a function that returns RGB values in hexadecimal
 ##' @param colorscale same as above in American spelling
+##' @param col.na which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour. 
 ##' @param ... ignored
 ##' @return a raster object
 ##' @seealso plot.cimg, rasterImage
@@ -60,9 +61,6 @@ as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
 ##' #By default as.raster rescales input values, so that:
 ##' all.equal(as.raster(boats),as.raster(boats/2)) #TRUE
 ##' #Setting rescale to FALSE changes that
-##' try(as.raster(boats,rescale=FALSE))
-##' #The above fails because the pixel values are in the wrong range
-##' boats <- boats/255 #Rescale to 0..1
 ##' as.raster(boats,rescale=FALSE) %>% plot
 ##' as.raster(boats/2,rescale=FALSE) %>% plot
 ##' #For grayscale images, a colourmap should take a single value and
@@ -71,7 +69,8 @@ as.data.frame.cimg <- function (x, ...,wide=c(FALSE,"c","d"))
 ##' cscale <- function(v) hsv(.5,v,1)
 ##' grayscale(boats) %>% as.raster(colourscale=cscale) %>% plot
 ##' @export
-as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NULL,...)
+as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,
+                           colorscale=NULL,col.na=rgb(0,0,0,0),...)
 {
     if (is.null(colorscale) && is.null(colourscale))
     {
@@ -94,6 +93,12 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NUL
     if (depth(im) == 1)
     {
         if (rescale) im <- renorm(im,0,1)
+        nas <- is.na(im)
+        has.na <- any(nas)
+        if (has.na)
+        {
+            im[nas] <- 0
+        }
         if (spectrum(im) == 1) #BW
         {
             dim(im) <- dim(im)[1:2]
@@ -107,6 +112,12 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NUL
             dim(r) <- dim(im)[2:1]
             class(r) <- "raster"
         }
+        if (has.na)
+        {
+            #Insert col.na where appropriate
+            ii <- where(nas)
+            r[cbind(ii$y,ii$x)] <- col.na
+        }
         r
     }
     else
@@ -115,6 +126,25 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,colorscale=NUL
         imager::frames(im,frames) %>% llply(as.raster.cimg)
     }
 }
+
+##' Convert a raster object to a cimg object
+##'
+##' R's native object for representing images is a "raster". This function converts raster objects to cimg objects. 
+##' @param obj a raster object
+##' @param ... ignored
+##' @return a cimg object
+##' @author Simon Barthelme
+##' @examples
+##' rst <- as.raster(matrix((1:4)/4,2,2))
+##' as.cimg(rst) %>% plot(int=FALSE)
+##' all.equal(rst,as.raster(as.cimg(rst)))
+##'
+##' @export
+as.cimg.raster <- function(obj,...)
+    {
+        map_il(1:3,~ col2rgb(obj)[.,] %>% matrix(dim(obj),byrow=TRUE) %>% as.cimg) %>% imappend("c") %>% imrotate(90) %>% mirror("x") 
+    }
+
 
 ##' Convert cimg to spatstat im object
 ##'
@@ -208,6 +238,10 @@ as.cimg.logical <- function(obj,...) as.cimg.vector(as.numeric(obj),...)
 ##' @describeIn as.cimg convert double
 ##' @export
 as.cimg.double <- function(obj,...) as.cimg.vector(obj,...)
+
+##' @describeIn as.cimg return object
+##' @export
+as.cimg.cimg <- function(obj,...) obj
 
 ##' @describeIn as.cimg convert vector
 ##' @export
@@ -396,3 +430,132 @@ as.matrix.cimg <- function(x,...) {
             stop("Too many non-empty dimensions")
         }
 }
+
+##' Convert an RGB image to grayscale 
+##' 
+##' This function converts from RGB images to grayscale 
+##' @param im an RGB image
+##' @param method either "Luma", in which case a linear approximation to luminance is used, or "XYZ", in which case the image is assumed to be in sRGB color space and CIE luminance is used.
+##' @param drop if TRUE returns an image with a single channel, otherwise keep the three channels (default TRUE)
+##' @return a grayscale image (spectrum == 1)
+##' @examples
+##' grayscale(boats) %>% plot
+##' #In many pictures, the difference between Luma and XYZ conversion is subtle 
+##' grayscale(boats,method="XYZ") %>% plot
+##' grayscale(boats,method="XYZ",drop=FALSE) %>% dim
+##' @export
+grayscale <- function(im,method="Luma",drop=TRUE)
+{
+    if (spectrum(im)==1)
+    {
+        warning("Image appears to already be in grayscale mode")
+        return(im)
+    }
+    else  if (spectrum(im) != 3)
+    {
+        stop("Image should have three colour channels")
+    }
+    if (method=="XYZ")
+    {
+        xyz <- sRGBtoRGB(im) %>% RGBtoXYZ 
+        im <- add.colour(G(xyz)) %>% XYZtoRGB %>% RGBtosRGB
+        if (drop)
+        {
+            R(im)
+        }
+        else
+        {
+            im
+        }
+    }
+    else if (method=="Luma")
+    {
+        bw <- .3*R(im)+.59*G(im)+.11*B(im)
+        if (drop)
+        {
+            bw
+        }
+        else
+        {
+            add.colour(bw)
+        }
+    }
+}
+
+#Converts a single frame from a magick image
+cvt.frame <- function(f){
+  f <- as.double(f)
+  d <- dim(f)
+  dim(f) <- c(d[1:2],1,4)
+  cimg(f) %>% imrotate(90) %>% mirror("x")
+}
+
+
+
+#' Convert a magick image to a cimg image or image list
+#'
+#' The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects. 
+#' @param obj an object of class "magick-image"
+#' @name magick
+#' @param ... ignored
+#' @return an object of class cimg or imlist
+#' @param alpha what do to with the alpha channel ("rm": remove and store as attribute, "flatten": flatten, "keep": keep). Default: "rm"
+#' @export
+#' @seealso flatten.alpha, rm.alpha
+#' @author Jan Wijffels, Simon Barthelme
+magick2imlist <- function(obj,alpha="rm",...)
+{
+    out <- map_il(seq_len(length(obj)), ~ cvt.frame(obj[[.]]))
+    if (alpha=="rm")
+    {
+        out <- map_il(out,rm.alpha)
+    }
+    else if (alpha=="flatten")
+    {
+        out <- map_il(out,flatten.alpha)
+    }
+    else if (alpha=="keep")
+        {
+            out
+        }
+    else
+    {
+        stop("alpha argument must be one of 'keep','rm','flatten'")
+    }
+}
+
+#' @rdname magick
+#' @export
+magick2cimg <- function(obj,alpha="rm",...)
+{
+    magick2imlist(obj,alpha=alpha) %>% imappend("z")
+}
+
+
+
+#' Convert a RasterLayer/RasterBrick to a cimg image/image list
+#'
+#' The raster library stores its data as "RasterLayer" and "RasterBrick" objects. The raster package can store its data  out-of-RAM, so in order not to load too much data the "maxpixels" argument sets a limit on how many pixels are loaded. 
+#' @param obj an object of class "RasterLayer"
+#' @param maxpixels max. number of pixels to load  (default 1e7)
+#' @name RasterPackage
+#' @param ... ignored
+#' @author  Simon Barthelme, adapted from the image method for RasterLayer by Robert J Hijmans
+#' @export
+'as.cimg.RasterLayer' <- function(obj, maxpixels=1e7, ...)  {
+    if (!requireNamespace("raster", quietly = TRUE)) {
+             stop("Package raster is needed for this function to work. Please install it.",
+      call. = FALSE)
+    }
+    x <- raster::sampleRegular(obj, maxpixels, asRaster=TRUE, useGDAL=TRUE)
+    y <- raster::yFromRow(x, nrow(x):1)
+    value <- as.vector(x) %>% t
+    x <- raster::xFromCol(x,1:ncol(x))
+    array(value,c(length(x),length(y),1,1)) %>% as.cimg 
+}
+
+#' @rdname RasterPackage
+#' @export
+'as.imlist.RasterStackBrick' <- function(obj, maxpixels=1e7, ...)  {
+    map(seq_len(raster::nlayers(obj)), ~ raster::raster(obj,.)) %>% map_il(~ as.cimg(.,maxpixels=maxpixels))
+}	

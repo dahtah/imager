@@ -2,6 +2,7 @@
 % Please edit documentation in R/conversions.R
 \name{as.cimg}
 \alias{as.cimg}
+\alias{as.cimg.cimg}
 \alias{as.cimg.double}
 \alias{as.cimg.logical}
 \alias{as.cimg.matrix}
@@ -16,6 +17,8 @@ as.cimg(obj, ...)
 \method{as.cimg}{logical}(obj, ...)
 
 \method{as.cimg}{double}(obj, ...)
+
+\method{as.cimg}{cimg}(obj, ...)
 
 \method{as.cimg}{vector}(obj, x = NA, y = NA, z = NA, cc = NA,
   dim = NULL, ...)
@@ -47,6 +50,8 @@ Imager implements various converters that turn your data into cimg objects. If y
 \item \code{logical}: convert logical
 
 \item \code{double}: convert double
+
+\item \code{cimg}: return object
 
 \item \code{vector}: convert vector
 

@@ -13,7 +13,7 @@ imfill(x = 1, y = 1, z = 1, val = 0, dim = NULL)
 
 \item{z}{depth (default 1)}
 
-\item{val}{fill-in values. Either a single value (for grayscale), or RGB values for colour}
+\item{val}{fill-in values. Either a single value (for grayscale), or RGB values for colour, or a character string for a colour (e.g. "blue")}
 
 \item{dim}{dimension vector (optional, alternative to specifying x,y,z)}
 }
@@ -27,6 +27,7 @@ This is a convenience function for quickly creating blank images, or images fill
 
 imfill(20,20) \%>\% plot #Blank image of size 20x20
 imfill(20,20,val=c(1,0,0)) \%>\% plot #All red image
+imfill(20,20,val="red") \%>\% plot #Same, using R colour name
 imfill(dim=dim(boats)) #Blank image of the same size as the boats image
 }
 \author{

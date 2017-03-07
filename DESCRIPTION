@@ -1,30 +1,31 @@
 Package: imager
 Type: Package
 Title: Image Processing Library Based on 'CImg'
-Version: 0.31
-Date: 2016-09-02
-Author: Simon Barthelme [aut, cre],
-    Antoine Cecchi [ctb]
-Authors@R: c(person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut","cre")),
-	   person("Antoine","Cecchi",email="antoine.cecchi@phelma.grenoble-inp.fr",role="ctb"))
+Version: 0.40
+Date: 2017-01-29
+Author: Simon Barthelme [aut, cre]
+Authors@R: person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut","cre"))
 Maintainer: Simon Barthelme <simon.barthelme@gipsa-lab.fr>
 Description: Fast image processing for images in up to 4 dimensions (two spatial
     dimensions, one time/depth dimension, one colour dimension). Provides most
     traditional image processing tools (filtering, morphology, transformations,
-    etc.) as well as various functions for easily analysing image data using R. The package wraps CImg, <http://cimg.eu>, a simple, modern C++ library for image processing.
+    etc.) as well as various functions for easily analysing image data using R. The
+    package wraps CImg, <http://cimg.eu>, a simple, modern C++ library for image
+    processing.
 License: LGPL
 Imports:
-    Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices,purrr,Cairo
+    Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices,purrr,Cairo,downloader
 Depends:
     R (>= 2.10.0),plyr,magrittr
 URL: http://dahtah.github.io/imager, https://github.com/dahtah/imager
 BugReports: https://github.com/dahtah/imager/issues
-SystemRequirements: fftw3
+SystemRequirements: fftw3,libtiff
 Enhances: spatstat
 LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 5.0.1
-Suggests: knitr,
+Suggests:
+    knitr,
     rmarkdown,ggplot2,dplyr,scales,
-    testthat,OpenMPController
+    testthat,OpenMPController,raster
 VignetteBuilder: knitr

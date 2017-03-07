@@ -7,13 +7,14 @@
 ##' @param x width (default 1)
 ##' @param y height (default 1)
 ##' @param z depth (default 1)
-##' @param val fill-in values. Either a single value (for grayscale), or RGB values for colour
+##' @param val fill-in values. Either a single value (for grayscale), or RGB values for colour, or a character string for a colour (e.g. "blue") 
 ##' @param dim dimension vector (optional, alternative to specifying x,y,z)
 ##' @return an image object (class cimg)
 ##' @examples
 ##' 
 ##' imfill(20,20) %>% plot #Blank image of size 20x20
 ##' imfill(20,20,val=c(1,0,0)) %>% plot #All red image
+##' imfill(20,20,val="red") %>% plot #Same, using R colour name
 ##' imfill(dim=dim(boats)) #Blank image of the same size as the boats image
 ##' @author Simon Barthelme
 ##' @export
@@ -22,6 +23,10 @@ imfill <- function(x=1,y=1,z=1,val=0,dim=NULL)
         if (!is.null(dim))
         {
             x <- dim[1];y <- dim[2];z <- dim[3]
+        }
+        if (is.character(val))
+        {
+            val <- col2rgb(val)[,1]/255
         }
         if (length(val) == 1)
             {

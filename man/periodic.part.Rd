@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{periodic.part}
 \alias{periodic.part}
-\title{Compute the periodic part of an image, using the periodic/smooth decomposition of Moisan (2009)}
+\title{Compute the periodic part of an image, using the periodic/smooth decomposition of Moisan (2011)}
 \usage{
 periodic.part(im)
 }
@@ -13,7 +13,7 @@ periodic.part(im)
 an image
 }
 \description{
-Moisan (2009) defines an additive image decomposition
+Moisan (2011) defines an additive image decomposition
 im = periodic + smooth
 where the periodic part shouldn't be too far from the original image. The periodic part can be used in frequency-domain analyses, to reduce the artifacts induced by non-periodicity.
 }

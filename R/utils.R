@@ -187,11 +187,11 @@ imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
 ##' renorm(-5:5) #Same as above
 renorm <- function(x,min=0,max=255)
     {
-        rg <- range(x)
-        if (any(!is.finite(rg)))
-            {
-                stop('Image contains non-finite values or NAs')
-            }
+        rg <- range(x,na.rm=TRUE)
+        ## if (any(!is.finite(rg)))
+        ##     {
+        ##         stop('Image contains non-finite values or NAs')
+        ##     }
         dr <- diff(rg)
         if (dr!=0)
             {
@@ -316,7 +316,7 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
             {
                 stop("Map should be a function with arguments x,y or x,y,z")
             }
-        wf <- llply(out,function(v) array(v,c(dim(im)[1:3],1))) %>% imappend("c")
+        wf <- purrr::map(out,function(v) array(v,c(dim(im)[1:3],1))) %>% { purrr::map(.,as.cimg) } %>% imappend("c")
         mode <- (direction=="forward")*2+(coordinates=="relative")
         warp(im,wf,mode=mode,interpolation=switch(interpolation,nearest=0,linear=1,cubic=2),boundary_conditions=switch(boundary,dirichlet=0,neumann=1,periodic=2))
     }
@@ -401,7 +401,7 @@ imdirac <- function(dims,x,y,z=1,cc=1)
 ##' @param im the image
 ##' @param thr a threshold, either numeric, or "auto", or a string for quantiles 
 ##' @param approx Skip pixels when computing quantiles in large images (default TRUE)
-##' @return a thresholded image
+##' @return a pixset with the selected pixels 
 ##' @examples
 ##' im <- load.example("birds")
 ##' im.g <- grayscale(im)
@@ -435,10 +435,8 @@ threshold <- function(im,thr="auto",approx=TRUE)
                 }
         }
         a <- im > thr
-        b <- im <= thr
-        im[a] <- 1
-        im[b] <- 0
-        im
+        attr(a,"threshold") <- thr
+        a
     }
 
 #Find a cut-off point for a bimodal distribution using kmeans (similar to Otsu's method)
@@ -507,33 +505,6 @@ iminfo <- function(fname)
     }
 }
 
-##' Load example image
-##'
-##' Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another (birds) is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field (hubble).
-##' The test video ("tennis") comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
-##' @param name name of the example
-##' @return an image
-##' @author Simon Barthelme
-##' @examples
-##' load.example("hubble") %>% plot
-##' load.example("birds") %>% plot
-##' load.example("parrots") %>% plot
-##' @export
-load.example <- function(name)
-{
-    fnames <- list(parrots="parrots.png",hubble="HubbleDeepField.jpg",
-                   tennis="tennis_sif.mpeg",birds="Leonardo_Birds.jpg")
-    if (name %in% names(fnames))
-    {
-        paste0('extdata/',fnames[name]) %>% system.file(package='imager') %>% load.image
-    }
-    else
-    {
-        msg <- 'Unknown example picture. Available: %s'
-        msg <- sprintf(msg,paste(names(fnames),collapse=","))
-        stop(msg)
-    }
-}
 
 ##' Crop the outer margins of an image 
 ##'
@@ -702,7 +673,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 #' #the pixel won't get cropped. A fix is to do a bucket fill first
 #' padded <- isoblur(padded,10)
 #' autocrop(padded) %>% plot
-#' padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=20)
+#' padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=.1)
 #' autocrop(padded2) %>% plot
 autocrop <- function(im,color=color.at(im,1,1),axes="zyx")
 {
@@ -739,4 +710,129 @@ cimg.use.openmp <- function(mode="adaptive")
             stop("Unknown mode, should be one of 'never','adaptive', or 'always'")
         }
     NULL
+}
+
+##' Return contours of image/pixset
+##'
+##' This is just a light interface over contourLines. See help for contourLines for details.
+##' If the image has more than one colour channel, return a list with the contour lines in each channel.
+##' Does not work on 3D images. 
+##' @param x an image or pixset
+##' @param nlevels number of contour levels. For pixsets this can only equal two. 
+##' @param ... extra parameters passed to contourLines
+##' @return a list of contours
+##' @author Simon Barthelme
+##' @seealso highlight
+##' @examples
+##' boats.gs <- grayscale(boats)
+##' ct <- contours(boats.gs,nlevels=3)
+##' plot(boats.gs)
+##' #Add contour lines
+##' purrr::walk(ct,function(v) lines(v$x,v$y,col="red"))
+##' #Contours of a pixel set
+##' px <- boats.gs > .8
+##' plot(boats.gs)
+##' ct <- contours(px)
+##' #Highlight pixset
+##' purrr::walk(ct,function(v) lines(v$x,v$y,col="red"))
+##' @export
+contours <- function(x,nlevels, ...) {
+   UseMethod("contours", x)
+ }
+
+##' @export
+contours.cimg <- function(x,nlevels=10,...)
+{
+    if (spectrum(x) > 1)
+    {
+        channels(x) %>% map(function(v) contours(v,nlevels=nlevels,...))
+    }
+    else if (depth(x) > 1)
+    {
+        stop("This function only works on 2D images")
+    }
+    else
+        {
+            out <- as.matrix(x) %>% contourLines(1:width(x),1:height(x),.,nlevels=nlevels,...)
+            out
+        }
+}
+
+
+##' @export
+contours.pixset <- function(x,nlevels=NULL,...)
+{
+    if (spectrum(x) > 1)
+    {
+        channels(x) %>% map(as.pixset) %>% map(function(v) contours(v,...))
+    }
+    else if (depth(x) > 1)
+    {
+        stop("This function only works on 2D pixel sets")
+    }
+    else
+        {
+            out <- as.matrix(x) %>% contourLines(1:width(x),1:height(x),.,nlevels=2,levels=c(0,1))
+            out
+        }
+}
+
+##' Remove alpha channel and store as attribute
+##'
+##' @param im an image with 4 RGBA colour channels 
+##' @return an image with only three RGB channels and the alpha channel as attribute
+##' @examples
+##' #An image with 4 colour channels (RGBA)
+##' im <- imfill(2,2,val=c(0,0,0,0))
+##' #Remove fourth channel
+##' rm.alpha(im) 
+##' attr(rm.alpha(im),"alpha")
+##' @author Simon Barthelme
+##' @seealso flatten.alpha
+##' @export
+rm.alpha <- function(im)
+{
+    if (spectrum(im)==4)
+    {
+        alpha <- imsub(im,cc==4)
+        im <- imsub(im,cc<=3)
+        attr(im,"alpha") <- alpha
+    }
+    im
+}
+
+##' Flatten alpha channel
+##'
+##' @param im an image (with 4 RGBA colour channels)
+##' @param bg background: either an RGB image, or a vector of colour values, or a string (e.g. "blue"). Default: white background.
+##' @return a blended image
+##' @seealso rm.alpha
+##' @examples
+##' #Add alpha channel
+##' alpha <- Xc(grayscale(boats))/width(boats)
+##' boats.a <- imlist(boats,alpha) %>% imappend("c")
+##' flatten.alpha(boats.a) %>% plot
+##' flatten.alpha(boats.a,"darkgreen") %>% plot
+##' @author Simon Barthelme
+##' @export
+flatten.alpha <- function(im,bg="white")
+{
+    if (spectrum(im)==4)
+    {
+        a <- channel(im,4) %>% add.colour
+        im <- rm.alpha(im)
+        if (is.vector(bg) || is.character(bg))
+        {
+            bg <- imfill(dim=dim(im),val=bg)
+        }
+        else
+        {
+            stop("Unrecognised format for bg argument")
+        }
+        im*a + bg*(1-a)
+    }
+    else
+    {
+        im
+    }
 }

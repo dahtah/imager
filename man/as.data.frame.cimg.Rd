@@ -11,7 +11,7 @@
 
 \item{...}{arguments passed to pixel.grid}
 
-\item{wide}{if "c" or "d" return a data.frame that is wide along colour or depth (for example with rgb values along columns). The default is FALSE, with each pixel forming a seperate entry.}
+\item{wide}{if "c" or "d" return a data.frame that is wide along colour or depth (for example with rgb values along columns). The default is FALSE, with each pixel forming a separate entry.}
 }
 \value{
 a data.frame

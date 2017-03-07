@@ -35,6 +35,6 @@ plot(boats,main="Original")
 plot(boats.new,main="New sails")
 }
 \seealso{
-bucket_select
+selectSimilar
 }
 

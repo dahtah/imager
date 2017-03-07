@@ -1,3 +1,4 @@
+
 mplot <- function(im,...)
     {
         graphics::par(mar=rep(0,4),omi=rep(0,4))
@@ -32,7 +33,8 @@ flattenAlpha <- function(im)
 ##' draw.fun <- function() text(150,50,"Boats!!!",cex=3)
 ##' out <- implot(im,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
 ##' plot(out)
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
+##' @export
 implot <- function(im,expr,...)
     {
         w <- width(im)
@@ -41,8 +43,6 @@ implot <- function(im,expr,...)
         out <- try({
             mplot(im,interp=FALSE,...)
             eval(expr,parent.frame())
-            ptr <- Cairo:::.image(grDevices::dev.cur())
-            b <- Cairo:::.ptr.to.raw(ptr$ref,0,ptr$width*ptr$height*4) %>% as.integer
             },TRUE)
         if (is(out,"try-error"))
             {
@@ -50,14 +50,11 @@ implot <- function(im,expr,...)
                 stop(out)
             }
         else
-            {
-                grDevices::dev.off()
-                
-                ## ch <- c(3,2,1,0)
-                ## ind <- seq_along(b)
-                ## im <- map(ch, ~ b[(ind %% 4)==.]) %>% map(~ as.cimg(.,dim=c(w,h,1,1))) %>% imappend("c")
-                mat <- t(matrix(b,4,length(b)/4)[c(3,2,1,4),])
-                dim(mat) <- c(w,h,1,4)
-                as.cimg(mat) %>% flattenAlpha 
-            }
+        {
+            out <- capture.plot()/255
+            grDevices::dev.off()
+            out
+        }
     }
+
+

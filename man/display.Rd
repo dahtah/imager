@@ -12,7 +12,7 @@ display(x, ...)
 \item{...}{ignored}
 }
 \description{
-CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in Rstudio.
+CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in RStudio.
 }
 \seealso{
 display.cimg, display.imlist

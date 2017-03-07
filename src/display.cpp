@@ -20,11 +20,11 @@ void display_(NumericVector im,bool rescale=true)
    CImgDisplay disp(img,"",norm,false,false);
    while (true)
       {
-	if (disp.is_closed() or disp.is_key(cimg::keyESC))
-	  {
-	    break;
-	  }
-	Rcpp::checkUserInterrupt();
+   	if (disp.is_closed() or disp.is_key(cimg::keyESC))
+   	  {
+   	    break;
+   	  }
+   	Rcpp::checkUserInterrupt();
       }
 
    return;
@@ -34,7 +34,7 @@ void display_(NumericVector im,bool rescale=true)
 void display_list(List imlist)
 {
    CImgList<double> L = sharedCImgList(imlist);
-   L.display();
+   L.display("",false);
    return;
 }
 
@@ -60,7 +60,8 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
   else
     {
       norm = 0;
-     }
+      img = 255*img;
+    }
   
   CImgDisplay disp(img.get_slice(0),"Video player",norm,false,false);
   int i = 0,n=img.depth();
@@ -71,12 +72,11 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
 	//Time to update the display
 	if ((dt >= delay) and (!pause))
 	  {
-	    img.get_slice(i).display(disp);
-	    if (i == n)
+	    if (i == n-1)
 	      {
 		if (loop)
 		  {
-		    i = 0;
+		    i = -1;
 		  }
 		else {
 		  break;
@@ -84,6 +84,8 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
 	      }
 	    t0 = cimg::time();
 	    i++;
+	    img.get_slice(i).display(disp);
+
 	  }
 	
 	if (disp.is_closed() or disp.is_key(cimg::keyESC))
