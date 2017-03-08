@@ -53,11 +53,18 @@ or [click here](gettingstarted.html).
 
 The tutorial covers basic image manipulation, plotting use base graphics and ggplot2, getting image data in and out, and an example of multiscale blob detection.
 
+The next step is to learn about pixsets, which are used to represent sets of pixels (e.g., the foreground in an image).
+
+		vignette("pixsets",package="imager")
+
+The vignette includes an example of image segmentation. 
+
+
 ## Documentation
 
 ### General package documentation 
 
-Most functions are described in the general package [documentation](imager.html). The automatically generated docs are [here](https://cran.r-project.org/web/packages/imager/imager.pdf), and come with examples. 
+Many functions are described in the general package [documentation](imager.html). The automatically generated docs are [here](https://cran.r-project.org/web/packages/imager/imager.pdf), and come with examples. 
 
 ### FAQ
 
@@ -67,8 +74,10 @@ See here for [Frequently Asked Questions](FAQ.html).
 
 There's also a number of tutorials and case studies:
 
+- imager as an [image editor](gimptools.html). Where do I find the bucket tool in imager?
 - how to [parallelise](parallel.html) computations 
 - how to write fast functional code: [a loop-free Canny edge detector](canny.html)
+- image splitting, simplification and recursive data structures: [quad-trees](quadtrees.html)
 - a [tutorial](image_stats.html) on natural image statistics using imager
 - another (incomplete) tutorial on [morphology and detrending](morphology.html)
 - a [tutorial](foreground_background.html) on [foreground/background segmentation](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/)

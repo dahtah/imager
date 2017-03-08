@@ -165,12 +165,15 @@ imager: an R package for image processing
 <pre><code>vignette(&quot;gettingstarted&quot;,package=&quot;imager&quot;)</code></pre>
 <p>or <a href="gettingstarted.html">click here</a>.</p>
 <p>The tutorial covers basic image manipulation, plotting use base graphics and ggplot2, getting image data in and out, and an example of multiscale blob detection.</p>
+<p>The next step is to learn about pixsets, which are used to represent sets of pixels (e.g., the foreground in an image).</p>
+<pre><code>    vignette(&quot;pixsets&quot;,package=&quot;imager&quot;)</code></pre>
+<p>The vignette includes an example of image segmentation.</p>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
 <div id="general-package-documentation" class="section level3">
 <h3>General package documentation</h3>
-<p>Most functions are described in the general package <a href="imager.html">documentation</a>. The automatically generated docs are <a href="https://cran.r-project.org/web/packages/imager/imager.pdf">here</a>, and come with examples.</p>
+<p>Many functions are described in the general package <a href="imager.html">documentation</a>. The automatically generated docs are <a href="https://cran.r-project.org/web/packages/imager/imager.pdf">here</a>, and come with examples.</p>
 </div>
 <div id="faq" class="section level3">
 <h3>FAQ</h3>
@@ -180,8 +183,10 @@ imager: an R package for image processing
 <h3>Tutorials, case studies, etc.</h3>
 <p>There’s also a number of tutorials and case studies:</p>
 <ul>
+<li>imager as an <a href="gimptools.html">image editor</a>. Where do I find the bucket tool in imager?</li>
 <li>how to <a href="parallel.html">parallelise</a> computations</li>
 <li>how to write fast functional code: <a href="canny.html">a loop-free Canny edge detector</a></li>
+<li>image splitting, simplification and recursive data structures: <a href="quadtrees.html">quad-trees</a></li>
 <li>a <a href="image_stats.html">tutorial</a> on natural image statistics using imager</li>
 <li>another (incomplete) tutorial on <a href="morphology.html">morphology and detrending</a></li>
 <li>a <a href="foreground_background.html">tutorial</a> on <a href="http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/">foreground/background segmentation</a></li>

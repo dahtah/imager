@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Quad-trees</title>
+
+<script src="quadtrees_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="quadtrees_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="quadtrees_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="quadtrees_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="quadtrees_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="quadtrees_files/highlight/default.css"
+      type="text/css" />
+<script src="quadtrees_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="quadtrees_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Quad-trees</h1>
+
+</div>
+
+
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<p>The following is a implemention in imager of <a href="https://github.com/fogleman/Quads">Quads</a> by Michael Fogleman. It illustrates the use of imager, purrr and recursion to work with recursive data structures.</p>
+<p><img src="quadtrees_apple.gif" width="624"/></p>
+<p>A quadtree is a recursive data-structure that subdivides an image into four quadrants, which can themselves be subdivided into sub-quadrants, etc. For compression, we build a quadtree such that image regions that are unhomogeneous are divided more finely. Homogenous image regions are simply assigned their mean colour.</p>
+<p>Subdividing can be done using “imsplit”</p>
+<pre class="r"><code>library(imager)
+library(purrr)
+
+im &lt;- load.example(&#39;parrots&#39;) %&gt;% imresize(.5)
+
+#Divide along x, then y
+qsplit &lt;- function(im)
+{
+    imsplit(im,&quot;x&quot;,2) %&gt;% map(~ imsplit(.,&quot;y&quot;,2)) %&gt;%
+        flatten 
+}
+
+qsplit(im) %&gt;% as.imlist %&gt;% plot</code></pre>
+<p><img src="quadtrees_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
+<p>The inverse operation uses “imappend”:</p>
+<pre class="r"><code>qunsplit &lt;- function(l)
+{
+    list(l[1:2],l[3:4]) %&gt;% map(~ imappend(.,&quot;y&quot;)) %&gt;% imappend(&quot;x&quot;)
+}
+
+qsplit(im) %&gt;% qunsplit %&gt;% plot</code></pre>
+<p><img src="quadtrees_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
+<p>The algorithm works by iterative refinement: at each iteration we find the least homogeneous region, and split it into four quadrants. Homogeneity is measured by the standard deviation of pixel values:</p>
+<pre class="r"><code>#Max std. dev across channels
+imsd &lt;- function(im)
+{
+    imsplit(im,&quot;c&quot;) %&gt;% map_dbl(sd) %&gt;% max
+}</code></pre>
+<p>The refinement function is recursive. It traverses the tree depth-first, looking for the least-homogeneous leaf (leaves are image regions).</p>
+<pre class="r"><code>refine &lt;- function(l)
+{
+    if (is.cimg(l)) #We have a leaf
+    {
+        qs &lt;- qsplit(l) #Split
+        if (any(dim(l)[1:2] &lt;= 4)) #Quadrants are very small
+        {
+            qs$sds &lt;- rep(0,4) #Prevent further refinement
+        }
+        else
+        {
+            qs$sds &lt;- map_dbl(qs,imsd) #Store std.dev of children
+        }
+        qs
+    }
+    else #Not a leaf, explore further
+    {
+        indm &lt;- which.max(l$sds) #Find child with max. std. dev
+        l[[indm]] &lt;- refine(l[[indm]]) #Refine
+        l$sds[indm] &lt;- max(l[[indm]]$sds) #Update std. dev
+        l
+    }
+}</code></pre>
+<p>Refinement will produce ever-deeper trees. To visualise them, we need to reconstruct an image from the tree. That’s the job of <em>rebuild</em>, which again is recursive:</p>
+<pre class="r"><code>rebuild &lt;- function(l,borders=FALSE)
+{
+    map(l[-5],~ if (is.cimg(.)) meanim(.,borders=borders) else rebuild(.,borders=borders)) %&gt;% qunsplit
+}
+
+#Produce an image that&#39;s just the average of image im
+#Optionally, add borders
+meanim &lt;- function(im,borders=FALSE)
+{
+    im &lt;- imsplit(im,&quot;c&quot;) %&gt;% map(~ 0*. + mean(.)) %&gt;% imappend(&quot;c&quot;)
+    if (borders)
+    {
+        im[px.borders(im)] &lt;- 0
+    }
+    im
+}</code></pre>
+<p>The way rebuild works is as follows: look at the current node. If the node is a leaf, approximate it. If the node has children, call rebuild on the children and recombine them using qunsplit.</p>
+<pre class="r"><code>iter.refine &lt;- function(im,nIter)
+{
+    for (i in seq_len(nIter)) { im &lt;- refine(im) };
+    im
+}
+
+#The first four iterations of the process
+map_il(1:4,~ iter.refine(im,.) %&gt;% rebuild) %&gt;% plot</code></pre>
+<p><img src="quadtrees_files/figure-html/unnamed-chunk-6-1.png" width="624" /></p>
+<pre class="r"><code>#After 200 iterations
+iter.refine(im,200) %&gt;% rebuild(borders=T) %&gt;% plot</code></pre>
+<p><img src="quadtrees_files/figure-html/unnamed-chunk-6-2.png" width="624" /></p>
+<p>The next image is an animation showing the first 1,000 steps of the process:</p>
+<p><img src="quadtrees_parrots.gif" width="624"/></p>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
