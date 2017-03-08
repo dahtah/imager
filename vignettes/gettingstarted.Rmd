@@ -338,7 +338,7 @@ We'll see more interesting uses for **ggplot2** later.
 
 # Blob detection/extraction of local maxima, denoising, scale-space
 
-Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for [scikit-image](http://scikit-image.org/docs/dev/auto_examples/features_detection/plot_blob.html))
+Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for [scikit-image](http://scikit-image.org/))
 
 ```{r}
 hub <- load.example("hubble") %>% grayscale
@@ -576,19 +576,20 @@ All functions are documented.
 
 ## Loading, saving, reading image information
 
-- load.image,save.image,iminfo
+- load.image,save.image,iminfo,load.video,save.video
 - plot.cimg, display, display_list, play, renorm
 - width, height, depth, spectrum,nPix
 
 ## Accessing image data, converting to and from other data structures
 
 
-
 ### Conversions
 
 - as.data.frame.cimg, as.matrix.cimg, as.array.cimg, squeeze
 - as.cimg, cimg
-- im2cimg,cimg2im
+- im2cimg,cimg2im (spatstat)
+- as.cimg.RasterLayer (raster package)
+- magick2cimg (magick)
 
 ### Image parts
 
@@ -614,6 +615,7 @@ All functions are documented.
 - capture.plot
 - as.cimg.function
 - imnoise,imfill,imdirac
+- implot
 
 ## Modifying images
 
@@ -654,6 +656,8 @@ All functions are documented.
 
 - parmin, parmax, parmax.abs, which.parmax,which.parmin,parmin.abs
 - add, mult, enorm
+- parmedian, parvar, parsd
+- parorder
 
 ## Misc.
 

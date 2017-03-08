@@ -97,6 +97,7 @@ The package's author is Simon Barthelmé (Gipsa-lab, CNRS). The following people
 - Aaron Robotham
 - Martin Roth
 - Jan Wijffels
+- Hong Ooi
 
 Let me know if you're missing from the list! 
 

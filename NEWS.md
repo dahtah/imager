@@ -2,6 +2,7 @@
    * added pixset class to represent sets of pixels in an image (implemented as binary images). A test on an image (e.g., im > 0) results in a pixset object. Pixsets come with many convenience functions for plotting, manipulation, morphology, etc. They are described in the "pixsets" vignette. 
    * improved reductions (parmax, parmin, etc.). Most are now implemented in C++ and some run in parallel using OpenMP. A median combine operation (parmedian) has been added.
    * added load.video, save.video, make.video functions. Loading and saving videos used to be a bit fragile and platform-dependent, it should now be easier and more robust (also slower, sorry). It's now possible to load individual frames from a video. *You still need ffmpeg*. 
+   * to load images from URLs imager now uses the *downloader* package, which is more robust than the previous solution
    * it's now possible to import images from the raster package and from the magick package.
    * unified RGB representations so that every function expects RGB values to be in the [0-1] range. There used to be a conflict in expectations here, with R expecting [0-1] and CImg [0-255]. *This might break existing code* (albeit in minor ways). 
    * new function implot, lets you draw on an image using R's base graphics. 
@@ -10,6 +11,8 @@
    * improved plotting. The default is now to have a constant aspect ratio that matches the aspect ratio of the image. 
    * save.image now accepts a quality argument when saving JPEGs.
    * native support for TIFF, now supports non-integer values in TIFF files
+   * rm.alpha removes alpha channel, flatten.alpha flattens it
+   * imfill now accepts  colour names, e.g. `imfill(10,10,val='red')`
    * improved documentation and examples
    * added functions for conversion to/from CIELAB 
    
