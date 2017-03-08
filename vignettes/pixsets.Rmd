@@ -228,3 +228,96 @@ plot(boats)
 imsplit(px,"c") %>% parany %>% highlight
 
 ```
+
+
+# An example: segmentation with pixsets
+
+The following example is derived from the documentation for [scikit-image](http://scikit-image.org/docs/dev/user_guide/tutorial_segmentation.html). The objective is to segment the coins from the background. 
+
+```{r}
+im <- load.example("coins")
+plot(im)
+```
+
+A simple thresholding doesn't work because the illumination varies: 
+
+```{r}
+threshold(im) %>% plot
+```
+
+It's possible to correct the illumination using a linear model: 
+
+```{r}
+library(dplyr)
+d <- as.data.frame(im)
+##Subsamble, fit a linear model
+m <- sample_n(d,1e4) %>% lm(value ~ x*y,data=.) 
+##Correct by removing the trend
+im.c <- im-predict(m,d)
+out <- threshold(im.c)
+plot(out)
+```
+
+Although that's much better we need to clean this up a bit: 
+
+```{r}
+out <- clean(out,3) %>% imager::fill(7)
+plot(im)
+highlight(out)
+```
+
+Another approach is to use a watershed. We start from seeds regions representing known foreground and known background pixels: 
+```{r fig.width=8}
+bg <- (!threshold(im.c,"10%"))
+fg <- (threshold(im.c,"90%"))
+imlist(fg,bg) %>% plot(layout="row")
+#Build a seed image where fg pixels have value 2, bg 1, and the rest are 0
+seed <- bg+2*fg
+plot(seed)
+```
+
+The watershed transform will propagate background and foreground labels to neighbouring pixels, according to a priority map (the lower the priority, the slower the propagation). Using the priority map it's possible to prevent label propagation across image edges:
+
+```{r}
+edges <- imgradient(im,"xy") %>% enorm
+p <- 1/(1+edges)
+plot(p)
+```
+
+We run the watershed transform:
+
+```{r}
+ws <- (watershed(seed,p)==1)
+plot(ws)
+```
+
+We still need to fill in some holes and remove a spurious area. To fill in holes, we use a bucket fill on the background starting from the top-left corner: 
+
+```{r}
+ws <- bucketfill(ws,1,1,color=2) %>% {!( . == 2) }
+plot(ws)
+```
+
+To remove the spurious area one possibility is to use "clean":
+```{r}
+clean(ws,5) %>% plot
+```
+
+Another is to split the pixset into connected components, and remove ones with small areas:
+
+```{r}
+split_connected(ws) %>% purrr::discard(~ sum(.) < 100) %>%
+    parany %>% plot
+```
+
+Here's a comparison of the segmentations obtained using the two methods:
+
+```{r fig.width=8}
+layout(t(1:2))
+plot(im,main="Thresholding")
+highlight(out)
+
+plot(im,main="Watershed")
+out2 <- clean(ws,5)
+highlight(out2,col="green")
+```

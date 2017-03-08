@@ -5,7 +5,7 @@ Imager is an image/video processing package for R, based on [CImg](http://cimg.e
 
 ## Installing the package
 
-Imager is now on CRAN, so
+Imager is on CRAN, so
 
 	install.packages("imager")
 
@@ -26,6 +26,8 @@ Install [XQuartz](https://www.xquartz.org/) if you haven't already (it's require
 You'll need Xcode (OS X's development environment) to compile source packages. The FFTW library is needed, and the easiest way to install it is via [Homebrew](http://brew.sh/). Install Homebrew, then run:
 	brew install fftw
 
+Optionally, install libtiff for better support of TIFF files. 
+
 ### Windows
 
 Building R packages on Windows is a bit of a pain so you're probably better off with the binary package (which may not be up-to-date). If you need the latest version of imager, you'll have to:
@@ -35,16 +37,16 @@ Building R packages on Windows is a bit of a pain so you're probably better off 
 
 ### Linux
 
-To build under Linux make sure you have the headers for libX11 and libfftw3. On my Ubuntu system this seems to be enough:
+To build under Linux make sure you have the headers for libX11 and libfftw3 (optionally, libtiff as well). On my Ubuntu system this seems to be enough:
 
-	sudo apt-get install libfftw3-dev libX11-dev
+	sudo apt-get install libfftw3-dev libX11-dev libtiff-dev
 
 
 ### External dependencies
 
 OS X users need [XQuartz](https://www.xquartz.org/). 
-On its own imager only supports JPEG, PNG and BMP formats. If you need support for other file types install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php).
-To load videos you'll need [ffmpeg](http://ffmpeg.org/download.html), no file formats are supported natively.
+On its own imager supports JPEG, PNG, TIFF and BMP formats. If you need support for other file types install [ImageMagick](http://www.imagemagick.org/script/binary-releases.php).
+To load and save videos you'll need [ffmpeg](http://ffmpeg.org/download.html), no file formats are supported natively.
 
 
 ## Getting started 
@@ -86,12 +88,7 @@ Imager is fully functional but still young, so the API might change. Open an iss
 
 ## Contributing to imager
 
-If you want to add features or fix a bug, just fork this repository and send me a pull request (they're welcome). Documentation is great too: imager has got quite large over time, and it's in need of how-to's and tutorials! 
-
-## Test pictures
-
-Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field. 
-The test video comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
+If you want to add features or fix a bug, just fork this repository and send me a pull request (they're welcome). Consider contributing documentation too: imager has got quite large over time, and it's in need of more how-to's and tutorials! 
 
 ## Contributors 
 
@@ -102,3 +99,8 @@ The package's author is Simon Barthelmé (Gipsa-lab, CNRS). The following people
 - Jan Wijffels
 
 Let me know if you're missing from the list! 
+
+## Test pictures
+
+Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field. 
+The test video comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.

@@ -100,12 +100,13 @@ NULL
 ##' @param xaxs The style of axis interval calculation to be used for the x-axis. See ?par
 ##' @param yaxs The style of axis interval calculation to be used for the y-axis. See ?par
 ##' @param axes Whether to draw axes (default TRUE)
-##' @param col.na which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour. 
+##' @param col.na which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour.
+##' @param main Main title
 ##' @param ... other parameters to be passed to plot.default (eg "main")
 ##' @seealso display, which is much faster, as.raster, which converts images to R raster objects
 ##' @export
 ##' @examples
-##' plot(boats,main="Boats") #extra arguments are passed to default plot function
+##' plot(boats,main="Boats") 
 ##' plot(boats,axes=FALSE,xlab="",ylab="")
 ##'
 ##' #Pixel values are rescaled to 0-1 by default, so that the following two plots are identical
@@ -139,7 +140,7 @@ NULL
 ##' boats.small <- imresize(boats,.3)
 ##' plot(boats.small,interp=TRUE)
 ##' plot(boats.small,interp=FALSE)
-plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,axes=TRUE,xaxs="i",yaxs="i",asp=1,col.na=rgb(0,0,0,0),...)
+plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",ylab="y",rescale=TRUE,colourscale=NULL,colorscale=NULL,interpolate=TRUE,axes=TRUE,main="",xaxs="i",yaxs="i",asp=1,col.na=rgb(0,0,0,0),...)
 {
     if (nPix(x) == 0) stop("Empty image")
     im <- x
@@ -162,6 +163,7 @@ plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",yl
             {
                 plot(1,1,xlim=xlim,ylim=ylim,xlab=xlab,ylab=ylab,type="n",xaxs=xaxs,yaxs=yaxs,axes=axes,...)
                 as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale,col.na=col.na) %>% rasterImage(1,height(im),width(im),1,interpolate=interpolate)
+                title(main)
             }
         else if (is.numeric(asp))
         {
@@ -169,6 +171,7 @@ plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",yl
             plot.window(xlim = xlim, ylim = ylim,asp=asp,xaxs=xaxs,yaxs=yaxs,...)
             rst <- as.raster(im,rescale=rescale,colorscale=colorscale,colourscale=colourscale,col.na=col.na)
             rasterImage(rst, 1, nrow(rst), ncol(rst), 1,interpolate=interpolate)
+            title(main)
             if (axes) { axis(1); axis(2) }
         }
         else

@@ -250,7 +250,7 @@ convert.im.toPNG <- function(A)
 
 ##' Load example image
 ##'
-##' Imager ships with four test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another (birds) is a sketch of birds by Leonardo, from Wikimedia. Also from Wikimedia: the Hubble Deep field (hubble).
+##' Imager ships with five test pictures and a video. Two (parrots and boats) come from the [Kodak set](http://r0k.us/graphics/kodak/). Another (birds) is a sketch of birds by Leonardo, from Wikimedia. The "coins" image comes from scikit-image. The Hubble Deep field (hubble) is from Wikimedia.
 ##' The test video ("tennis") comes from [xiph.org](https://media.xiph.org/video/derf/)'s collection.
 ##' @param name name of the example
 ##' @return an image
@@ -263,7 +263,7 @@ convert.im.toPNG <- function(A)
 load.example <- function(name)
 {
     fnames <- list(parrots="parrots.png",hubble="HubbleDeepField.jpg",
-                   tennis="tennis_sif.mpeg",birds="Leonardo_Birds.jpg")
+                   tennis="tennis_sif.mpeg",birds="Leonardo_Birds.jpg",coins="coins.png")
     if (name %in% names(fnames))
     {
         fp <- paste0('extdata/',fnames[name]) %>% system.file(package='imager')

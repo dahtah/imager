@@ -6,8 +6,8 @@
 \usage{
 \method{plot}{cimg}(x, frame, xlim = c(1, width(x)), ylim = c(height(x), 1),
   xlab = "x", ylab = "y", rescale = TRUE, colourscale = NULL,
-  colorscale = NULL, interpolate = TRUE, axes = TRUE, xaxs = "i",
-  yaxs = "i", asp = 1, col.na = rgb(0, 0, 0, 0), ...)
+  colorscale = NULL, interpolate = TRUE, axes = TRUE, main = "",
+  xaxs = "i", yaxs = "i", asp = 1, col.na = rgb(0, 0, 0, 0), ...)
 }
 \arguments{
 \item{x}{the image}
@@ -30,6 +30,8 @@
 
 \item{axes}{Whether to draw axes (default TRUE)}
 
+\item{main}{Main title}
+
 \item{xaxs}{The style of axis interval calculation to be used for the x-axis. See ?par}
 
 \item{yaxs}{The style of axis interval calculation to be used for the y-axis. See ?par}
@@ -46,7 +48,7 @@ See examples for an explanation.
 If the image is one dimensional (i.e., a simple row or column image), then pixel values will be plotted as a line.
 }
 \examples{
-plot(boats,main="Boats") #extra arguments are passed to default plot function
+plot(boats,main="Boats") 
 plot(boats,axes=FALSE,xlab="",ylab="")
 
 #Pixel values are rescaled to 0-1 by default, so that the following two plots are identical
