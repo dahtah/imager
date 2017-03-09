@@ -127,8 +127,10 @@ $(document).ready(function () {
 library(tidyverse)
 library(imager)
 ##Optional: cowplot has nicer defaults for ggplot
-library(cowplot) 
-im &lt;- load.image(&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG&quot;) 
+library(cowplot) </code></pre>
+<pre><code>## Warning: `legend.margin` must be specified using `margin()`. For the old
+## behavior use legend.spacing</code></pre>
+<pre class="r"><code>im &lt;- load.image(&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Aster_Tataricus.JPG/1024px-Aster_Tataricus.JPG&quot;) 
 plot(im)</code></pre>
 <p><img src="ascii_art_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
 <p>The first strategy we’ll explore is to render pixels as characters, using darker characters for darker pixels.</p>

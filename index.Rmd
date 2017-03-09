@@ -72,12 +72,122 @@ See here for [Frequently Asked Questions](FAQ.html).
 
 ### Tutorials, case studies, etc. 
 
+<!--html_preserve-->
+<div class="row">
+
+<div class = "col-sm-6 col-md-3">
+
+    <div class="thumbnail">
+		<img src="gallery/canny.jpg" width="300px" />
+        <h3><a href="canny.html">Canny edge detector</a></h3>
+      <p> how to write fast functional code: a loop-free Canny edge detector </p>
+    </div>
+</div>
+
+<div class = "col-sm-6 col-md-3">
+
+  	<div class="thumbnail">
+	<img src="gallery/gimp-toolbox-icons.png" alt="gimp-toolbox-icons.png" />
+        <h3><a href="gimptools.html">Imager as an image editor</a></h3>
+      <p>Where do I find the bucket tool in imager?</p>
+    </div>
+</div>
+
+<div class = "col-sm-6 col-md-3">
+
+  	<div class="thumbnail">
+	<img src="quadtrees_apple.gif"  />
+        <h3><a href="quadtrees.html">Quadtrees</a></h3>
+      <p>Image splitting, simplification and recursive data structures.</p>
+    </div>
+</div>
+
+
+<div class = "col-sm-6 col-md-3">
+
+  	<div class="thumbnail">
+	<img src="gallery/unshuffle.gif"  />
+        <h3><a href="unsuffle.html">Image unshredding</a></h3>
+      <p> Shuffle the columns of an image, and put it back together by solving a TSP. </p>
+    </div>
+</div>
+
+</div>
+<div class="row">
+
+<div class = "col-sm-6 col-md-3">
+
+    <div class="thumbnail">
+		<img src="gallery/parallel.jpg" width="300px" />
+        <h3><a href="parallel.html">Parallelising</a></h3>
+      <p> How to parallelise computations  </p>
+    </div>
+</div>
+	
+
+<div class = "col-sm-6 col-md-3">
+
+    <div class="thumbnail">
+		<img src="gallery/imstats.png" width="300px" />
+        <h3><a href="image_stats.html">Image statistics</a></h3>
+      <p> An (incomplete) tutorial on image statistics </p>
+    </div>
+</div>
+
+<div class = "col-sm-6 col-md-3">
+
+    <div class="thumbnail">
+		<img src="gallery/morpho.gif" width="300px" />
+        <h3><a href="morphology.html">Image morphology </a></h3>
+      <p> A tutorial on morphology and detrending </p>
+    </div>
+</div>
+
+<div class = "col-sm-6 col-md-3">
+    <div class="thumbnail">
+		<img src="gallery/other.png" width="300px" />
+        <h3><a href="otherpackages.html">Other packages </a></h3>
+      <p> Importing image data from other R packages </p>
+    </div>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class = "col-sm-6 col-md-3">
+
+    <div class="thumbnail">
+		<img src="gallery/fgbg.gif" width="300px" />
+        <h3><a href="foreground_background.html">Foreground and background</a></h3>
+      <p> Image segmentation using nearest-neighbour classifiers, watershed transform </p>
+    </div>
+
+</div>
+
+<div class = "col-sm-6 col-md-3">
+	    <div class="thumbnail">
+		<img src="gallery/gradfield.png" width="300px" />
+        <h3><a href="gradient_field.html">Gradient fields</a></h3>
+      <p> Plotting gradient fields using ggplot2 </p>
+    </div>
+
+</div>
+</div>
+<!--/html_preserve-->
+
+
+### Tutorials, case studies, etc. 
+
 There's also a number of tutorials and case studies:
 
 - imager as an [image editor](gimptools.html). Where do I find the bucket tool in imager?
 - how to [parallelise](parallel.html) computations 
 - how to write fast functional code: [a loop-free Canny edge detector](canny.html)
 - image splitting, simplification and recursive data structures: [quad-trees](quadtrees.html)
+- how to import image data from [other R packages](otherpackages.html)
+- [image unshredding](unshuffle.html): shuffle the columns of an image, and put it back together by solving a TSP. 
+- [ASCII art](ascii_art.html): how to render an image using only characters. 
 - a [tutorial](image_stats.html) on natural image statistics using imager
 - another (incomplete) tutorial on [morphology and detrending](morphology.html)
 - a [tutorial](foreground_background.html) on [foreground/background segmentation](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/)

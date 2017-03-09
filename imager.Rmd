@@ -46,7 +46,7 @@ deriche(im,2,order=2,axis="x") %>% deriche(2,order=2,axis="y") %>% plot
 ```{r quickstart2,fig.width=12,cache=TRUE}
 #Another example of chaining: image gradient along x and y axes
 layout(matrix(1:2,1,2));
-grayscale(im) %>% get_gradient(axes="xy") %>% l_ply(plot)
+grayscale(im) %>% imgradient %>% plot
 
 #If ffmpeg is present, we can load videos as well:
 tennis <- load.video(system.file('extdata/tennis_sif.mpeg',package='imager'))
@@ -81,7 +81,7 @@ imager::save.image(parrots,"/tmp/parrots.jpeg")
 #We call imager::save.image to avoid ambiguity, as base R already has a save.image function 
 ```
 
-You can load files from your hard drive or from a URL. Loading from URLs is useful when scraping web pages, for example. The following piece of code searches for pictures of parrots (using the rvest package), then loads the first one it finds 
+You can load files from your hard drive or from a URL. Loading from URLs is useful when scraping web pages, for example. The following piece of code searches for pictures of parrots (using the rvest package), then loads the first four pictures it finds:
 
 ```{r loading_parrots}
 library(rvest)
@@ -91,8 +91,8 @@ search <- read_html("https://www.google.com/search?site=&tbm=isch&q=parrot")
 #Grab all <img> tags, get their "src" attribute, a URL to an image
 urls <- search %>% html_nodes("img") %>% html_attr("src") #Get urls of parrot pictures
 
-#Load the first one
-load.image(urls[1]) %>% plot()
+#Load the first four, return as image list, display
+map_il(urls[1:4],load.image) %>% plot
 ```
 
 # Loading and saving videos 
@@ -358,6 +358,10 @@ One often needs to perform separate computations on each channel of an image, or
 imsplit(parrots,"c") #A list with three elements corresponding to the three channels
 imsplit(parrots,"c") %>% laply(mean) #Mean pixel value in each channel
 imsplit(parrots,"x") %>% laply(mean) %>% head #Mean pixel value in each line (across all channels)
+
+##For a more modern version, using purrr
+imsplit(parrots,"c") %>% purrr::map_dbl(mean) #Mean pixel value in each channel
+
 ```
 
 imsplit contains an additional argument, called "nb". When "nb" is positive imsplit cuts the image into "nb" chunks, along the axis "axis":
@@ -405,11 +409,14 @@ Another way to combine after a split is to take the mean result, or a product, e
 imsplit(parrots,"c") %>% add %>% plot(main="Adding colour channels")
 
 #Use different levels of blur on the same image
-blur.layers <- llply(seq(1,15,l=5),function(v) isoblur(parrots,v))
+blur.layers <- map_il(seq(1,15,l=5),~ isoblur(parrots,.))
 
 blur.layers %>% parmin %>% plot(main="Min across blur levels")
 blur.layers %>% parmax %>% plot(main="Max across blur levels")
 blur.layers %>% average %>% plot(main="Average across blur levels")
+blur.layers %>% parmed %>% plot(main="Median across blur levels")
+
+
 ```
 
 # Sub-images, pixel neighbourhoods, etc.
@@ -480,7 +487,7 @@ Denoising can be performed using basic filters that average over space:
 
 ```{r denoise_blur}
 birds <- load.image(system.file('extdata/Leonardo_Birds.jpg',package='imager'))
-birds.noisy <- (birds + 80*rnorm(prod(dim(birds)))) 
+birds.noisy <- (birds + .5*rnorm(prod(dim(birds)))) 
 layout(t(1:2))
 plot(birds.noisy,main="Original")
 isoblur(birds.noisy,5) %>% plot(main="Blurred")
@@ -491,8 +498,9 @@ Blurring removes some of the noise but also blurs away the contours. CImg provid
 ```{r denoise_aniso}
 layout(t(1:2))
 plot(birds.noisy,main="Original")
-blur_anisotropic(birds.noisy,ampl=1e5,sharp=1) %>% plot(main="Blurred (anisotropic)")
+blur_anisotropic(birds.noisy,ampl=1e3,sharp=.3) %>% plot(main="Blurred (anisotropic)")
 ```
+
 
 
 # Colour spaces
