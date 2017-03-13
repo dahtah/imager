@@ -347,7 +347,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // bucket_select
-NumericVector bucket_select(NumericVector im, int x, int y, int z, float sigma, bool high_connexity);
+LogicalVector bucket_select(NumericVector im, int x, int y, int z, float sigma, bool high_connexity);
 RcppExport SEXP imager_bucket_select(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP sigmaSEXP, SEXP high_connexitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

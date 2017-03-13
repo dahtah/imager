@@ -518,7 +518,7 @@ px.flood <- function(im,x,y,z=1,sigma=0,high_connexity=FALSE)
         out <- bucket_select(im,x,y,z,sigma,high_connexity)
         if (spectrum(im) > 1)
         {
-            imappend(map(1:spectrum(im),~ out),"c") %>% as.pixset
+            imrep(out,spectrum(im)) %>% imappend("c")
         }
         else
         {
