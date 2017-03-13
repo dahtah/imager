@@ -5,8 +5,12 @@ output:
     fig_width: 6.5
     fig_height: 6
     toc: true
+    toc_float: true
     number_sections: true
+
 ---
+
+[Simon Barthelmé](http://sites.google.com/site/simonbarthelme) (GIPSA-lab, CNRS)
 
 
 [ASCII art](https://en.wikipedia.org/wiki/ASCII_art) is the art of drawing pictures using text (specifically, the 128 characters allowed by standard ASCII). In this example we'll see how to use imager to render pictures into ASCII, in the manner of image-to-ASCII converters like *AAlib*. 

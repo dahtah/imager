@@ -187,7 +187,9 @@ plot(msk)</code></pre>
 str(grad)</code></pre>
 <pre><code>## List of 2
 ##  $ x: cimg [1:768, 1:512, 1, 1:3] 0.00139 0.00612 0.0022 -0.00172 0.00254 ...
+##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;cimg&quot; &quot;imager_array&quot; &quot;numeric&quot;
 ##  $ y: cimg [1:768, 1:512, 1, 1:3] 0.01119 0.00923 0.00646 0.00335 0.00287 ...
+##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;cimg&quot; &quot;imager_array&quot; &quot;numeric&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;imlist&quot; &quot;list&quot;</code></pre>
 <pre class="r"><code>layout(t(1:2))
 plot(grad$x,main=&quot;Gradient along x&quot;)
@@ -195,7 +197,7 @@ plot(grad$y,main=&quot;Gradient along y&quot;)</code></pre>
 <p><img src="foreground_background_files/figure-html/gradient-1.png" width="1152" /></p>
 <p>What we now have is a list of two images, one corresponding to the gradient in the x direction and the gradient in the y dimension. Both are computed across the RGB channels separately.</p>
 <p>The image gradient isn’t quite what we need yet, since a light-to-dark edge will have negative gradient while a dark-to-light edge will have positive gradient. A good solution is to square the gradient:</p>
-<pre class="r"><code>grad.sq &lt;- grad %&gt;% llply(function(v) v^2)
+<pre class="r"><code>grad.sq &lt;- grad %&gt;% map_il(~ .^2)
 layout(t(1:2))
 plot(sqrt(grad.sq$x),main=&quot;Gradient magnitude along x&quot;)
 plot(sqrt(grad.sq$y),main=&quot;Gradient magnitude along y&quot;)</code></pre>
@@ -213,17 +215,18 @@ plot(sqrt(edges),main=&quot;Detected edges&quot;)</code></pre>
 
 detect.edges &lt;- function(im,sigma=1)
     {
-        isoblur(im,sigma) %&gt;% imgradient(&quot;xy&quot;) %&gt;% llply(function(v) v^2) %&gt;% add %&gt;% imsplit(&quot;c&quot;) %&gt;% add
+        isoblur(im,sigma) %&gt;% imgradient(&quot;xy&quot;) %&gt;% enorm %&gt;% imsplit(&quot;c&quot;) %&gt;% add
     }
 
-detect.edges(parrots,5) %&gt;% sqrt %&gt;% plot</code></pre>
+edges &lt;- detect.edges(parrots,2) %&gt;% sqrt 
+plot(edges)</code></pre>
 <p><img src="foreground_background_files/figure-html/detect_edges-1.png" width="624" /></p>
 <p>The next step is to use the watershed algorithm for label propagation. The watershed algorithm propagates labels (non-zero pixels) to their non-labelled (zero-valued) neighbours according to a priority map. Labels get propagated first to neighbours with high priority. Here we’re going to give higher priority to non-edge neighbouts. David Tschumperlé uses the following heuristic:</p>
 <pre class="r"><code>pmap &lt;- 1/(1+edges) #Priority inv. proportional to gradient magnitude
 plot(pmap,main=&quot;Priority map&quot;) #Nice metal plate effect! </code></pre>
 <p><img src="foreground_background_files/figure-html/pmap-1.png" width="624" /></p>
 <p>The other element needed for the watershed transform is an image of the same size as pmap, with a few labelled (non-zero) pixels. We’ll start with two:</p>
-<pre class="r"><code>seeds &lt;- imfill(width(pmap),height(pmap)) #Empty image
+<pre class="r"><code>seeds &lt;- imfill(dim=dim(pmap)) #Empty image
 seeds[400,50,1,1] &lt;- 1 #Background pixel 
 seeds[600,450,1,1] &lt;- 2 #Foreground pixel</code></pre>
 <p>and we can now run the watershed transform:</p>
@@ -233,12 +236,8 @@ plot(wt,main=&quot;Watershed segmentation&quot;)</code></pre>
 <p>We can use the result as a mask:</p>
 <pre class="r"><code>mask &lt;- add.colour(wt) #We copy along the three colour channels
 layout(t(1:2))
-plot(parrots*(mask==1),main=&quot;Background&quot;)</code></pre>
-<pre><code>## Warning in plot(parrots * (mask == 1), main = &quot;Background&quot;): Méthodes
-## incompatibles (&quot;Ops.cimg&quot;, &quot;Ops.pixset&quot;) pour &quot;*&quot;</code></pre>
-<pre class="r"><code>plot(parrots*(mask==2),main=&quot;Foreground&quot;)</code></pre>
-<pre><code>## Warning in plot(parrots * (mask == 2), main = &quot;Foreground&quot;): Méthodes
-## incompatibles (&quot;Ops.cimg&quot;, &quot;Ops.pixset&quot;) pour &quot;*&quot;</code></pre>
+plot(parrots*(mask==1),main=&quot;Background&quot;)
+plot(parrots*(mask==2),main=&quot;Foreground&quot;)</code></pre>
 <p><img src="foreground_background_files/figure-html/mask-1.png" width="1152" /></p>
 <p>Not perfect but pretty good already!</p>
 </div>

@@ -86,6 +86,36 @@ labels <- c(rep(1,nrow(fgMat)),rep(0,nrow(bgMat)))
     out <- fknn(rbind(fgMat,bgMat),testMat,cl=labels,k=5)
 msk <- as.cimg(rep(out,3),dim=dim(im))
     
-  
-    imlist(im,im*(msk==1)) %>% imappend("z") %>% imresize(.5) %>% save.video("gallery/fgbg.gif",fps=1)
+    im <- imresize(im,.5)
+    msk <- imresize(msk,.5)
+    imlist(im,msk) %>% imappend("z") %>%  save.video("gallery/fgbg.gif",fps=1)
+}
+
+cpp_api <- function()
+{
+    imfill(200,200,val=1) %>% implot({ text(40,100,"C",cex=9,font=1);text(130,100,"++",cex=9) }) %>% imager::save.image("gallery/cpp.png")
+}
+
+gradfield <- function()
+{
+im <- load.example("parrots") %>% grayscale %>% imresize(.3)
+gr <- imgradient(im,"xy")
+library(dplyr)
+names(gr) <- c("dx","dy")
+dgr <- as.data.frame(gr)
+dgr <- tidyr::spread(dgr,im,value)
+library(cowplot)
+##Subsample: take every fourth pixel
+dgr.sub <- dplyr::filter(dgr,(x %% 4) ==0,(y %% 4) == 0)
+
+#Compute end points of the arrows we'll plot, scaled so that they have a typical
+#size of 1px or thereabouts
+dgr.sub <- mutate(dgr.sub,xend=x+dx/sd(dx),yend=y+dy/sd(dy))
+dgr.sub <- dplyr::mutate(dgr.sub,mag=sqrt(dx^2+dy^2), #Gradient magnitude
+                         dxs=dx/mag,dys=dy/mag,#Scale every vector to unit size
+                         xend = x + dxs,yend = y +dys) 
+p <- as.data.frame(im) %>% ggplot(aes(x,y))+geom_raster(aes(fill=value))
+p <- p+geom_segment(data=dgr.sub,aes(xend=xend,yend=yend,alpha=mag),arrow = arrow(length = unit(0.01, "npc")),col="red")
+p <- p+coord_cartesian(xlim=c(0,50,ylim=50,100))+scale_y_reverse()+scale_fill_continuous(low="black",high="white")
+ggsave("gallery/gradfield.png",p)
 }

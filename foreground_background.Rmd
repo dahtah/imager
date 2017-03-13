@@ -140,7 +140,7 @@ What we now have is a list of two images, one corresponding to the gradient in t
 The image gradient isn't quite what we need yet, since a light-to-dark edge will have negative gradient while a dark-to-light edge will have positive gradient. A good solution is to square the gradient:
 
 ```{r squaring_gradient,fig.width=12}
-grad.sq <- grad %>% llply(function(v) v^2)
+grad.sq <- grad %>% map_il(~ .^2)
 layout(t(1:2))
 plot(sqrt(grad.sq$x),main="Gradient magnitude along x")
 plot(sqrt(grad.sq$y),main="Gradient magnitude along y")
@@ -166,10 +166,11 @@ We have too many edges: for example, the edges around the eyes are spurious (the
 
 detect.edges <- function(im,sigma=1)
     {
-        isoblur(im,sigma) %>% imgradient("xy") %>% llply(function(v) v^2) %>% add %>% imsplit("c") %>% add
+        isoblur(im,sigma) %>% imgradient("xy") %>% enorm %>% imsplit("c") %>% add
     }
 
-detect.edges(parrots,5) %>% sqrt %>% plot
+edges <- detect.edges(parrots,2) %>% sqrt 
+plot(edges)
 ```
 
 The next step is to use the watershed algorithm for label propagation. The watershed algorithm propagates labels (non-zero pixels) to their non-labelled (zero-valued) neighbours according to a priority map. Labels get propagated first to neighbours with high priority. Here we're going to give higher priority to non-edge neighbouts. David Tschumperlé uses the following heuristic:
@@ -181,7 +182,7 @@ plot(pmap,main="Priority map") #Nice metal plate effect!
 
 The other element needed for the watershed transform is an image of the same size as pmap, with a few labelled (non-zero) pixels. We'll start with two:
 ```{r seeds}
-seeds <- imfill(width(pmap),height(pmap)) #Empty image
+seeds <- imfill(dim=dim(pmap)) #Empty image
 seeds[400,50,1,1] <- 1 #Background pixel 
 seeds[600,450,1,1] <- 2 #Foreground pixel
 ```

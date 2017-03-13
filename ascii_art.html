@@ -19,12 +19,14 @@
 <script src="ascii_art_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="ascii_art_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="ascii_art_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="ascii_art_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="ascii_art_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="ascii_art_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="ascii_art_files/navigation-1.1/tabsets.js"></script>
+<link href="ascii_art_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="ascii_art_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="ascii_art_files/highlight/default.css"
-      type="text/css" />
-<script src="ascii_art_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -95,10 +97,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="ascii_art_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -108,6 +110,101 @@ $(document).ready(function () {
 <!-- code folding -->
 
 
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -121,6 +218,7 @@ $(document).ready(function () {
 </div>
 
 
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
 <p><a href="https://en.wikipedia.org/wiki/ASCII_art">ASCII art</a> is the art of drawing pictures using text (specifically, the 128 characters allowed by standard ASCII). In this example we’ll see how to use imager to render pictures into ASCII, in the manner of image-to-ASCII converters like <em>AAlib</em>.</p>
 <p>We’ll be using imager and tools from the tidyverse, and an image of a flower as an example:</p>
 <pre class="r"><code>##The tidyverse package loads dplyr, purrr, etc. 
@@ -241,15 +339,21 @@ The tennis video, rendered in ASCII
 
 
 
+</div>
+</div>
 
 </div>
 
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 
