@@ -1,3 +1,7 @@
+# imager 0.40.1 Minor release
+	* Updated CImg, imager should now compile on Solaris
+	* Fixed memory access bug in px.flood
+
 # imager 0.40 Major release
    * added pixset class to represent sets of pixels in an image (implemented as binary images). A test on an image (e.g., im > 0) results in a pixset object. Pixsets come with many convenience functions for plotting, manipulation, morphology, etc. They are described in the "pixsets" vignette. 
    * improved reductions (parmax, parmin, etc.). Most are now implemented in C++ and some run in parallel using OpenMP. A median combine operation (parmedian) has been added.
