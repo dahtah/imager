@@ -19,12 +19,11 @@
 <script src="imager_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="imager_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="imager_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="imager_files/navigation-1.1/tabsets.js"></script>
+<link href="imager_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="imager_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="imager_files/highlight/default.css"
-      type="text/css" />
-<script src="imager_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -95,10 +94,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="imager_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -130,17 +129,18 @@ $(document).ready(function () {
 <li><a href="#coordinates"><span class="toc-section-number">6</span> Coordinates</a></li>
 <li><a href="#the-cimg-class"><span class="toc-section-number">7</span> The cimg class</a></li>
 <li><a href="#image-lists"><span class="toc-section-number">8</span> Image lists</a></li>
-<li><a href="#splitting-and-concatenating-images"><span class="toc-section-number">9</span> Splitting and concatenating images</a></li>
-<li><a href="#split-apply-combine"><span class="toc-section-number">10</span> Split, apply, combine</a></li>
-<li><a href="#sub-images-pixel-neighbourhoods-etc."><span class="toc-section-number">11</span> Sub-images, pixel neighbourhoods, etc.</a></li>
-<li><a href="#denoising"><span class="toc-section-number">12</span> Denoising</a></li>
-<li><a href="#colour-spaces"><span class="toc-section-number">13</span> Colour spaces</a></li>
-<li><a href="#resizing-rotation-etc."><span class="toc-section-number">14</span> Resizing, rotation, etc.</a></li>
-<li><a href="#warping"><span class="toc-section-number">15</span> Warping</a></li>
-<li><a href="#lagged-operators"><span class="toc-section-number">16</span> Lagged operators</a></li>
-<li><a href="#filtering"><span class="toc-section-number">17</span> Filtering</a></li>
-<li><a href="#ffts-and-the-periodicsmooth-decomposition"><span class="toc-section-number">18</span> FFTs and the periodic/smooth decomposition</a></li>
-<li><a href="#morphology"><span class="toc-section-number">19</span> Morphology</a></li>
+<li><a href="#pixel-sets-pixsets"><span class="toc-section-number">9</span> Pixel sets (pixsets)</a></li>
+<li><a href="#splitting-and-concatenating-images"><span class="toc-section-number">10</span> Splitting and concatenating images</a></li>
+<li><a href="#split-apply-combine"><span class="toc-section-number">11</span> Split, apply, combine</a></li>
+<li><a href="#sub-images-pixel-neighbourhoods-etc."><span class="toc-section-number">12</span> Sub-images, pixel neighbourhoods, etc.</a></li>
+<li><a href="#denoising"><span class="toc-section-number">13</span> Denoising</a></li>
+<li><a href="#colour-spaces"><span class="toc-section-number">14</span> Colour spaces</a></li>
+<li><a href="#resizing-rotation-etc."><span class="toc-section-number">15</span> Resizing, rotation, etc.</a></li>
+<li><a href="#warping"><span class="toc-section-number">16</span> Warping</a></li>
+<li><a href="#lagged-operators"><span class="toc-section-number">17</span> Lagged operators</a></li>
+<li><a href="#filtering"><span class="toc-section-number">18</span> Filtering</a></li>
+<li><a href="#ffts-and-the-periodicsmooth-decomposition"><span class="toc-section-number">19</span> FFTs and the periodic/smooth decomposition</a></li>
+<li><a href="#morphology"><span class="toc-section-number">20</span> Morphology</a></li>
 </ul>
 </div>
 
@@ -175,14 +175,15 @@ deriche(im,2,order=2,axis=&quot;x&quot;) %&gt;% deriche(2,order=2,axis=&quot;y&q
 <p><img src="imager_files/figure-html/quickstart-5.jpeg" width="624" /></p>
 <pre class="r"><code>#Another example of chaining: image gradient along x and y axes
 layout(matrix(1:2,1,2));
-grayscale(im) %&gt;% get_gradient(axes=&quot;xy&quot;) %&gt;% l_ply(plot)</code></pre>
+grayscale(im) %&gt;% imgradient(&quot;xy&quot;) %&gt;% plot(layout=&quot;row&quot;)</code></pre>
 <p><img src="imager_files/figure-html/quickstart2-1.jpeg" width="1152" /></p>
 <pre class="r"><code>#If ffmpeg is present, we can load videos as well:
 tennis &lt;- load.video(system.file(&#39;extdata/tennis_sif.mpeg&#39;,package=&#39;imager&#39;))
 
-plot(tennis,frame=1)
-plot(tennis,frame=5)</code></pre>
+plot(tennis,frame=1)</code></pre>
 <p><img src="imager_files/figure-html/quickstart2-2.jpeg" width="1152" /></p>
+<pre class="r"><code>plot(tennis,frame=5)</code></pre>
+<p><img src="imager_files/figure-html/quickstart2-3.jpeg" width="1152" /></p>
 <p>In the next example, we convert the video to grayscale, run a motion detector, and combine both videos to display them side-by-side:</p>
 <pre class="r"><code>tennis.g &lt;- grayscale(tennis)
 motion &lt;- deriche(tennis.g,1,order=1,axis=&quot;z&quot;)^2 #Differentiate along z axis and square
@@ -203,7 +204,7 @@ parrots &lt;- load.image(file)
 #The file format is defined by the extension. Here we save as JPEG
 imager::save.image(parrots,&quot;/tmp/parrots.jpeg&quot;)
 #We call imager::save.image to avoid ambiguity, as base R already has a save.image function </code></pre>
-<p>You can load files from your hard drive or from a URL. Loading from URLs is useful when scraping web pages, for example. The following piece of code searches for pictures of parrots (using the rvest package), then loads the first one it finds</p>
+<p>You can load files from your hard drive or from a URL. Loading from URLs is useful when scraping web pages, for example. The following piece of code searches for pictures of parrots (using the rvest package), then loads the first four pictures it finds:</p>
 <pre class="r"><code>library(rvest)
 #Run a search query (returning html content)
 search &lt;- read_html(&quot;https://www.google.com/search?site=&amp;tbm=isch&amp;q=parrot&quot;)
@@ -211,8 +212,8 @@ search &lt;- read_html(&quot;https://www.google.com/search?site=&amp;tbm=isch&am
 #Grab all &lt;img&gt; tags, get their &quot;src&quot; attribute, a URL to an image
 urls &lt;- search %&gt;% html_nodes(&quot;img&quot;) %&gt;% html_attr(&quot;src&quot;) #Get urls of parrot pictures
 
-#Load the first one
-load.image(urls[1]) %&gt;% plot()</code></pre>
+#Load the first four, return as image list, display
+map_il(urls[1:4],load.image) %&gt;% plot</code></pre>
 <p><img src="imager_files/figure-html/loading_parrots-1.jpeg" width="624" /></p>
 </div>
 <div id="loading-and-saving-videos" class="section level1">
@@ -409,8 +410,25 @@ mutate(df,value=cos(sin(x+y)^2)) %&gt;% as.cimg</code></pre>
 <pre class="r"><code>list(a=parrots,b=3*parrots) %&gt;% as.imlist</code></pre>
 <pre><code>Image list of size 2 </code></pre>
 </div>
+<div id="pixel-sets-pixsets" class="section level1">
+<h1><span class="header-section-number">9</span> Pixel sets (pixsets)</h1>
+<p>Another important datatype in imager is the pixel set (AKA pixset, introduced in imager v0.40). A pixset is a set of pixels, represented as a binary image, and that’s what you get when you test properties on images, e.g.:</p>
+<pre class="r"><code>grayscale(parrots) &gt; .8</code></pre>
+<pre><code>Pixel set of size 21353. Width: 768 pix Height: 512 pix Depth: 1 Colour channels: 1 </code></pre>
+<p>Internally a pixset is just a array of logicals, so it’s no different from what you’d get from running a test on a vector, e.g.:</p>
+<pre class="r"><code>1:4  &gt;= 2</code></pre>
+<pre><code>[1] FALSE  TRUE  TRUE  TRUE</code></pre>
+<p>Compared to logical arrays, however, pixsets come with many convenience functions, for plotting, splitting, morphological operations, etc.</p>
+<p>As an example, the following bit of code generates random shapes by filtering &amp; thresholding a random image, splitting it into connected components, and removing the smaller ones:</p>
+<pre class="r"><code>set.seed(1)
+imnoise(100,100) %&gt;% isoblur(3) %&gt;%
+    threshold(0) %&gt;% split_connected %&gt;%
+    purrr::keep(~ sum(.) &gt; 200) %&gt;% plot</code></pre>
+<p><img src="imager_files/figure-html/unnamed-chunk-16-1.jpeg" width="624" /></p>
+<p>Pixsets are covered elsewhere, in the vignette <code>vignette('pixsets')</code>, and in the <a href="morphology.Rmd">morphology tutorial</a>.</p>
+</div>
 <div id="splitting-and-concatenating-images" class="section level1">
-<h1><span class="header-section-number">9</span> Splitting and concatenating images</h1>
+<h1><span class="header-section-number">10</span> Splitting and concatenating images</h1>
 <p>One often needs to perform separate computations on each channel of an image, or on each frame, each line, etc. This can be achieved using a loop or more conveniently using imsplit:</p>
 <pre class="r"><code>imsplit(parrots,&quot;c&quot;) #A list with three elements corresponding to the three channels</code></pre>
 <pre><code>Image list of size 3 </code></pre>
@@ -418,14 +436,18 @@ mutate(df,value=cos(sin(x+y)^2)) %&gt;% as.cimg</code></pre>
 <pre><code>[1] 0.4771064 0.4297881 0.2972314</code></pre>
 <pre class="r"><code>imsplit(parrots,&quot;x&quot;) %&gt;% laply(mean) %&gt;% head #Mean pixel value in each line (across all channels)</code></pre>
 <pre><code>[1] 0.3666948 0.3682700 0.3697508 0.3705525 0.3707925 0.3708410</code></pre>
+<pre class="r"><code>##For a more modern version, using purrr
+imsplit(parrots,&quot;c&quot;) %&gt;% purrr::map_dbl(mean) #Mean pixel value in each channel</code></pre>
+<pre><code>    c = 1     c = 2     c = 3 
+0.4771064 0.4297881 0.2972314 </code></pre>
 <p>imsplit contains an additional argument, called “nb”. When “nb” is positive imsplit cuts the image into “nb” chunks, along the axis “axis”:</p>
 <pre class="r"><code>imsplit(parrots,&quot;x&quot;,4) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-14-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-17-1.jpeg" width="624" /></p>
 <pre class="r"><code>imsplit(parrots,&quot;y&quot;,3) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-14-2.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-17-2.jpeg" width="624" /></p>
 <p>When “nb” is negative, “nb” pixels defines the chunk size:</p>
 <pre class="r"><code>imsplit(parrots,&quot;x&quot;,-250) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-15-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-18-1.jpeg" width="624" /></p>
 <p>That last panel looks crummy because it’s a long-and-thin image stretched into a square.</p>
 <p>The inverse operation to imsplit is called imappend: it takes a list of images and concatenates them along the dimension of your choice.</p>
 <pre class="r"><code>#Sample functions and turn them into separate R,G,B channels
@@ -437,7 +459,7 @@ plot(trippy)</code></pre>
 <p><img src="imager_files/figure-html/imappend-1.jpeg" width="624" /></p>
 </div>
 <div id="split-apply-combine" class="section level1">
-<h1><span class="header-section-number">10</span> Split, apply, combine</h1>
+<h1><span class="header-section-number">11</span> Split, apply, combine</h1>
 <p>Often what one wants to do is to split the image along a certain axis (e.g. colour), apply a transformation separately and recombine the result. iiply does that:</p>
 <pre class="r"><code>iiply(parrots,&quot;c&quot;,function(v) v/max(v))  %&gt;% plot</code></pre>
 <p><img src="imager_files/figure-html/iiply-1.jpeg" width="624" /></p>
@@ -448,7 +470,7 @@ plot(trippy)</code></pre>
 <pre class="r"><code>imsplit(parrots,&quot;c&quot;) %&gt;% add %&gt;% plot(main=&quot;Adding colour channels&quot;)</code></pre>
 <p><img src="imager_files/figure-html/add_average_etc-1.jpeg" width="624" /></p>
 <pre class="r"><code>#Use different levels of blur on the same image
-blur.layers &lt;- llply(seq(1,15,l=5),function(v) isoblur(parrots,v))
+blur.layers &lt;- map_il(seq(1,15,l=5),~ isoblur(parrots,.))
 
 blur.layers %&gt;% parmin %&gt;% plot(main=&quot;Min across blur levels&quot;)</code></pre>
 <p><img src="imager_files/figure-html/add_average_etc-2.jpeg" width="624" /></p>
@@ -456,9 +478,11 @@ blur.layers %&gt;% parmin %&gt;% plot(main=&quot;Min across blur levels&quot;)</
 <p><img src="imager_files/figure-html/add_average_etc-3.jpeg" width="624" /></p>
 <pre class="r"><code>blur.layers %&gt;% average %&gt;% plot(main=&quot;Average across blur levels&quot;)</code></pre>
 <p><img src="imager_files/figure-html/add_average_etc-4.jpeg" width="624" /></p>
+<pre class="r"><code>blur.layers %&gt;% parmed %&gt;% plot(main=&quot;Median across blur levels&quot;)</code></pre>
+<p><img src="imager_files/figure-html/add_average_etc-5.jpeg" width="624" /></p>
 </div>
 <div id="sub-images-pixel-neighbourhoods-etc." class="section level1">
-<h1><span class="header-section-number">11</span> Sub-images, pixel neighbourhoods, etc.</h1>
+<h1><span class="header-section-number">12</span> Sub-images, pixel neighbourhoods, etc.</h1>
 <p>If you need to select a part of an image, you can use imsub, which is best explained by example:</p>
 <pre class="r"><code>imsub(parrots,x &lt; 30) #Only the first 30 rows</code></pre>
 <pre><code>Image. Width: 29 pix Height: 512 pix Depth: 1 Colour channels: 3 </code></pre>
@@ -487,7 +511,7 @@ parrots.cp &lt;- load.example(&quot;parrots&quot;)
 G(parrots.cp) &lt;- 0
 B(parrots.cp) &lt;- 0
 plot(parrots.cp)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-16-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-19-1.jpeg" width="624" /></p>
 <p>If you need to access a specific frame, use frame:</p>
 <pre class="r"><code>frame(tennis,1)</code></pre>
 <pre><code>Image. Width: 352 pix Height: 240 pix Depth: 1 Colour channels: 3 </code></pre>
@@ -495,9 +519,9 @@ plot(parrots.cp)</code></pre>
 frame(tennis,1) &lt;- isoblur(frame(tennis,1),10)</code></pre>
 <p>If you need pixel values along rows and columns use:</p>
 <pre class="r"><code>imrow(R(parrots),10) %&gt;% plot(main=&quot;Red channel along 10th row&quot;,type=&quot;l&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-18-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-21-1.jpeg" width="624" /></p>
 <pre class="r"><code>imcol(B(parrots),10) %&gt;% plot(main=&quot;Blue channel along 10th line&quot;,type=&quot;l&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-18-2.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-21-2.jpeg" width="624" /></p>
 <p>Individual pixels can be accessed using <em>at</em> and <em>color.at</em>:</p>
 <pre class="r"><code>at(parrots,x=20,y=20,cc=1:3)</code></pre>
 <pre><code>[1] 0.6313725 0.5882353 0.4941176</code></pre>
@@ -511,10 +535,10 @@ dim(im) #4 dimensional, but the last two dimensions are singletons</code></pre>
 im[,1] &lt;- 1:4 #Shortcut</code></pre>
 </div>
 <div id="denoising" class="section level1">
-<h1><span class="header-section-number">12</span> Denoising</h1>
+<h1><span class="header-section-number">13</span> Denoising</h1>
 <p>Denoising can be performed using basic filters that average over space:</p>
 <pre class="r"><code>birds &lt;- load.image(system.file(&#39;extdata/Leonardo_Birds.jpg&#39;,package=&#39;imager&#39;))
-birds.noisy &lt;- (birds + 80*rnorm(prod(dim(birds)))) 
+birds.noisy &lt;- (birds + .5*rnorm(prod(dim(birds)))) 
 layout(t(1:2))
 plot(birds.noisy,main=&quot;Original&quot;)
 isoblur(birds.noisy,5) %&gt;% plot(main=&quot;Blurred&quot;)</code></pre>
@@ -522,11 +546,11 @@ isoblur(birds.noisy,5) %&gt;% plot(main=&quot;Blurred&quot;)</code></pre>
 <p>Blurring removes some of the noise but also blurs away the contours. CImg provides an anisotropic blur that does not have that problem:</p>
 <pre class="r"><code>layout(t(1:2))
 plot(birds.noisy,main=&quot;Original&quot;)
-blur_anisotropic(birds.noisy,ampl=1e5,sharp=1) %&gt;% plot(main=&quot;Blurred (anisotropic)&quot;)</code></pre>
+blur_anisotropic(birds.noisy,ampl=1e3,sharp=.3) %&gt;% plot(main=&quot;Blurred (anisotropic)&quot;)</code></pre>
 <p><img src="imager_files/figure-html/denoise_aniso-1.jpeg" width="624" /></p>
 </div>
 <div id="colour-spaces" class="section level1">
-<h1><span class="header-section-number">13</span> Colour spaces</h1>
+<h1><span class="header-section-number">14</span> Colour spaces</h1>
 <p>To convert from RGB to HSL/HSV/HSI/YUV/YCbCR, run RGBto[…], as in the following example:</p>
 <pre class="r"><code>parrots.hsl &lt;- RGBtoHSL(parrots)
 chan &lt;- channels(parrots.hsl) #Extract the channels as a list of images
@@ -548,7 +572,7 @@ grayscale(parrots) %&gt;% add.colour %&gt;% spectrum</code></pre>
 <pre class="r"><code>#Image is still in gray tones but has R,G,B channels </code></pre>
 </div>
 <div id="resizing-rotation-etc." class="section level1">
-<h1><span class="header-section-number">14</span> Resizing, rotation, etc.</h1>
+<h1><span class="header-section-number">15</span> Resizing, rotation, etc.</h1>
 <p>Functions for resizing and rotation should be fairly intuitive:</p>
 <pre class="r"><code>thmb &lt;- resize(parrots,round(width(parrots)/10),round(height(parrots)/10))
 plot(thmb,main=&quot;Thumbnail&quot;) #Pixellated parrots</code></pre>
@@ -575,7 +599,7 @@ pad(parrots,axes=&quot;y&quot;,140,pos=-1) %&gt;% autocrop(c(0,0,0)) %&gt;% plot
 <p><img src="imager_files/figure-html/autocrop-1.jpeg" width="624" /></p>
 </div>
 <div id="warping" class="section level1">
-<h1><span class="header-section-number">15</span> Warping</h1>
+<h1><span class="header-section-number">16</span> Warping</h1>
 <p>Warping maps the pixels of the input image to a different location in the output. Scaling is a special case of warping, so is shifting. Warping relies on a map: <span class="math inline">\(M(x,y) = (x&#39;,y&#39;)\)</span></p>
 <p>that describes where to send pixel (x,y). Shifting the image corresponds to adding a constant to the coordinates: <span class="math inline">\(M(x,y) = (x+\delta_x,y+\delta_y)\)</span></p>
 <p>In imager:</p>
@@ -598,7 +622,7 @@ imwarp(parrots,map=map,direction=&quot;forward&quot;) %&gt;% plot()</code></pre>
 <p>See ?imwarp for more. Note that 3D warping is possible as well.</p>
 </div>
 <div id="lagged-operators" class="section level1">
-<h1><span class="header-section-number">16</span> Lagged operators</h1>
+<h1><span class="header-section-number">17</span> Lagged operators</h1>
 <p>To compute the difference between successive images in a video, you can use the shift operator:</p>
 <pre class="r"><code>#Compute difference between two successive frames (at lag 1)
 (imshift(tennis,delta_z=1)-tennis) %&gt;% plot(frame=2,main=&quot;Difference betw. frames 2 and 1&quot;)</code></pre>
@@ -611,11 +635,11 @@ imwarp(parrots,map=map,direction=&quot;forward&quot;) %&gt;% plot()</code></pre>
 #is valid</code></pre>
 </div>
 <div id="filtering" class="section level1">
-<h1><span class="header-section-number">17</span> Filtering</h1>
+<h1><span class="header-section-number">18</span> Filtering</h1>
 <p>imager has the usual correlate and convolve operations:</p>
 <pre class="r"><code>flt &lt;- as.cimg(matrix(1,4,4)) #4x4 box filter
 grayscale(parrots) %&gt;% correlate(flt) %&gt;% plot(main=&quot;Filtering with box filter&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-21-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-24-1.jpeg" width="624" /></p>
 <pre class="r"><code>#Here the filter is symmetrical so convolution and correlation should be the same. Check:
 a &lt;- grayscale(parrots) %&gt;% correlate(flt)
 b &lt;- grayscale(parrots) %&gt;% imager::convolve(flt)
@@ -626,7 +650,7 @@ all.equal(a,b)</code></pre>
 layout(t(1:2))
 deriche(im,sigma=4,order=2,axis=&quot;y&quot;) %&gt;% plot(main=&quot;2nd deriv of Gaussian along y&quot;)
 vanvliet(im,sigma=4,order=2,axis=&quot;y&quot;) %&gt;% plot(main=&quot;2nd deriv of Gaussian along y&quot;)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-22-1.jpeg" width="1152" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-25-1.jpeg" width="1152" /></p>
 <p>The Vanvliet-Young filter is typically a better approximation. We can establish this by looking at the impulse response (which should be Gaussian). Here’s the one-dimensional case:</p>
 <pre class="r"><code>n &lt;- 1e3
 xv &lt;- seq(0,1,l=n) #1D Grid
@@ -640,19 +664,19 @@ imp.true &lt;- dnorm(xv,sd=sig/n,m=.5) #True impulse response
 plot(xv,imp.true/max(imp.true),type=&quot;l&quot;,lwd=2,xlab=&quot;x&quot;,ylab=&quot;Impulse response&quot;)
 lines(xv,imp.vv/max(imp.vv),col=&quot;blue&quot;,lwd=2)
 lines(xv,imp.dr/max(imp.dr),col=&quot;red&quot;,lwd=2)</code></pre>
-<p><img src="imager_files/figure-html/unnamed-chunk-23-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/unnamed-chunk-26-1.jpeg" width="624" /></p>
 <p>The ideal filter is in black, the Vanvliet-Young filter in blue, the Deriche filter in red. Vanvliet-Young is clearly more accurate, but slightly slower:</p>
 <pre class="r"><code>im &lt;- imfill(3e3,3e3)
 system.time(deriche(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.107   0.001   0.043 </code></pre>
+  0.173   0.039   0.126 </code></pre>
 <pre class="r"><code>system.time(vanvliet(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.207   0.000   0.067 </code></pre>
+  0.241   0.027   0.128 </code></pre>
 <p>In both cases computation time is independent of filter bandwidth, which is a very nice feature (the filters are IIR).</p>
 </div>
 <div id="ffts-and-the-periodicsmooth-decomposition" class="section level1">
-<h1><span class="header-section-number">18</span> FFTs and the periodic/smooth decomposition</h1>
+<h1><span class="header-section-number">19</span> FFTs and the periodic/smooth decomposition</h1>
 <p>FFTs can be computed via the FFT function:</p>
 <pre class="r"><code>im &lt;- as.cimg(function(x,y) sin(x/5)+cos(x/4)*sin(y/2),128,128)
 ff &lt;- FFT(im)
@@ -675,7 +699,7 @@ periodic.part(parrots) %&gt;% plot(main=&quot;Periodic part of parrots&quot;)
 <p>See ?periodic.smooth for details.</p>
 </div>
 <div id="morphology" class="section level1">
-<h1><span class="header-section-number">19</span> Morphology</h1>
+<h1><span class="header-section-number">20</span> Morphology</h1>
 <p>See the vignette on <a href="morphology.html">morphology</a>.</p>
 </div>
 
@@ -687,9 +711,13 @@ periodic.part(parrots) %&gt;% plot(main=&quot;Periodic part of parrots&quot;)
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

@@ -19,12 +19,11 @@
 <script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="index_files/highlight/default.css"
-      type="text/css" />
-<script src="index_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -95,10 +94,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="index_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -157,23 +156,24 @@ imager: an R package for image processing
 </div>
 <div id="dependencies" class="section level2">
 <h2>Dependencies</h2>
-<p>OS X users need to install XQuartz: <a href="https://www.xquartz.org/" class="uri">https://www.xquartz.org/</a>. You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to work with videos, or import and save images in formats other than BMP, PNG and JPEG. On Linux these should be available from standard repositories (ie. “sudo apt-get install ffmpeg” should work). On OS X they are available via brew: “brew install imagemagick ffmpeg”.</p>
+<p>OS X users need to install XQuartz: <a href="https://www.xquartz.org/" class="uri">https://www.xquartz.org/</a>. You’ll also need <a href="http://www.imagemagick.org/script/binary-releases.php">ImageMagick</a> and <a href="http://ffmpeg.org/download.html">ffmpeg</a> if you want to work with videos, or import and save images in formats other than BMP, TIFF, PNG and JPEG. On Linux these should be available from standard repositories (ie. “sudo apt-get install ffmpeg” should work). On OS X they are available via brew: “brew install imagemagick ffmpeg”.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
 <p>There’s a tutorial included in the package: hit</p>
 <pre><code>vignette(&quot;gettingstarted&quot;,package=&quot;imager&quot;)</code></pre>
-<p>or <a href="gettingstarted.html">click here</a>.</p>
+<p>or <a href="https://cran.r-project.org/web/packages/imager/vignettes/gettingstarted.html">click here</a>.</p>
 <p>The tutorial covers basic image manipulation, plotting use base graphics and ggplot2, getting image data in and out, and an example of multiscale blob detection.</p>
-<p>The next step is to learn about pixsets, which are used to represent sets of pixels (e.g., the foreground in an image).</p>
+<p>The next step is to learn about <a href="https://cran.r-project.org/web/packages/imager/vignettes/pixsets.html">pixsets</a>, which are used to represent sets of pixels (e.g., the foreground in an image).</p>
 <pre><code>    vignette(&quot;pixsets&quot;,package=&quot;imager&quot;)</code></pre>
-<p>The vignette includes an example of image segmentation.</p>
+<p>The <a href="https://cran.r-project.org/web/packages/imager/vignettes/pixsets.html">vignette</a> includes an example of image segmentation.</p>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
 <div id="general-package-documentation" class="section level3">
 <h3>General package documentation</h3>
 <p>Many functions are described in the general package <a href="imager.html">documentation</a>. The automatically generated docs are <a href="https://cran.r-project.org/web/packages/imager/imager.pdf">here</a>, and come with examples.</p>
+<p>You might find <a href="http://cimg.eu/">CImg</a>’s doc useful as well.</p>
 </div>
 <div id="faq" class="section level3">
 <h3>FAQ</h3>
@@ -305,25 +305,6 @@ imager: an R package for image processing
 </div>
 
 </div>
-<div id="tutorials-case-studies-etc.-1" class="section level3">
-<h3>Tutorials, case studies, etc.</h3>
-<p>There’s also a number of tutorials and case studies:</p>
-<ul>
-<li>imager as an <a href="gimptools.html">image editor</a>. Where do I find the bucket tool in imager?</li>
-<li>how to <a href="parallel.html">parallelise</a> computations</li>
-<li>how to write fast functional code: <a href="canny.html">a loop-free Canny edge detector</a></li>
-<li>image splitting, simplification and recursive data structures: <a href="quadtrees.html">quad-trees</a></li>
-<li>how to import image data from <a href="otherpackages.html">other R packages</a></li>
-<li><a href="unshuffle.html">image unshredding</a>: shuffle the columns of an image, and put it back together by solving a TSP.</li>
-<li><a href="ascii_art.html">ASCII art</a>: how to render an image using only characters.</li>
-<li>a <a href="image_stats.html">tutorial</a> on natural image statistics using imager</li>
-<li>another (incomplete) tutorial on <a href="morphology.html">morphology and detrending</a></li>
-<li>a <a href="foreground_background.html">tutorial</a> on <a href="http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/">foreground/background segmentation</a></li>
-<li>plotting the <a href="gradient_field.html">image gradient as a vector field</a></li>
-<li>information on <a href="cpp_api.html">accessing the CImg API using Rcpp</a></li>
-</ul>
-<p>You might find <a href="http://cimg.eu/">CImg</a>’s doc useful as well.</p>
-</div>
 </div>
 <div id="bugs-issues-etc." class="section level2">
 <h2>Bugs, issues, etc.</h2>
@@ -338,9 +319,13 @@ imager: an R package for image processing
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

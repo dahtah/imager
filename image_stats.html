@@ -19,12 +19,11 @@
 <script src="image_stats_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="image_stats_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="image_stats_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="image_stats_files/navigation-1.1/tabsets.js"></script>
+<link href="image_stats_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="image_stats_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="image_stats_files/highlight/default.css"
-      type="text/css" />
-<script src="image_stats_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -95,10 +94,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="image_stats_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -160,13 +159,13 @@ pos &lt;- cbind(pos.x,pos.y)</code></pre>
 <pre class="r"><code>val &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2]))
 head(val,3)</code></pre>
 <pre><code>## $`1`
-## [1] 0.3305098 0.3305098 0.3305098
+## [1] 0.3766275 0.3844706 0.3884314
 ## 
 ## $`2`
-## [1] 0.2447843 0.2604706 0.2825490
+## [1] 0.3083922 0.3398039 0.3080392
 ## 
 ## $`3`
-## [1] 0.3901176 0.4005882 0.3783529</code></pre>
+## [1] 0.3556471 0.3521961 0.3512941</code></pre>
 <p>In each element of the list, the first value corresponds to the value of the central pixel, the second to the left-hand neighbour and the third to the right-hand neighbour. We transform the list to a matrix and plot the value of the neighbours as a function of the value of the central pixel:</p>
 <pre class="r"><code>mat &lt;- do.call(rbind,val)
 plot(mat[,1],mat[,2],xlab=&quot;Central value&quot;,ylab=&quot;Left-hand neighbour&#39;s value&quot; )</code></pre>
@@ -176,9 +175,9 @@ plot(mat[,1],mat[,2],xlab=&quot;Central value&quot;,ylab=&quot;Left-hand neighbo
 <p>As the scatterplots suggest, neighbouring pixels tend to be highly correlated:</p>
 <pre class="r"><code>cor(mat)</code></pre>
 <pre><code>##           [,1]      [,2]      [,3]
-## [1,] 1.0000000 0.9811194 0.9808757
-## [2,] 0.9811194 1.0000000 0.9594413
-## [3,] 0.9808757 0.9594413 1.0000000</code></pre>
+## [1,] 1.0000000 0.9874034 0.9866582
+## [2,] 0.9874034 1.0000000 0.9607263
+## [3,] 0.9866582 0.9607263 1.0000000</code></pre>
 <p>We can repeat the analysis using neighbours that are further away:</p>
 <pre class="r"><code>stencil &lt;- data.frame(dx=c(0,-4,4),dy=c(0,0,0)) #Selects neighbours that are 4 pixels away in x direction
 pos.x &lt;- round(runif(500,5,width(im)-4))
@@ -186,9 +185,9 @@ pos &lt;- cbind(pos.x,pos.y)
 mat &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2])) %&gt;% do.call(rbind,.)
 cor(mat)</code></pre>
 <pre><code>##           [,1]      [,2]      [,3]
-## [1,] 1.0000000 0.9148690 0.9072662
-## [2,] 0.9148690 1.0000000 0.8643944
-## [3,] 0.9072662 0.8643944 1.0000000</code></pre>
+## [1,] 1.0000000 0.9378854 0.9177442
+## [2,] 0.9378854 1.0000000 0.8570731
+## [3,] 0.9177442 0.8570731 1.0000000</code></pre>
 <p>Here the correlation coefficients (1,2) and (1,3) represent correlations between pixels that are 4 units away (~ 98%), while coefficient (2,3) represents a correlation between pixels that are 8 units away (~ 94%). Correlation then seems to drop as a function of distance. We can make a more systematic analysis using a wider stencil:</p>
 <pre class="r"><code>stencil &lt;- expand.grid(dx=seq(-10,10,1),dy=seq(-10,10,1))
 head(stencil,4)</code></pre>
@@ -216,8 +215,8 @@ df &lt;- data.frame(dist.x = c(Dx),dist.y = c(Dy), cor = c(C))
 head(df,3)</code></pre>
 <pre><code>##   dist.x dist.y       cor
 ## 1      0      0 1.0000000
-## 2      1      0 0.9840487
-## 3      2      0 0.9554052</code></pre>
+## 2      1      0 0.9819809
+## 3      2      0 0.9515344</code></pre>
 <p>Plotting the results:</p>
 <pre class="r"><code>library(ggplot2)
 ggplot(df,aes(dist.x,dist.y))+geom_point(aes(size=cor))</code></pre>
@@ -243,6 +242,7 @@ ggplot(df,aes(dist.x,dist.y))+geom_point(aes(size=cor))</code></pre>
 suby &lt;- subset(df,dist.x==0) %&gt;% select(cor,dist.axis=dist.y) %&gt;%   mutate(label=&quot;Correlation along y&quot;)
 subx &lt;- subset(df,dist.y==0) %&gt;%  select(cor,dist.axis=dist.x) %&gt;% mutate(label=&quot;Correlation along x&quot;) 
 rbind(subx,suby) %&gt;% ggplot(aes(dist.axis,cor,col=label))+geom_point()+geom_smooth()+labs(x=&quot;Distance along axis (x or y), pix.&quot;,y=&quot;Correlation between values&quot;,col=&quot;&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39;</code></pre>
 <p><img src="image_stats_files/figure-html/correlation_axis-1.png" width="864" /></p>
 <p>It’s interesting to look at the principal components of the image patches we extract. They describe the directions of greatest variance among the set of patches from this particular image (more interesting analyses use of course a whole set of images, not just the one).</p>
 <p>Notice that the eigenspectrum of the covariance matrix falls off very rapidly:</p>
@@ -314,9 +314,13 @@ plot(fn)</code></pre>
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

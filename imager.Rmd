@@ -46,7 +46,7 @@ deriche(im,2,order=2,axis="x") %>% deriche(2,order=2,axis="y") %>% plot
 ```{r quickstart2,fig.width=12,cache=TRUE}
 #Another example of chaining: image gradient along x and y axes
 layout(matrix(1:2,1,2));
-grayscale(im) %>% imgradient %>% plot
+grayscale(im) %>% imgradient("xy") %>% plot(layout="row")
 
 #If ffmpeg is present, we can load videos as well:
 tennis <- load.video(system.file('extdata/tennis_sif.mpeg',package='imager'))
@@ -153,7 +153,7 @@ make.video(dd,f)
 
 ```{r echo=FALSE}
 iml <- map_il(seq(0,20,l=60),~ isoblur(boats,.))
-save.video(iml,"increasing_blur.webm")
+save.video(iml,"imager_files/figure-html/increasing_blur.webm")
 ```
 
 <video width="500"  controls loop>

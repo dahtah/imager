@@ -19,12 +19,11 @@
 <script src="parallel_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="parallel_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="parallel_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="parallel_files/navigation-1.1/tabsets.js"></script>
+<link href="parallel_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="parallel_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="parallel_files/highlight/default.css"
-      type="text/css" />
-<script src="parallel_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -95,10 +94,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="parallel_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -143,12 +142,12 @@ fun &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% lapply(rank)
     
 system.time(fun())</code></pre>
 <pre><code>##    user  system elapsed 
-##  13.374   0.470  13.840</code></pre>
+##  12.413   0.536  12.945</code></pre>
 <pre class="r"><code>#Parallel version: use mclapply
 fun.par &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% mclapply(rank,mc.cores=2)
 system.time(fun.par())</code></pre>
 <pre><code>##    user  system elapsed 
-##   4.959   0.477  10.442</code></pre>
+##   4.790   0.608  10.250</code></pre>
 </div>
 <div id="native-parallelisation-cimg-and-openmp" class="section level1">
 <h1><span class="header-section-number">2</span> Native parallelisation: CImg and OpenMP</h1>
@@ -166,16 +165,16 @@ OpenMPController::omp_set_num_threads(1)</code></pre>
 ## [1] 1</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
-##   expr      min       lq     mean  median       uq      max neval
-##  fun() 465.7779 467.9026 476.4602 469.218 472.8895 564.1045    15</code></pre>
+##   expr      min      lq     mean   median       uq      max neval
+##  fun() 463.7745 465.425 469.6804 466.8861 468.3055 499.1592    15</code></pre>
 <pre class="r"><code>#2 cores
 OpenMPController::omp_set_num_threads(2)</code></pre>
 <pre><code>## [[1]]
 ## [1] 2</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
-##   expr      min       lq     mean   median       uq     max neval
-##  fun() 407.1996 408.9262 412.4111 410.0252 416.1974 425.469    15</code></pre>
+##   expr      min       lq     mean   median       uq      max neval
+##  fun() 250.1561 260.1025 262.2085 264.3445 266.5629 268.8653    15</code></pre>
 <pre class="r"><code>#3 cores, etc.
 OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre><code>## [[1]]
@@ -183,7 +182,7 @@ OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
 ##   expr      min       lq     mean   median       uq      max neval
-##  fun() 275.6922 276.1959 281.6873 277.9295 285.6638 296.9839    15</code></pre>
+##  fun() 295.3284 297.5541 300.0099 299.4172 302.8274 306.2033    15</code></pre>
 <p>If CImg’s parallelisation doesn’t seem to work on your machine, it’s probably because you compiled the package with clang, which has patchy support for OpenMP. Recompile using gcc if possible.</p>
 </div>
 <div id="parallelisation-in-r-vs.native-parallelisation" class="section level1">
@@ -195,8 +194,8 @@ OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre class="r"><code>fun.R &lt;- function() imsplit(boats,&quot;c&quot;) %&gt;% mclapply(function(v) medianblur(v,50),mc.cores=3)
 microbenchmark(fun.R(),times=20)</code></pre>
 <pre><code>## Unit: seconds
-##     expr      min       lq     mean   median      uq      max neval
-##  fun.R() 4.476874 4.605437 4.717922 4.714756 4.86042 4.935906    20</code></pre>
+##     expr      min      lq     mean   median       uq      max neval
+##  fun.R() 4.840825 5.21166 5.275059 5.291631 5.363318 5.467941    20</code></pre>
 <p>Second, CImg’s native version:</p>
 <pre class="r"><code>OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre><code>## [[1]]
@@ -205,7 +204,7 @@ microbenchmark(fun.R(),times=20)</code></pre>
 microbenchmark(fun.nat(),times=20)</code></pre>
 <pre><code>## Unit: seconds
 ##       expr      min       lq    mean   median       uq      max neval
-##  fun.nat() 4.549791 4.623581 4.74483 4.729581 4.812571 5.004164    20</code></pre>
+##  fun.nat() 5.140669 5.220139 5.39972 5.270974 5.475182 6.057458    20</code></pre>
 <p>Pros and cons of using native parallelisation:</p>
 <ul>
 <li>Transparent</li>
@@ -230,9 +229,13 @@ microbenchmark(fun.nat(),times=20)</code></pre>
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

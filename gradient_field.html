@@ -19,12 +19,11 @@
 <script src="gradient_field_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="gradient_field_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="gradient_field_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="gradient_field_files/navigation-1.1/tabsets.js"></script>
+<link href="gradient_field_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="gradient_field_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="gradient_field_files/highlight/default.css"
-      type="text/css" />
-<script src="gradient_field_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -95,10 +94,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="gradient_field_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -163,6 +162,8 @@ head(dgr)</code></pre>
 ##replace with library(ggplot2) if you prefer
 library(cowplot)</code></pre>
 <pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## Warning: `legend.margin` must be specified using `margin()`. For the old
+## behavior use legend.spacing</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;cowplot&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
@@ -219,9 +220,13 @@ gradfield(grayscale(boats),6)</code></pre>
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

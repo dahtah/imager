@@ -19,12 +19,11 @@
 <script src="canny_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="canny_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="canny_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="canny_files/navigation-1.1/tabsets.js"></script>
+<link href="canny_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="canny_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="canny_files/highlight/default.css"
-      type="text/css" />
-<script src="canny_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -95,10 +94,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="canny_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -309,7 +308,7 @@ bucketfill(im1,80,80,color=1,high_connex=TRUE) %&gt;% plot(main=&quot;Result&quo
 <p>The bucketfill has a tolerance parameter, which sets a stopping criterion: if nearby pixels are more than “sigma” apart in value, they won’t be filled. The trick will consist in starting a bucket fill inside a strong region, and painting nearby weak pixels as strong. If we do this from all strong regions, we’ll have rescued all the weak edges that need to be rescued. split_connected splits a pixel set into its connected regions:</p>
 <pre class="r"><code>pxs &lt;- split_connected(strong,high_connectivity=TRUE)
 length(pxs)</code></pre>
-<pre><code>## [1] 125</code></pre>
+<pre><code>## [1] 124</code></pre>
 <p>Each element in pxs is a pixel set representing a set of connected strong edge pixels.</p>
 <p>We need seed pixels from each region, which we can collect using purrr’s map function:</p>
 <pre class="r"><code>#Collect seed pixels and plot their location
@@ -358,10 +357,10 @@ all.equal(canny,canny2)</code></pre>
 <p>The second function is much faster, at least on this image (for this particular choice of thresholds):</p>
 <pre class="r"><code>system.time(hystFP(list(strong=strong,weak=weak)))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.470   0.012   0.482</code></pre>
+##   0.473   0.004   0.477</code></pre>
 <pre class="r"><code>system.time(rescueFill(strong,weak))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.177   0.012   0.189</code></pre>
+##   0.193   0.012   0.204</code></pre>
 </div>
 
 
@@ -372,9 +371,13 @@ all.equal(canny,canny2)</code></pre>
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

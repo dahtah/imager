@@ -41,7 +41,7 @@ should to the trick. If you prefer the latest development version, see our [Gith
 
 ## Dependencies
 
-OS X users need to install XQuartz: https://www.xquartz.org/. You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to work with videos, or import and save images in formats other than BMP, PNG and JPEG. On Linux these should be available from standard repositories (ie. "sudo apt-get install ffmpeg" should work). On OS X they are available via brew: "brew install imagemagick ffmpeg". 
+OS X users need to install XQuartz: https://www.xquartz.org/. You'll also need [ImageMagick](http://www.imagemagick.org/script/binary-releases.php) and [ffmpeg](http://ffmpeg.org/download.html) if you want to work with videos, or import and save images in formats other than BMP, TIFF, PNG and JPEG. On Linux these should be available from standard repositories (ie. "sudo apt-get install ffmpeg" should work). On OS X they are available via brew: "brew install imagemagick ffmpeg". 
 
 ## Getting started 
 
@@ -49,15 +49,15 @@ There's a tutorial included in the package:  hit
 
 	vignette("gettingstarted",package="imager")
 
-or [click here](gettingstarted.html).
+or [click here](https://cran.r-project.org/web/packages/imager/vignettes/gettingstarted.html).
 
 The tutorial covers basic image manipulation, plotting use base graphics and ggplot2, getting image data in and out, and an example of multiscale blob detection.
 
-The next step is to learn about pixsets, which are used to represent sets of pixels (e.g., the foreground in an image).
+The next step is to learn about [pixsets](https://cran.r-project.org/web/packages/imager/vignettes/pixsets.html), which are used to represent sets of pixels (e.g., the foreground in an image).
 
 		vignette("pixsets",package="imager")
 
-The vignette includes an example of image segmentation. 
+The [vignette](https://cran.r-project.org/web/packages/imager/vignettes/pixsets.html) includes an example of image segmentation. 
 
 
 ## Documentation
@@ -65,6 +65,8 @@ The vignette includes an example of image segmentation.
 ### General package documentation 
 
 Many functions are described in the general package [documentation](imager.html). The automatically generated docs are [here](https://cran.r-project.org/web/packages/imager/imager.pdf), and come with examples. 
+
+You might find [CImg](http://cimg.eu/)'s doc useful as well.
 
 ### FAQ
 
@@ -197,24 +199,6 @@ See here for [Frequently Asked Questions](FAQ.html).
 <!--/html_preserve-->
 
 
-### Tutorials, case studies, etc. 
-
-There's also a number of tutorials and case studies:
-
-- imager as an [image editor](gimptools.html). Where do I find the bucket tool in imager?
-- how to [parallelise](parallel.html) computations 
-- how to write fast functional code: [a loop-free Canny edge detector](canny.html)
-- image splitting, simplification and recursive data structures: [quad-trees](quadtrees.html)
-- how to import image data from [other R packages](otherpackages.html)
-- [image unshredding](unshuffle.html): shuffle the columns of an image, and put it back together by solving a TSP. 
-- [ASCII art](ascii_art.html): how to render an image using only characters. 
-- a [tutorial](image_stats.html) on natural image statistics using imager
-- another (incomplete) tutorial on [morphology and detrending](morphology.html)
-- a [tutorial](foreground_background.html) on [foreground/background segmentation](http://opensource.graphics/how-to-code-a-nice-user-guided-foreground-extraction-algorithm/)
-- plotting the [image gradient as a vector field](gradient_field.html)
-- information on [accessing the CImg API using Rcpp](cpp_api.html)
-
-You might find [CImg](http://cimg.eu/)'s doc useful as well. 
 
 ## Bugs, issues, etc.
 

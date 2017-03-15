@@ -19,12 +19,11 @@
 <script src="gimptools_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="gimptools_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="gimptools_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="gimptools_files/navigation-1.1/tabsets.js"></script>
+<link href="gimptools_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="gimptools_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="gimptools_files/highlight/default.css"
-      type="text/css" />
-<script src="gimptools_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -95,10 +94,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="gimptools_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -155,7 +154,7 @@ $(document).ready(function () {
 <img src="gimp-toolbox-icons.png" alt="gimp-toolbox-icons.png" />
 <p class="caption">gimp-toolbox-icons.png</p>
 </div>
-<p>The goal of this document is to show how to perform most of these operations in imager, with the help of a few other packages.</p>
+<p>The goal of this document is to show how to perform most of these operations in imager, with the help of a few other packages. It’s a good way of familiarising yourself with the package.</p>
 <pre class="r"><code>library(imager)
 parrots &lt;- load.example(&quot;parrots&quot;)</code></pre>
 <div id="selection" class="section level1">
@@ -452,9 +451,13 @@ imwarp(parrots,map=map.shear.rev,direction=&quot;backward&quot;) %&gt;% plot</co
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 
