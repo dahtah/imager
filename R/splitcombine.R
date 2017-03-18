@@ -268,7 +268,7 @@ parvar <- function(x,na.rm=FALSE)
 
 ##' @describeIn imager.combine Std. deviation 
 ##' @export
-parsd <- function(x) parvar(x) %>% sqrt
+parsd <- function(x,na.rm=FALSE) parvar(x,na.rm=na.rm) %>% sqrt
 
 
 ##' @describeIn imager.combine Parallel all (for pixsets)

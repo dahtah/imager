@@ -46,7 +46,7 @@ parmed(x, na.rm = FALSE)
 
 parvar(x, na.rm = FALSE)
 
-parsd(x)
+parsd(x, na.rm = FALSE)
 
 parall(x)
 
