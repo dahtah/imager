@@ -249,7 +249,22 @@ parmed <- function(x,na.rm=FALSE) check.reduce(x) %>% reduce_med(na_rm=na.rm)
 
 ##' @describeIn imager.combine Variance
 ##' @export
-parvar <- function(x) check.reduce(x) %>% reduce_list(4)
+parvar <- function(x,na.rm=FALSE)
+{
+    if (na.rm)
+    {
+        nValid <- map_il(x,px.na) %>% { length(x) - add(.) }
+        avg <- add(x,na.rm=TRUE)/nValid
+        map_il(x,~ (.-avg)^2) %>% add(na.rm=TRUE) %>% { ./(nValid-1) }
+    }
+    else
+    {
+        n <- length(x)
+        avg <- average(x)
+        map_il(x,~ (.-avg)^2) %>% add %>% { ./(n-1) }
+    }
+}
+
 
 ##' @describeIn imager.combine Std. deviation 
 ##' @export

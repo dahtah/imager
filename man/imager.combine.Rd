@@ -44,7 +44,7 @@ enorm(x)
 
 parmed(x, na.rm = FALSE)
 
-parvar(x)
+parvar(x, na.rm = FALSE)
 
 parsd(x)
 
