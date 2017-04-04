@@ -23,7 +23,6 @@ rescueFill <- function(strong,weak)
 nonmax <- function(gr)
     {
         mag <- with(gr,sqrt(x^2+y^2))
-        ang <- with(gr,atan2(y,x))
         grs <- list(x=gr$x/mag,y=gr$y/mag)
         X <- Xc(gr$x)
         Y <- Yc(gr$y)
