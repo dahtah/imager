@@ -1,3 +1,7 @@
+# imager 0.40.2 Minor release
+	* added crop.bbox for cropping image to the bounding box of a pixset
+	* updated CImg: issues with Intel C compiler and libtiff on Windows fixed upstream
+	
 # imager 0.40.1 Minor release
 	* Updated CImg, imager should now compile on Solaris
 	* Fixed memory access bug in px.flood

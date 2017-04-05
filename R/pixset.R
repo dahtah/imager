@@ -661,7 +661,8 @@ display.pixset <- function(x,...) display(as.cimg(x),...)
 ##' Compute the bounding box of a pixset 
 ##'
 ##' This function returns the bounding box of a pixset as another pixset. If the image has more than one frame, a bounding cube is returned.
-##' If the image has several colour channels, the bounding box is computed separately in each channel. 
+##' If the image has several colour channels, the bounding box is computed separately in each channel.
+##' crop.bbox crops an image using the bounding box of a pixset. 
 ##' @param px a pixset
 ##' @return a pixset object
 ##' @examples
@@ -670,6 +671,7 @@ display.pixset <- function(x,...) display(as.cimg(x),...)
 ##' plot(im)
 ##' highlight(bbox(px))
 ##' highlight(px,col="green")
+##' crop.bbox(im,px) %>% plot
 ##' @author Simon Barthelme
 ##' @export
 bbox <- function(px)
@@ -678,7 +680,7 @@ bbox <- function(px)
     #Compute separately across colour channels 
     if (spectrum(px) > 1)
     {
-        imsplit(px,"c") %>% bbox %>% imappend("c")
+        imsplit(px,"c") %>% map(bbox) %>% imappend("c")
     }
     
     if (sum(px) == 0)
@@ -697,6 +699,41 @@ bbox <- function(px)
             }
         }
 }
+
+
+
+#' @describeIn bbox crop image using the bounding box of pixset px
+#' @param im an image
+#' @export
+crop.bbox <- function(im,px)
+{
+    w <- where(px)
+    
+    if (spectrum(px) > 1)
+    {
+        px <- imsplit(px,"c") %>% parany
+    }
+    
+    if (sum(px) == 0)
+    {
+        im
+    }
+    else
+        {
+            if (depth(px)==1)
+            {
+                imsub(im,x %inr% range(w$x),y %inr% range(w$y))
+            }
+            else
+            {
+                imsub(im,x %inr% range(w$x),y %inr% range(w$y),z %inr% range(w$z))
+            }
+        }
+}
+
+
+
+
 ##' A pixset for NA values
 ##'
 ##' A pixset containing all NA pixels

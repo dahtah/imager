@@ -2,12 +2,17 @@
 % Please edit documentation in R/pixset.R
 \name{bbox}
 \alias{bbox}
+\alias{crop.bbox}
 \title{Compute the bounding box of a pixset}
 \usage{
 bbox(px)
+
+crop.bbox(im, px)
 }
 \arguments{
 \item{px}{a pixset}
+
+\item{im}{an image}
 }
 \value{
 a pixset object
@@ -15,13 +20,19 @@ a pixset object
 \description{
 This function returns the bounding box of a pixset as another pixset. If the image has more than one frame, a bounding cube is returned.
 If the image has several colour channels, the bounding box is computed separately in each channel.
+crop.bbox crops an image using the bounding box of a pixset.
 }
+\section{Functions}{
+\itemize{
+\item \code{crop.bbox}: crop image using the bounding box of pixset px
+}}
 \examples{
 im <- grayscale(boats)
 px <- im > .85
 plot(im)
 highlight(bbox(px))
 highlight(px,col="green")
+crop.bbox(im,px) \%>\% plot
 }
 \author{
 Simon Barthelme
