@@ -426,7 +426,14 @@ px.right <- function(im,n=1)
 #' @export
 px.borders <- function(im,n=1)
 {
-    (px.left(im,n) | px.right(im,n)) | (px.top(im,n) | px.bottom(im,n))
+    if (all(dim(im)[1:2] > 1))
+        {
+            (px.left(im,n) | px.right(im,n)) | (px.top(im,n) | px.bottom(im,n))
+        }
+    else
+    {
+        (px.left(im,n) | px.right(im,n))
+    }
 }
 
 #' @describeIn common_pixsets all pixels in image
