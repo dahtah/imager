@@ -263,7 +263,8 @@ grow <- function(px,x,y=x,z=x,boundary=TRUE)
 ##' Cleaning up can be achieved by shrinking the set (removing speckle), followed by growing it back up. Filling in can be achieved by growing the set (removing holes), and shrinking it again. 
 ##' @param px a pixset
 ##' @param ... parameters that define the structuring element to use, passed on to "grow" and "shrink"
-##' @return a pixset
+##' @examples
+##  #A pixset
 ##' im <- load.example("birds") %>% grayscale
 ##' sub <- imsub(-im,y> 380) %>% threshold("85%")
 ##' plot(sub)
