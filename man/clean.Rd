@@ -14,21 +14,6 @@ fill(px, ...)
 
 \item{...}{parameters that define the structuring element to use, passed on to "grow" and "shrink"}
 }
-\value{
-a pixset
-im <- load.example("birds") %>% grayscale
-sub <- imsub(-im,y> 380) %>% threshold("85%")
-plot(sub)
-#Turn into a pixel set
-px <- sub==1
-layout(t(1:2))
-plot(px,main="Before clean-up")
-clean(px,3) %>% plot(main="After clean-up")
-#Now fill in the holes
-px <- clean(px,3)
-plot(px,main="Before filling-in")
-fill(px,28) %>% plot(main="After filling-in")
-}
 \description{
 Cleaning up a pixel set here means removing small isolated elements (speckle). Filling in means removing holes.
 Cleaning up can be achieved by shrinking the set (removing speckle), followed by growing it back up. Filling in can be achieved by growing the set (removing holes), and shrinking it again.
@@ -37,6 +22,20 @@ Cleaning up can be achieved by shrinking the set (removing speckle), followed by
 \itemize{
 \item \code{fill}: Fill in holes using morphological closing
 }}
+\examples{
+im <- load.example("birds") \%>\% grayscale
+sub <- imsub(-im,y> 380) \%>\% threshold("85\%")
+plot(sub)
+#Turn into a pixel set
+px <- sub==1
+layout(t(1:2))
+plot(px,main="Before clean-up")
+clean(px,3) \%>\% plot(main="After clean-up")
+#Now fill in the holes
+px <- clean(px,3)
+plot(px,main="Before filling-in")
+fill(px,28) \%>\% plot(main="After filling-in")
+}
 \author{
 Simon Barthelme
 }
