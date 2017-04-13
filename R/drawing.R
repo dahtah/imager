@@ -15,7 +15,7 @@
 #' layout(t(1:2))
 #' plot(boats,main="Original")
 #' plot(boats.new,main="New sails")
-#' @seealso selectSimilar
+#' @seealso px.flood
 bucketfill <- function(im,x,y,z = 1,color,opacity=1,sigma=0,high_connexity=FALSE)
     {
         if (missing(color))

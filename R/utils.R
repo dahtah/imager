@@ -401,6 +401,7 @@ imdirac <- function(dims,x,y,z=1,cc=1)
 ##' @param im the image
 ##' @param thr a threshold, either numeric, or "auto", or a string for quantiles 
 ##' @param approx Skip pixels when computing quantiles in large images (default TRUE)
+##' @param adjust use to adjust the automatic threshold: if the auto-threshold is at k, effective threshold will be at adjust*k (default 1)
 ##' @return a pixset with the selected pixels 
 ##' @examples
 ##' im <- load.example("birds")
@@ -408,9 +409,13 @@ imdirac <- function(dims,x,y,z=1,cc=1)
 ##' threshold(im.g,"15%") %>% plot
 ##' threshold(im.g,"auto") %>% plot
 ##' threshold(im.g,.1) %>% plot
+##' #If auto-threshold is too high, adjust downwards or upwards
+##' #using "adjust"
+##' threshold(im,adjust=.5) %>% plot
+##' threshold(im,adjust=1.3) %>% plot
 ##' @author Simon Barthelme
 ##' @export
-threshold <- function(im,thr="auto",approx=TRUE)
+threshold <- function(im,thr="auto",approx=TRUE,adjust=1)
     {
         if (is.character(thr))
         {
@@ -425,7 +430,7 @@ threshold <- function(im,thr="auto",approx=TRUE)
             
             if (thr=="auto")
             {
-                thr <- cut.kmeans(c(v))
+                thr <- cut.kmeans(c(v))*adjust
             }
                 else
                 {

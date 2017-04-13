@@ -625,7 +625,7 @@ All functions are documented.
 - threshold, renorm
 - permute_axes
 - imshift, imrotate, mirror, rotate_xy, imwarp, warp
-- imdraw, selectSimilar, bucketfill
+- imdraw, px.flood, bucketfill
 
 ## Filtering and FFTs
 

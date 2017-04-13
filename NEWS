@@ -1,3 +1,16 @@
+imager 0.40.2 Minor release
+===========================
+
+    * added crop.bbox for cropping image to the bounding box of a pixset
+    * updated CImg: fixes issues with Intel C compiler and libtiff giving pop-up warnings on Windows 
+    * threshold now has an "adjust" argument, to adjust the auto-thresholding
+
+imager 0.40.1 Minor release
+===========================
+
+    * Updated CImg, imager should now compile on Solaris
+    * Fixed memory access bug in px.flood
+
 imager 0.40 Major release
 =========================
 
@@ -14,6 +27,8 @@ imager 0.40 Major release
     should now be easier and more robust (also slower, sorry). It's now
     possible to load individual frames from a video. *You still need
     ffmpeg*.
+-   to load images from URLs imager now uses the *downloader* package,
+    which is more robust than the previous solution
 -   it's now possible to import images from the raster package and from
     the magick package.
 -   unified RGB representations so that every function expects RGB
@@ -30,6 +45,8 @@ imager 0.40 Major release
 -   save.image now accepts a quality argument when saving JPEGs.
 -   native support for TIFF, now supports non-integer values in TIFF
     files
+-   rm.alpha removes alpha channel, flatten.alpha flattens it
+-   imfill now accepts colour names, e.g. `imfill(10,10,val='red')`
 -   improved documentation and examples
 -   added functions for conversion to/from CIELAB
 
