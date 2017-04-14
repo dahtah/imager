@@ -23,4 +23,3 @@ This is just imsplit followed by llply followed by imappend
 iiply(boats,"c",function(v) (v-mean(v))/sd(v)) \%>\% plot 
 
 }
-

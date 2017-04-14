@@ -201,8 +201,15 @@ load.jpeg <- function(file)
 ##' load.image(tmpF) %>% plot
 save.image <- function(im,file,quality=.7)
 {
+    if (!is.cimg(im)) {
+        stop("First argument should be an image")
+    }
     if (depth(im) > 1) warning("using save.image for videos is deprecated, please switch to save.video")
     ftype <- stringr::str_match(file,"\\.([^.]+)$")[1,2]
+    if (is.na(ftype))
+    {
+        stop("Please provide a file extension (.png, .jpeg, etc.)")
+    }
     if (ftype == "png")
     {
         save.png(im,file)

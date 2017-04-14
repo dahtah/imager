@@ -30,4 +30,3 @@ autocrop(padded) \%>\% plot
 padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=.1)
 autocrop(padded2) \%>\% plot
 }
-

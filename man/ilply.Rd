@@ -22,4 +22,3 @@ Shorthand for imsplit followed by llply
 parrots <- load.example("parrots")
 ilply(parrots,"c",mean) #mean luminance per colour channel
 }
-

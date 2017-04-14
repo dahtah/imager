@@ -18,4 +18,3 @@ Click on individual images to zoom in.
 ##Not run: interactive only 
 ## imgradient(boats,"xy") \%>\% display
 }
-

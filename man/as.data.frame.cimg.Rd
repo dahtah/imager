@@ -29,4 +29,3 @@ as.data.frame(boats,wide="c") \%>\% head(5)
 \author{
 Simon Barthelme
 }
-

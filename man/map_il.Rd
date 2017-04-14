@@ -26,4 +26,3 @@ try(imsplit(boats,"x",2) \%>\% map_il(~ . > 2))
 \author{
 Simon Barthelme
 }
-

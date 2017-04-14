@@ -19,10 +19,9 @@ a data.frame defining a stencil
 \description{
 Returns a stencil corresponding to all nearest-neighbours of a pixel
 }
-\author{
-Simon Barthelme
-}
 \seealso{
 get.stencil
 }
-
+\author{
+Simon Barthelme
+}

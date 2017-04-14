@@ -18,4 +18,3 @@ play(vid, loop = FALSE, delay = 30L, normalise = TRUE)
 \description{
 A very basic video player. Press the space bar to pause and ESC to close.
 }
-

@@ -23,7 +23,7 @@ SystemRequirements: fftw3,libtiff
 Enhances: spatstat
 LinkingTo: Rcpp
 LazyData: true
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Suggests:
     knitr,
     rmarkdown,ggplot2,dplyr,scales,

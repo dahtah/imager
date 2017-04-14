@@ -23,4 +23,3 @@ diffusion_tensors(im, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6,
 \description{
 Compute field of diffusion tensors for edge-preserving smoothing.
 }
-

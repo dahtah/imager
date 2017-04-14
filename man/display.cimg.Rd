@@ -23,4 +23,3 @@ Press escape or close the window to exit.
 ##display(boats,FALSE) #Normalisation off
 ##display(boats/2,FALSE) #Normalisation off, so different from above
 }
-

@@ -17,4 +17,3 @@ CImg has its own functions for fast, interactive image plotting. Use this if you
 \seealso{
 display.cimg, display.imlist
 }
-

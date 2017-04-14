@@ -34,10 +34,9 @@ ct <- contours(px)
 #Highlight pixset
 purrr::walk(ct,function(v) lines(v$x,v$y,col="red"))
 }
-\author{
-Simon Barthelme
-}
 \seealso{
 highlight
 }
-
+\author{
+Simon Barthelme
+}

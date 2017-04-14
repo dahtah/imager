@@ -44,4 +44,3 @@ resize(im, size_x = -100L, size_y = -100L, size_z = -100L,
 Resize image to new dimensions.
 If pd[x,y,z,v]<0, it corresponds to a percentage of the original size (the default value is -100).
 }
-

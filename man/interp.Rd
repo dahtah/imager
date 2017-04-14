@@ -24,4 +24,3 @@ Locations need to be provided as a data.frame with variables x,y,z, and c (the l
 loc <- data.frame(x=runif(10,1,width(boats)),y=runif(10,1,height(boats))) #Ten random locations
 interp(boats,loc)
 }
-

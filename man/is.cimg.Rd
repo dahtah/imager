@@ -15,4 +15,3 @@ logical
 \description{
 Checks that an object is a cimg object
 }
-

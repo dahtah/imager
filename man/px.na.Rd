@@ -20,4 +20,3 @@ im <- boats
 im[1] <- NA
 px.na(im)
 }
-

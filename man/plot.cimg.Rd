@@ -86,4 +86,3 @@ plot(boats.small,interp=FALSE)
 \seealso{
 display, which is much faster, as.raster, which converts images to R raster objects
 }
-
