@@ -2,6 +2,7 @@
 	* added crop.bbox for cropping image to the bounding box of a pixset
 	* updated CImg: fixes issues with Intel C compiler and libtiff giving pop-up warnings on Windows 
 	* threshold now has an "adjust" argument, to adjust the auto-thresholding
+	* switched to C++11 
 	
 # imager 0.40.1 Minor release
 	* Updated CImg, imager should now compile on Solaris
