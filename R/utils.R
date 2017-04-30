@@ -664,7 +664,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 #' Autocrop image region 
 #'
 #' @param im an image
-#' @param color Colour used for the crop. If missing, the colour is taken from the top-left pixel. 
+#' @param color Colour used for the crop. If missing, the colour is taken from the top-left pixel. Can also be a colour name (e.g. "red", or "black")
 #' @param axes Axes used for the crop.
 #' @export
 #' @examples
@@ -673,15 +673,21 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 #' plot(padded)
 #' #Remove padding
 #' autocrop(padded) %>% plot
-#'
+#' #You can specify the colour if needs be
+#'autocrop(padded,"black") %>% plot
 #' #autocrop has a zero-tolerance policy: if a pixel value is slightly different from the one you gave
 #' #the pixel won't get cropped. A fix is to do a bucket fill first
 #' padded <- isoblur(padded,10)
 #' autocrop(padded) %>% plot
 #' padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=.1)
 #' autocrop(padded2) %>% plot
+#' 
 autocrop <- function(im,color=color.at(im,1,1),axes="zyx")
 {
+    if (is.character(color))
+    {
+        color <- col2rgb(color)[,1]/255
+    }
     autocrop_(im,color,axes)
 }
 

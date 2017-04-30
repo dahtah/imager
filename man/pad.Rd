@@ -4,7 +4,7 @@
 \alias{pad}
 \title{Pad image with n pixels along specified axis}
 \usage{
-pad(im, nPix, axes, pos = 0, val = 0)
+pad(im, nPix, axes, pos = 0, val = rep(0, spectrum(im)))
 }
 \arguments{
 \item{im}{the input image}
@@ -15,7 +15,7 @@ pad(im, nPix, axes, pos = 0, val = 0)
 
 \item{pos}{-1: prepend 0: center 1: append}
 
-\item{val}{value to fill the padding with (default 0)}
+\item{val}{colour of the padded pixels (default 0 in all channels). Can be a string for colour images, e.g. "red", or "black".}
 }
 \value{
 a padded image
@@ -27,6 +27,7 @@ Pad image with n pixels along specified axis
 pad(boats,20,"xy") \%>\% plot
 pad(boats,20,pos=-1,"xy") \%>\% plot
 pad(boats,20,pos=1,"xy") \%>\% plot
+pad(boats,20,pos=1,"xy",val="red") \%>\% plot
 }
 \author{
 Simon Barthelme
