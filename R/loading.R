@@ -102,12 +102,12 @@ load.image.internal <- function(file)
             is.url <- grepl("^(http|ftp)s?://", file)
             if (is.url)
             {
-                load_image(file)
+                load_image(file)/255
             }
             else
             {
                 file <- normalizePath(file,mustWork=TRUE)
-                load_image(file)
+                load_image(file)/255
             }
         }
         else
