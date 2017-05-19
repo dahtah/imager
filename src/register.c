@@ -54,6 +54,9 @@ extern SEXP imager_getYc(SEXP, SEXP, SEXP, SEXP);
 extern SEXP imager_getZc(SEXP, SEXP, SEXP, SEXP);
 extern SEXP imager_haar(SEXP, SEXP, SEXP);
 extern SEXP imager_has_omp();
+extern SEXP imager_hough_circle_(SEXP, SEXP);
+extern SEXP imager_hough_line_grad(SEXP, SEXP, SEXP);
+extern SEXP imager_hough_line_px(SEXP, SEXP);
 extern SEXP imager_HSItoRGB(SEXP);
 extern SEXP imager_HSLtoRGB(SEXP);
 extern SEXP imager_HSVtoRGB(SEXP);
@@ -169,6 +172,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"imager_getZc",               (DL_FUNC) &imager_getZc,                4},
     {"imager_haar",                (DL_FUNC) &imager_haar,                 3},
     {"imager_has_omp",             (DL_FUNC) &imager_has_omp,              0},
+    {"imager_hough_circle_",       (DL_FUNC) &imager_hough_circle_,        2},
+    {"imager_hough_line_grad",     (DL_FUNC) &imager_hough_line_grad,      3},
+    {"imager_hough_line_px",       (DL_FUNC) &imager_hough_line_px,        2},
     {"imager_HSItoRGB",            (DL_FUNC) &imager_HSItoRGB,             1},
     {"imager_HSLtoRGB",            (DL_FUNC) &imager_HSLtoRGB,             1},
     {"imager_HSVtoRGB",            (DL_FUNC) &imager_HSVtoRGB,             1},
