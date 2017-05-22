@@ -16,6 +16,7 @@ extern SEXP imager_bdistance_transform(SEXP, SEXP, SEXP);
 extern SEXP imager_berode(SEXP, SEXP, SEXP);
 extern SEXP imager_berode_rect(SEXP, SEXP, SEXP, SEXP);
 extern SEXP imager_berode_square(SEXP, SEXP);
+extern SEXP imager_bgraph(SEXP);
 extern SEXP imager_blabel(SEXP, SEXP);
 extern SEXP imager_blur_anisotropic(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP imager_boxblur(SEXP, SEXP, SEXP);
@@ -134,6 +135,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"imager_berode",              (DL_FUNC) &imager_berode,               3},
     {"imager_berode_rect",         (DL_FUNC) &imager_berode_rect,          4},
     {"imager_berode_square",       (DL_FUNC) &imager_berode_square,        2},
+    {"imager_bgraph",       (DL_FUNC) &imager_bgraph,        1},
     {"imager_blabel",              (DL_FUNC) &imager_blabel,               2},
     {"imager_blur_anisotropic",    (DL_FUNC) &imager_blur_anisotropic,    11},
     {"imager_boxblur",             (DL_FUNC) &imager_boxblur,              3},

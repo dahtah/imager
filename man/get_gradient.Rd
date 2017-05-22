@@ -29,3 +29,4 @@ Compute image gradient.
 \seealso{
 imgradient
 }
+

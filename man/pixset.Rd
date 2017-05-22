@@ -26,3 +26,4 @@ as.cimg(boats > 250)
 #Equivalently:
 (boats > 250) + 0
 }
+

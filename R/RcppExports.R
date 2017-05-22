@@ -4,145 +4,145 @@
 #' @describeIn imager.colourspaces RGB to HSL conversion 
 #' @export
 RGBtoHSL <- function(im) {
-    .Call('imager_RGBtoHSL', PACKAGE = 'imager', im)
+    .Call(imager_RGBtoHSL, im)
 }
 
 #' @describeIn imager.colourspaces CIE RGB to CIE XYZ (1931) conversion, D65 white point
 #' @export
 RGBtoXYZ <- function(im) {
-    .Call('imager_RGBtoXYZ', PACKAGE = 'imager', im)
+    .Call(imager_RGBtoXYZ, im)
 }
 
 #' @describeIn imager.colourspaces CIE XYZ to CIE RGB (1931) conversion, D65 white point
 #' @export
 XYZtoRGB <- function(im) {
-    .Call('imager_XYZtoRGB', PACKAGE = 'imager', im)
+    .Call(imager_XYZtoRGB, im)
 }
 
 #' @describeIn imager.colourspaces HSL to RGB conversion 
 #' @export
 HSLtoRGB <- function(im) {
-    .Call('imager_HSLtoRGB', PACKAGE = 'imager', im)
+    .Call(imager_HSLtoRGB, im)
 }
 
 #' @describeIn imager.colourspaces RGB to HSV conversion 
 #' @export
 RGBtoHSV <- function(im) {
-    .Call('imager_RGBtoHSV', PACKAGE = 'imager', im)
+    .Call(imager_RGBtoHSV, im)
 }
 
 #' @describeIn imager.colourspaces HSV to RGB conversion 
 #' @export
 HSVtoRGB <- function(im) {
-    .Call('imager_HSVtoRGB', PACKAGE = 'imager', im)
+    .Call(imager_HSVtoRGB, im)
 }
 
 #' @describeIn imager.colourspaces RGB to HSI conversion 
 #' @export
 RGBtoHSI <- function(im) {
-    .Call('imager_RGBtoHSI', PACKAGE = 'imager', im)
+    .Call(imager_RGBtoHSI, im)
 }
 
 #' @describeIn imager.colourspaces HSI to RGB conversion 
 #' @export
 HSItoRGB <- function(im) {
-    .Call('imager_HSItoRGB', PACKAGE = 'imager', im)
+    .Call(imager_HSItoRGB, im)
 }
 
 #' @describeIn imager.colourspaces RGB to sRGB conversion 
 #' @export
 RGBtosRGB <- function(im) {
-    .Call('imager_RGBtosRGB', PACKAGE = 'imager', im)
+    .Call(imager_RGBtosRGB, im)
 }
 
 #' @describeIn imager.colourspaces sRGB to RGB conversion 
 #' @export
 sRGBtoRGB <- function(im) {
-    .Call('imager_sRGBtoRGB', PACKAGE = 'imager', im)
+    .Call(imager_sRGBtoRGB, im)
 }
 
 #' @describeIn imager.colourspaces RGB to YCbCr conversion 
 #' @export
 RGBtoYCbCr <- function(im) {
-    .Call('imager_RGBtoYCbCr', PACKAGE = 'imager', im)
+    .Call(imager_RGBtoYCbCr, im)
 }
 
 #' @describeIn imager.colourspaces YCbCr to RGB conversion 
 #' @export
 YCbCrtoRGB <- function(im) {
-    .Call('imager_YCbCrtoRGB', PACKAGE = 'imager', im)
+    .Call(imager_YCbCrtoRGB, im)
 }
 
 #' @describeIn imager.colourspaces RGB to YUV conversion 
 #' @export
 RGBtoYUV <- function(im) {
-    .Call('imager_RGBtoYUV', PACKAGE = 'imager', im)
+    .Call(imager_RGBtoYUV, im)
 }
 
 #' @describeIn imager.colourspaces YUV to RGB conversion 
 #' @export
 YUVtoRGB <- function(im) {
-    .Call('imager_YUVtoRGB', PACKAGE = 'imager', im)
+    .Call(imager_YUVtoRGB, im)
 }
 
 #' @describeIn imager.colourspaces Lab to RGB (linear)
 #' @export
 LabtoRGB <- function(im) {
-    .Call('imager_LabtoRGB', PACKAGE = 'imager', im)
+    .Call(imager_LabtoRGB, im)
 }
 
 #' @describeIn imager.colourspaces RGB (linear) to Lab
 #' @export
 RGBtoLab <- function(im) {
-    .Call('imager_RGBtoLab', PACKAGE = 'imager', im)
+    .Call(imager_RGBtoLab, im)
 }
 
 #' @describeIn imager.colourspaces Lab to XYZ
 #' @export
 LabtoXYZ <- function(im) {
-    .Call('imager_LabtoXYZ', PACKAGE = 'imager', im)
+    .Call(imager_LabtoXYZ, im)
 }
 
 #' @describeIn imager.colourspaces XYZ to Lab
 #' @export
 XYZtoLab <- function(im) {
-    .Call('imager_XYZtoLab', PACKAGE = 'imager', im)
+    .Call(imager_XYZtoLab, im)
 }
 
 #' @describeIn imager.colourspaces Lab to sRGB
 #' @export
 LabtosRGB <- function(im) {
-    .Call('imager_LabtosRGB', PACKAGE = 'imager', im)
+    .Call(imager_LabtosRGB, im)
 }
 
 #' @describeIn imager.colourspaces sRGB to Lab
 #' @export
 sRGBtoLab <- function(im) {
-    .Call('imager_sRGBtoLab', PACKAGE = 'imager', im)
+    .Call(imager_sRGBtoLab, im)
 }
 
 getXc <- function(x, y, z, c) {
-    .Call('imager_getXc', PACKAGE = 'imager', x, y, z, c)
+    .Call(imager_getXc, x, y, z, c)
 }
 
 getYc <- function(x, y, z, c) {
-    .Call('imager_getYc', PACKAGE = 'imager', x, y, z, c)
+    .Call(imager_getYc, x, y, z, c)
 }
 
 getZc <- function(x, y, z, c) {
-    .Call('imager_getZc', PACKAGE = 'imager', x, y, z, c)
+    .Call(imager_getZc, x, y, z, c)
 }
 
 getCc <- function(x, y, z, c) {
-    .Call('imager_getCc', PACKAGE = 'imager', x, y, z, c)
+    .Call(imager_getCc, x, y, z, c)
 }
 
 display_ <- function(im, rescale = TRUE) {
-    invisible(.Call('imager_display_', PACKAGE = 'imager', im, rescale))
+    invisible(.Call(imager_display_, im, rescale))
 }
 
 display_list <- function(imlist) {
-    invisible(.Call('imager_display_list', PACKAGE = 'imager', imlist))
+    invisible(.Call(imager_display_list, imlist))
 }
 
 #' Play a video 
@@ -154,19 +154,19 @@ display_list <- function(imlist) {
 #' @param normalise if true pixel values are rescaled to 0...255 (default TRUE). The normalisation is based on the *first frame*. If you don't want the default behaviour you can normalise by hand. Default TRUE.
 #' @export
 play <- function(vid, loop = FALSE, delay = 30L, normalise = TRUE) {
-    invisible(.Call('imager_play', PACKAGE = 'imager', vid, loop, delay, normalise))
+    invisible(.Call(imager_play, vid, loop, delay, normalise))
 }
 
 select <- function(im, type = 2L) {
-    .Call('imager_select', PACKAGE = 'imager', im, type)
+    .Call(imager_select, im, type)
 }
 
 bucket_fill <- function(im, x, y, z, color, opacity = 1, sigma = 0, high_connexity = FALSE) {
-    .Call('imager_bucket_fill', PACKAGE = 'imager', im, x, y, z, color, opacity, sigma, high_connexity)
+    .Call(imager_bucket_fill, im, x, y, z, color, opacity, sigma, high_connexity)
 }
 
 bucket_select <- function(im, x, y, z, sigma = 0, high_connexity = FALSE) {
-    .Call('imager_bucket_select', PACKAGE = 'imager', im, x, y, z, sigma, high_connexity)
+    .Call(imager_bucket_select, im, x, y, z, sigma, high_connexity)
 }
 
 #' Apply recursive Deriche filter.
@@ -185,7 +185,7 @@ bucket_select <- function(im, x, y, z, sigma = 0, high_connexity = FALSE) {
 #' deriche(boats,sigma=2,order=1) %>% plot("Second-order Deriche along x")
 #' deriche(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Deriche along y")
 deriche <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
-    .Call('imager_deriche', PACKAGE = 'imager', im, sigma, order, axis, neumann)
+    .Call(imager_deriche, im, sigma, order, axis, neumann)
 }
 
 #' Young-Van Vliet recursive Gaussian filter.
@@ -213,7 +213,7 @@ deriche <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
 #' vanvliet(boats,sigma=2,order=1,axis="y") %>% plot("Second-order Young-van Vliet along y")
 #' @export
 vanvliet <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
-    .Call('imager_vanvliet', PACKAGE = 'imager', im, sigma, order, axis, neumann)
+    .Call(imager_vanvliet, im, sigma, order, axis, neumann)
 }
 
 #' Blur image isotropically.
@@ -228,7 +228,7 @@ vanvliet <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
 #' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=10")
 #' @seealso medianblur
 isoblur <- function(im, sigma, neumann = TRUE, gaussian = FALSE) {
-    .Call('imager_isoblur', PACKAGE = 'imager', im, sigma, neumann, gaussian)
+    .Call(imager_isoblur, im, sigma, neumann, gaussian)
 }
 
 #' Blur image with the median filter.
@@ -245,7 +245,7 @@ isoblur <- function(im, sigma, neumann = TRUE, gaussian = FALSE) {
 #' medianblur(boats,10,8) %>% plot(main="Median blur, 10 pixels, threshold = 8")
 #' @seealso isoblur, boxblur
 medianblur <- function(im, n, threshold = 0) {
-    .Call('imager_medianblur', PACKAGE = 'imager', im, n, threshold)
+    .Call(imager_medianblur, im, n, threshold)
 }
 
 #' Blur image with a box filter (square window)
@@ -258,7 +258,7 @@ medianblur <- function(im, n, threshold = 0) {
 #' boxblur(boats,5,TRUE) %>% plot(main="Neumann boundary")
 #' @export
 boxblur <- function(im, boxsize, neumann = TRUE) {
-    .Call('imager_boxblur', PACKAGE = 'imager', im, boxsize, neumann)
+    .Call(imager_boxblur, im, boxsize, neumann)
 }
 
 #' Compute image Laplacian
@@ -269,7 +269,7 @@ boxblur <- function(im, boxsize, neumann = TRUE) {
 #' imlap(boats) %>% plot
 #' @export
 imlap <- function(im) {
-    .Call('imager_imlap', PACKAGE = 'imager', im)
+    .Call(imager_imlap, im)
 }
 
 #' Blur image with a box filter.
@@ -286,7 +286,7 @@ imlap <- function(im) {
 #' @examples
 #' boxblur_xy(boats,20,5) %>% plot(main="Anisotropic blur")
 boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
-    .Call('imager_boxblur_xy', PACKAGE = 'imager', im, sx, sy, neumann)
+    .Call(imager_boxblur_xy, im, sx, sy, neumann)
 }
 
 #' Correlation of image by filter
@@ -309,7 +309,7 @@ boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
 #' correlate(boats,filter) %>% plot(main="Correlation")
 #' convolve(boats,filter) %>% plot(main="Convolution")
 correlate <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
-    .Call('imager_correlate', PACKAGE = 'imager', im, filter, dirichlet, normalise)
+    .Call(imager_correlate, im, filter, dirichlet, normalise)
 }
 
 #' Convolve image by filter.
@@ -331,11 +331,11 @@ correlate <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
 #' correlate(boats,filter) %>% plot(main="Correlation")
 #' convolve(boats,filter) %>% plot(main="Convolution")
 convolve <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
-    .Call('imager_convolve', PACKAGE = 'imager', im, filter, dirichlet, normalise)
+    .Call(imager_convolve, im, filter, dirichlet, normalise)
 }
 
 sharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, sigma = 0) {
-    .Call('imager_sharpen', PACKAGE = 'imager', im, amplitude, sharpen_type, edge, alpha, sigma)
+    .Call(imager_sharpen, im, amplitude, sharpen_type, edge, alpha, sigma)
 }
 
 #' Compute image gradient.
@@ -354,14 +354,14 @@ sharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, si
 #' @export
 #' @seealso imgradient
 get_gradient <- function(im, axes = "", scheme = 3L) {
-    .Call('imager_get_gradient', PACKAGE = 'imager', im, axes, scheme)
+    .Call(imager_get_gradient, im, axes, scheme)
 }
 
 #' Return image hessian.
 #' @param im an image
 #' @param axes Axes considered for the hessian computation, as a character string (e.g "xy").
 get_hessian <- function(im, axes = "") {
-    .Call('imager_get_hessian', PACKAGE = 'imager', im, axes)
+    .Call(imager_get_hessian, im, axes)
 }
 
 #' Compute field of diffusion tensors for edge-preserving smoothing.
@@ -374,7 +374,7 @@ get_hessian <- function(im, axes = "") {
 #' @param is_sqrt Tells if the square root of the tensor field is computed instead.
 #' @export
 diffusion_tensors <- function(im, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, is_sqrt = FALSE) {
-    .Call('imager_diffusion_tensors', PACKAGE = 'imager', im, sharpness, anisotropy, alpha, sigma, is_sqrt)
+    .Call(imager_diffusion_tensors, im, sharpness, anisotropy, alpha, sigma, is_sqrt)
 }
 
 #' Compute Haar multiscale wavelet transform.
@@ -391,19 +391,19 @@ diffusion_tensors <- function(im, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6
 #' haar(hr*mask.low,inverse=TRUE,nb=3) %>% plot(main="75% compression")
 #' haar(hr*mask.high,inverse=TRUE,nb=3) %>% plot(main="95% compression")
 haar <- function(im, inverse = FALSE, nb_scales = 1L) {
-    .Call('imager_haar', PACKAGE = 'imager', im, inverse, nb_scales)
+    .Call(imager_haar, im, inverse, nb_scales)
 }
 
 FFT_complex <- function(real, imag, inverse = FALSE, nb_threads = 0L) {
-    .Call('imager_FFT_complex', PACKAGE = 'imager', real, imag, inverse, nb_threads)
+    .Call(imager_FFT_complex, real, imag, inverse, nb_threads)
 }
 
 FFT_realim <- function(real, inverse = FALSE, nb_threads = 0L) {
-    .Call('imager_FFT_realim', PACKAGE = 'imager', real, inverse, nb_threads)
+    .Call(imager_FFT_realim, real, inverse, nb_threads)
 }
 
 FFT_realout <- function(real, imag, inverse = FALSE, nb_threads = 0L) {
-    .Call('imager_FFT_realout', PACKAGE = 'imager', real, imag, inverse, nb_threads)
+    .Call(imager_FFT_realout, real, imag, inverse, nb_threads)
 }
 
 #' Estimate displacement field between two images.
@@ -417,7 +417,7 @@ FFT_realout <- function(real, imag, inverse = FALSE, nb_threads = 0L) {
 #' @param is_backward If false, match I2(X + U(X)) = I1(X), else match I2(X) = I1(X - U(X)).
 #' @export
 displacement <- function(sourceIm, destIm, smoothness = 0.1, precision = 5.0, nb_scales = 0L, iteration_max = 10000L, is_backward = FALSE) {
-    .Call('imager_displacement', PACKAGE = 'imager', sourceIm, destIm, smoothness, precision, nb_scales, iteration_max, is_backward)
+    .Call(imager_displacement, sourceIm, destIm, smoothness, precision, nb_scales, iteration_max, is_backward)
 }
 
 #' Blur image anisotropically, in an edge-preserving way.
@@ -442,39 +442,43 @@ displacement <- function(sourceIm, destIm, smoothness = 0.1, precision = 5.0, nb
 #' im.noisy <- (im + 80*rnorm(prod(dim(im)))) 
 #' blur_anisotropic(im.noisy,ampl=1e4,sharp=1) %>% plot
 blur_anisotropic <- function(im, amplitude, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2, interpolation_type = 0L, fast_approx = TRUE) {
-    .Call('imager_blur_anisotropic', PACKAGE = 'imager', im, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, fast_approx)
+    .Call(imager_blur_anisotropic, im, amplitude, sharpness, anisotropy, alpha, sigma, dl, da, gauss_prec, interpolation_type, fast_approx)
 }
 
 periodic_part <- function(im) {
-    .Call('imager_periodic_part', PACKAGE = 'imager', im)
+    .Call(imager_periodic_part, im)
 }
 
 hough_line_px <- function(px, theta) {
-    .Call('imager_hough_line_px', PACKAGE = 'imager', px, theta)
+    .Call(imager_hough_line_px, px, theta)
 }
 
 hough_line_grad <- function(im, ntheta, alpha = 1.5) {
-    .Call('imager_hough_line_grad', PACKAGE = 'imager', im, ntheta, alpha)
+    .Call(imager_hough_line_grad, im, ntheta, alpha)
 }
 
 hough_circle_ <- function(px, radius) {
-    .Call('imager_hough_circle_', PACKAGE = 'imager', px, radius)
+    .Call(imager_hough_circle_, px, radius)
+}
+
+bgraph <- function(px) {
+    .Call(imager_bgraph, px)
 }
 
 interp_xy <- function(inp, ix, iy, z = 0L, c = 0L, cubic = FALSE) {
-    .Call('imager_interp_xy', PACKAGE = 'imager', inp, ix, iy, z, c, cubic)
+    .Call(imager_interp_xy, inp, ix, iy, z, c, cubic)
 }
 
 interp_xyz <- function(inp, ix, iy, iz, c = 0L, cubic = FALSE) {
-    .Call('imager_interp_xyz', PACKAGE = 'imager', inp, ix, iy, iz, c, cubic)
+    .Call(imager_interp_xyz, inp, ix, iy, iz, c, cubic)
 }
 
 interp_xyzc <- function(inp, ix, iy, iz, ic, cubic = FALSE) {
-    .Call('imager_interp_xyzc', PACKAGE = 'imager', inp, ix, iy, iz, ic, cubic)
+    .Call(imager_interp_xyzc, inp, ix, iy, iz, ic, cubic)
 }
 
 interp_xyc <- function(inp, ix, iy, z, ic, cubic = FALSE) {
-    .Call('imager_interp_xyc', PACKAGE = 'imager', inp, ix, iy, z, ic, cubic)
+    .Call(imager_interp_xyc, inp, ix, iy, z, ic, cubic)
 }
 
 #' Label connected components.
@@ -500,11 +504,11 @@ interp_xyc <- function(inp, ix, iy, z, ic, cubic = FALSE) {
 #' plot(labels,"Labels")
 #' 
 label <- function(im, high_connectivity = FALSE, tolerance = 0) {
-    .Call('imager_label', PACKAGE = 'imager', im, high_connectivity, tolerance)
+    .Call(imager_label, im, high_connectivity, tolerance)
 }
 
 blabel <- function(im, high_connectivity = FALSE) {
-    .Call('imager_blabel', PACKAGE = 'imager', im, high_connectivity)
+    .Call(imager_blabel, im, high_connectivity)
 }
 
 #' Erode/dilate image by a structuring element.
@@ -528,11 +532,11 @@ blabel <- function(im, high_connectivity = FALSE) {
 #' plot(dilate_rect(outline,5,10))
 #' plot(dilate_square(outline,5)) 
 erode <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
-    .Call('imager_erode', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
+    .Call(imager_erode, im, mask, boundary_conditions, real_mode)
 }
 
 berode <- function(im, mask, boundary_conditions = TRUE) {
-    .Call('imager_berode', PACKAGE = 'imager', im, mask, boundary_conditions)
+    .Call(imager_berode, im, mask, boundary_conditions)
 }
 
 #' @describeIn erode Erode image by a rectangular structuring element of specified size.
@@ -541,52 +545,52 @@ berode <- function(im, mask, boundary_conditions = TRUE) {
 #' @param sz Depth of the structuring element.
 #' @export
 erode_rect <- function(im, sx, sy, sz = 1L) {
-    .Call('imager_erode_rect', PACKAGE = 'imager', im, sx, sy, sz)
+    .Call(imager_erode_rect, im, sx, sy, sz)
 }
 
 berode_rect <- function(im, sx, sy, sz = 1L) {
-    .Call('imager_berode_rect', PACKAGE = 'imager', im, sx, sy, sz)
+    .Call(imager_berode_rect, im, sx, sy, sz)
 }
 
 #' @describeIn erode Erode image by a square structuring element of specified size.
 #'
 #' @export
 erode_square <- function(im, size) {
-    .Call('imager_erode_square', PACKAGE = 'imager', im, size)
+    .Call(imager_erode_square, im, size)
 }
 
 berode_square <- function(im, size) {
-    .Call('imager_berode_square', PACKAGE = 'imager', im, size)
+    .Call(imager_berode_square, im, size)
 }
 
 #' @describeIn erode Dilate image by a structuring element.
 #' @export
 dilate <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
-    .Call('imager_dilate', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
+    .Call(imager_dilate, im, mask, boundary_conditions, real_mode)
 }
 
 bdilate <- function(im, mask, boundary_conditions = TRUE) {
-    .Call('imager_bdilate', PACKAGE = 'imager', im, mask, boundary_conditions)
+    .Call(imager_bdilate, im, mask, boundary_conditions)
 }
 
 #' @describeIn erode Dilate image by a rectangular structuring element of specified size
 #' @export
 dilate_rect <- function(im, sx, sy, sz = 1L) {
-    .Call('imager_dilate_rect', PACKAGE = 'imager', im, sx, sy, sz)
+    .Call(imager_dilate_rect, im, sx, sy, sz)
 }
 
 bdilate_rect <- function(im, sx, sy, sz = 1L) {
-    .Call('imager_bdilate_rect', PACKAGE = 'imager', im, sx, sy, sz)
+    .Call(imager_bdilate_rect, im, sx, sy, sz)
 }
 
 #' @describeIn erode Dilate image by a square structuring element of specified size
 #' @export
 dilate_square <- function(im, size) {
-    .Call('imager_dilate_square', PACKAGE = 'imager', im, size)
+    .Call(imager_dilate_square, im, size)
 }
 
 bdilate_square <- function(im, size) {
-    .Call('imager_bdilate_square', PACKAGE = 'imager', im, size)
+    .Call(imager_bdilate_square, im, size)
 }
 
 #' Compute watershed transform.
@@ -611,7 +615,7 @@ bdilate_square <- function(im, size) {
 #' watershed(im,p) %>% plot(main="Watershed transform")
 #' @export
 watershed <- function(im, priority, fill_lines = TRUE) {
-    .Call('imager_watershed', PACKAGE = 'imager', im, priority, fill_lines)
+    .Call(imager_watershed, im, priority, fill_lines)
 }
 
 #' Compute Euclidean distance function to a specified value.
@@ -634,83 +638,83 @@ watershed <- function(im, priority, fill_lines = TRUE) {
 #' #How far are we from the nearest white dot? 
 #' distance_transform(im,1) %>% plot
 distance_transform <- function(im, value, metric = 2L) {
-    .Call('imager_distance_transform', PACKAGE = 'imager', im, value, metric)
+    .Call(imager_distance_transform, im, value, metric)
 }
 
 bdistance_transform <- function(im, value = TRUE, metric = 2L) {
-    .Call('imager_bdistance_transform', PACKAGE = 'imager', im, value, metric)
+    .Call(imager_bdistance_transform, im, value, metric)
 }
 
 #' @describeIn erode Morphological opening (erosion followed by dilation)
 #' @export
 mopening <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
-    .Call('imager_mopening', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
+    .Call(imager_mopening, im, mask, boundary_conditions, real_mode)
 }
 
 #' @describeIn erode Morphological opening by a square element (erosion followed by dilation)
 #' @export
 mopening_square <- function(im, size) {
-    .Call('imager_mopening_square', PACKAGE = 'imager', im, size)
+    .Call(imager_mopening_square, im, size)
 }
 
 #' @describeIn erode Morphological closing by a square element (dilation followed by erosion)
 #' @export
 mclosing_square <- function(im, size) {
-    .Call('imager_mclosing_square', PACKAGE = 'imager', im, size)
+    .Call(imager_mclosing_square, im, size)
 }
 
 #' @describeIn erode Morphological closing (dilation followed by erosion)
 #' @export
 mclosing <- function(im, mask, boundary_conditions = TRUE, real_mode = FALSE) {
-    .Call('imager_mclosing', PACKAGE = 'imager', im, mask, boundary_conditions, real_mode)
+    .Call(imager_mclosing, im, mask, boundary_conditions, real_mode)
 }
 
 reduce_wsum <- function(x, w, na_rm = FALSE) {
-    .Call('imager_reduce_wsum', PACKAGE = 'imager', x, w, na_rm)
+    .Call(imager_reduce_wsum, x, w, na_rm)
 }
 
 reduce_average <- function(x, na_rm = FALSE) {
-    .Call('imager_reduce_average', PACKAGE = 'imager', x, na_rm)
+    .Call(imager_reduce_average, x, na_rm)
 }
 
 reduce_prod <- function(x, na_rm = FALSE) {
-    .Call('imager_reduce_prod', PACKAGE = 'imager', x, na_rm)
+    .Call(imager_reduce_prod, x, na_rm)
 }
 
 reduce_minmax <- function(x, na_rm = FALSE, max = TRUE) {
-    .Call('imager_reduce_minmax', PACKAGE = 'imager', x, na_rm, max)
+    .Call(imager_reduce_minmax, x, na_rm, max)
 }
 
 reduce_list <- function(x, summary = 0L) {
-    .Call('imager_reduce_list', PACKAGE = 'imager', x, summary)
+    .Call(imager_reduce_list, x, summary)
 }
 
 reduce_list2 <- function(x, summary = 0L) {
-    .Call('imager_reduce_list2', PACKAGE = 'imager', x, summary)
+    .Call(imager_reduce_list2, x, summary)
 }
 
 reduce_med <- function(x, na_rm = FALSE) {
-    .Call('imager_reduce_med', PACKAGE = 'imager', x, na_rm)
+    .Call(imager_reduce_med, x, na_rm)
 }
 
 psort <- function(x, increasing = TRUE) {
-    .Call('imager_psort', PACKAGE = 'imager', x, increasing)
+    .Call(imager_psort, x, increasing)
 }
 
 porder <- function(x, increasing = TRUE) {
-    .Call('imager_porder', PACKAGE = 'imager', x, increasing)
+    .Call(imager_porder, x, increasing)
 }
 
 prank <- function(x, increasing = TRUE) {
-    .Call('imager_prank', PACKAGE = 'imager', x, increasing)
+    .Call(imager_prank, x, increasing)
 }
 
 autocrop_ <- function(im, color, axes = "zyx") {
-    .Call('imager_autocrop_', PACKAGE = 'imager', im, color, axes)
+    .Call(imager_autocrop_, im, color, axes)
 }
 
 rotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
-    .Call('imager_rotate', PACKAGE = 'imager', im, angle, interpolation, boundary)
+    .Call(imager_rotate, im, angle, interpolation, boundary)
 }
 
 #' Rotate image by an arbitrary angle, around a center point.
@@ -726,7 +730,7 @@ rotate <- function(im, angle, interpolation = 1L, boundary = 0L) {
 #' rotate_xy(boats,30,200,400,boundary=2) %>% plot
 #' @export
 rotate_xy <- function(im, angle, cx, cy, interpolation = 1L, boundary_conditions = 0L) {
-    .Call('imager_rotate_xy', PACKAGE = 'imager', im, angle, cx, cy, interpolation, boundary_conditions)
+    .Call(imager_rotate_xy, im, angle, cx, cy, interpolation, boundary_conditions)
 }
 
 #' Mirror image content along specified axis 
@@ -737,7 +741,7 @@ rotate_xy <- function(im, angle, cx, cy, interpolation = 1L, boundary_conditions
 #' mirror(boats,"x") %>% plot
 #' mirror(boats,"y") %>% plot
 mirror <- function(im, axis) {
-    .Call('imager_mirror', PACKAGE = 'imager', im, axis)
+    .Call(imager_mirror, im, axis)
 }
 
 #' Permute image axes
@@ -750,25 +754,25 @@ mirror <- function(im, axis) {
 #' im <- array(0,c(10,30,40,3)) %>% as.cimg
 #' permute_axes(im,"zxyc")
 permute_axes <- function(im, perm) {
-    .Call('imager_permute_axes', PACKAGE = 'imager', im, perm)
+    .Call(imager_permute_axes, im, perm)
 }
 
 #' @describeIn resize_uniform Double size
 #' @export
 resize_doubleXY <- function(im) {
-    .Call('imager_resize_doubleXY', PACKAGE = 'imager', im)
+    .Call(imager_resize_doubleXY, im)
 }
 
 #' @describeIn resize_uniform Half size
 #' @export
 resize_halfXY <- function(im) {
-    .Call('imager_resize_halfXY', PACKAGE = 'imager', im)
+    .Call(imager_resize_halfXY, im)
 }
 
 #' @describeIn resize_uniform Triple size
 #' @export
 resize_tripleXY <- function(im) {
-    .Call('imager_resize_tripleXY', PACKAGE = 'imager', im)
+    .Call(imager_resize_tripleXY, im)
 }
 
 #' Shift image content.
@@ -786,7 +790,7 @@ resize_tripleXY <- function(im) {
 #' @examples
 #' imshift(boats,10,50) %>% plot
 imshift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, boundary_conditions = 0L) {
-    .Call('imager_imshift', PACKAGE = 'imager', im, delta_x, delta_y, delta_z, delta_c, boundary_conditions)
+    .Call(imager_imshift, im, delta_x, delta_y, delta_z, delta_c, boundary_conditions)
 }
 
 #' Resize image to new dimensions.
@@ -812,7 +816,7 @@ imshift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, 
 #' @param centering_c Set centering type (only if  interpolation_type=0).
 #' @export
 resize <- function(im, size_x = -100L, size_y = -100L, size_z = -100L, size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L, centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0) {
-    .Call('imager_resize', PACKAGE = 'imager', im, size_x, size_y, size_z, size_c, interpolation_type, boundary_conditions, centering_x, centering_y, centering_z, centering_c)
+    .Call(imager_resize, im, size_x, size_y, size_z, size_c, interpolation_type, boundary_conditions, centering_x, centering_y, centering_z, centering_c)
 }
 
 #' Warp image
@@ -831,15 +835,15 @@ resize <- function(im, size_x = -100L, size_y = -100L, size_z = -100L, size_c = 
 #' warpfield <- list(warp.x,warp.y) %>% imappend("c")
 #' warp(boats,warpfield,mode=1) %>% plot
 warp <- function(im, warpfield, mode = 0L, interpolation = 1L, boundary_conditions = 0L) {
-    .Call('imager_warp', PACKAGE = 'imager', im, warpfield, mode, interpolation, boundary_conditions)
+    .Call(imager_warp, im, warpfield, mode, interpolation, boundary_conditions)
 }
 
 load_image <- function(fname) {
-    .Call('imager_load_image', PACKAGE = 'imager', fname)
+    .Call(imager_load_image, fname)
 }
 
 save_image <- function(im, fname) {
-    invisible(.Call('imager_save_image', PACKAGE = 'imager', im, fname))
+    invisible(.Call(imager_save_image, im, fname))
 }
 
 #' Split an image along a certain axis (producing a list)
@@ -850,15 +854,15 @@ save_image <- function(im, fname) {
 #' if nb=-1 (the default) the maximum number of splits is used ie. split(im,"c") produces a list containing all individual colour channels
 #' @seealso imappend (the reverse operation)
 im_split <- function(im, axis, nb = -1L) {
-    .Call('imager_im_split', PACKAGE = 'imager', im, axis, nb)
+    .Call(imager_im_split, im, axis, nb)
 }
 
 im_append <- function(imlist, axis) {
-    .Call('imager_im_append', PACKAGE = 'imager', imlist, axis)
+    .Call(imager_im_append, imlist, axis)
 }
 
 px_append <- function(imlist, axis) {
-    .Call('imager_px_append', PACKAGE = 'imager', imlist, axis)
+    .Call(imager_px_append, imlist, axis)
 }
 
 #' Pixel-wise evaluation of a CImg expression
@@ -884,7 +888,7 @@ px_append <- function(imlist, axis) {
 #' imfill(500,500) %>% imeval(julia) %>% plot
 #' @export
 imeval <- function(im, expr) {
-    .Call('imager_imeval', PACKAGE = 'imager', im, expr)
+    .Call(imager_imeval, im, expr)
 }
 
 #' Extract a numerical summary from image patches, using CImg's mini-language
@@ -905,11 +909,11 @@ imeval <- function(im, expr) {
 #' as.cimg(out,v.name="med") %>% plot
 #' @export
 patch_summary_cimg <- function(im, expr, cx, cy, wx, wy) {
-    .Call('imager_patch_summary_cimg', PACKAGE = 'imager', im, expr, cx, cy, wx, wy)
+    .Call(imager_patch_summary_cimg, im, expr, cx, cy, wx, wy)
 }
 
 extract_fast <- function(im, fun, cx, cy, wx, wy) {
-    .Call('imager_extract_fast', PACKAGE = 'imager', im, fun, cx, cy, wx, wy)
+    .Call(imager_extract_fast, im, fun, cx, cy, wx, wy)
 }
 
 #' Extract image patches and return a list
@@ -929,7 +933,7 @@ extract_fast <- function(im, fun, cx, cy, wx, wy) {
 #' #2 patches of size 5x5 located at (10,10) and (10,20)
 #' extract_patches(boats,c(10,10),c(10,20),5,5)
 extract_patches <- function(im, cx, cy, wx, wy) {
-    .Call('imager_extract_patches', PACKAGE = 'imager', im, cx, cy, wx, wy)
+    .Call(imager_extract_patches, im, cx, cy, wx, wy)
 }
 
 #' @param cz vector of z coordinates for patch centers 
@@ -937,34 +941,34 @@ extract_patches <- function(im, cx, cy, wx, wy) {
 #' @describeIn extract_patches Extract 3D patches
 #' @export
 extract_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {
-    .Call('imager_extract_patches3D', PACKAGE = 'imager', im, cx, cy, cz, wx, wy, wz)
+    .Call(imager_extract_patches3D, im, cx, cy, cz, wx, wy, wz)
 }
 
 draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
-    .Call('imager_draw_image', PACKAGE = 'imager', im, sprite, x, y, z, opacity)
+    .Call(imager_draw_image, im, sprite, x, y, z, opacity)
 }
 
 do_patchmatch <- function(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide) {
-    .Call('imager_do_patchmatch', PACKAGE = 'imager', im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide)
+    .Call(imager_do_patchmatch, im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide)
 }
 
 checkcoords <- function(x, y, z, c, d) {
-    .Call('imager_checkcoords', PACKAGE = 'imager', x, y, z, c, d)
+    .Call(imager_checkcoords, x, y, z, c, d)
 }
 
 cimg_omp <- function() {
-    .Call('imager_cimg_omp', PACKAGE = 'imager')
+    .Call(imager_cimg_omp)
 }
 
 set_cimg_omp <- function(mode) {
-    .Call('imager_set_cimg_omp', PACKAGE = 'imager', mode)
+    .Call(imager_set_cimg_omp, mode)
 }
 
 has_omp <- function() {
-    .Call('imager_has_omp', PACKAGE = 'imager')
+    .Call(imager_has_omp)
 }
 
 px_split <- function(im, axis, nb = -1L) {
-    .Call('imager_px_split', PACKAGE = 'imager', im, axis, nb)
+    .Call(imager_px_split, im, axis, nb)
 }
 

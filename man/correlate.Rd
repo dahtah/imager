@@ -27,3 +27,4 @@ layout(t(1:2))
 correlate(boats,filter) \%>\% plot(main="Correlation")
 convolve(boats,filter) \%>\% plot(main="Convolution")
 }
+

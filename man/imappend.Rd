@@ -26,3 +26,4 @@ imsplit(boats > .5,"c") \%>\% imappend("x") \%>\% plot
 \seealso{
 imsplit (the reverse operation)
 }
+

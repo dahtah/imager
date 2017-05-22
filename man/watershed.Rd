@@ -31,3 +31,4 @@ p <- 1-distance_transform(sign(im),1)
 plot(p,main="Priority map")
 watershed(im,p) \%>\% plot(main="Watershed transform")
 }
+

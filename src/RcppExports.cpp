@@ -682,6 +682,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bgraph
+List bgraph(LogicalVector px);
+RcppExport SEXP imager_bgraph(SEXP pxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type px(pxSEXP);
+    rcpp_result_gen = Rcpp::wrap(bgraph(px));
+    return rcpp_result_gen;
+END_RCPP
+}
 // interp_xy
 NumericVector interp_xy(NumericVector inp, NumericVector ix, NumericVector iy, int z, int c, bool cubic);
 RcppExport SEXP imager_interp_xy(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP zSEXP, SEXP cSEXP, SEXP cubicSEXP) {
