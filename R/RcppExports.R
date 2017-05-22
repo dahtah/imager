@@ -449,6 +449,18 @@ periodic_part <- function(im) {
     .Call('imager_periodic_part', PACKAGE = 'imager', im)
 }
 
+hough_line_px <- function(px, theta) {
+    .Call('imager_hough_line_px', PACKAGE = 'imager', px, theta)
+}
+
+hough_line_grad <- function(im, ntheta, alpha = 1.5) {
+    .Call('imager_hough_line_grad', PACKAGE = 'imager', im, ntheta, alpha)
+}
+
+hough_circle_ <- function(px, radius) {
+    .Call('imager_hough_circle_', PACKAGE = 'imager', px, radius)
+}
+
 interp_xy <- function(inp, ix, iy, z = 0L, c = 0L, cubic = FALSE) {
     .Call('imager_interp_xy', PACKAGE = 'imager', inp, ix, iy, z, c, cubic)
 }

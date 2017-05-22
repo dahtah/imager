@@ -645,6 +645,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// hough_line_px
+NumericVector hough_line_px(LogicalVector px, NumericVector theta);
+RcppExport SEXP imager_hough_line_px(SEXP pxSEXP, SEXP thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type px(pxSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type theta(thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(hough_line_px(px, theta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hough_line_grad
+NumericVector hough_line_grad(NumericVector im, int ntheta, double alpha);
+RcppExport SEXP imager_hough_line_grad(SEXP imSEXP, SEXP nthetaSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type ntheta(nthetaSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(hough_line_grad(im, ntheta, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hough_circle_
+NumericVector hough_circle_(LogicalVector px, int radius);
+RcppExport SEXP imager_hough_circle_(SEXP pxSEXP, SEXP radiusSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type px(pxSEXP);
+    Rcpp::traits::input_parameter< int >::type radius(radiusSEXP);
+    rcpp_result_gen = Rcpp::wrap(hough_circle_(px, radius));
+    return rcpp_result_gen;
+END_RCPP
+}
 // interp_xy
 NumericVector interp_xy(NumericVector inp, NumericVector ix, NumericVector iy, int z, int c, bool cubic);
 RcppExport SEXP imager_interp_xy(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP zSEXP, SEXP cSEXP, SEXP cubicSEXP) {
