@@ -782,7 +782,7 @@ px.na <- function(im)
 #' sp <- igraph::shortest_paths(G,start,end,output="vpath")
 #' path <- sp$vpath[[1]] %>% as.integer %>% coord.index(im,.)
 #' @export
-as.graph <- function(px,weighted=TRUE)
+as.graph.pixset <- function(px,weighted=TRUE)
 {
     if (any(dim(px)[3:4] > 1)) stop('Only defined for 2D pixsets')
     bg <- bgraph(px)
@@ -795,7 +795,11 @@ as.graph <- function(px,weighted=TRUE)
     mxind <- igraph::V(G) %>% as.integer %>% max
     if (mxind < nPix(px))
         {
-            G <- G+igraph::vertices((mxind+1):nPix(px))
+            G <- igraph::add_vertices(G,nPix(px)-mxind)
         }
     G
 }
+
+#' @export
+as.graph <- function(x,...) UseMethod("as.graph")
+

@@ -8,9 +8,10 @@
 NULL
 
 #' @useDynLib imager, .registration=TRUE
-#' @importFrom grDevices as.raster col2rgb dev.capture gray rgb contourLines
+#' @importFrom grDevices as.raster col2rgb dev.capture gray rgb contourLines xy.coords
+#' @importFrom igraph as.igraph
 #' @importFrom utils file_test
-#' @importFrom graphics axis plot rasterImage layout lines plot.new plot.window title
+#' @importFrom graphics axis plot rasterImage layout lines plot.new plot.window title abline polygon
 #' @importFrom stats quantile rnorm kmeans setNames
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom purrr map map_dbl map_lgl map_df map2
@@ -250,6 +251,20 @@ ldim <- function(v)
     {
         if (is.vector(v)) length(v) else dim(v)
     }
+
+##' Grayscale dimensions of image
+##'
+##' Shortcut, returns the dimensions of an image if it had only one colour channel
+##' @param im an image
+##' @return returns c(dim(im)[1:3],1)
+##' @author Simon Barthelme
+##' @examples
+##' imnoise(dim=gsdim(boats))
+##' @export
+gsdim <- function(im)
+{
+    c(dim(im)[1:3],1)
+}
 
 ##' Split a video into separate frames
 ##'
