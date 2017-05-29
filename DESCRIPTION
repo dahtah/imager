@@ -19,7 +19,7 @@ Depends:
     R (>= 2.10.0),plyr,magrittr
 URL: http://dahtah.github.io/imager, https://github.com/dahtah/imager
 BugReports: https://github.com/dahtah/imager/issues
-SystemRequirements: fftw3,libtiff,C++11
+SystemRequirements: fftw3,libtiff
 Enhances: spatstat
 LinkingTo: Rcpp
 LazyData: true
