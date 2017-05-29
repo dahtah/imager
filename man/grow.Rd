@@ -28,6 +28,7 @@ A structuring element is a pattern to be moved over the image: for example a 3x3
 \itemize{
 \item \code{shrink}: shrink pixset using erosion
 }}
+
 \examples{
 #A pixel set:
 a <- grayscale(boats) > .8
@@ -47,4 +48,3 @@ px <- px.all(im)
 shrink(px,3,bound=TRUE) \%>\% plot(main="Boundary conditions: TRUE")
 shrink(px,3,bound=FALSE) \%>\% plot(main="Boundary conditions: FALSE")
 }
-

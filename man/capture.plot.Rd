@@ -21,4 +21,3 @@ Capture the current R plot device as a cimg image
 \author{
 Simon Barthelme
 }
-

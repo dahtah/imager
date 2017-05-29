@@ -28,4 +28,3 @@ boats[1:2,1:3,] <- imnoise(2,3) #The same noise array is replicated over the thr
 \seealso{
 imsub, which provides a more convenient interface, autocrop, imdraw
 }
-

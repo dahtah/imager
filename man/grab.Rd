@@ -3,8 +3,8 @@
 \name{grab}
 \alias{grab}
 \alias{grabLine}
-\alias{grabPoint}
 \alias{grabRect}
+\alias{grabPoint}
 \title{Select image regions interactively}
 \usage{
 grabLine(im, output = "coord")
@@ -31,10 +31,9 @@ In case of lines contents are interpolated. Note that grabLine does not support 
 ##grabRect(boats)
 ##grabRect(boats,TRUE)
 }
-\author{
-Simon Barthelme
-}
 \seealso{
 display
 }
-
+\author{
+Simon Barthelme
+}

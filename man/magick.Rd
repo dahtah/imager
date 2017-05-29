@@ -2,8 +2,8 @@
 % Please edit documentation in R/conversions.R
 \name{magick}
 \alias{magick}
-\alias{magick2cimg}
 \alias{magick2imlist}
+\alias{magick2cimg}
 \title{Convert a magick image to a cimg image or image list}
 \usage{
 magick2imlist(obj, alpha = "rm", ...)
@@ -23,10 +23,9 @@ an object of class cimg or imlist
 \description{
 The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects.
 }
-\author{
-Jan Wijffels, Simon Barthelme
-}
 \seealso{
 flatten.alpha, rm.alpha
 }
-
+\author{
+Jan Wijffels, Simon Barthelme
+}

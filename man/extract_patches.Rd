@@ -37,8 +37,8 @@ WARNINGS:
 \itemize{
 \item \code{extract_patches3D}: Extract 3D patches
 }}
+
 \examples{
 #2 patches of size 5x5 located at (10,10) and (10,20)
 extract_patches(boats,c(10,10),c(10,20),5,5)
 }
-

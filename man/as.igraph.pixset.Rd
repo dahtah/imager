@@ -45,4 +45,3 @@ path <- sp$vpath[[1]] \%>\% as.integer \%>\% coord.index(im,.)
 \seealso{
 as.igraph.cimg
 }
-

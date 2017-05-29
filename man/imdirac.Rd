@@ -42,4 +42,3 @@ imdirac(c(50,50),20,20) \%>\% deriche(sigma=2,order=1,axis="x")  \%>\% plot
 \author{
 Simon Barthelme
 }
-

@@ -42,10 +42,9 @@ as.raster(boats/2,rescale=FALSE) \%>\% plot
 cscale <- function(v) hsv(.5,v,1)
 grayscale(boats) \%>\% as.raster(colourscale=cscale) \%>\% plot
 }
-\author{
-Simon Barthelme
-}
 \seealso{
 plot.cimg, rasterImage
 }
-
+\author{
+Simon Barthelme
+}

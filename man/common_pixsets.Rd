@@ -2,16 +2,16 @@
 % Please edit documentation in R/pixset.R
 \name{common_pixsets}
 \alias{common_pixsets}
-\alias{px.all}
-\alias{px.borders}
-\alias{px.bottom}
 \alias{px.circle}
 \alias{px.diamond}
-\alias{px.left}
-\alias{px.none}
-\alias{px.right}
 \alias{px.square}
+\alias{px.left}
 \alias{px.top}
+\alias{px.bottom}
+\alias{px.right}
+\alias{px.borders}
+\alias{px.all}
+\alias{px.none}
 \title{Various useful pixsets}
 \usage{
 px.circle(r, x = 2 * r + 1, y = 2 * r + 1)
@@ -78,6 +78,7 @@ px.square is also similar but returns a square (Linf distance less than r)
 
 \item \code{px.none}: no pixel in image
 }}
+
 \examples{
 px.circle(20,350,350) \%>\% plot(interp=FALSE)
 px.circle(3) \%>\% plot(interp=FALSE)
@@ -100,4 +101,3 @@ px.borders(im,1) \%>\% plot(int=FALSE)
 \author{
 Simon Barthelme
 }
-

@@ -1,6 +1,3 @@
-#' @export
-as.igraph <- function (x, ...) UseMethod("as.igraph")
-
 #' Form an adjacency graph from a pixset
 #'
 #' Return a graph where nodes are pixels, and two nodes are connected if and only if both nodes are in the pixset, and the pixels are adjacent. Optionnally, add weights corresponding to distance (either 1 or sqrt(2), depending on the orientation of the edge).

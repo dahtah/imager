@@ -30,4 +30,3 @@ nfline(theta=0,rho=10,col="red")
 \author{
 Simon Barthelme
 }
-

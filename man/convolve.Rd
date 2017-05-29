@@ -30,4 +30,3 @@ convolve(boats,filter) \%>\% plot(main="Convolution")
 \seealso{
 correlate
 }
-

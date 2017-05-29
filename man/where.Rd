@@ -16,4 +16,3 @@ Return locations in pixel set
 #All pixel locations with value greater than .99
 where(boats > .99) 
 }
-

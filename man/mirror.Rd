@@ -18,4 +18,3 @@ Mirror image content along specified axis
 mirror(boats,"x") \%>\% plot
 mirror(boats,"y") \%>\% plot
 }
-

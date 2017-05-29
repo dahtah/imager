@@ -30,4 +30,3 @@ pixel.grid(dim=c(10,10,3,2)) \%>\% head
 pixel.grid(im,standardise=TRUE) \%>\% head
 pixel.grid(im,drop.unused=FALSE) \%>\% head
 }
-

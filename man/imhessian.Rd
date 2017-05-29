@@ -20,4 +20,3 @@ Compute image hessian.
 \examples{
 imhessian(boats,"xy") \%>\% plot(main="Second-derivative, d/(dx*dy)")
 }
-

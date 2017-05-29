@@ -28,4 +28,3 @@ medianblur(boats,10,8) \%>\% plot(main="Median blur, 10 pixels, threshold = 8")
 \seealso{
 isoblur, boxblur
 }
-

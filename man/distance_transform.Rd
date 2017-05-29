@@ -29,4 +29,3 @@ plot(im)
 #How far are we from the nearest white dot? 
 distance_transform(im,1) \%>\% plot
 }
-
