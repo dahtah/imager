@@ -8,6 +8,7 @@
 #' @return an igraph "graph" object
 #' @seealso as.igraph.cimg
 #' @examples
+#' library(igraph)
 #' #Simple 3x3 lattice
 #' px <- px.all(imfill(3,3))
 #' as.igraph(px) %>% plot
@@ -59,6 +60,7 @@ as.igraph.pixset <- function(x,weighted=TRUE,...)
 ##' @author Simon Barthelme
 ##' @seealso as.igraph.pixset
 ##' @examples
+##' library(igraph)
 ##' im <- imfill(5,5)
 ##' G <- as.igraph(im)
 ##' plot(G)
@@ -93,7 +95,7 @@ as.igraph.cimg <- function(x,mask=px.all(channel(im,1)))
         if (spectrum(mask) > 1)
         {
             warning("mask has colour channels, using OR reduction")
-            mask <- imsplit(px,"c") %>% parany
+            mask <- imsplit(mask,"c") %>% parany
         }
     }
     bg <- bgraph(mask)
@@ -112,6 +114,6 @@ as.igraph.cimg <- function(x,mask=px.all(channel(im,1)))
 
 graph.sim <- function(G,reg=1)
 {
-    E(G)$weight <- G$dist/(reg+sqrt(rowSums((G$value.from - G$value.to)^2)))
+    igraph::E(G)$weight <- G$dist/(reg+sqrt(rowSums((G$value.from - G$value.to)^2)))
     G
 }
