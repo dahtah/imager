@@ -29,3 +29,4 @@ Shift image content.
 \examples{
 imshift(boats,10,50) \%>\% plot
 }
+

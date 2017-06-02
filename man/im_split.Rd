@@ -20,3 +20,4 @@ Split an image along a certain axis (producing a list)
 \seealso{
 imappend (the reverse operation)
 }
+

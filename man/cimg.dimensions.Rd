@@ -2,11 +2,11 @@
 % Please edit documentation in R/cimg_class.R
 \name{cimg.dimensions}
 \alias{cimg.dimensions}
-\alias{width}
-\alias{height}
-\alias{spectrum}
 \alias{depth}
+\alias{height}
 \alias{nPix}
+\alias{spectrum}
+\alias{width}
 \title{Image dimensions}
 \usage{
 width(im)

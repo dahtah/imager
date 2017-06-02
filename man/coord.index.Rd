@@ -24,9 +24,10 @@ cind
 all.equal(boats[33],with(cind,at(boats,x,y,z,cc)))
 all.equal(33,index.coord(boats,cind))
 }
-\seealso{
-index.coord for the reverse operation
-}
 \author{
 Simon Barthelme
 }
+\seealso{
+index.coord for the reverse operation
+}
+

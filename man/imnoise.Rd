@@ -35,3 +35,4 @@ imnoise(dim=dim(boats)) #Noise image of the same size as the boats image
 \author{
 Simon Barthelme
 }
+

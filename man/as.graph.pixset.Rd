@@ -40,3 +40,4 @@ end <- index.coord(im,data.frame(x=384,y=300))
 sp <- igraph::shortest_paths(G,start,end,output="vpath")
 path <- sp$vpath[[1]] \%>\% as.integer \%>\% coord.index(im,.)
 }
+

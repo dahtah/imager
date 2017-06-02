@@ -27,3 +27,4 @@ channels(boats,1:2,drop=TRUE) \%>\% str #A list of 2D arrays
 \seealso{
 frames
 }
+

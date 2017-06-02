@@ -31,3 +31,4 @@ imrep(boats,3,"x") \%>\% plot
 \author{
 Simon Barthelme
 }
+

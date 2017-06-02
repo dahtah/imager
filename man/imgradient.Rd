@@ -26,3 +26,4 @@ imgradient(boats,"xy") #Returns a list
 \author{
 Simon Barthelme
 }
+

@@ -25,3 +25,4 @@ grayscale(boats) \%>\% plot
 grayscale(boats,method="XYZ") \%>\% plot
 grayscale(boats,method="XYZ",drop=FALSE) \%>\% dim
 }
+

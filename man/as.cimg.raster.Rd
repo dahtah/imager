@@ -26,3 +26,4 @@ all.equal(rst,as.raster(as.cimg(rst)))
 \author{
 Simon Barthelme
 }
+

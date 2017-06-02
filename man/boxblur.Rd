@@ -23,3 +23,4 @@ boxblur(boats,5,TRUE) \%>\% plot(main="Neumann boundary")
 \seealso{
 deriche(), vanvliet().
 }
+

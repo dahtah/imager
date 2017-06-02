@@ -25,9 +25,10 @@ none, used for side effect
 \description{
 Base R has a function for plotting circles called "symbols". Unfortunately, the size of the circles is inconsistent across devices. This function plots circles whose radius is specified in used coordinates.
 }
-\seealso{
-hough_circle
-}
 \author{
 Simon Barthelme
 }
+\seealso{
+hough_circle
+}
+
