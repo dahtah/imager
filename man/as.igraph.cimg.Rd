@@ -21,6 +21,7 @@ In this graph representation, every pixel is a vertex connected to its neighbour
 The image values along edges are stored as graph attributes (see examples).
 }
 \examples{
+library(igraph)
 im <- imfill(5,5)
 G <- as.igraph(im)
 plot(G)

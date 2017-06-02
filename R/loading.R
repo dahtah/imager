@@ -77,23 +77,26 @@ load.image <- function(file) wrap.url(file,load.image.internal)
 
 load.image.internal <- function(file)
 {
-    bmp <- try(read.bitmap(file),silent=TRUE)
-    if (class(bmp) != "try-error") #Loaded succesfully
-    {
-        if (!is.null(attr(bmp,"header"))) #We have a BMP file, rescale
+    fext <- fileext(file)
+    if (fext %in% c('png','bmp','jpeg','jpg'))
         {
-            bmp <- bmp/255
-        }
-        if (length(dim(bmp)) == 3) #Has colour
-        {
-            dim(bmp) <- c(dim(bmp)[1:2],1,dim(bmp)[3]) #Make array 4D
-        }
-        else 
-        {
-            dim(bmp) <- c(dim(bmp),1,1)
-        }
-        bmp <- cimg(bmp) %>% mirror("x") %>% imrotate(-90)
-        bmp
+            bmp <- read.bitmap(file)
+            ## if (class(bmp) != "try-error") #Loaded succesfully
+            ## {
+            if (!is.null(attr(bmp,"header"))) #We have a BMP file, rescale
+            {
+                bmp <- bmp/255
+            }
+            if (length(dim(bmp)) == 3) #Has colour
+            {
+                dim(bmp) <- c(dim(bmp)[1:2],1,dim(bmp)[3]) #Make array 4D
+            }
+            else 
+            {
+                dim(bmp) <- c(dim(bmp),1,1)
+            }
+            bmp <- cimg(bmp) %>% mirror("x") %>% imrotate(-90)
+            bmp
     }
     else #Loading with read.bitmap has failed, try with ImageMagick
     {
@@ -343,3 +346,11 @@ save.video <- function(im,fname,...)
     }, finally=unlink(dd,recursive=TRUE))
     
 }
+
+#borrowed from pkgmaker::file_extension
+fileext <- function(f)
+{
+    sub(".*\\.([^.]{3})$", "\\1", f) %>% tolower
+}
+
+                    
