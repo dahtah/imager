@@ -26,3 +26,4 @@ imsplit(boats,"x",5) \%>\% plot(layout="rect")
 \author{
 Simon Barthelme
 }
+

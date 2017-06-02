@@ -33,3 +33,4 @@ patches <- pixel.grid(im)  \%>\% mutate(w=3,h=3)
 out <- mutate(patches,med=patch_summary_cimg(im,"ic",x,y,w,h))
 as.cimg(out,v.name="med") \%>\% plot
 }
+

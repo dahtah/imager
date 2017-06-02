@@ -44,9 +44,10 @@ igraph::E(G)$weight <- G$dist/(1e-1+abs(G$value.from - G$value.to))
 igraph::distances(G,5000) \%>\% as.vector \%>\%
     as.cimg(dim=gsdim(im)) \%>\% plot
 }
-\seealso{
-as.igraph.pixset
-}
 \author{
 Simon Barthelme
 }
+\seealso{
+as.igraph.pixset
+}
+

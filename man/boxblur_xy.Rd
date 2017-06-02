@@ -24,3 +24,4 @@ boxblur_xy(boats,20,5) \%>\% plot(main="Anisotropic blur")
 \seealso{
 blur().
 }
+

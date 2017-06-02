@@ -22,9 +22,10 @@ im <- imfill(2,2,val=c(0,0,0,0))
 rm.alpha(im) 
 attr(rm.alpha(im),"alpha")
 }
-\seealso{
-flatten.alpha
-}
 \author{
 Simon Barthelme
 }
+\seealso{
+flatten.alpha
+}
+

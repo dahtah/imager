@@ -18,3 +18,4 @@ as.cimg.im is an alias for the same function
 \author{
 Simon Barthelme
 }
+

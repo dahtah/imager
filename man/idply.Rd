@@ -21,3 +21,4 @@ Shorthand for imsplit followed by ldply
 \examples{
 idply(boats,"c",mean) #mean luminance per colour channel
 }
+

@@ -24,9 +24,10 @@ boats.a <- imlist(boats,alpha) \%>\% imappend("c")
 flatten.alpha(boats.a) \%>\% plot
 flatten.alpha(boats.a,"darkgreen") \%>\% plot
 }
-\seealso{
-rm.alpha
-}
 \author{
 Simon Barthelme
 }
+\seealso{
+rm.alpha
+}
+

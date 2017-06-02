@@ -23,3 +23,4 @@ plot(im)
 #Load the R logo directly from the CRAN webpage
 #load.image("https://cran.r-project.org/Rlogo.jpg") \%>\% plot
 }
+
