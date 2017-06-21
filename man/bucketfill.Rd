@@ -16,11 +16,11 @@ bucketfill(im, x, y, z = 1, color, opacity = 1, sigma = 0,
 
 \item{z}{Z-coordinate of the starting point of the region to fill.}
 
-\item{color}{Pointer to spectrum() consecutive values, defining the drawing color. If missing, use value at location (x,y,z)}
+\item{color}{a vector of values (of length spectrum(im)), or a colour name (e.g. "red"). If missing, use the colour at location (x,y,z).}
 
-\item{opacity}{Opacity of the drawing.}
+\item{opacity}{opacity. If the opacity is below 1, paint with transparency.}
 
-\item{sigma}{Tolerance concerning neighborhood values.}
+\item{sigma}{Tolerance for neighborhood values: spread to neighbours if difference is less than sigma (for grayscale). If there are several channels, the sum of squared differences is used: if it below sigma^2, the colour spreads.}
 
 \item{high_connexity}{Use 8-connexity (only for 2d images, default FALSE).}
 }
@@ -29,10 +29,14 @@ Bucket fill
 }
 \examples{
 #Change the colour of a sail 
-boats.new <- bucketfill(boats,x=169,y=179,color=c(125,0,125),sigma=20) 
+boats.new <- bucketfill(boats,x=169,y=179,color="pink",sigma=.2) 
 layout(t(1:2))
 plot(boats,main="Original")
 plot(boats.new,main="New sails")
+
+#More spreading, lower opacity, colour specified as vector
+ugly <- bucketfill(boats,x=169,y=179,color=c(0,1,0),sigma=.6,opacity=.5)
+plot(ugly)
 }
 \seealso{
 px.flood

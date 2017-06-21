@@ -336,10 +336,10 @@ shrink <- function(px,x,y=x,z=x,boundary=TRUE)
 ##' Various useful pixsets
 ##'
 ##' These functions define some commonly used pixsets.
-##' px.left gives the left-most pixels of an image
+##' px.left gives the left-most pixels of an image, px.right the right-most, etc.
 ##' px.circle returns an (approximately) circular pixset of radius r, embedded in an image of width x and height y
 ##' Mathematically speaking, the set of all pixels whose L2 distance to the center equals r or less.
-##' px.diamond is similar but returns a diamong (L1 distance less than r)
+##' px.diamond is similar but returns a diamond (L1 distance less than r)
 ##' px.square is also similar but returns a square (Linf distance less than r)
 ##' @name common_pixsets
 ##' @param r radius (in pixels)
@@ -363,6 +363,7 @@ shrink <- function(px,x,y=x,z=x,boundary=TRUE)
 ##' px.right(im,1) %>% plot(int=FALSE)
 ##' px.top(im,4) %>% plot(int=FALSE)
 ##' px.bottom(im,2) %>% plot(int=FALSE)
+##' #All of the above
 ##' px.borders(im,1) %>% plot(int=FALSE)
 ##' @author Simon Barthelme
 NULL
