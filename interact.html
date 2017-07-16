@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Building interactive interfaces using imager</title>
+
+<script src="interact_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="interact_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="interact_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="interact_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="interact_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="interact_files/navigation-1.1/tabsets.js"></script>
+<link href="interact_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="interact_files/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Building interactive interfaces using imager</h1>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#hello-world"><span class="toc-section-number">1</span> Hello, world!</a></li>
+<li><a href="#a-gallery"><span class="toc-section-number">2</span> A gallery</a></li>
+<li><a href="#handling-mouse-events"><span class="toc-section-number">3</span> Handling mouse events</a></li>
+<li><a href="#misc.-examples"><span class="toc-section-number">4</span> Misc. examples</a><ul>
+<li><a href="#exploring-key-events"><span class="toc-section-number">4.1</span> Exploring key events</a></li>
+<li><a href="#zoom"><span class="toc-section-number">4.2</span> Zoom</a></li>
+<li><a href="#zoom-and-rotate"><span class="toc-section-number">4.3</span> Zoom and rotate</a></li>
+<li><a href="#smudge"><span class="toc-section-number">4.4</span> Smudge</a></li>
+<li><a href="#foregroundbackground"><span class="toc-section-number">4.5</span> Foreground/background</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>To explore the effect of certain image manipulations, filter settings, etc., it’s useful to have a basic interaction mechanism. You can use <a href="http://shiny.rstudio.com/">shiny</a> for that, but imager provides a lightweight alternative.</p>
+<p>The user provides a function that gets called every time a user event happens (a click, a keypress, etc.). The role of the function is to process the event and output an image, which will then be displayed.</p>
+<p>Note to people who are used to programming GUIs: you are probably familiar with APIs that let you define the elements of an interface, and a bunch of individual call-back functions that handle user events. The approach here is much more basic, but the goal is to have something quick and dirty that knows a few key-presses, not a full GUI with drop-down menus.</p>
+<div id="hello-world" class="section level1">
+<h1><span class="header-section-number">1</span> Hello, world!</h1>
+<p>With that said, let’s move on to a hello world example:</p>
+<pre class="r"><code>library(imager)
+im &lt;- implot(boats,text(130,100,&quot;Hello, world!&quot;,cex=3,col=&quot;white&quot;))
+##Hello, world!!!
+interact(function(state) im)</code></pre>
+<p>Press “Esc” to exit. At this point the function does nothing interesting. It gets called once every time a user event happens, but it returns the same image every time, so the display doesn’t change. To verify that user events are actually sent to the function, try this:</p>
+<pre class="r"><code>interact(function(state) { print(&quot;Something happenned!&quot;); im })</code></pre>
+<p>Next we examine the state, and if we see that the space bar has been pressed, we change the image:</p>
+<pre class="r"><code>f &lt;- function(state)
+{
+    if (state$key==&quot;space&quot;)
+    {
+        implot(im,text(130,170,&quot;Hello, world!&quot;,cex=3.5,col=&quot;white&quot;))
+    }
+    else
+    {
+        im
+    }
+}
+interact(f)</code></pre>
+<p>The return value for interact is the last image displayed, which you can verify by pressing Esc with the message toggled on and off.</p>
+<p>Notice that the new message appears when you press the space bar, but disappears when some other event happens. To toggle the message on and off, we need to keep track of the current state of the image. We do this using side-effects and the “&lt;&lt;-” assignment operator, which lets you update variables outside of the immediate environment of the function.</p>
+<pre class="r"><code>msg_on &lt;- FALSE
+f &lt;- function(state)
+{
+    if (state$key==&quot;space&quot;)
+    {
+        print(&quot;toggle!&quot;)
+        msg_on &lt;&lt;- !msg_on
+    }
+    if (msg_on)
+    {
+        implot(im,text(130,170,&quot;Hello, world!&quot;,cex=3.5,col=&quot;white&quot;))
+    }
+    else
+    {
+        im
+    }
+}
+interact(f)</code></pre>
+<p>Now we can toggle the message on and off.</p>
+</div>
+<div id="a-gallery" class="section level1">
+<h1><span class="header-section-number">2</span> A gallery</h1>
+<p>Our next example is actually useful: we build a function that lets us explore an image list oen-by-one, moving left and right with the arrow keys.</p>
+<pre class="r"><code>gallery &lt;- function(iml)
+ {
+     ind &lt;- 1
+     f &lt;- function(state)
+    {
+         if (state$key==&quot;arrowleft&quot;)
+         {
+             ind &lt;&lt;- max(ind-1,1)
+         }
+         if (state$key==&quot;arrowright&quot;)
+         {
+             ind &lt;&lt;- min(ind+1,length(iml))
+         }
+         iml[[ind]]
+     }
+     interact(f)
+ }
+ 
+map_il(1:10,~ isoblur(boats,.)) %&gt;% gallery</code></pre>
+<p>As an exercise you can try adding the image index in the top-left corner, or circular scrolling (so that a right-arrow at the end loops back to the beginning).</p>
+</div>
+<div id="handling-mouse-events" class="section level1">
+<h1><span class="header-section-number">3</span> Handling mouse events</h1>
+<p>In our next example, we take the first step towards reimplementing Microsoft Paint. Every time the mouse is clicked, we draw a circle:</p>
+<pre class="r"><code>paint &lt;- function()
+{
+    im &lt;- boats
+    f &lt;- function(state)
+    {
+        if (state$mouse_button != 0)
+            {
+                im &lt;&lt;- draw_circle(im,state$mouse_x,state$mouse_y,radius=10,col=&quot;white&quot;)
+            }
+        im
+    }
+    interact(f)
+}
+
+paint()</code></pre>
+<p>We use the draw_circle function for speed (implot is convenient but slow!).</p>
+</div>
+<div id="misc.-examples" class="section level1">
+<h1><span class="header-section-number">4</span> Misc. examples</h1>
+<div id="exploring-key-events" class="section level2">
+<h2><span class="header-section-number">4.1</span> Exploring key events</h2>
+<p>This function prints the name of each key it recognises:</p>
+<pre class="r"><code>interact(function(state) { if (state$key!=&quot;&quot;) print(state$key); imfill(100,100); })</code></pre>
+</div>
+<div id="zoom" class="section level2">
+<h2><span class="header-section-number">4.2</span> Zoom</h2>
+<p>The display is automatically resized to the size of the output image. In this function, you can expand the image using the mouse wheel:</p>
+<pre class="r"><code>zoom &lt;- function()
+{
+    z.level &lt;- 1
+    im &lt;- boats
+    f &lt;- function(state)
+    {
+        ##Mouse wheel can have value 0 (nothing happened)
+        ##-1 (rolled down)
+        ##+1 (rolled up)
+        z.level &lt;&lt;-  z.level*exp(.1*state$mouse_wheel)
+        imresize(im,z.level)
+    }
+    interact(f)
+}</code></pre>
+</div>
+<div id="zoom-and-rotate" class="section level2">
+<h2><span class="header-section-number">4.3</span> Zoom and rotate</h2>
+<p>A variant of the above, where Ctrl+Mouse wheel rotates the image.</p>
+<pre class="r"><code>zoom.rotate &lt;- function()
+{
+    z.level &lt;- 1
+    angle &lt;- 0 
+    im &lt;- boats
+    f &lt;- function(state)
+    {
+        ##Ctrl is pressed, change angle
+        if (state$key %in% c(&quot;ctrlleft&quot;,&quot;ctrlright&quot;))
+        {
+            angle &lt;&lt;-  (angle + 5*state$mouse_wheel) %% 360
+        }
+        else #change zoom level
+        {
+            z.level &lt;&lt;-  z.level*exp(.1*state$mouse_wheel)
+    }
+        imresize(im,z.level) %&gt;% imrotate(angle)
+    }
+    interact(f)
+}</code></pre>
+</div>
+<div id="smudge" class="section level2">
+<h2><span class="header-section-number">4.4</span> Smudge</h2>
+<p>Like paint, but we use a pre-processing trick for speed.</p>
+<pre class="r"><code>##Add local blur everytime mouse button is clicked
+smudge &lt;- function(im)
+{
+    blur &lt;- 0
+    mask &lt;- imfill(dim=dim(im),val=rep(0,3))
+    im.blurred &lt;- isoblur(im,4)
+    f &lt;- function(state)
+    {
+        if (state$mouse_button != 0)
+            {
+                mask &lt;&lt;- draw_circle(mask,state$mouse_x,state$mouse_y,radius=10,col=&quot;white&quot;)
+            }
+        (1-mask)*im+mask*im.blurred
+    }
+    interact(f)
+}</code></pre>
+</div>
+<div id="foregroundbackground" class="section level2">
+<h2><span class="header-section-number">4.5</span> Foreground/background</h2>
+<p>Interacting <a href="foreground_background.html">foreground extraction</a>. See link for an explanation of the algorithm. Click on foreground regions, ctrl+click on background regions.</p>
+<pre class="r"><code>detect.edges &lt;- function(im,sigma=1)
+    {
+        isoblur(im,sigma) %&gt;% imgradient(&quot;xy&quot;) %&gt;% llply(function(v) v^2) %&gt;% add %&gt;% imsplit(&quot;c&quot;) %&gt;% add
+    }
+
+extract.fg &lt;- function(im,edges,fg,bg)
+    {
+        seeds &lt;- 0*R(im)
+        seeds[cbind(as.matrix(fg),1,1)] &lt;- 1
+        seeds[cbind(as.matrix(bg),1,1)] &lt;- 2
+        sigma &lt;- 0.002*max(width(im),height(im)) #Heuristic (from David&#39;s code)
+        pmap &lt;- 1/(1+edges)
+        res &lt;- watershed(seeds,pmap)
+        if (spectrum(im)==3) res &lt;- add.colour(res)
+        res==1
+    }
+
+fgbg &lt;- function(im)
+{
+    edges &lt;- detect.edges(im)
+    fg &lt;- data.frame()
+    bg &lt;- data.frame()
+    f &lt;- function(state)
+    {
+        if (state$mouse_button != 0)
+        {
+            d &lt;- data.frame(x=state$mouse_x,y=state$mouse_y)
+            if (state$key == &quot;ctrlleft&quot;)
+            {
+                bg &lt;&lt;- rbind(bg,d)
+            }
+            else
+            {
+                fg &lt;&lt;- rbind(fg,d)
+            }
+        }
+        if (nrow(fg) &gt;= 1 &amp;&amp; nrow(bg) &gt;= 1)
+        {
+            msk &lt;- extract.fg(im,edges,fg,bg)
+            im*(msk+.5)/1.5
+        }
+        else
+        {
+            im
+        }
+    }
+    interact(f)
+}
+
+##Left-click on the coins, ctrl-click on background, and
+##watch the background disappear
+load.example(&quot;coins&quot;) %&gt;% as.cimg %&gt;% fgbg</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

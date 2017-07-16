@@ -1,0 +1,277 @@
+---
+title: "Building interactive interfaces using imager"
+output:
+  html_document:
+    fig_width: 6.5
+    fig_height: 6
+    toc: true
+    number_sections: true
+---
+
+To explore the effect of certain image manipulations, filter settings, etc., it's useful to have a basic interaction mechanism. You can use [shiny](http://shiny.rstudio.com/) for that, but imager provides a lightweight alternative. 
+
+The user provides a function that gets called every time a user event happens (a click, a keypress, etc.). The role of the function is to process the event and output an image, which will then be displayed.	
+
+Note to people who are used to programming GUIs: you are probably familiar with APIs that let you define the elements of an interface, and a bunch of individual call-back functions that handle user events. The approach here is much more basic, but the goal is to have something quick and dirty that knows a few key-presses, not a full GUI with drop-down menus.
+
+```{r echo=FALSE}
+interact <- function(...) invisible()
+```
+
+# Hello, world!
+
+With that said, let's move on to a hello world example:
+
+```{r}
+library(imager)
+im <- implot(boats,text(130,100,"Hello, world!",cex=3,col="white"))
+##Hello, world!!!
+interact(function(state) im)
+```
+
+Press "Esc" to exit. At this point the function does nothing interesting. It gets called once every time a user event happens, but it returns the same image every time, so the display doesn't change. To verify that user events are actually sent to the function, try this: 
+
+```{r}
+interact(function(state) { print("Something happenned!"); im })
+```
+
+Next we examine the state, and if we see that the space bar has been pressed, we change the image:
+
+```{r}
+f <- function(state)
+{
+    if (state$key=="space")
+    {
+        implot(im,text(130,170,"Hello, world!",cex=3.5,col="white"))
+    }
+    else
+    {
+        im
+    }
+}
+interact(f)
+```
+
+The return value for interact is the last image displayed, which you can verify by pressing Esc with the message toggled on and off. 
+
+Notice that the new message appears when you press the space bar, but disappears when some other event happens. To toggle the message on and off, we need to keep track of the current state of the image. We do this using side-effects and the "<<-" assignment operator, which lets you update variables outside of the immediate environment of the function. 
+
+```{r}
+msg_on <- FALSE
+f <- function(state)
+{
+    if (state$key=="space")
+    {
+        print("toggle!")
+        msg_on <<- !msg_on
+    }
+    if (msg_on)
+    {
+        implot(im,text(130,170,"Hello, world!",cex=3.5,col="white"))
+    }
+    else
+    {
+        im
+    }
+}
+interact(f)
+
+```
+
+Now we can toggle the message on and off. 
+
+# A gallery
+
+Our next example is actually useful: we build a function that lets us explore an image list oen-by-one, moving left and right with the arrow keys.
+
+```{r}
+gallery <- function(iml)
+ {
+     ind <- 1
+     f <- function(state)
+    {
+         if (state$key=="arrowleft")
+         {
+             ind <<- max(ind-1,1)
+         }
+         if (state$key=="arrowright")
+         {
+             ind <<- min(ind+1,length(iml))
+         }
+         iml[[ind]]
+     }
+     interact(f)
+ }
+ 
+map_il(1:10,~ isoblur(boats,.)) %>% gallery
+```
+
+As an exercise you can try adding the image index in the top-left corner, or circular scrolling (so that a right-arrow at the end loops back to the beginning). 
+
+# Handling mouse events
+
+In our next example, we take the first step towards reimplementing Microsoft Paint. Every time the mouse is clicked, we draw a circle:
+
+```{r}
+paint <- function()
+{
+    im <- boats
+    f <- function(state)
+    {
+        if (state$mouse_button != 0)
+            {
+                im <<- draw_circle(im,state$mouse_x,state$mouse_y,radius=10,col="white")
+            }
+        im
+    }
+    interact(f)
+}
+
+paint()
+```
+
+We use the draw_circle function for speed (implot is convenient but slow!). 
+
+
+# Misc. examples 
+
+## Exploring key events
+
+This function prints the name of each key it recognises:
+
+```{r}
+interact(function(state) { if (state$key!="") print(state$key); imfill(100,100); })
+```
+
+## Zoom 
+
+The display is automatically resized to the size of the output image. In this function, you can expand the image using the mouse wheel:
+
+```{r}
+zoom <- function()
+{
+    z.level <- 1
+    im <- boats
+    f <- function(state)
+    {
+        ##Mouse wheel can have value 0 (nothing happened)
+        ##-1 (rolled down)
+        ##+1 (rolled up)
+        z.level <<-  z.level*exp(.1*state$mouse_wheel)
+        imresize(im,z.level)
+    }
+    interact(f)
+}
+```
+
+## Zoom and rotate
+
+A variant of the above, where Ctrl+Mouse wheel rotates the image.
+
+```{r}
+zoom.rotate <- function()
+{
+    z.level <- 1
+    angle <- 0 
+    im <- boats
+    f <- function(state)
+    {
+        ##Ctrl is pressed, change angle
+        if (state$key %in% c("ctrlleft","ctrlright"))
+        {
+            angle <<-  (angle + 5*state$mouse_wheel) %% 360
+        }
+        else #change zoom level
+        {
+            z.level <<-  z.level*exp(.1*state$mouse_wheel)
+	}
+        imresize(im,z.level) %>% imrotate(angle)
+    }
+    interact(f)
+}
+```
+
+
+## Smudge
+
+Like paint, but we use a pre-processing trick for speed. 
+
+```{r}
+##Add local blur everytime mouse button is clicked
+smudge <- function(im)
+{
+    blur <- 0
+    mask <- imfill(dim=dim(im),val=rep(0,3))
+    im.blurred <- isoblur(im,4)
+    f <- function(state)
+    {
+        if (state$mouse_button != 0)
+            {
+                mask <<- draw_circle(mask,state$mouse_x,state$mouse_y,radius=10,col="white")
+            }
+        (1-mask)*im+mask*im.blurred
+    }
+    interact(f)
+}
+
+```
+
+## Foreground/background
+
+Interacting [foreground extraction](foreground_background.html). See link for an explanation of the algorithm. Click on foreground regions, ctrl+click on background regions.
+
+```{r}
+
+detect.edges <- function(im,sigma=1)
+    {
+        isoblur(im,sigma) %>% imgradient("xy") %>% llply(function(v) v^2) %>% add %>% imsplit("c") %>% add
+    }
+
+extract.fg <- function(im,edges,fg,bg)
+    {
+        seeds <- 0*R(im)
+        seeds[cbind(as.matrix(fg),1,1)] <- 1
+        seeds[cbind(as.matrix(bg),1,1)] <- 2
+        sigma <- 0.002*max(width(im),height(im)) #Heuristic (from David's code)
+        pmap <- 1/(1+edges)
+        res <- watershed(seeds,pmap)
+        if (spectrum(im)==3) res <- add.colour(res)
+        res==1
+    }
+
+fgbg <- function(im)
+{
+    edges <- detect.edges(im)
+    fg <- data.frame()
+    bg <- data.frame()
+    f <- function(state)
+    {
+        if (state$mouse_button != 0)
+        {
+            d <- data.frame(x=state$mouse_x,y=state$mouse_y)
+            if (state$key == "ctrlleft")
+            {
+                bg <<- rbind(bg,d)
+            }
+            else
+            {
+                fg <<- rbind(fg,d)
+            }
+        }
+        if (nrow(fg) >= 1 && nrow(bg) >= 1)
+        {
+            msk <- extract.fg(im,edges,fg,bg)
+            im*(msk+.5)/1.5
+        }
+        else
+        {
+            im
+        }
+    }
+    interact(f)
+}
+
+##Left-click on the coins, ctrl-click on background, and
+##watch the background disappear
+load.example("coins") %>% as.cimg %>% fgbg
+```

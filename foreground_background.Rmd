@@ -31,7 +31,7 @@ extract.fg <- function(im,fg,bg)
         edges <- detect.edges(im,sigma)
         pmap <- 1/(1+edges)
         res <- watershed(seeds,pmap)
-        res <- rlply(3,res) %>% imappend("c") 
+        res <- imrep(res,3) %>% imappend("c") 
         res
     }
 fg <- data.frame(x=c(541,482,499,670),y=c(189,353,465,394))
