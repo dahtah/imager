@@ -128,6 +128,44 @@ grabPoint <- function(im,output="coord")
     }
 }
 
+
+##' Build simple interactive interfaces using imager
+##'
+##' To explore the effect of certain image manipulations, filter settings, etc., it's useful to have a basic interaction mechanism. You can use shiny for that, but this function provides a lightweight alternative. The user provides a function that gets called every time a user event happens (a click, a keypress, etc.). The role of the function is to process the event and output an image, which will then be displayed.
+##' See examples for more. 
+##' @param fun a function that takes a single argument (a list of user events) and returns an image to be plotted. The image won't be rescaled before plotting, so make sure RGB values are in [0,1]. 
+##' @param title a title for the window (default "", none)
+##' @return an image, specifically the last image displayed
+##' @author Simon Barthelme
+##' @examples
+##' #Implement a basic image gallery:
+##' #press "right" and "left" to view each image in a list
+##' gallery <- function(iml)
+##' {
+##'     ind <- 1
+##'     f <- function(state)
+##'    {
+##'         if (state$key=="arrowleft")
+##'         {
+##'             ind <<- max(ind-1,1)
+##'         }
+##'         if (state$key=="arrowright")
+##'         {
+##'             ind <<- min(ind+1,length(iml))
+##'         }
+##'         iml[[ind]]
+##'     }
+##'     interact(f)
+##' }
+##' ##Not run (interactive only)
+##' ##map_il(1:10,~ isoblur(boats,.)) %>% gallery
+##' @export
+interact <- function(fun,title="")
+{
+    interact_(fun,title)
+}
+
+
 interp.line <- function(im,x0,y0,x1,y1,n,...)
 {
     dx <- x1-x0

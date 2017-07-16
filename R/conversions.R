@@ -272,25 +272,25 @@ as.cimg.vector <- function(obj,x=NA,y=NA,z=NA,cc=NA,dim=NULL,...)
                 if (is.whole(sqrt(l)))
                     {
                         warning("Guessing input is a square 2D image")
-                        d <- sqrt(l)
+                        d <- sqrt(l) %>% round
                         array(obj,c(d,d,1,1)) %>% cimg
                     }
                 else if (is.whole(sqrt(l/3)))
                     {
                         warning("Guessing input is a square 2D RGB image")
-                        d <- sqrt(l/3)
+                        d <- sqrt(l/3) %>% round
                         array(obj,c(d,d,1,3))%>% cimg
                     }
                 else if (is.whole((l)^(1/3))) 
                     {
                         warning("Guessing input is a cubic 3D image")
-                        d <- l^(1/3)
+                        d <- l^(1/3) %>% round
                         array(obj,c(d,d,d,1))%>% cimg
                     }
                 else if (is.whole((l/3)^(1/3))) 
                     {
                         warning("Guessing input is a cubic 3D RGB image")
-                        d <- (l/3)^(1/3)
+                        d <- (l/3)^(1/3) %>% round
                         array(obj,c(d,d,d,3))%>% cimg
                     }
                 else
