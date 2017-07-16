@@ -24,3 +24,4 @@ load.example("parrots") \%>\% plot
 \author{
 Simon Barthelme
 }
+

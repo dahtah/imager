@@ -14,3 +14,4 @@ get_hessian(im, axes = "")
 \description{
 Return image hessian.
 }
+

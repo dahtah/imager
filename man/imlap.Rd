@@ -15,3 +15,4 @@ The Laplacian is the sum of second derivatives, approximated here using finite d
 \examples{
 imlap(boats) \%>\% plot
 }
+

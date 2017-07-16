@@ -27,7 +27,6 @@ subim is an alias defined for backward-compatibility.
 \itemize{
 \item \code{subim}: alias for imsub
 }}
-
 \examples{
 parrots <- load.example("parrots")
 imsub(parrots,x < 30) #Only the first 30 columns
@@ -46,3 +45,4 @@ imsub(parrots,cc==1) #Colour axis is "cc" not "c" here because "c" is an importa
 \author{
 Simon Barthelme
 }
+

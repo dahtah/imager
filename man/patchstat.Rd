@@ -43,3 +43,4 @@ with(ptch,patchstat(im,'median',x,y,3,3))
 \seealso{
 extract_patches
 }
+

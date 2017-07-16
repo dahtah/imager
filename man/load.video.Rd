@@ -37,9 +37,10 @@ fname <- system.file('extdata/tennis_sif.mpeg',package='imager')
 ## load.video(fname,fps=10) \%>\% play
 ## load.video(fname,skip=2) \%>\% play
 }
-\seealso{
-save.video, make.video
-}
 \author{
 Simon Barthelme
 }
+\seealso{
+save.video, make.video
+}
+

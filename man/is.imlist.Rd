@@ -15,3 +15,4 @@ logical
 \description{
 Check that an object is an imlist object
 }
+

@@ -30,3 +30,4 @@ load.image(tmpF) \%>\% plot
 \seealso{
 save.video
 }
+

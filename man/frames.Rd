@@ -22,3 +22,4 @@ Split a video into separate frames
 \seealso{
 channels
 }
+

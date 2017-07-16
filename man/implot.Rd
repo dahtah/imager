@@ -32,9 +32,10 @@ draw.fun <- function() text(150,50,"Boats!!!",cex=3)
 out <- implot(im,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
 plot(out)
 }
-\seealso{
-plot, capture.plot
-}
 \author{
 Simon Barthelme
 }
+\seealso{
+plot, capture.plot
+}
+

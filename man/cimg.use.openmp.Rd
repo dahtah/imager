@@ -22,3 +22,4 @@ cimg.use.openmp("never") #turn off parallelisation
 \author{
 Simon Barthelme
 }
+

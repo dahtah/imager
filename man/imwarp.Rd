@@ -60,9 +60,10 @@ imwarp(im,map=map.scaling.inv,dir="backward") \%>\% plot #No holes
 map.bend.rel <- function(x,y) list(x=50*sin(y/10),y=0*y)
 imwarp(im,map=map.bend.rel,coord="relative",dir="backward") \%>\% plot #No holes
 }
-\seealso{
-warp for direct access to the CImg function
-}
 \author{
 Simon Barthelme
 }
+\seealso{
+warp for direct access to the CImg function
+}
+

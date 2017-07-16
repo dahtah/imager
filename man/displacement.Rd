@@ -25,3 +25,4 @@ displacement(sourceIm, destIm, smoothness = 0.1, precision = 5,
 \description{
 Estimate displacement field between two images.
 }
+

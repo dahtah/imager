@@ -21,3 +21,4 @@ Convert image list to data.frame
 gr <- imgradient(boats,"xy") \%>\% setNames(c("dx","dy")) \%>\% as.data.frame
 str(gr)
 }
+
