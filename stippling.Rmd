@@ -15,7 +15,13 @@ The bits of code here mimic the sort of computer art produced by the [StippleGen
 Stippling has a interesting connection to statistics, specifically spatial statistics. Let's say the goal is to render an image by drawing a lot of black dots. Areas with a high density of black dots will appear dark, while areas with a low density will appear light. We could use simple random sampling for this purpose:
 
 ```{r}
-#Draw pixels with prob. proportional to 1 minus the grayscale value
+library(dplyr)
+library(imager)
+##image from Seccord (2002)
+im <- load.image("http://dahtah.github.io/imager/images/stippling_leaves.png")
+plot(im)
+
+##Draw pixels with prob. proportional to 1 minus the grayscale value
 xy <- sample(nPix(im),1e4,replace=TRUE,prob=1-im) %>%
     coord.index(im,.) %>%
     select(x,y)
@@ -42,16 +48,18 @@ voronoi <- function(xy,w,h)
 #Resolution
 res <- 300
 xy <- data.frame(x=runif(5,1,res),y=runif(5,1,res))
-voronoi(xy,res,res) %>% plot
+vr <- voronoi(xy,res,res)
+plot(vr)
 points(xy,col="red",pch=19)
 ```
 
-To get the center of mass of each cell, we use dplyr: 
+To get the center of mass of each cell, we convert to a data.frame format and use dplyr: 
 
 ```{r}
-library(dplyr)
-xy.c <- voronoi(xy,res,res) %>% as.data.frame %>%
+xy.c <- as.data.frame(vr) %>%
     group_by(value) %>% dplyr::mutate(x=mean(x),y=mean(y))
+plot(vr)
+points(xy,col="red",pch=19)
 points(xy.c,col="blue",pch=19)
 
 ```
@@ -119,12 +127,13 @@ stipple <- function(im,nDots=1e3,gamma=1,nSteps=5)
 }
 
 out <- stipple(im,1e4,gamma=1)
-plot(out,ylim=c(height(im),1),cex=.2,pch=19,axes=FALSE,xlab="",ylab="")
+plot(out,ylim=c(height(im),1),cex=.1,pch=19,axes=FALSE,xlab="",ylab="")
 ```
 
 Below, a variant that plots line segments instead of dots, orienting each segment using the image gradient: 
 
 ```{r}
+library(purrr)
 plot.segments <- function(im,out,scale=40)
 {
     g <- imgradient(im,"xy") %>% map(~ isoblur(.,3)) %>% map(~ interp(.,out))
@@ -135,18 +144,18 @@ plot.segments <- function(im,out,scale=40)
 plot.segments(im,out)
 ```
 
-Another variant in colour: 
+Another variant, with a mosaic effect:
 
 ```{r}
-stipple.colour <- function(im,nDots=1e4,scale=40)
+mosaic <- function(im,nDots=1e4,scale=140,gamma=.2)
 {
-    out <- grayscale(im) %>% stipple(nDots)
-    col <- interp(im,out) %$% rgb(c.1,c.2,c.3)
+    out <- grayscale(im) %>% stipple(nDots,gamma=gamma)
+    col <- interp(im,out) %$% rgb(c.1,c.2,c.3,.8)
     g <- grayscale(im) %>% imgradient("xy") %>% map(~ isoblur(.,3)) %>% map(~ interp(.,out))
-    plot(out,ylim=c(height(im),1),cex=.5,pch=19,col="white",axes=FALSE,xlab="",ylab="")
-    segments(out$x,out$y,out$x-scale*g$y,out$y+scale*g$x,col=col,lwd=3)
+    plot(im,axes=FALSE,xlab="",ylab="")
+    #plot(out,ylim=c(height(im),1),cex=.5,pch=19,col="white",axes=FALSE,xlab="",ylab="")
+    segments(out$x,out$y,out$x-scale*g$y,out$y+scale*g$x,col=col,lwd=8)
 }
 
-
-load.example("parrots") %>% isoblur(3) %>% stipple.colour 
+load.example("parrots") %>% mosaic
 ```
