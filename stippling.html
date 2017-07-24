@@ -119,29 +119,22 @@ $(document).ready(function () {
 
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#stippling"><span class="toc-section-number">1</span> Stippling</a></li>
+<li><a href="#some-variants-of-stippling"><span class="toc-section-number">2</span> Some variants of stippling</a></li>
+<li><a href="#tsp-traveling-salesman-problem-art"><span class="toc-section-number">3</span> TSP (Traveling Salesman Problem) art</a></li>
+</ul>
+</div>
 
 <p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
 <p>The bits of code here mimic the sort of computer art produced by the <a href="http://wiki.evilmadscientist.com/StippleGen">StippleGen</a> program (and others). <a href="http://mrl.nyu.edu/~ajsecord/stipples.html">Stippling</a> (Seccord, 2002) produces pointillist drawings (it’s essentially a variant of dithering) and TSP art renders shapes using a single continuous line.</p>
+<div id="stippling" class="section level1">
+<h1><span class="header-section-number">1</span> Stippling</h1>
 <p>Stippling has a interesting connection to statistics, specifically spatial statistics. Let’s say the goal is to render an image by drawing a lot of black dots. Areas with a high density of black dots will appear dark, while areas with a low density will appear light. We could use simple random sampling for this purpose:</p>
-<pre class="r"><code>library(dplyr)</code></pre>
-<pre><code>## Warning: Installed Rcpp (0.12.12) different from Rcpp used to build dplyr (0.12.11).
-## Please reinstall dplyr to avoid random crashes or undefined behavior.</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following object is masked _by_ &#39;.GlobalEnv&#39;:
-## 
-##     last</code></pre>
-<pre><code>## The following objects are masked from &#39;package:plyr&#39;:
-## 
-##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-##     summarize</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(imager)
+<pre class="r"><code>library(dplyr)
+library(imager)
+##image from Seccord (2002)
 im &lt;- load.image(&quot;http://dahtah.github.io/imager/images/stippling_leaves.png&quot;)
 plot(im)</code></pre>
 <p><img src="stippling_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
@@ -231,20 +224,12 @@ stipple &lt;- function(im,nDots=1e3,gamma=1,nSteps=5)
 out &lt;- stipple(im,1e4,gamma=1)
 plot(out,ylim=c(height(im),1),cex=.1,pch=19,axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)</code></pre>
 <p><img src="stippling_files/figure-html/unnamed-chunk-6-1.png" width="624" /></p>
+</div>
+<div id="some-variants-of-stippling" class="section level1">
+<h1><span class="header-section-number">2</span> Some variants of stippling</h1>
 <p>Below, a variant that plots line segments instead of dots, orienting each segment using the image gradient:</p>
-<pre class="r"><code>library(purrr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;purrr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
-## 
-##     contains, order_by</code></pre>
-<pre><code>## The following object is masked from &#39;package:plyr&#39;:
-## 
-##     compact</code></pre>
-<pre><code>## The following object is masked from &#39;package:magrittr&#39;:
-## 
-##     set_names</code></pre>
-<pre class="r"><code>plot.segments &lt;- function(im,out,scale=40)
+<pre class="r"><code>library(purrr)
+plot.segments &lt;- function(im,out,scale=40)
 {
     g &lt;- imgradient(im,&quot;xy&quot;) %&gt;% map(~ isoblur(.,3)) %&gt;% map(~ interp(.,out))
     plot(out,ylim=c(height(im),1),cex=.5,pch=19,col=&quot;white&quot;,axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)
@@ -266,6 +251,25 @@ plot.segments(im,out)</code></pre>
 
 load.example(&quot;parrots&quot;) %&gt;% mosaic</code></pre>
 <p><img src="stippling_files/figure-html/unnamed-chunk-8-1.png" width="624" /></p>
+</div>
+<div id="tsp-traveling-salesman-problem-art" class="section level1">
+<h1><span class="header-section-number">3</span> TSP (Traveling Salesman Problem) art</h1>
+<p>In TSP art, instead of plotting the dots individually we connect them all using line segments.To get a nice set of connecting segments and not some random hairball, a good path through the points is found by solving a spatial TSP. In R there’s the TSP package for that, which is handy but doesn’t scale all that well to large point sets:</p>
+<pre class="r"><code>library(TSP)
+##im is the original image (used only for its dimensions)
+##out is the output of the stipple function (dot positions)
+draw.tsp &lt;- function(im,out)
+{
+    tour &lt;- out %&gt;% ETSP %&gt;% solve_TSP
+    plot(out[tour,],type=&quot;l&quot;,ylim=c(height(im),1),axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)
+}
+
+##Be careful, this is memory-heavy (also, slow)
+out &lt;- stipple(im,4e3,gamma=1.5)
+draw.tsp(im,out)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-9-1.png" width="624" /></p>
+<p>Some post-processing will let you erase the uglier bits, but I leave that as an exercise to the reader.</p>
+</div>
 
 
 
