@@ -26,7 +26,7 @@ A shortcut for modifying parts of an image, using imeval syntax. See doc for ime
 imchange(boats,px.borders(boats,10),~ 0) \%>\% plot
 #Eq. to
 im <- boats
-im[px.border(im,10)] <- 0
+im[px.borders(im,10)] <- 0
 #Using formula syntax
 imchange(boats,~ px.borders(.,10),~ 0)
 #Replace with grayscale ramp
