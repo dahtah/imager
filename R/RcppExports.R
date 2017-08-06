@@ -889,32 +889,6 @@ px_append <- function(imlist, axis) {
     .Call(`_imager_px_append`, imlist, axis)
 }
 
-#' Pixel-wise evaluation of a CImg expression
-#'
-#' This function provides experimental support for CImg's "math expression parser", a byte-compiled mini-language. 
-#' @param im an image
-#' @param expr an expression (as string)
-#' @examples
-#' imfill(10,10) %>% imeval('x+y') %>% plot
-#' # Box filter
-#' boxf = "v=0;for(iy=y-3,iy<y+3,iy++,for(ix=x-3,ix< x+3,ix++,v+=i(ix,iy)));v"
-#' imeval(boats,boxf) %>% plot
-#' # Example by D. Tschumperle: Julia set
-#' julia <-  "
-#'    zr = -1.2 + 2.4*x/w;
-#'    zi = -1.2 + 2.4*y/h;
-#'    for (iter = 0, zr^2+zi^2<=4 && iter<256, iter++,
-#'      t = zr^2 - zi^2 + 0.5;
-#'      (zi *= 2*zr) += 0.2;
-#'      zr = t
-#'    );
-#'    iter"
-#' imfill(500,500) %>% imeval(julia) %>% plot
-#' @export
-imeval <- function(im, expr) {
-    .Call(`_imager_imeval`, im, expr)
-}
-
 #' Extract a numerical summary from image patches, using CImg's mini-language
 #' Experimental feature. 
 #' @param im an image

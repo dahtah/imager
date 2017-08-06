@@ -1459,18 +1459,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// imeval
-NumericVector imeval(NumericVector im, std::string expr);
-RcppExport SEXP _imager_imeval(SEXP imSEXP, SEXP exprSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
-    Rcpp::traits::input_parameter< std::string >::type expr(exprSEXP);
-    rcpp_result_gen = Rcpp::wrap(imeval(im, expr));
-    return rcpp_result_gen;
-END_RCPP
-}
 // patch_summary_cimg
 NumericVector patch_summary_cimg(NumericVector im, std::string expr, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
 RcppExport SEXP _imager_patch_summary_cimg(SEXP imSEXP, SEXP exprSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
@@ -1741,7 +1729,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_im_split", (DL_FUNC) &_imager_im_split, 3},
     {"_imager_im_append", (DL_FUNC) &_imager_im_append, 2},
     {"_imager_px_append", (DL_FUNC) &_imager_px_append, 2},
-    {"_imager_imeval", (DL_FUNC) &_imager_imeval, 2},
     {"_imager_patch_summary_cimg", (DL_FUNC) &_imager_patch_summary_cimg, 6},
     {"_imager_extract_fast", (DL_FUNC) &_imager_extract_fast, 6},
     {"_imager_extract_patches", (DL_FUNC) &_imager_extract_patches, 5},

@@ -85,36 +85,6 @@ LogicalVector px_append(List imlist,char axis)
   }
 }
 
-//' Pixel-wise evaluation of a CImg expression
-//'
-//' This function provides experimental support for CImg's "math expression parser", a byte-compiled mini-language. 
-//' @param im an image
-//' @param expr an expression (as string)
-//' @examples
-//' imfill(10,10) %>% imeval('x+y') %>% plot
-//' # Box filter
-//' boxf = "v=0;for(iy=y-3,iy<y+3,iy++,for(ix=x-3,ix< x+3,ix++,v+=i(ix,iy)));v"
-//' imeval(boats,boxf) %>% plot
-//' # Example by D. Tschumperle: Julia set
-//' julia <-  "
-//'    zr = -1.2 + 2.4*x/w;
-//'    zi = -1.2 + 2.4*y/h;
-//'    for (iter = 0, zr^2+zi^2<=4 && iter<256, iter++,
-//'      t = zr^2 - zi^2 + 0.5;
-//'      (zi *= 2*zr) += 0.2;
-//'      zr = t
-//'    );
-//'    iter"
-//' imfill(500,500) %>% imeval(julia) %>% plot
-//' @export
-// [[Rcpp::export]]
-NumericVector imeval(NumericVector im,std::string expr)
-{
-    CImg<double> img = as<CImg<double> >(im);
-    img.fill(expr.c_str(),true);
-    return wrap(img);
-}
-
 //' Extract a numerical summary from image patches, using CImg's mini-language
 //' Experimental feature. 
 //' @param im an image
@@ -133,7 +103,6 @@ NumericVector imeval(NumericVector im,std::string expr)
 //' as.cimg(out,v.name="med") %>% plot
 //' @export
 // [[Rcpp::export]]
-
 NumericVector patch_summary_cimg(NumericVector im,std::string expr,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
 {
   CId img = as<CId >(im);
