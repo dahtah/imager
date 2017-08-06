@@ -27,4 +27,3 @@ ci(imfill(3,3),l1,l2) #Three elements, etc.
 \author{
 Simon Barthelme
 }
-

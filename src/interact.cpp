@@ -133,6 +133,8 @@ NumericVector interact_(Function fun,std::string title = "")
 	disp.resize(nimg.width(),nimg.height());
 	disp.display(255*nimg);
       }
+      disp.flush();
+
       disp.wait();
       Rcpp::checkUserInterrupt();
     }

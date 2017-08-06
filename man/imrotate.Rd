@@ -30,4 +30,3 @@ imrotate(boats,30,cx=20,cy=20) \%>\% plot
 \seealso{
 imwarp, for flexible image warping, which includes rotations as a special case
 }
-

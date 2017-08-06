@@ -18,4 +18,3 @@ By default images are stored in xyzc order. Use permute_axes to change that orde
 im <- array(0,c(10,30,40,3)) \%>\% as.cimg
 permute_axes(im,"zxyc")
 }
-

@@ -33,4 +33,3 @@ imfill(dim=dim(boats)) #Blank image of the same size as the boats image
 \author{
 Simon Barthelme
 }
-

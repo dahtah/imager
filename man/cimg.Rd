@@ -25,4 +25,3 @@ cimg(array(1,c(10,10,5,3)))
 \author{
 Simon Barthelme
 }
-

@@ -15,8 +15,10 @@ interact(fun, title = "")
 an image, specifically the last image displayed
 }
 \description{
-To explore the effect of certain image manipulations, filter settings, etc., it's useful to have a basic interaction mechanism. You can use shiny for that, but this function provides a lightweight alternative. The user provides a function that gets called every time a user event happens (a click, a keypress, etc.). The role of the function is to process the event and output an image, which will then be displayed.
+To explore the effect of certain image manipulations, filter settings, etc., it's useful to have a basic interaction mechanism. You can use shiny for that, but imager provides a lightweight alternative. The user writes a function that gets called every time a user event happens (a click, a keypress, etc.). The role of the function is to process the event and output an image, which will then be displayed.
+You can exit the interface at any time by pressing Esc.
 See examples for more.
+This feature is experimental!!!
 }
 \examples{
 #Implement a basic image gallery:

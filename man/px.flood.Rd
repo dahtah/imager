@@ -34,4 +34,3 @@ highlight(px)
 \seealso{
 bucketfill
 }
-

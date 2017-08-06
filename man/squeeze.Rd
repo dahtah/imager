@@ -16,4 +16,3 @@ Works just like Matlab's squeeze function: if anything in dim(x) equals one the 
 A <- array(1:9,c(3,1,3)) #3D array with one flat dimension
 A \%>\% squeeze #flat dimension removed
 }
-

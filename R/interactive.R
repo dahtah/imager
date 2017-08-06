@@ -131,8 +131,10 @@ grabPoint <- function(im,output="coord")
 
 ##' Build simple interactive interfaces using imager
 ##'
-##' To explore the effect of certain image manipulations, filter settings, etc., it's useful to have a basic interaction mechanism. You can use shiny for that, but this function provides a lightweight alternative. The user provides a function that gets called every time a user event happens (a click, a keypress, etc.). The role of the function is to process the event and output an image, which will then be displayed.
-##' See examples for more. 
+##' To explore the effect of certain image manipulations, filter settings, etc., it's useful to have a basic interaction mechanism. You can use shiny for that, but imager provides a lightweight alternative. The user writes a function that gets called every time a user event happens (a click, a keypress, etc.). The role of the function is to process the event and output an image, which will then be displayed.
+##' You can exit the interface at any time by pressing Esc.
+##' See examples for more.
+##' This feature is experimental!!!
 ##' @param fun a function that takes a single argument (a list of user events) and returns an image to be plotted. The image won't be rescaled before plotting, so make sure RGB values are in [0,1]. 
 ##' @param title a title for the window (default "", none)
 ##' @return an image, specifically the last image displayed

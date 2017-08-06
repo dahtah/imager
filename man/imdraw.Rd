@@ -28,10 +28,9 @@ boats.small <- imresize(boats,.5)
 #I'm aware the result is somewhat ugly 
 imdraw(im,boats.small,x=400,y=10,opacity=.7) \%>\% plot
 }
-\author{
-Simon Barthelme
-}
 \seealso{
 imager.combine, for different ways of combining images
 }
-
+\author{
+Simon Barthelme
+}
