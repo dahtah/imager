@@ -204,8 +204,9 @@ NumericVector imshift(NumericVector im, int delta_x=0,  int delta_y=0,  int delt
 }
 
 
-//' Resize image to new dimensions.
-//' If pd[x,y,z,v]<0, it corresponds to a percentage of the original size (the default value is -100).
+//' Resize image
+//'
+//' If the dimension arguments are negative, they are interpreted as a proportion of the original image. 
 //' @param im an image
 //' @param size_x Number of columns (new size along the X-axis).
 //' @param size_y Number of rows (new size along the Y-axis).
@@ -225,6 +226,7 @@ NumericVector imshift(NumericVector im, int delta_x=0,  int delta_y=0,  int delt
 //' @param centering_y Set centering type (only if  interpolation_type=0).
 //' @param centering_z Set centering type (only if  interpolation_type=0).
 //' @param centering_c Set centering type (only if  interpolation_type=0).
+//' @seealso See imresize for an easier interface. 
 //' @export
 // [[Rcpp::export]]
 NumericVector resize(NumericVector im, int size_x=-100,  int size_y=-100,

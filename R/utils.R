@@ -76,15 +76,15 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
 ##' @name resize_uniform
 ##' @param im an image
 ##' @param scale a scale factor
-##' @param interpolation interpolation method to use (see doc for resize). Default 3, linear.
+##' @param interpolation interpolation method to use (see doc for resize). Default 3, linear. Set to 5 for cubic, 6 for Lanczos (higher quality).  
 ##' @return an image
 ##' @references
-##' For double-scale, half-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}.
+##' For double-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}. For half-scaling uses what the CImg doc describes as an "optimised filter", see resize_halfXY in CImg.h. 
 ##' @seealso resize
 ##' @examples
 ##' im <- load.example("parrots")
 ##' imresize(im,1/4) #Quarter size
-##' liply(2:4,function(ind) imresize(im,1/ind),"x") %>%  plot
+##' map_il(2:4,~ imresize(im,1/.)) %>% imappend("x") %>% plot
 ##' @author Simon Barthelme
 NULL
 

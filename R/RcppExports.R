@@ -817,8 +817,9 @@ imshift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, 
     .Call(`_imager_imshift`, im, delta_x, delta_y, delta_z, delta_c, boundary_conditions)
 }
 
-#' Resize image to new dimensions.
-#' If pd[x,y,z,v]<0, it corresponds to a percentage of the original size (the default value is -100).
+#' Resize image
+#'
+#' If the dimension arguments are negative, they are interpreted as a proportion of the original image. 
 #' @param im an image
 #' @param size_x Number of columns (new size along the X-axis).
 #' @param size_y Number of rows (new size along the Y-axis).
@@ -838,6 +839,7 @@ imshift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, 
 #' @param centering_y Set centering type (only if  interpolation_type=0).
 #' @param centering_z Set centering type (only if  interpolation_type=0).
 #' @param centering_c Set centering type (only if  interpolation_type=0).
+#' @seealso See imresize for an easier interface. 
 #' @export
 resize <- function(im, size_x = -100L, size_y = -100L, size_z = -100L, size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L, centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0) {
     .Call(`_imager_resize`, im, size_x, size_y, size_z, size_c, interpolation_type, boundary_conditions, centering_x, centering_y, centering_z, centering_c)
