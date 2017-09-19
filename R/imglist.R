@@ -121,7 +121,7 @@ as.imlist.cimg <- function(obj,...) list(obj) %>% as.imlist.list
 as.data.frame.imlist <- function(x,...,index="im")
 {
     if (is.null(names(x))) names(x) <- 1:length(x)
-    map_df(x,~ as.data.frame(.,...),.id=index)
+    map_df(x,function(v) as.data.frame(v,...),.id=index)
 }
 
 ##' @export
