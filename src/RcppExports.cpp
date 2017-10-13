@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // RGBtoHSL
 NumericVector RGBtoHSL(NumericVector im);
-RcppExport SEXP imager_RGBtoHSL(SEXP imSEXP) {
+RcppExport SEXP _imager_RGBtoHSL(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 // RGBtoXYZ
 NumericVector RGBtoXYZ(NumericVector im);
-RcppExport SEXP imager_RGBtoXYZ(SEXP imSEXP) {
+RcppExport SEXP _imager_RGBtoXYZ(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -30,7 +30,7 @@ END_RCPP
 }
 // XYZtoRGB
 NumericVector XYZtoRGB(NumericVector im);
-RcppExport SEXP imager_XYZtoRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_XYZtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,7 +41,7 @@ END_RCPP
 }
 // HSLtoRGB
 NumericVector HSLtoRGB(NumericVector im);
-RcppExport SEXP imager_HSLtoRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_HSLtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -52,7 +52,7 @@ END_RCPP
 }
 // RGBtoHSV
 NumericVector RGBtoHSV(NumericVector im);
-RcppExport SEXP imager_RGBtoHSV(SEXP imSEXP) {
+RcppExport SEXP _imager_RGBtoHSV(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -63,7 +63,7 @@ END_RCPP
 }
 // HSVtoRGB
 NumericVector HSVtoRGB(NumericVector im);
-RcppExport SEXP imager_HSVtoRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_HSVtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -74,7 +74,7 @@ END_RCPP
 }
 // RGBtoHSI
 NumericVector RGBtoHSI(NumericVector im);
-RcppExport SEXP imager_RGBtoHSI(SEXP imSEXP) {
+RcppExport SEXP _imager_RGBtoHSI(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -85,7 +85,7 @@ END_RCPP
 }
 // HSItoRGB
 NumericVector HSItoRGB(NumericVector im);
-RcppExport SEXP imager_HSItoRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_HSItoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -96,7 +96,7 @@ END_RCPP
 }
 // RGBtosRGB
 NumericVector RGBtosRGB(NumericVector im);
-RcppExport SEXP imager_RGBtosRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_RGBtosRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -107,7 +107,7 @@ END_RCPP
 }
 // sRGBtoRGB
 NumericVector sRGBtoRGB(NumericVector im);
-RcppExport SEXP imager_sRGBtoRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_sRGBtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -118,7 +118,7 @@ END_RCPP
 }
 // RGBtoYCbCr
 NumericVector RGBtoYCbCr(NumericVector im);
-RcppExport SEXP imager_RGBtoYCbCr(SEXP imSEXP) {
+RcppExport SEXP _imager_RGBtoYCbCr(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -129,7 +129,7 @@ END_RCPP
 }
 // YCbCrtoRGB
 NumericVector YCbCrtoRGB(NumericVector im);
-RcppExport SEXP imager_YCbCrtoRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_YCbCrtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -140,7 +140,7 @@ END_RCPP
 }
 // RGBtoYUV
 NumericVector RGBtoYUV(NumericVector im);
-RcppExport SEXP imager_RGBtoYUV(SEXP imSEXP) {
+RcppExport SEXP _imager_RGBtoYUV(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -151,7 +151,7 @@ END_RCPP
 }
 // YUVtoRGB
 NumericVector YUVtoRGB(NumericVector im);
-RcppExport SEXP imager_YUVtoRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_YUVtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -162,7 +162,7 @@ END_RCPP
 }
 // LabtoRGB
 NumericVector LabtoRGB(NumericVector im);
-RcppExport SEXP imager_LabtoRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_LabtoRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -173,7 +173,7 @@ END_RCPP
 }
 // RGBtoLab
 NumericVector RGBtoLab(NumericVector im);
-RcppExport SEXP imager_RGBtoLab(SEXP imSEXP) {
+RcppExport SEXP _imager_RGBtoLab(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -184,7 +184,7 @@ END_RCPP
 }
 // LabtoXYZ
 NumericVector LabtoXYZ(NumericVector im);
-RcppExport SEXP imager_LabtoXYZ(SEXP imSEXP) {
+RcppExport SEXP _imager_LabtoXYZ(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -195,7 +195,7 @@ END_RCPP
 }
 // XYZtoLab
 NumericVector XYZtoLab(NumericVector im);
-RcppExport SEXP imager_XYZtoLab(SEXP imSEXP) {
+RcppExport SEXP _imager_XYZtoLab(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -206,7 +206,7 @@ END_RCPP
 }
 // LabtosRGB
 NumericVector LabtosRGB(NumericVector im);
-RcppExport SEXP imager_LabtosRGB(SEXP imSEXP) {
+RcppExport SEXP _imager_LabtosRGB(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -217,7 +217,7 @@ END_RCPP
 }
 // sRGBtoLab
 NumericVector sRGBtoLab(NumericVector im);
-RcppExport SEXP imager_sRGBtoLab(SEXP imSEXP) {
+RcppExport SEXP _imager_sRGBtoLab(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -228,7 +228,7 @@ END_RCPP
 }
 // getXc
 NumericVector getXc(int x, int y, int z, int c);
-RcppExport SEXP imager_getXc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
+RcppExport SEXP _imager_getXc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -242,7 +242,7 @@ END_RCPP
 }
 // getYc
 NumericVector getYc(int x, int y, int z, int c);
-RcppExport SEXP imager_getYc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
+RcppExport SEXP _imager_getYc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -256,7 +256,7 @@ END_RCPP
 }
 // getZc
 NumericVector getZc(int x, int y, int z, int c);
-RcppExport SEXP imager_getZc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
+RcppExport SEXP _imager_getZc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -270,7 +270,7 @@ END_RCPP
 }
 // getCc
 NumericVector getCc(int x, int y, int z, int c);
-RcppExport SEXP imager_getCc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
+RcppExport SEXP _imager_getCc(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -284,7 +284,7 @@ END_RCPP
 }
 // display_
 void display_(NumericVector im, bool rescale);
-RcppExport SEXP imager_display_(SEXP imSEXP, SEXP rescaleSEXP) {
+RcppExport SEXP _imager_display_(SEXP imSEXP, SEXP rescaleSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
@@ -295,7 +295,7 @@ END_RCPP
 }
 // display_list
 void display_list(List imlist);
-RcppExport SEXP imager_display_list(SEXP imlistSEXP) {
+RcppExport SEXP _imager_display_list(SEXP imlistSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type imlist(imlistSEXP);
@@ -305,7 +305,7 @@ END_RCPP
 }
 // play
 void play(NumericVector vid, bool loop, unsigned long delay, bool normalise);
-RcppExport SEXP imager_play(SEXP vidSEXP, SEXP loopSEXP, SEXP delaySEXP, SEXP normaliseSEXP) {
+RcppExport SEXP _imager_play(SEXP vidSEXP, SEXP loopSEXP, SEXP delaySEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type vid(vidSEXP);
@@ -318,7 +318,7 @@ END_RCPP
 }
 // select
 NumericVector select(NumericVector im, int type);
-RcppExport SEXP imager_select(SEXP imSEXP, SEXP typeSEXP) {
+RcppExport SEXP _imager_select(SEXP imSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -330,7 +330,7 @@ END_RCPP
 }
 // bucket_fill
 NumericVector bucket_fill(NumericVector im, int x, int y, int z, NumericVector color, float opacity, float sigma, bool high_connexity);
-RcppExport SEXP imager_bucket_fill(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP sigmaSEXP, SEXP high_connexitySEXP) {
+RcppExport SEXP _imager_bucket_fill(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP sigmaSEXP, SEXP high_connexitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -348,7 +348,7 @@ END_RCPP
 }
 // bucket_select
 LogicalVector bucket_select(NumericVector im, int x, int y, int z, float sigma, bool high_connexity);
-RcppExport SEXP imager_bucket_select(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP sigmaSEXP, SEXP high_connexitySEXP) {
+RcppExport SEXP _imager_bucket_select(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP sigmaSEXP, SEXP high_connexitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -364,7 +364,7 @@ END_RCPP
 }
 // deriche
 NumericVector deriche(NumericVector im, float sigma, int order, char axis, bool neumann);
-RcppExport SEXP imager_deriche(SEXP imSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP neumannSEXP) {
+RcppExport SEXP _imager_deriche(SEXP imSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP neumannSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -379,7 +379,7 @@ END_RCPP
 }
 // vanvliet
 NumericVector vanvliet(NumericVector im, float sigma, int order, char axis, bool neumann);
-RcppExport SEXP imager_vanvliet(SEXP imSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP neumannSEXP) {
+RcppExport SEXP _imager_vanvliet(SEXP imSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP neumannSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -394,7 +394,7 @@ END_RCPP
 }
 // isoblur
 NumericVector isoblur(NumericVector im, float sigma, bool neumann, bool gaussian);
-RcppExport SEXP imager_isoblur(SEXP imSEXP, SEXP sigmaSEXP, SEXP neumannSEXP, SEXP gaussianSEXP) {
+RcppExport SEXP _imager_isoblur(SEXP imSEXP, SEXP sigmaSEXP, SEXP neumannSEXP, SEXP gaussianSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -408,7 +408,7 @@ END_RCPP
 }
 // medianblur
 NumericVector medianblur(NumericVector im, int n, float threshold);
-RcppExport SEXP imager_medianblur(SEXP imSEXP, SEXP nSEXP, SEXP thresholdSEXP) {
+RcppExport SEXP _imager_medianblur(SEXP imSEXP, SEXP nSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -421,7 +421,7 @@ END_RCPP
 }
 // boxblur
 NumericVector boxblur(NumericVector im, float boxsize, bool neumann);
-RcppExport SEXP imager_boxblur(SEXP imSEXP, SEXP boxsizeSEXP, SEXP neumannSEXP) {
+RcppExport SEXP _imager_boxblur(SEXP imSEXP, SEXP boxsizeSEXP, SEXP neumannSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -434,7 +434,7 @@ END_RCPP
 }
 // imlap
 NumericVector imlap(NumericVector im);
-RcppExport SEXP imager_imlap(SEXP imSEXP) {
+RcppExport SEXP _imager_imlap(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -445,7 +445,7 @@ END_RCPP
 }
 // boxblur_xy
 NumericVector boxblur_xy(NumericVector im, float sx, float sy, bool neumann);
-RcppExport SEXP imager_boxblur_xy(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP neumannSEXP) {
+RcppExport SEXP _imager_boxblur_xy(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP neumannSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -459,7 +459,7 @@ END_RCPP
 }
 // correlate
 NumericVector correlate(NumericVector im, NumericVector filter, bool dirichlet, bool normalise);
-RcppExport SEXP imager_correlate(SEXP imSEXP, SEXP filterSEXP, SEXP dirichletSEXP, SEXP normaliseSEXP) {
+RcppExport SEXP _imager_correlate(SEXP imSEXP, SEXP filterSEXP, SEXP dirichletSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -473,7 +473,7 @@ END_RCPP
 }
 // convolve
 NumericVector convolve(NumericVector im, NumericVector filter, bool dirichlet, bool normalise);
-RcppExport SEXP imager_convolve(SEXP imSEXP, SEXP filterSEXP, SEXP dirichletSEXP, SEXP normaliseSEXP) {
+RcppExport SEXP _imager_convolve(SEXP imSEXP, SEXP filterSEXP, SEXP dirichletSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -487,7 +487,7 @@ END_RCPP
 }
 // sharpen
 NumericVector sharpen(NumericVector im, float amplitude, bool sharpen_type, float edge, float alpha, float sigma);
-RcppExport SEXP imager_sharpen(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpen_typeSEXP, SEXP edgeSEXP, SEXP alphaSEXP, SEXP sigmaSEXP) {
+RcppExport SEXP _imager_sharpen(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpen_typeSEXP, SEXP edgeSEXP, SEXP alphaSEXP, SEXP sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -503,7 +503,7 @@ END_RCPP
 }
 // get_gradient
 List get_gradient(NumericVector im, std::string axes, int scheme);
-RcppExport SEXP imager_get_gradient(SEXP imSEXP, SEXP axesSEXP, SEXP schemeSEXP) {
+RcppExport SEXP _imager_get_gradient(SEXP imSEXP, SEXP axesSEXP, SEXP schemeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -516,7 +516,7 @@ END_RCPP
 }
 // get_hessian
 List get_hessian(NumericVector im, std::string axes);
-RcppExport SEXP imager_get_hessian(SEXP imSEXP, SEXP axesSEXP) {
+RcppExport SEXP _imager_get_hessian(SEXP imSEXP, SEXP axesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -528,7 +528,7 @@ END_RCPP
 }
 // diffusion_tensors
 NumericVector diffusion_tensors(NumericVector im, float sharpness, float anisotropy, float alpha, float sigma, bool is_sqrt);
-RcppExport SEXP imager_diffusion_tensors(SEXP imSEXP, SEXP sharpnessSEXP, SEXP anisotropySEXP, SEXP alphaSEXP, SEXP sigmaSEXP, SEXP is_sqrtSEXP) {
+RcppExport SEXP _imager_diffusion_tensors(SEXP imSEXP, SEXP sharpnessSEXP, SEXP anisotropySEXP, SEXP alphaSEXP, SEXP sigmaSEXP, SEXP is_sqrtSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -544,7 +544,7 @@ END_RCPP
 }
 // haar
 NumericVector haar(NumericVector im, bool inverse, int nb_scales);
-RcppExport SEXP imager_haar(SEXP imSEXP, SEXP inverseSEXP, SEXP nb_scalesSEXP) {
+RcppExport SEXP _imager_haar(SEXP imSEXP, SEXP inverseSEXP, SEXP nb_scalesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -557,7 +557,7 @@ END_RCPP
 }
 // FFT_complex
 List FFT_complex(NumericVector real, NumericVector imag, bool inverse, int nb_threads);
-RcppExport SEXP imager_FFT_complex(SEXP realSEXP, SEXP imagSEXP, SEXP inverseSEXP, SEXP nb_threadsSEXP) {
+RcppExport SEXP _imager_FFT_complex(SEXP realSEXP, SEXP imagSEXP, SEXP inverseSEXP, SEXP nb_threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -571,7 +571,7 @@ END_RCPP
 }
 // FFT_realim
 List FFT_realim(NumericVector real, bool inverse, int nb_threads);
-RcppExport SEXP imager_FFT_realim(SEXP realSEXP, SEXP inverseSEXP, SEXP nb_threadsSEXP) {
+RcppExport SEXP _imager_FFT_realim(SEXP realSEXP, SEXP inverseSEXP, SEXP nb_threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -584,7 +584,7 @@ END_RCPP
 }
 // FFT_realout
 NumericVector FFT_realout(NumericVector real, NumericVector imag, bool inverse, int nb_threads);
-RcppExport SEXP imager_FFT_realout(SEXP realSEXP, SEXP imagSEXP, SEXP inverseSEXP, SEXP nb_threadsSEXP) {
+RcppExport SEXP _imager_FFT_realout(SEXP realSEXP, SEXP imagSEXP, SEXP inverseSEXP, SEXP nb_threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -598,7 +598,7 @@ END_RCPP
 }
 // displacement
 NumericVector displacement(NumericVector sourceIm, NumericVector destIm, float smoothness, float precision, unsigned int nb_scales, unsigned int iteration_max, bool is_backward);
-RcppExport SEXP imager_displacement(SEXP sourceImSEXP, SEXP destImSEXP, SEXP smoothnessSEXP, SEXP precisionSEXP, SEXP nb_scalesSEXP, SEXP iteration_maxSEXP, SEXP is_backwardSEXP) {
+RcppExport SEXP _imager_displacement(SEXP sourceImSEXP, SEXP destImSEXP, SEXP smoothnessSEXP, SEXP precisionSEXP, SEXP nb_scalesSEXP, SEXP iteration_maxSEXP, SEXP is_backwardSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -615,7 +615,7 @@ END_RCPP
 }
 // blur_anisotropic
 NumericVector blur_anisotropic(NumericVector im, float amplitude, float sharpness, float anisotropy, float alpha, float sigma, float dl, float da, float gauss_prec, unsigned int interpolation_type, bool fast_approx);
-RcppExport SEXP imager_blur_anisotropic(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpnessSEXP, SEXP anisotropySEXP, SEXP alphaSEXP, SEXP sigmaSEXP, SEXP dlSEXP, SEXP daSEXP, SEXP gauss_precSEXP, SEXP interpolation_typeSEXP, SEXP fast_approxSEXP) {
+RcppExport SEXP _imager_blur_anisotropic(SEXP imSEXP, SEXP amplitudeSEXP, SEXP sharpnessSEXP, SEXP anisotropySEXP, SEXP alphaSEXP, SEXP sigmaSEXP, SEXP dlSEXP, SEXP daSEXP, SEXP gauss_precSEXP, SEXP interpolation_typeSEXP, SEXP fast_approxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -636,7 +636,7 @@ END_RCPP
 }
 // periodic_part
 NumericVector periodic_part(NumericVector im);
-RcppExport SEXP imager_periodic_part(SEXP imSEXP) {
+RcppExport SEXP _imager_periodic_part(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -647,7 +647,7 @@ END_RCPP
 }
 // hough_line_px
 NumericVector hough_line_px(LogicalVector px, NumericVector theta);
-RcppExport SEXP imager_hough_line_px(SEXP pxSEXP, SEXP thetaSEXP) {
+RcppExport SEXP _imager_hough_line_px(SEXP pxSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -659,7 +659,7 @@ END_RCPP
 }
 // hough_line_grad
 NumericVector hough_line_grad(NumericVector im, int ntheta, double alpha);
-RcppExport SEXP imager_hough_line_grad(SEXP imSEXP, SEXP nthetaSEXP, SEXP alphaSEXP) {
+RcppExport SEXP _imager_hough_line_grad(SEXP imSEXP, SEXP nthetaSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -672,7 +672,7 @@ END_RCPP
 }
 // hough_circle_
 NumericVector hough_circle_(LogicalVector px, int radius);
-RcppExport SEXP imager_hough_circle_(SEXP pxSEXP, SEXP radiusSEXP) {
+RcppExport SEXP _imager_hough_circle_(SEXP pxSEXP, SEXP radiusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -684,7 +684,7 @@ END_RCPP
 }
 // bgraph
 List bgraph(LogicalVector px);
-RcppExport SEXP imager_bgraph(SEXP pxSEXP) {
+RcppExport SEXP _imager_bgraph(SEXP pxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -695,7 +695,7 @@ END_RCPP
 }
 // interp_xy
 NumericVector interp_xy(NumericVector inp, NumericVector ix, NumericVector iy, int z, int c, bool cubic);
-RcppExport SEXP imager_interp_xy(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP zSEXP, SEXP cSEXP, SEXP cubicSEXP) {
+RcppExport SEXP _imager_interp_xy(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP zSEXP, SEXP cSEXP, SEXP cubicSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -711,7 +711,7 @@ END_RCPP
 }
 // interp_xyz
 NumericVector interp_xyz(NumericVector inp, NumericVector ix, NumericVector iy, NumericVector iz, int c, bool cubic);
-RcppExport SEXP imager_interp_xyz(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP izSEXP, SEXP cSEXP, SEXP cubicSEXP) {
+RcppExport SEXP _imager_interp_xyz(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP izSEXP, SEXP cSEXP, SEXP cubicSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -727,7 +727,7 @@ END_RCPP
 }
 // interp_xyzc
 NumericVector interp_xyzc(NumericVector inp, NumericVector ix, NumericVector iy, NumericVector iz, IntegerVector ic, bool cubic);
-RcppExport SEXP imager_interp_xyzc(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP izSEXP, SEXP icSEXP, SEXP cubicSEXP) {
+RcppExport SEXP _imager_interp_xyzc(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP izSEXP, SEXP icSEXP, SEXP cubicSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -743,7 +743,7 @@ END_RCPP
 }
 // interp_xyc
 NumericVector interp_xyc(NumericVector inp, NumericVector ix, NumericVector iy, int z, IntegerVector ic, bool cubic);
-RcppExport SEXP imager_interp_xyc(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP zSEXP, SEXP icSEXP, SEXP cubicSEXP) {
+RcppExport SEXP _imager_interp_xyc(SEXP inpSEXP, SEXP ixSEXP, SEXP iySEXP, SEXP zSEXP, SEXP icSEXP, SEXP cubicSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -759,7 +759,7 @@ END_RCPP
 }
 // label
 NumericVector label(NumericVector im, bool high_connectivity, double tolerance);
-RcppExport SEXP imager_label(SEXP imSEXP, SEXP high_connectivitySEXP, SEXP toleranceSEXP) {
+RcppExport SEXP _imager_label(SEXP imSEXP, SEXP high_connectivitySEXP, SEXP toleranceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -772,7 +772,7 @@ END_RCPP
 }
 // blabel
 NumericVector blabel(LogicalVector im, bool high_connectivity);
-RcppExport SEXP imager_blabel(SEXP imSEXP, SEXP high_connectivitySEXP) {
+RcppExport SEXP _imager_blabel(SEXP imSEXP, SEXP high_connectivitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -784,7 +784,7 @@ END_RCPP
 }
 // erode
 NumericVector erode(NumericVector im, NumericVector mask, bool boundary_conditions, bool real_mode);
-RcppExport SEXP imager_erode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
+RcppExport SEXP _imager_erode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -798,7 +798,7 @@ END_RCPP
 }
 // berode
 LogicalVector berode(LogicalVector im, LogicalVector mask, bool boundary_conditions);
-RcppExport SEXP imager_berode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP) {
+RcppExport SEXP _imager_berode(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -811,7 +811,7 @@ END_RCPP
 }
 // erode_rect
 NumericVector erode_rect(NumericVector im, int sx, int sy, int sz);
-RcppExport SEXP imager_erode_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
+RcppExport SEXP _imager_erode_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -825,7 +825,7 @@ END_RCPP
 }
 // berode_rect
 LogicalVector berode_rect(LogicalVector im, int sx, int sy, int sz);
-RcppExport SEXP imager_berode_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
+RcppExport SEXP _imager_berode_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -839,7 +839,7 @@ END_RCPP
 }
 // erode_square
 NumericVector erode_square(NumericVector im, int size);
-RcppExport SEXP imager_erode_square(SEXP imSEXP, SEXP sizeSEXP) {
+RcppExport SEXP _imager_erode_square(SEXP imSEXP, SEXP sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -851,7 +851,7 @@ END_RCPP
 }
 // berode_square
 LogicalVector berode_square(LogicalVector im, int size);
-RcppExport SEXP imager_berode_square(SEXP imSEXP, SEXP sizeSEXP) {
+RcppExport SEXP _imager_berode_square(SEXP imSEXP, SEXP sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -863,7 +863,7 @@ END_RCPP
 }
 // dilate
 NumericVector dilate(NumericVector im, NumericVector mask, bool boundary_conditions, bool real_mode);
-RcppExport SEXP imager_dilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
+RcppExport SEXP _imager_dilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -877,7 +877,7 @@ END_RCPP
 }
 // bdilate
 LogicalVector bdilate(LogicalVector im, LogicalVector mask, bool boundary_conditions);
-RcppExport SEXP imager_bdilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP) {
+RcppExport SEXP _imager_bdilate(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -890,7 +890,7 @@ END_RCPP
 }
 // dilate_rect
 NumericVector dilate_rect(NumericVector im, int sx, int sy, int sz);
-RcppExport SEXP imager_dilate_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
+RcppExport SEXP _imager_dilate_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -904,7 +904,7 @@ END_RCPP
 }
 // bdilate_rect
 LogicalVector bdilate_rect(LogicalVector im, int sx, int sy, int sz);
-RcppExport SEXP imager_bdilate_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
+RcppExport SEXP _imager_bdilate_rect(SEXP imSEXP, SEXP sxSEXP, SEXP sySEXP, SEXP szSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -918,7 +918,7 @@ END_RCPP
 }
 // dilate_square
 NumericVector dilate_square(NumericVector im, int size);
-RcppExport SEXP imager_dilate_square(SEXP imSEXP, SEXP sizeSEXP) {
+RcppExport SEXP _imager_dilate_square(SEXP imSEXP, SEXP sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -930,7 +930,7 @@ END_RCPP
 }
 // bdilate_square
 LogicalVector bdilate_square(LogicalVector im, int size);
-RcppExport SEXP imager_bdilate_square(SEXP imSEXP, SEXP sizeSEXP) {
+RcppExport SEXP _imager_bdilate_square(SEXP imSEXP, SEXP sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -942,7 +942,7 @@ END_RCPP
 }
 // watershed
 NumericVector watershed(NumericVector im, NumericVector priority, bool fill_lines);
-RcppExport SEXP imager_watershed(SEXP imSEXP, SEXP prioritySEXP, SEXP fill_linesSEXP) {
+RcppExport SEXP _imager_watershed(SEXP imSEXP, SEXP prioritySEXP, SEXP fill_linesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -955,7 +955,7 @@ END_RCPP
 }
 // distance_transform
 NumericVector distance_transform(NumericVector im, double value, unsigned int metric);
-RcppExport SEXP imager_distance_transform(SEXP imSEXP, SEXP valueSEXP, SEXP metricSEXP) {
+RcppExport SEXP _imager_distance_transform(SEXP imSEXP, SEXP valueSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -968,7 +968,7 @@ END_RCPP
 }
 // bdistance_transform
 NumericVector bdistance_transform(LogicalVector im, bool value, unsigned int metric);
-RcppExport SEXP imager_bdistance_transform(SEXP imSEXP, SEXP valueSEXP, SEXP metricSEXP) {
+RcppExport SEXP _imager_bdistance_transform(SEXP imSEXP, SEXP valueSEXP, SEXP metricSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -981,7 +981,7 @@ END_RCPP
 }
 // mopening
 NumericVector mopening(NumericVector im, NumericVector mask, bool boundary_conditions, bool real_mode);
-RcppExport SEXP imager_mopening(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
+RcppExport SEXP _imager_mopening(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -995,7 +995,7 @@ END_RCPP
 }
 // mopening_square
 NumericVector mopening_square(NumericVector im, int size);
-RcppExport SEXP imager_mopening_square(SEXP imSEXP, SEXP sizeSEXP) {
+RcppExport SEXP _imager_mopening_square(SEXP imSEXP, SEXP sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1007,7 +1007,7 @@ END_RCPP
 }
 // mclosing_square
 NumericVector mclosing_square(NumericVector im, int size);
-RcppExport SEXP imager_mclosing_square(SEXP imSEXP, SEXP sizeSEXP) {
+RcppExport SEXP _imager_mclosing_square(SEXP imSEXP, SEXP sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1019,7 +1019,7 @@ END_RCPP
 }
 // mclosing
 NumericVector mclosing(NumericVector im, NumericVector mask, bool boundary_conditions, bool real_mode);
-RcppExport SEXP imager_mclosing(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
+RcppExport SEXP _imager_mclosing(SEXP imSEXP, SEXP maskSEXP, SEXP boundary_conditionsSEXP, SEXP real_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1033,7 +1033,7 @@ END_RCPP
 }
 // reduce_wsum
 NumericVector reduce_wsum(List x, NumericVector w, bool na_rm);
-RcppExport SEXP imager_reduce_wsum(SEXP xSEXP, SEXP wSEXP, SEXP na_rmSEXP) {
+RcppExport SEXP _imager_reduce_wsum(SEXP xSEXP, SEXP wSEXP, SEXP na_rmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1046,7 +1046,7 @@ END_RCPP
 }
 // reduce_average
 NumericVector reduce_average(List x, bool na_rm);
-RcppExport SEXP imager_reduce_average(SEXP xSEXP, SEXP na_rmSEXP) {
+RcppExport SEXP _imager_reduce_average(SEXP xSEXP, SEXP na_rmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1058,7 +1058,7 @@ END_RCPP
 }
 // reduce_prod
 NumericVector reduce_prod(List x, bool na_rm);
-RcppExport SEXP imager_reduce_prod(SEXP xSEXP, SEXP na_rmSEXP) {
+RcppExport SEXP _imager_reduce_prod(SEXP xSEXP, SEXP na_rmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1070,7 +1070,7 @@ END_RCPP
 }
 // reduce_minmax
 NumericVector reduce_minmax(List x, bool na_rm, bool max);
-RcppExport SEXP imager_reduce_minmax(SEXP xSEXP, SEXP na_rmSEXP, SEXP maxSEXP) {
+RcppExport SEXP _imager_reduce_minmax(SEXP xSEXP, SEXP na_rmSEXP, SEXP maxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1083,7 +1083,7 @@ END_RCPP
 }
 // reduce_list
 NumericVector reduce_list(List x, int summary);
-RcppExport SEXP imager_reduce_list(SEXP xSEXP, SEXP summarySEXP) {
+RcppExport SEXP _imager_reduce_list(SEXP xSEXP, SEXP summarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1095,7 +1095,7 @@ END_RCPP
 }
 // reduce_list2
 NumericVector reduce_list2(List x, int summary);
-RcppExport SEXP imager_reduce_list2(SEXP xSEXP, SEXP summarySEXP) {
+RcppExport SEXP _imager_reduce_list2(SEXP xSEXP, SEXP summarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1107,7 +1107,7 @@ END_RCPP
 }
 // reduce_med
 NumericVector reduce_med(List x, bool na_rm);
-RcppExport SEXP imager_reduce_med(SEXP xSEXP, SEXP na_rmSEXP) {
+RcppExport SEXP _imager_reduce_med(SEXP xSEXP, SEXP na_rmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1119,7 +1119,7 @@ END_RCPP
 }
 // psort
 List psort(List x, bool increasing);
-RcppExport SEXP imager_psort(SEXP xSEXP, SEXP increasingSEXP) {
+RcppExport SEXP _imager_psort(SEXP xSEXP, SEXP increasingSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1131,7 +1131,7 @@ END_RCPP
 }
 // porder
 List porder(List x, bool increasing);
-RcppExport SEXP imager_porder(SEXP xSEXP, SEXP increasingSEXP) {
+RcppExport SEXP _imager_porder(SEXP xSEXP, SEXP increasingSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1143,7 +1143,7 @@ END_RCPP
 }
 // prank
 List prank(List x, bool increasing);
-RcppExport SEXP imager_prank(SEXP xSEXP, SEXP increasingSEXP) {
+RcppExport SEXP _imager_prank(SEXP xSEXP, SEXP increasingSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1155,7 +1155,7 @@ END_RCPP
 }
 // autocrop_
 NumericVector autocrop_(NumericVector im, NumericVector color, std::string axes);
-RcppExport SEXP imager_autocrop_(SEXP imSEXP, SEXP colorSEXP, SEXP axesSEXP) {
+RcppExport SEXP _imager_autocrop_(SEXP imSEXP, SEXP colorSEXP, SEXP axesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1168,7 +1168,7 @@ END_RCPP
 }
 // rotate
 NumericVector rotate(NumericVector im, float angle, unsigned int interpolation, unsigned int boundary);
-RcppExport SEXP imager_rotate(SEXP imSEXP, SEXP angleSEXP, SEXP interpolationSEXP, SEXP boundarySEXP) {
+RcppExport SEXP _imager_rotate(SEXP imSEXP, SEXP angleSEXP, SEXP interpolationSEXP, SEXP boundarySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1182,7 +1182,7 @@ END_RCPP
 }
 // rotate_xy
 NumericVector rotate_xy(NumericVector im, float angle, float cx, float cy, unsigned int interpolation, unsigned int boundary_conditions);
-RcppExport SEXP imager_rotate_xy(SEXP imSEXP, SEXP angleSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP interpolationSEXP, SEXP boundary_conditionsSEXP) {
+RcppExport SEXP _imager_rotate_xy(SEXP imSEXP, SEXP angleSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP interpolationSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1198,7 +1198,7 @@ END_RCPP
 }
 // mirror
 NumericVector mirror(NumericVector im, char axis);
-RcppExport SEXP imager_mirror(SEXP imSEXP, SEXP axisSEXP) {
+RcppExport SEXP _imager_mirror(SEXP imSEXP, SEXP axisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1210,7 +1210,7 @@ END_RCPP
 }
 // permute_axes
 NumericVector permute_axes(NumericVector im, std::string perm);
-RcppExport SEXP imager_permute_axes(SEXP imSEXP, SEXP permSEXP) {
+RcppExport SEXP _imager_permute_axes(SEXP imSEXP, SEXP permSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1222,7 +1222,7 @@ END_RCPP
 }
 // resize_doubleXY
 NumericVector resize_doubleXY(NumericVector im);
-RcppExport SEXP imager_resize_doubleXY(SEXP imSEXP) {
+RcppExport SEXP _imager_resize_doubleXY(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1233,7 +1233,7 @@ END_RCPP
 }
 // resize_halfXY
 NumericVector resize_halfXY(NumericVector im);
-RcppExport SEXP imager_resize_halfXY(SEXP imSEXP) {
+RcppExport SEXP _imager_resize_halfXY(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1244,7 +1244,7 @@ END_RCPP
 }
 // resize_tripleXY
 NumericVector resize_tripleXY(NumericVector im);
-RcppExport SEXP imager_resize_tripleXY(SEXP imSEXP) {
+RcppExport SEXP _imager_resize_tripleXY(SEXP imSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1255,7 +1255,7 @@ END_RCPP
 }
 // imshift
 NumericVector imshift(NumericVector im, int delta_x, int delta_y, int delta_z, int delta_c, int boundary_conditions);
-RcppExport SEXP imager_imshift(SEXP imSEXP, SEXP delta_xSEXP, SEXP delta_ySEXP, SEXP delta_zSEXP, SEXP delta_cSEXP, SEXP boundary_conditionsSEXP) {
+RcppExport SEXP _imager_imshift(SEXP imSEXP, SEXP delta_xSEXP, SEXP delta_ySEXP, SEXP delta_zSEXP, SEXP delta_cSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1271,7 +1271,7 @@ END_RCPP
 }
 // resize
 NumericVector resize(NumericVector im, int size_x, int size_y, int size_z, int size_c, int interpolation_type, unsigned int boundary_conditions, float centering_x, float centering_y, float centering_z, float centering_c);
-RcppExport SEXP imager_resize(SEXP imSEXP, SEXP size_xSEXP, SEXP size_ySEXP, SEXP size_zSEXP, SEXP size_cSEXP, SEXP interpolation_typeSEXP, SEXP boundary_conditionsSEXP, SEXP centering_xSEXP, SEXP centering_ySEXP, SEXP centering_zSEXP, SEXP centering_cSEXP) {
+RcppExport SEXP _imager_resize(SEXP imSEXP, SEXP size_xSEXP, SEXP size_ySEXP, SEXP size_zSEXP, SEXP size_cSEXP, SEXP interpolation_typeSEXP, SEXP boundary_conditionsSEXP, SEXP centering_xSEXP, SEXP centering_ySEXP, SEXP centering_zSEXP, SEXP centering_cSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1292,7 +1292,7 @@ END_RCPP
 }
 // warp
 NumericVector warp(NumericVector im, NumericVector warpfield, unsigned int mode, unsigned int interpolation, unsigned int boundary_conditions);
-RcppExport SEXP imager_warp(SEXP imSEXP, SEXP warpfieldSEXP, SEXP modeSEXP, SEXP interpolationSEXP, SEXP boundary_conditionsSEXP) {
+RcppExport SEXP _imager_warp(SEXP imSEXP, SEXP warpfieldSEXP, SEXP modeSEXP, SEXP interpolationSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1307,7 +1307,7 @@ END_RCPP
 }
 // load_image
 NumericVector load_image(std::string fname);
-RcppExport SEXP imager_load_image(SEXP fnameSEXP) {
+RcppExport SEXP _imager_load_image(SEXP fnameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1318,7 +1318,7 @@ END_RCPP
 }
 // save_image
 void save_image(NumericVector im, std::string fname);
-RcppExport SEXP imager_save_image(SEXP imSEXP, SEXP fnameSEXP) {
+RcppExport SEXP _imager_save_image(SEXP imSEXP, SEXP fnameSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
@@ -1329,7 +1329,7 @@ END_RCPP
 }
 // im_split
 List im_split(NumericVector im, char axis, int nb);
-RcppExport SEXP imager_im_split(SEXP imSEXP, SEXP axisSEXP, SEXP nbSEXP) {
+RcppExport SEXP _imager_im_split(SEXP imSEXP, SEXP axisSEXP, SEXP nbSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1342,7 +1342,7 @@ END_RCPP
 }
 // im_append
 NumericVector im_append(List imlist, char axis);
-RcppExport SEXP imager_im_append(SEXP imlistSEXP, SEXP axisSEXP) {
+RcppExport SEXP _imager_im_append(SEXP imlistSEXP, SEXP axisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1354,7 +1354,7 @@ END_RCPP
 }
 // px_append
 LogicalVector px_append(List imlist, char axis);
-RcppExport SEXP imager_px_append(SEXP imlistSEXP, SEXP axisSEXP) {
+RcppExport SEXP _imager_px_append(SEXP imlistSEXP, SEXP axisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1366,7 +1366,7 @@ END_RCPP
 }
 // imeval
 NumericVector imeval(NumericVector im, std::string expr);
-RcppExport SEXP imager_imeval(SEXP imSEXP, SEXP exprSEXP) {
+RcppExport SEXP _imager_imeval(SEXP imSEXP, SEXP exprSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1378,7 +1378,7 @@ END_RCPP
 }
 // patch_summary_cimg
 NumericVector patch_summary_cimg(NumericVector im, std::string expr, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
-RcppExport SEXP imager_patch_summary_cimg(SEXP imSEXP, SEXP exprSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
+RcppExport SEXP _imager_patch_summary_cimg(SEXP imSEXP, SEXP exprSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1394,7 +1394,7 @@ END_RCPP
 }
 // extract_fast
 NumericVector extract_fast(NumericVector im, int fun, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
-RcppExport SEXP imager_extract_fast(SEXP imSEXP, SEXP funSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
+RcppExport SEXP _imager_extract_fast(SEXP imSEXP, SEXP funSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1410,7 +1410,7 @@ END_RCPP
 }
 // extract_patches
 List extract_patches(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
-RcppExport SEXP imager_extract_patches(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
+RcppExport SEXP _imager_extract_patches(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1425,7 +1425,7 @@ END_RCPP
 }
 // extract_patches3D
 List extract_patches3D(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector cz, IntegerVector wx, IntegerVector wy, IntegerVector wz);
-RcppExport SEXP imager_extract_patches3D(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP czSEXP, SEXP wxSEXP, SEXP wySEXP, SEXP wzSEXP) {
+RcppExport SEXP _imager_extract_patches3D(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP czSEXP, SEXP wxSEXP, SEXP wySEXP, SEXP wzSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1442,7 +1442,7 @@ END_RCPP
 }
 // draw_image
 NumericVector draw_image(NumericVector im, NumericVector sprite, int x, int y, int z, float opacity);
-RcppExport SEXP imager_draw_image(SEXP imSEXP, SEXP spriteSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP opacitySEXP) {
+RcppExport SEXP _imager_draw_image(SEXP imSEXP, SEXP spriteSEXP, SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP opacitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1458,7 +1458,7 @@ END_RCPP
 }
 // do_patchmatch
 List do_patchmatch(NumericVector im1, NumericVector im2, unsigned int patch_width, unsigned int patch_height, unsigned int patch_depth, unsigned int nb_iterations, unsigned int nb_randoms, NumericVector guide);
-RcppExport SEXP imager_do_patchmatch(SEXP im1SEXP, SEXP im2SEXP, SEXP patch_widthSEXP, SEXP patch_heightSEXP, SEXP patch_depthSEXP, SEXP nb_iterationsSEXP, SEXP nb_randomsSEXP, SEXP guideSEXP) {
+RcppExport SEXP _imager_do_patchmatch(SEXP im1SEXP, SEXP im2SEXP, SEXP patch_widthSEXP, SEXP patch_heightSEXP, SEXP patch_depthSEXP, SEXP nb_iterationsSEXP, SEXP nb_randomsSEXP, SEXP guideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1476,7 +1476,7 @@ END_RCPP
 }
 // checkcoords
 LogicalVector checkcoords(IntegerVector x, IntegerVector y, IntegerVector z, IntegerVector c, IntegerVector d);
-RcppExport SEXP imager_checkcoords(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP, SEXP dSEXP) {
+RcppExport SEXP _imager_checkcoords(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1491,7 +1491,7 @@ END_RCPP
 }
 // cimg_omp
 int cimg_omp();
-RcppExport SEXP imager_cimg_omp() {
+RcppExport SEXP _imager_cimg_omp() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1501,7 +1501,7 @@ END_RCPP
 }
 // set_cimg_omp
 int set_cimg_omp(int mode);
-RcppExport SEXP imager_set_cimg_omp(SEXP modeSEXP) {
+RcppExport SEXP _imager_set_cimg_omp(SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1512,7 +1512,7 @@ END_RCPP
 }
 // has_omp
 bool has_omp();
-RcppExport SEXP imager_has_omp() {
+RcppExport SEXP _imager_has_omp() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1522,7 +1522,7 @@ END_RCPP
 }
 // px_split
 List px_split(LogicalVector im, char axis, int nb);
-RcppExport SEXP imager_px_split(SEXP imSEXP, SEXP axisSEXP, SEXP nbSEXP) {
+RcppExport SEXP _imager_px_split(SEXP imSEXP, SEXP axisSEXP, SEXP nbSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;

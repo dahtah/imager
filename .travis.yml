@@ -19,3 +19,5 @@ r_binary_packages:
  - png
  - jpeg
  - plyr
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir -p ~/.R && echo "SHLIB_OPENMP_CXXFLAGS = " >>~/.R/Makevars; fi
