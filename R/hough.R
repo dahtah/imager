@@ -117,7 +117,7 @@ nfline <- function(theta,rho,col,...)
 hough_circle <- function(px,radius)
 {
     if (!is.pixset(px)) stop('Input must be a pixset')
-    if (any(dim(px)[3:4]) > 1) stop('The Hough transform is only defined for 2D, grayscale images')
+    if (any(dim(px)[3:4]) > 1) stop('The Hough transform is only defined for 2D pixsets')
     hough_circle_(px,radius)
 }
 

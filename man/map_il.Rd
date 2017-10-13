@@ -2,9 +2,15 @@
 % Please edit documentation in R/imglist.R
 \name{map_il}
 \alias{map_il}
+\alias{map2_il}
+\alias{pmap_il}
 \title{Type-stable map for use with the purrr package}
 \usage{
 map_il(...)
+
+map2_il(...)
+
+pmap_il(...)
 }
 \arguments{
 \item{...}{passed to map}
@@ -15,6 +21,13 @@ an image list
 \description{
 Works like purrr::map, purrr::map_dbl and the like but ensures that the output is an image list.
 }
+\section{Functions}{
+\itemize{
+\item \code{map2_il}: Parallel map (two values)
+
+\item \code{pmap_il}: Parallel map (multiple values)
+}}
+
 \examples{
 #Returns a list
 imsplit(boats,"x",2) \%>\% purrr::map(~ isoblur(.,3))
@@ -22,6 +35,9 @@ imsplit(boats,"x",2) \%>\% purrr::map(~ isoblur(.,3))
 imsplit(boats,"x",2) \%>\% map_il(~ isoblur(.,3))
 #Fails if function returns an object that's not an image
 try(imsplit(boats,"x",2) \%>\% map_il(~ . > 2))
+#Parallel maps
+map2_il(1:3,101:103,~ imshift(boats,.x,.y))
+pmap_il(list(x=1:3,y=4:6,z=7:9),function(x,y,z) imfill(x,y,z))
 }
 \author{
 Simon Barthelme

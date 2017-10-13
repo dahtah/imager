@@ -39,8 +39,8 @@ as.cimg(d2,dim=gsdim(im)) \%>\% plot(interpolate=FALSE)
 im <- grayscale(boats)
 G <- as.igraph(im)
 #value.from holds the value of the source pixel, value.to the sink's
-#set w_ij = d_ij/(1e-1 + |v_i - v_j|)
-igraph::E(G)$weight <- G$dist/(1e-1+abs(G$value.from - G$value.to))
+#set w_ij = (|v_i - v_j|)/d_ij
+igraph::E(G)$weight <- (abs(G$value.from - G$value.to))/G$dist
 igraph::distances(G,5000) \%>\% as.vector \%>\%
     as.cimg(dim=gsdim(im)) \%>\% plot
 }

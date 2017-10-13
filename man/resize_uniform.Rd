@@ -21,7 +21,7 @@ imresize(im, scale = 1, interpolation = 3)
 
 \item{scale}{a scale factor}
 
-\item{interpolation}{interpolation method to use (see doc for resize). Default 3, linear.}
+\item{interpolation}{interpolation method to use (see doc for resize). Default 3, linear. Set to 5 for cubic, 6 for Lanczos (higher quality).}
 }
 \value{
 an image
@@ -43,10 +43,10 @@ Resize image by a single scale factor. For non-uniform scaling and a wider range
 \examples{
 im <- load.example("parrots")
 imresize(im,1/4) #Quarter size
-liply(2:4,function(ind) imresize(im,1/ind),"x") \%>\%  plot
+map_il(2:4,~ imresize(im,1/.)) \%>\% imappend("x") \%>\% plot
 }
 \references{
-For double-scale, half-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}.
+For double-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}. For half-scaling uses what the CImg doc describes as an "optimised filter", see resize_halfXY in CImg.h.
 }
 \seealso{
 resize

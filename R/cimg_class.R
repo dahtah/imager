@@ -14,7 +14,7 @@ NULL
 #' @importFrom graphics axis plot rasterImage layout lines plot.new plot.window title abline polygon
 #' @importFrom stats quantile rnorm kmeans setNames
 #' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
-#' @importFrom purrr map map_dbl map_lgl map_df map2
+#' @importFrom purrr map map_dbl map_lgl map_df map2 map_int pmap reduce
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
 #' @importFrom readbitmap read.bitmap
@@ -181,6 +181,7 @@ plot.cimg <- function(x,frame,xlim=c(1,width(x)),ylim=c(height(x),1),xlab="x",yl
         }
         
     }
+    invisible(x)
 }
 
 #Plots one-dimensional images

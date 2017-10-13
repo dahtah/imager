@@ -169,6 +169,26 @@ bucket_select <- function(im, x, y, z, sigma = 0, high_connexity = FALSE) {
     .Call(`_imager_bucket_select`, im, x, y, z, sigma, high_connexity)
 }
 
+draw_circle <- function(im, x, y, radius, color, opacity = 1, filled = TRUE) {
+    .Call(`_imager_draw_circle`, im, x, y, radius, color, opacity, filled)
+}
+
+draw_circle_ <- function(im, x, y, radius, color, opacity = 1, filled = TRUE) {
+    .Call(`_imager_draw_circle_`, im, x, y, radius, color, opacity, filled)
+}
+
+draw_rect_ <- function(im, x0, y0, x1, y1, color, opacity = 1, filled = TRUE) {
+    .Call(`_imager_draw_rect_`, im, x0, y0, x1, y1, color, opacity, filled)
+}
+
+draw_poly_ <- function(im, points, color, opacity = 1) {
+    .Call(`_imager_draw_poly_`, im, points, color, opacity)
+}
+
+draw_text_ <- function(im, x, y, text, color, opacity = 1, fsize = 20L) {
+    .Call(`_imager_draw_text_`, im, x, y, text, color, opacity, fsize)
+}
+
 #' Apply recursive Deriche filter.
 #'
 #' The Deriche filter is a fast approximation to a Gaussian filter (order = 0), or Gaussian derivatives (order = 1 or 2).   
@@ -463,6 +483,10 @@ hough_circle_ <- function(px, radius) {
 
 bgraph <- function(px) {
     .Call(`_imager_bgraph`, px)
+}
+
+interact_ <- function(fun, title = "") {
+    .Call(`_imager_interact_`, fun, title)
 }
 
 interp_xy <- function(inp, ix, iy, z = 0L, c = 0L, cubic = FALSE) {
@@ -793,8 +817,9 @@ imshift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, 
     .Call(`_imager_imshift`, im, delta_x, delta_y, delta_z, delta_c, boundary_conditions)
 }
 
-#' Resize image to new dimensions.
-#' If pd[x,y,z,v]<0, it corresponds to a percentage of the original size (the default value is -100).
+#' Resize image
+#'
+#' If the dimension arguments are negative, they are interpreted as a proportion of the original image. 
 #' @param im an image
 #' @param size_x Number of columns (new size along the X-axis).
 #' @param size_y Number of rows (new size along the Y-axis).
@@ -814,6 +839,7 @@ imshift <- function(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L, 
 #' @param centering_y Set centering type (only if  interpolation_type=0).
 #' @param centering_z Set centering type (only if  interpolation_type=0).
 #' @param centering_c Set centering type (only if  interpolation_type=0).
+#' @seealso See imresize for an easier interface. 
 #' @export
 resize <- function(im, size_x = -100L, size_y = -100L, size_z = -100L, size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L, centering_x = 0, centering_y = 0, centering_z = 0, centering_c = 0) {
     .Call(`_imager_resize`, im, size_x, size_y, size_z, size_c, interpolation_type, boundary_conditions, centering_x, centering_y, centering_z, centering_c)
@@ -863,32 +889,6 @@ im_append <- function(imlist, axis) {
 
 px_append <- function(imlist, axis) {
     .Call(`_imager_px_append`, imlist, axis)
-}
-
-#' Pixel-wise evaluation of a CImg expression
-#'
-#' This function provides experimental support for CImg's "math expression parser", a byte-compiled mini-language. 
-#' @param im an image
-#' @param expr an expression (as string)
-#' @examples
-#' imfill(10,10) %>% imeval('x+y') %>% plot
-#' # Box filter
-#' boxf = "v=0;for(iy=y-3,iy<y+3,iy++,for(ix=x-3,ix< x+3,ix++,v+=i(ix,iy)));v"
-#' imeval(boats,boxf) %>% plot
-#' # Example by D. Tschumperle: Julia set
-#' julia <-  "
-#'    zr = -1.2 + 2.4*x/w;
-#'    zi = -1.2 + 2.4*y/h;
-#'    for (iter = 0, zr^2+zi^2<=4 && iter<256, iter++,
-#'      t = zr^2 - zi^2 + 0.5;
-#'      (zi *= 2*zr) += 0.2;
-#'      zr = t
-#'    );
-#'    iter"
-#' imfill(500,500) %>% imeval(julia) %>% plot
-#' @export
-imeval <- function(im, expr) {
-    .Call(`_imager_imeval`, im, expr)
 }
 
 #' Extract a numerical summary from image patches, using CImg's mini-language

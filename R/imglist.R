@@ -232,11 +232,28 @@ display.list <- function(x,...)
 ##' imsplit(boats,"x",2) %>% map_il(~ isoblur(.,3))
 ##' #Fails if function returns an object that's not an image
 ##' try(imsplit(boats,"x",2) %>% map_il(~ . > 2))
+##' #Parallel maps
+##' map2_il(1:3,101:103,~ imshift(boats,.x,.y))
+##' pmap_il(list(x=1:3,y=4:6,z=7:9),function(x,y,z) imfill(x,y,z))
 map_il <- function(...)
 {
     map(...) %>% as.imlist
 }
 
+
+##' @describeIn map_il Parallel map (two values)
+##' @export
+map2_il <- function(...)
+{
+    map2(...) %>% as.imlist
+}
+
+##' @describeIn map_il Parallel map (multiple values)
+##' @export
+pmap_il <- function(...)
+{
+    pmap(...) %>% as.imlist
+}
 
 #' @export
 `[.imlist` <- function(x,...)

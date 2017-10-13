@@ -2,8 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{resize}
 \alias{resize}
-\title{Resize image to new dimensions.
-If pd[x,y,z,v]<0, it corresponds to a percentage of the original size (the default value is -100).}
+\title{Resize image}
 \usage{
 resize(im, size_x = -100L, size_y = -100L, size_z = -100L,
   size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L,
@@ -41,6 +40,8 @@ resize(im, size_x = -100L, size_y = -100L, size_z = -100L,
 \item{centering_c}{Set centering type (only if  interpolation_type=0).}
 }
 \description{
-Resize image to new dimensions.
-If pd[x,y,z,v]<0, it corresponds to a percentage of the original size (the default value is -100).
+If the dimension arguments are negative, they are interpreted as a proportion of the original image.
+}
+\seealso{
+See imresize for an easier interface.
 }

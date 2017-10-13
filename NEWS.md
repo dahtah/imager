@@ -1,3 +1,21 @@
+# imager 0.50 Major release
+
+* new functions imeval and imchange. These create custom execution environments for functions, and simplify image pipelines: for example,
+``` imeval(boats,~ xs*.) ```
+is equivalent to: ``` (Xc(boats)/width(boats))*boats ``` and creates a fading effect. 
+``` imchange(boats,~ c==1,~ xs*.) ```
+is the same thing but applied only to the first colour channel (R) 
+   
+* (experimental feature) quick-and-dirty interactive interfaces are now easy to program using the interact() function. Use it to explore filter parameters, interactive segmentation. For more sophisticated needs, use e.g. shiny. 
+
+* (experimental feature) as.igraph methods for images and pixsets convert images into graph representations. Nodes are pixels, and edges are drawn between neighbouring pixels. On pixsets, this allows some interesting morphological operations, e.g. contour tracing. On images, it could be used for various graph-based image processing algorithms, like spectral graph clustering
+
+* 
+
+* Hough transforms for circles and lines are now available, see hough_circle and hough_line
+* most functions that take a colour argument now accept colour names, e.g.:
+  ```imfill(10,10,val="red")``` or ```autocrop(im,col="black")```
+
 # imager 0.40.2 Minor release
 	* added crop.bbox for cropping image to the bounding box of a pixset
 	* updated CImg: fixes issues with Intel C compiler and libtiff giving pop-up warnings on Windows 

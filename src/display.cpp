@@ -25,6 +25,7 @@ void display_(NumericVector im,bool rescale=true)
    	    break;
    	  }
    	Rcpp::checkUserInterrupt();
+	disp.wait();
       }
 
    return;

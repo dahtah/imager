@@ -362,6 +362,89 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// draw_circle
+NumericVector draw_circle(NumericVector im, IntegerVector x, IntegerVector y, int radius, NumericVector color, double opacity, bool filled);
+RcppExport SEXP _imager_draw_circle(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP radiusSEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP filledSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type color(colorSEXP);
+    Rcpp::traits::input_parameter< double >::type opacity(opacitySEXP);
+    Rcpp::traits::input_parameter< bool >::type filled(filledSEXP);
+    rcpp_result_gen = Rcpp::wrap(draw_circle(im, x, y, radius, color, opacity, filled));
+    return rcpp_result_gen;
+END_RCPP
+}
+// draw_circle_
+NumericVector draw_circle_(NumericVector im, IntegerVector x, IntegerVector y, IntegerVector radius, NumericVector color, double opacity, bool filled);
+RcppExport SEXP _imager_draw_circle_(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP radiusSEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP filledSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type color(colorSEXP);
+    Rcpp::traits::input_parameter< double >::type opacity(opacitySEXP);
+    Rcpp::traits::input_parameter< bool >::type filled(filledSEXP);
+    rcpp_result_gen = Rcpp::wrap(draw_circle_(im, x, y, radius, color, opacity, filled));
+    return rcpp_result_gen;
+END_RCPP
+}
+// draw_rect_
+NumericVector draw_rect_(NumericVector im, IntegerVector x0, IntegerVector y0, IntegerVector x1, IntegerVector y1, NumericVector color, double opacity, bool filled);
+RcppExport SEXP _imager_draw_rect_(SEXP imSEXP, SEXP x0SEXP, SEXP y0SEXP, SEXP x1SEXP, SEXP y1SEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP filledSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type x0(x0SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y0(y0SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y1(y1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type color(colorSEXP);
+    Rcpp::traits::input_parameter< double >::type opacity(opacitySEXP);
+    Rcpp::traits::input_parameter< bool >::type filled(filledSEXP);
+    rcpp_result_gen = Rcpp::wrap(draw_rect_(im, x0, y0, x1, y1, color, opacity, filled));
+    return rcpp_result_gen;
+END_RCPP
+}
+// draw_poly_
+NumericVector draw_poly_(NumericVector im, NumericVector points, NumericVector color, float opacity);
+RcppExport SEXP _imager_draw_poly_(SEXP imSEXP, SEXP pointsSEXP, SEXP colorSEXP, SEXP opacitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type color(colorSEXP);
+    Rcpp::traits::input_parameter< float >::type opacity(opacitySEXP);
+    rcpp_result_gen = Rcpp::wrap(draw_poly_(im, points, color, opacity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// draw_text_
+NumericVector draw_text_(NumericVector im, int x, int y, std::string text, NumericVector color, double opacity, int fsize);
+RcppExport SEXP _imager_draw_text_(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP textSEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP fsizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
+    Rcpp::traits::input_parameter< int >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type y(ySEXP);
+    Rcpp::traits::input_parameter< std::string >::type text(textSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type color(colorSEXP);
+    Rcpp::traits::input_parameter< double >::type opacity(opacitySEXP);
+    Rcpp::traits::input_parameter< int >::type fsize(fsizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(draw_text_(im, x, y, text, color, opacity, fsize));
+    return rcpp_result_gen;
+END_RCPP
+}
 // deriche
 NumericVector deriche(NumericVector im, float sigma, int order, char axis, bool neumann);
 RcppExport SEXP _imager_deriche(SEXP imSEXP, SEXP sigmaSEXP, SEXP orderSEXP, SEXP axisSEXP, SEXP neumannSEXP) {
@@ -690,6 +773,18 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type px(pxSEXP);
     rcpp_result_gen = Rcpp::wrap(bgraph(px));
+    return rcpp_result_gen;
+END_RCPP
+}
+// interact_
+NumericVector interact_(Function fun, std::string title);
+RcppExport SEXP _imager_interact_(SEXP funSEXP, SEXP titleSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Function >::type fun(funSEXP);
+    Rcpp::traits::input_parameter< std::string >::type title(titleSEXP);
+    rcpp_result_gen = Rcpp::wrap(interact_(fun, title));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1364,18 +1459,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// imeval
-NumericVector imeval(NumericVector im, std::string expr);
-RcppExport SEXP _imager_imeval(SEXP imSEXP, SEXP exprSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
-    Rcpp::traits::input_parameter< std::string >::type expr(exprSEXP);
-    rcpp_result_gen = Rcpp::wrap(imeval(im, expr));
-    return rcpp_result_gen;
-END_RCPP
-}
 // patch_summary_cimg
 NumericVector patch_summary_cimg(NumericVector im, std::string expr, IntegerVector cx, IntegerVector cy, IntegerVector wx, IntegerVector wy);
 RcppExport SEXP _imager_patch_summary_cimg(SEXP imSEXP, SEXP exprSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP wxSEXP, SEXP wySEXP) {
@@ -1565,6 +1648,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_select", (DL_FUNC) &_imager_select, 2},
     {"_imager_bucket_fill", (DL_FUNC) &_imager_bucket_fill, 8},
     {"_imager_bucket_select", (DL_FUNC) &_imager_bucket_select, 6},
+    {"_imager_draw_circle", (DL_FUNC) &_imager_draw_circle, 7},
+    {"_imager_draw_circle_", (DL_FUNC) &_imager_draw_circle_, 7},
+    {"_imager_draw_rect_", (DL_FUNC) &_imager_draw_rect_, 8},
+    {"_imager_draw_poly_", (DL_FUNC) &_imager_draw_poly_, 4},
+    {"_imager_draw_text_", (DL_FUNC) &_imager_draw_text_, 7},
     {"_imager_deriche", (DL_FUNC) &_imager_deriche, 5},
     {"_imager_vanvliet", (DL_FUNC) &_imager_vanvliet, 5},
     {"_imager_isoblur", (DL_FUNC) &_imager_isoblur, 4},
@@ -1589,6 +1677,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_hough_line_grad", (DL_FUNC) &_imager_hough_line_grad, 3},
     {"_imager_hough_circle_", (DL_FUNC) &_imager_hough_circle_, 2},
     {"_imager_bgraph", (DL_FUNC) &_imager_bgraph, 1},
+    {"_imager_interact_", (DL_FUNC) &_imager_interact_, 2},
     {"_imager_interp_xy", (DL_FUNC) &_imager_interp_xy, 6},
     {"_imager_interp_xyz", (DL_FUNC) &_imager_interp_xyz, 6},
     {"_imager_interp_xyzc", (DL_FUNC) &_imager_interp_xyzc, 6},
@@ -1640,7 +1729,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_im_split", (DL_FUNC) &_imager_im_split, 3},
     {"_imager_im_append", (DL_FUNC) &_imager_im_append, 2},
     {"_imager_px_append", (DL_FUNC) &_imager_px_append, 2},
-    {"_imager_imeval", (DL_FUNC) &_imager_imeval, 2},
     {"_imager_patch_summary_cimg", (DL_FUNC) &_imager_patch_summary_cimg, 6},
     {"_imager_extract_fast", (DL_FUNC) &_imager_extract_fast, 6},
     {"_imager_extract_patches", (DL_FUNC) &_imager_extract_patches, 5},
