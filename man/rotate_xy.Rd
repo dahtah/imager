@@ -26,4 +26,3 @@ Rotate image by an arbitrary angle, around a center point.
 rotate_xy(boats,30,200,400) \%>\% plot
 rotate_xy(boats,30,200,400,boundary=2) \%>\% plot
 }
-

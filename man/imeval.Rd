@@ -31,4 +31,3 @@ julia <-  "
    iter"
 imfill(500,500) \%>\% imeval(julia) \%>\% plot
 }
-

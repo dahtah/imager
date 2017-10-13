@@ -21,4 +21,3 @@ imsplit(boats,"x",6) \%>\% plot
 \seealso{
 plot.imlist, display.imlist, as.data.frame.imlist
 }
-

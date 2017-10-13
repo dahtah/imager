@@ -24,4 +24,3 @@ mask.high <- threshold(abs(hr),"95\%")
 haar(hr*mask.low,inverse=TRUE,nb=3) \%>\% plot(main="75\% compression")
 haar(hr*mask.high,inverse=TRUE,nb=3) \%>\% plot(main="95\% compression")
 }
-

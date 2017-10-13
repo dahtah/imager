@@ -22,4 +22,3 @@ This is just a shortcut for llply followed by imappend
 build.im <- function(size) as.cimg(function(x,y) (x+y)/size,size,size)
 liply(c(10,50,100),build.im,"y") \%>\% plot
 }
-

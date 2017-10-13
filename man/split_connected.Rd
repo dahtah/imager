@@ -26,10 +26,9 @@ plot(spl[[1]])
 Compute connected components (using "label"), then split into as many sets as there are components.
 Useful for segmentation
 }
-\author{
-Simon Barthelme
-}
 \seealso{
 label
 }
-
+\author{
+Simon Barthelme
+}

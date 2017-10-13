@@ -23,4 +23,3 @@ The raster library stores its data as "RasterLayer" and "RasterBrick" objects. T
 \author{
 Simon Barthelme, adapted from the image method for RasterLayer by Robert J Hijmans
 }
-

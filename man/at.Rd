@@ -42,6 +42,7 @@ Return or set pixel value at coordinates
 
 \item \code{color.at<-}: set value of all colour channels at a location
 }}
+
 \examples{
 im <- as.cimg(function(x,y) x+y,50,50)
 at(im,10,1)
@@ -58,4 +59,3 @@ imsub(im, x \%inr\% c(1,100), y \%inr\% c(1,100)) \%>\% plot
 \author{
 Simon Barthelme
 }
-

@@ -36,4 +36,3 @@ From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
       recursive filtering. IEEE Trans. Signal Processing,
       vol. 54, pp. 2365-2367, 2006.
 }
-

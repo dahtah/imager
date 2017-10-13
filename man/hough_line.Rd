@@ -43,4 +43,3 @@ df <- hough_line(boats,ntheta=800,data=TRUE)
 \author{
 Simon Barthelme
 }
-

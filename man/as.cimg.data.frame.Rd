@@ -30,4 +30,3 @@ as.cimg(df,dims=c(10,10,1,1)) \%>\% plot
 \author{
 Simon Barthelme
 }
-

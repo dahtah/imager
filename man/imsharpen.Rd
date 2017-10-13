@@ -28,4 +28,3 @@ layout(t(1:2))
 plot(boats,main="Original")
 imsharpen(boats,150)  \%>\% plot(main="Sharpened")
 }
-

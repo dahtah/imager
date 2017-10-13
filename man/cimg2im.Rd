@@ -17,10 +17,9 @@ an object of class im, or a list of objects of class im, or a list of lists of o
 \description{
 The spatstat library uses a different format for images, which have class "im". This utility converts a cimg object to an im object. spatstat im objects are limited to 2D grayscale images, so if the image has depth or spectrum > 1 a list is returned for the separate frames or channels (or both, in which case a list of lists is returned, with frames at the higher level and channels at the lower one).
 }
-\author{
-Simon Barthelme
-}
 \seealso{
 im, as.im
 }
-
+\author{
+Simon Barthelme
+}

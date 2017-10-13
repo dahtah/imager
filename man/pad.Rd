@@ -32,4 +32,3 @@ pad(boats,20,pos=1,"xy",val="red") \%>\% plot
 \author{
 Simon Barthelme
 }
-

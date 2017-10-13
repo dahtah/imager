@@ -2,12 +2,12 @@
 % Please edit documentation in R/conversions.R
 \name{as.cimg}
 \alias{as.cimg}
-\alias{as.cimg.cimg}
-\alias{as.cimg.double}
-\alias{as.cimg.logical}
-\alias{as.cimg.matrix}
 \alias{as.cimg.numeric}
+\alias{as.cimg.logical}
+\alias{as.cimg.double}
+\alias{as.cimg.cimg}
 \alias{as.cimg.vector}
+\alias{as.cimg.matrix}
 \title{Convert to cimg object}
 \usage{
 as.cimg(obj, ...)
@@ -57,6 +57,7 @@ Imager implements various converters that turn your data into cimg objects. If y
 
 \item \code{matrix}: Convert to matrix
 }}
+
 \examples{
 as.cimg(1:100,x=10,y=10) #10x10, grayscale image
 as.cimg(rep(1:100,3),x=10,y=10,cc=3) #10x10 RGB
@@ -64,10 +65,9 @@ as.cimg(1:100,dim=c(10,10,1,1))
 as.cimg(1:100) #Guesses dimensions, warning is issued
 as.cimg(rep(1:100,3)) #Guesses dimensions, warning is issued
 }
-\author{
-Simon Barthelme
-}
 \seealso{
 as.cimg.array, as.cimg.function, as.cimg.data.frame
 }
-
+\author{
+Simon Barthelme
+}

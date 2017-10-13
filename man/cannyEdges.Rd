@@ -32,4 +32,3 @@ cannyEdges(boats,alpha=1.4) \%>\% plot
 \author{
 Simon Barthelme
 }
-

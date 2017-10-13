@@ -26,4 +26,3 @@ get.locations(im,function(v) v^2 + 3*v - 2 < 30)
 \author{
 Simon Barthelme
 }
-

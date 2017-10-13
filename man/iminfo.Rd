@@ -26,4 +26,3 @@ info <- plyr::ldply(someFiles,function(v) iminfo(v) \%>\% as.data.frame)
 \author{
 Simon Barthelme
 }
-
