@@ -4,14 +4,14 @@
 \alias{imgradient}
 \title{Compute image gradient}
 \usage{
-imgradient(im, axes, scheme = 3)
+imgradient(im, axes = "xy", scheme = 3)
 }
 \arguments{
 \item{im}{an image of class cimg}
 
-\item{axes}{direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz")}
+\item{axes}{direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz"). Default: "xy"}
 
-\item{scheme}{numerical scheme (default '3')}
+\item{scheme}{numerical scheme (default '3', rotation invariant)}
 }
 \value{
 an image or a list of images, depending on the value of "axes"

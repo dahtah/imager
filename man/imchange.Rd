@@ -45,5 +45,5 @@ load.example("parrots") \%>\%
 imeval
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }

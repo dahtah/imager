@@ -549,7 +549,8 @@ magick2cimg <- function(obj,alpha="rm",...)
     }
     x <- raster::sampleRegular(obj, maxpixels, asRaster=TRUE, useGDAL=TRUE)
     y <- raster::yFromRow(x, nrow(x):1)
-    value <- as.vector(x) %>% t
+    #for some reason as.vector(x) doesn't work anymore
+    value <- as.vector(getValues(x)) %>% t
     x <- raster::xFromCol(x,1:ncol(x))
     array(value,c(length(x),length(y),1,1)) %>% as.cimg 
 }

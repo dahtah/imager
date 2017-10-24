@@ -355,3 +355,29 @@ fileext <- function(f)
 }
 
                     
+##' Load all images in a directory
+##'
+##' Load all images in a directory and return them as an image list. 
+##' @param path directory to load from
+##' @param pattern optional: file pattern (ex. *jpg). Default NULL, in which case we look for file extensions png,jpeg,jpg,tif,bmp. 
+##' @param quiet if TRUE, loading errors are quiet. If FALSE, they are displayed. Default FALSE
+##' @return an image list
+##' @author Simon Barthelme
+##' @examples
+##' path <- system.file(package="imager") %>% paste0("/extdata")
+##'
+##' @export
+load.dir <- function(path,pattern=NULL,quiet=FALSE)
+{
+    fn <- dir(path,full.names=TRUE,pattern=pattern)
+    nms <- dir(path,full.names=FALSE,pattern=pattern) #Lazy!!!
+    if (is.null(pattern))
+    {
+        is.img <- fn %>% fileext %>% { . %in% c("png","jpg","jpeg","bmp","tif") }
+        fn <- fn[is.img]
+        nms <- nms[is.img]
+    }
+    li <- purrr::safely(load.image,quiet=quiet)
+    map(fn,li) %>% setNames(nms) %>%
+        keep(~ is.null(.$error)) %>% map_il("result")
+}

@@ -232,15 +232,15 @@ iterate <- function(f,k)
 ##' Light interface for get_gradient. Refer to get_gradient for details on the computation.
 ##' 
 ##' @param im an image of class cimg
-##' @param axes direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz")
-##' @param scheme numerical scheme (default '3')
+##' @param axes direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz"). Default: "xy"
+##' @param scheme numerical scheme (default '3', rotation invariant)
 ##' @return an image or a list of images, depending on the value of "axes" 
 ##' @author Simon Barthelme
 ##' @export
 ##' @examples
 ##' grayscale(boats) %>% imgradient("x") %>% plot
 ##' imgradient(boats,"xy") #Returns a list 
-imgradient <- function(im,axes,scheme=3)
+imgradient <- function(im,axes="xy",scheme=3)
     {
         gr <- get_gradient(im,axes,scheme)
         if (length(gr) == 1)

@@ -1,7 +1,7 @@
 
 ##' Evaluation in an image context
 ##'
-##' imeval does for images what "with" does for data.frames, namely contextual evaluation. It provides shortcuts for pixel-wise operations.
+##' imeval does for images what "with" does for data.frames, namely contextual evaluation. It provides various shortcuts for pixel-wise operations.
 ##' It takes inspiration from purrr::map in using formulas for defining anonymous functions using the "." argument.
 ##' Usage is made clear (hopefully) in the examples.
 ##' The old version of imeval used CImg's internal math parser, but has been retired. 
@@ -39,7 +39,8 @@
 ##' blank <- imfill(30,30)
 ##' imeval(blank,~ dnorm(rho,sd=w/3)) %>% plot(int=FALSE)
 ##' imeval(blank,~ theta) %>% plot
-##' ##imeval is made for interactive use, meaning it accesses the environment it got called from, e.g. this works: 
+##' ##imeval is made for interactive use, meaning it
+##' ##accesses the environment it got called from, e.g. this works: 
 ##' f <- function()
 ##' {
 ##'   a <- imfill(3,3,val=1)
@@ -58,6 +59,11 @@
 ##' grayscale(boats) %>%
 ##'     imeval(~ (. > median(.)) & rho < 150) %>%
 ##'     plot
+##' ##other abbreviations are defined:
+##' ##s for imshift, b for isoblur, rot for imrotate.
+##' ##e.g.
+##' imeval(boats, ~ .*s(.,3)) %>% plot
+##' 
 ##' @author Simon Barthelme
 ##' @export
 imeval <- function(obj,...,env=parent.frame())
@@ -103,6 +109,9 @@ add.variables <- function(im,vars,env)
     z <- dim(im)[3]
     env$w <- as.integer(x)
     env$h <- as.integer(y)
+    env$b <- isoblur
+    env$s <- imshift
+    env$rot <- imrotate
     if (missing(env))  env <- list()
     if (any(c("x","xc","xs","rho","theta") %in% vars)) env$x <- Xc(im)
     if (any(c("c") %in% vars)) env$c <- Cc(im)
@@ -152,7 +161,7 @@ add.variables <- function(im,vars,env)
 ##'   HSLtoRGB %>%
 ##'   plot
 ##' 
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 imchange <- function(obj,where,fo,env=parent.frame())
 {

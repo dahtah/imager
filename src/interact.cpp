@@ -60,7 +60,6 @@ std::string cvt_keycode(const unsigned int key)
   case cimg::keyK : return "k";
   case cimg::keyL : return "l";
   case cimg::keyENTER : return "enter";
-  case cimg::keySHIFTLEFT : return "shiftleft";
   case cimg::keyZ : return "z";
   case cimg::keyX : return "x";
   case cimg::keyC : return "c";
@@ -68,16 +67,20 @@ std::string cvt_keycode(const unsigned int key)
   case cimg::keyB : return "b";
   case cimg::keyN : return "n";
   case cimg::keyM : return "m";
-  case cimg::keySHIFTRIGHT : return "shiftright";
+#if cimg_OS==2    
+  case cimg::keySHIFTLEFT : return "shift";
+  case cimg::keyCTRLRIGHT : return "ctrl";
+#else
+  case cimg::keySHIFTRIGHT : 
+  case cimg::keySHIFTLEFT : return "shift";
+  case cimg::keyCTRLLEFT : 
+  case cimg::keyCTRLRIGHT : return "ctrl";
+#endif    
   case cimg::keyARROWUP : return "arrowup";
-  case cimg::keyCTRLLEFT : return "ctrlleft";
-  case cimg::keyAPPLEFT : return "appleft";
   case cimg::keyALT : return "alt";
   case cimg::keySPACE : return "space";
-  case cimg::keyALTGR : return "altgr";
-  case cimg::keyAPPRIGHT : return "appright";
+    //  case cimg::keyALTGR : return "altgr";
   case cimg::keyMENU : return "menu";
-  case cimg::keyCTRLRIGHT : return "ctrlright";
   case cimg::keyARROWLEFT : return "arrowleft";
   case cimg::keyARROWDOWN : return "arrowdown";
   case cimg::keyARROWRIGHT : return "arrowright";
@@ -113,7 +116,7 @@ NumericVector interact_(Function fun,std::string title = "")
   //CId img = as<CId >(im);
   //  CImgDisplay disp(255*img,title.c_str(),0,false,false);
   CImgDisplay disp(1,1,title.c_str(),0,false,false);
-    int a =0;
+  //int a =0;
     while (true)
   //  while (false)
     {

@@ -14,7 +14,7 @@ imeval(obj, ..., env = parent.frame())
 \item{env}{additional variables (defaults to the calling environment)}
 }
 \description{
-imeval does for images what "with" does for data.frames, namely contextual evaluation. It provides shortcuts for pixel-wise operations.
+imeval does for images what "with" does for data.frames, namely contextual evaluation. It provides various shortcuts for pixel-wise operations.
 It takes inspiration from purrr::map in using formulas for defining anonymous functions using the "." argument.
 Usage is made clear (hopefully) in the examples.
 The old version of imeval used CImg's internal math parser, but has been retired.
@@ -49,7 +49,8 @@ imeval(boats,~ (abs(xc)/w)*.) \%>\% plot
 blank <- imfill(30,30)
 imeval(blank,~ dnorm(rho,sd=w/3)) \%>\% plot(int=FALSE)
 imeval(blank,~ theta) \%>\% plot
-##imeval is made for interactive use, meaning it accesses the environment it got called from, e.g. this works: 
+##imeval is made for interactive use, meaning it
+##accesses the environment it got called from, e.g. this works: 
 f <- function()
 {
   a <- imfill(3,3,val=1)
@@ -68,6 +69,11 @@ map_il(1:3, ~ isoblur(boats,.)) \%>\%
 grayscale(boats) \%>\%
     imeval(~ (. > median(.)) & rho < 150) \%>\%
     plot
+##other abbreviations are defined:
+##s for imshift, b for isoblur, rot for imrotate.
+##e.g.
+imeval(boats, ~ .*s(.,3)) \%>\% plot
+
 }
 \seealso{
 imchange, which modifies specific parts of an image
