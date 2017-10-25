@@ -205,3 +205,5 @@ imchange <- function(obj,where,fo,env=parent.frame())
     }
     
 }
+
+is.formula <- function (x) inherits(x, "formula")
