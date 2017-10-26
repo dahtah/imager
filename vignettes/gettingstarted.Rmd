@@ -288,7 +288,7 @@ p <- ggplot(df,aes(x,y))+geom_raster(aes(fill=value))
 p
 ```
 
-We're not quite there, mainly because or y axis is reversed. Here's a fix:
+We're not quite there, mainly because our y axis is reversed. Here's a fix:
 ```{r}
 p + scale_y_continuous(trans=scales::reverse_trans())
 ```
@@ -576,7 +576,7 @@ All functions are documented.
 
 ## Loading, saving, reading image information
 
-- load.image,save.image,iminfo,load.video,save.video
+- load.image,save.image,iminfo,load.video,save.video,load.dir
 - plot.cimg, display, display_list, play, renorm
 - width, height, depth, spectrum,nPix
 
@@ -611,15 +611,15 @@ All functions are documented.
 - interp
 
 ## Generating images
-
-- capture.plot
-- as.cimg.function
+   
+- implot, capture.plot: use base graphics on images
+- imeval, as.cimg.function: create parametric images
 - imnoise,imfill,imdirac
 - implot
 
 ## Modifying images
 
-- add.colour,grayscale
+- add.colour,grayscale,colorise
 - imresize,resize,resize,resize_doubleXY,resize_halfXY,resize_tripleXY
 - autocrop, pad
 - threshold, renorm
@@ -637,6 +637,7 @@ All functions are documented.
 
 ## Morphology
 
+- grow, shrink, clean, fill     
 - dilate,dilate_rect,dilate_square
 - mopening,mopening_square,mclosing,mclosing_square
 - erode, erode_rect, erode_square
@@ -649,14 +650,16 @@ All functions are documented.
 
 ## Split-apply-combine
 
-- imsplit, imappend,
-- liply, iiply, ilply, idply
+- imsplit, imappend
+- map_il, map2_il (based on purrr package)
+- liply, iiply, ilply, idply (older variants based on plyr)
 
 ## Reductions
 
 - parmin, parmax, parmax.abs, which.parmax,which.parmin,parmin.abs
 - add, mult, enorm
 - parmedian, parvar, parsd
+- parany, parall (for pixsets)  
 - parorder
 
 ## Misc.

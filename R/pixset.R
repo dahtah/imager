@@ -482,6 +482,7 @@ boundary <- function(px,depth=1,high_connexity=FALSE)
 ##' @param col color of the contours
 ##' @param ... passed to the "lines" function
 ##' @author Simon Barthelme
+##' @seealso colorise, another way of highlighting stuff
 ##' @examples
 ##' #Select similar pixels around point (180,200)
 ##' px <- px.flood(boats,180,200,sigma=.08)
@@ -752,6 +753,41 @@ px.na <- function(im)
 }
 
 
+##' Fill in a colour in an area given by a pixset
+##'
+##' Paint all pixels in pixset px with the same colour 
+##' @param im an image
+##' @param px either a pixset or a formula, as in imeval. 
+##' @param col colour to fill in. either a vector of numeric values or a string (e.g. "red")
+##' @param alpha transparency (default 1, no transparency)
+##' @return an image
+##' @examples
+##' im <- load.example("coins")
+##' colorise(im,Xc(im) < 50,"blue") %>% plot
+##' #Same thing with the formula interface
+##' colorise(im,~ x < 50,"blue") %>% plot
+##' #Add transparency
+##' colorise(im,~ x < 50,"blue",alpha=.5) %>% plot
+##' #Highlight pixels with low luminance values
+##' colorise(im,~ . < 0.3,"blue",alpha=.2) %>% plot
+##' @author Simon Barthelmé
+##' @export
+colorise <- function(im,px,col,alpha=1)
+{
+    if (is.character(col))
+    {
+        col <- col2rgb(col)[,1]/255
+    }
+    if (is.formula(px)) {
+        px <- imeval(im, px)
+    }
 
+    if (spectrum(px)!=1)
+    {
+        px <- imsplit(px,"c") %>% parany
+    }
+    mod <- function(im,c) { if (alpha==1) { im[px] <- c} else { im[px] <- alpha*c+(1-alpha)*im[px]}; im }
+    imsplit(im,"c") %>% map2_il(col,mod) %>% imappend("c")
+}
 
 

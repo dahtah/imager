@@ -10,8 +10,13 @@ is the same thing but applied only to the first colour channel (R)
 
 * (experimental feature) as.igraph methods for images and pixsets convert images into graph representations. Nodes are pixels, and edges are drawn between neighbouring pixels. On pixsets, this allows some interesting morphological operations, e.g. contour tracing. On images, it could be used for various graph-based image processing algorithms, like spectral graph clustering
 
-* 
+* new function: colorise, to fill in regions with a certain colour. Also comes with a formula interface, just like imeval. Ex: highlight central region in image
+    ``` colorise(boats,~ sqrt(xc^2+yc^2) < 140,"blue",alpha=.2) %>% plot ```
+see ?colorise for more. 
+	
+* new function: load.dir, to load all images in a directory  
 
+  
 * Hough transforms for circles and lines are now available, see hough_circle and hough_line
 * most functions that take a colour argument now accept colour names, e.g.:
   ```imfill(10,10,val="red")``` or ```autocrop(im,col="black")```

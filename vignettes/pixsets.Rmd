@@ -78,6 +78,12 @@ highlight(px)
 
 highlight extracts the contours of the pixset (see ?contours) and plots them. 
 
+colorise is also useful: 
+
+```{r}
+colorise(im,px,"red",alpha=.5) %>% plot
+```
+
 You can also use plain old "plot": 
 ```{r}
 plot(px)
