@@ -24,6 +24,9 @@ plot(boats)
 highlight(px)
 px.flood(boats,18,50,sigma=.08) \%>\% highlight(col="white",lwd=3)
 }
+\seealso{
+colorise, another way of highlighting stuff
+}
 \author{
 Simon Barthelme
 }

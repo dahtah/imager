@@ -21,7 +21,7 @@ Load all images in a directory and return them as an image list.
 }
 \examples{
 path <- system.file(package="imager") \%>\% paste0("/extdata")
-
+load.dir(path)
 }
 \author{
 Simon Barthelme

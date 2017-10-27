@@ -365,7 +365,7 @@ fileext <- function(f)
 ##' @author Simon Barthelme
 ##' @examples
 ##' path <- system.file(package="imager") %>% paste0("/extdata")
-##'
+##' load.dir(path)
 ##' @export
 load.dir <- function(path,pattern=NULL,quiet=FALSE)
 {
