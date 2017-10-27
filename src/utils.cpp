@@ -160,20 +160,21 @@ NumericVector extract_fast(NumericVector im,int fun,IntegerVector cx,IntegerVect
 //'
 //' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
 //' WARNINGS: 
-//' - values outside of the image region are considered to be 0.
+//' - values outside of the image region are subject to boundary conditions. The default is to set them to 0 (Dirichlet), other boundary conditions are listed below. 
 //' - widths and heights should be odd integers (they're rounded up otherwise). 
 //' @param im an image
 //' @param cx vector of x coordinates for patch centers 
 //' @param cy vector of y coordinates for patch centers 
 //' @param wx vector of patch widths (or single value)
 //' @param wy vector of patch heights (or single value)
+//' @param boundary_conditions integer. Can be 0 (Dirichlet, default), 1 (Neumann) 2 (Periodic) 3 (mirror). 
 //' @return a list of image patches (cimg objects)
 //' @export
 //' @examples
 //' #2 patches of size 5x5 located at (10,10) and (10,20)
 //' extract_patches(boats,c(10,10),c(10,20),5,5)
 // [[Rcpp::export]]
-List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy)
+List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector wx,IntegerVector wy,int boundary_conditions=0)
 {
   CId img = as<CId >(im);
   int n = cx.length();
@@ -197,11 +198,11 @@ List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerV
     {
       if (rep)
 	{
-	  out[i] = wrap(img.get_crop(cx(i)-wx(0)/2,cy(i)-wy(0)/2,cx(i)+wx(0)/2,cy(i)+wy(0)/2)); 
+	  out[i] = wrap(img.get_crop(cx(i)-wx(0)/2,cy(i)-wy(0)/2,cx(i)+wx(0)/2,cy(i)+wy(0)/2,boundary_conditions)); 
 	}
       else
 	{
-	  out[i] = wrap(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2)); 
+	  out[i] = wrap(img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2,boundary_conditions)); 
 	}
     }
   out.attr("class") = CharacterVector::create("imlist","list");

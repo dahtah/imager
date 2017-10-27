@@ -920,20 +920,21 @@ extract_fast <- function(im, fun, cx, cy, wx, wy) {
 #'
 #' Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
 #' WARNINGS: 
-#' - values outside of the image region are considered to be 0.
+#' - values outside of the image region are subject to boundary conditions. The default is to set them to 0 (Dirichlet), other boundary conditions are listed below. 
 #' - widths and heights should be odd integers (they're rounded up otherwise). 
 #' @param im an image
 #' @param cx vector of x coordinates for patch centers 
 #' @param cy vector of y coordinates for patch centers 
 #' @param wx vector of patch widths (or single value)
 #' @param wy vector of patch heights (or single value)
+#' @param boundary_conditions integer. Can be 0 (Dirichlet, default), 1 (Neumann) 2 (Periodic) 3 (mirror). 
 #' @return a list of image patches (cimg objects)
 #' @export
 #' @examples
 #' #2 patches of size 5x5 located at (10,10) and (10,20)
 #' extract_patches(boats,c(10,10),c(10,20),5,5)
-extract_patches <- function(im, cx, cy, wx, wy) {
-    .Call(`_imager_extract_patches`, im, cx, cy, wx, wy)
+extract_patches <- function(im, cx, cy, wx, wy, boundary_conditions = 0L) {
+    .Call(`_imager_extract_patches`, im, cx, cy, wx, wy, boundary_conditions)
 }
 
 #' @param cz vector of z coordinates for patch centers 

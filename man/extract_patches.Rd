@@ -5,7 +5,7 @@
 \alias{extract_patches3D}
 \title{Extract image patches and return a list}
 \usage{
-extract_patches(im, cx, cy, wx, wy)
+extract_patches(im, cx, cy, wx, wy, boundary_conditions = 0L)
 
 extract_patches3D(im, cx, cy, cz, wx, wy, wz)
 }
@@ -20,6 +20,8 @@ extract_patches3D(im, cx, cy, cz, wx, wy, wz)
 
 \item{wy}{vector of patch heights (or single value)}
 
+\item{boundary_conditions}{integer. Can be 0 (Dirichlet, default), 1 (Neumann) 2 (Periodic) 3 (mirror).}
+
 \item{cz}{vector of z coordinates for patch centers}
 
 \item{wz}{vector of coordinates for patch depth}
@@ -30,7 +32,7 @@ a list of image patches (cimg objects)
 \description{
 Patches are rectangular (cubic) image regions centered at cx,cy (cz) with width wx and height wy (opt. depth wz)
 WARNINGS: 
-- values outside of the image region are considered to be 0.
+- values outside of the image region are subject to boundary conditions. The default is to set them to 0 (Dirichlet), other boundary conditions are listed below. 
 - widths and heights should be odd integers (they're rounded up otherwise).
 }
 \section{Functions}{

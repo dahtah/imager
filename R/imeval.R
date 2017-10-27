@@ -43,10 +43,10 @@
 ##' ##accesses the environment it got called from, e.g. this works: 
 ##' f <- function()
 ##' {
-##'   a <- imfill(3,3,val=1)
-##'    b <- imfill(3,3,val=3)
+##'   im1 <- imfill(3,3,val=1)
+##'    im2 <- imfill(3,3,val=3)
 ##' 
-##'   imeval(a,~ .+b)
+##'   imeval(im1,~ .+im2)
 ##' }
 ##' f()
 ##' ##imeval accepts lists as well 

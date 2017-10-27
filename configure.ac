@@ -123,6 +123,11 @@ dnl fi
 dnl AC_SUBST(OPENMP_CFLAGS)
 dnl AC_SUBST(HAVE_OPENMP)
 
+# Checks for OpenMP.
+m4_include([m4/ax_openmp.m4])
+AX_OPENMP
+
+AC_SUBST(OPENMP_CXXFLAGS)
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
 AC_SUBST(HAVE_FFTW)

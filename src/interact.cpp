@@ -98,8 +98,9 @@ std::string cvt_keycode(const unsigned int key)
   case cimg::keyPADSUB : return "padsub";
   case cimg::keyPADMUL : return "padmul";
   case cimg::keyPADDIV : return "paddiv";	
-  otherwise: return "unknown";
   }
+  return "unknown";
+  
 }
 
 
