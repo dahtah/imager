@@ -316,7 +316,7 @@ boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
 #'
 #' @param im an image
 #' @param filter the correlation kernel.
-#' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+#' @param neumann if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE. 
 #' @param normalise normalise filter (default FALSE)
 #'      
 #'
@@ -328,8 +328,8 @@ boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
 #' #Convolution vs. correlation 
 #' correlate(boats,filter) %>% plot(main="Correlation")
 #' convolve(boats,filter) %>% plot(main="Convolution")
-correlate <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
-    .Call(`_imager_correlate`, im, filter, dirichlet, normalise)
+correlate <- function(im, filter, neumann = FALSE, normalise = FALSE) {
+    .Call(`_imager_correlate`, im, filter, neumann, normalise)
 }
 
 #' Convolve image by filter.
@@ -339,7 +339,7 @@ correlate <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
 #'
 #' @param im an image
 #' @param filter a filter (another image)
-#' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+#' @param neumann if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE. 
 #' @param normalise normalise filter (default FALSE)
 #' @export
 #' @seealso correlate
@@ -350,8 +350,8 @@ correlate <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
 #' #Convolution vs. correlation 
 #' correlate(boats,filter) %>% plot(main="Correlation")
 #' convolve(boats,filter) %>% plot(main="Convolution")
-convolve <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
-    .Call(`_imager_convolve`, im, filter, dirichlet, normalise)
+convolve <- function(im, filter, neumann = FALSE, normalise = FALSE) {
+    .Call(`_imager_convolve`, im, filter, neumann, normalise)
 }
 
 sharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, sigma = 0) {

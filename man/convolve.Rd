@@ -4,14 +4,14 @@
 \alias{convolve}
 \title{Convolve image by filter.}
 \usage{
-convolve(im, filter, dirichlet = FALSE, normalise = FALSE)
+convolve(im, filter, neumann = FALSE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{filter}{a filter (another image)}
 
-\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
+\item{neumann}{if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE.}
 
 \item{normalise}{normalise filter (default FALSE)}
 }

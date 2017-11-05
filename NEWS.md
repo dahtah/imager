@@ -15,7 +15,6 @@ is the same thing but applied only to the first colour channel (R)
 see ?colorise for more. 
 	
 * new function: load.dir, to load all images in a directory  
-
   
 * Hough transforms for circles and lines are now available, see hough_circle and hough_line
 * most functions that take a colour argument now accept colour names, e.g.:

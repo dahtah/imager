@@ -32,5 +32,5 @@ colorise(im,~ x < 50,"blue",alpha=.5) \%>\% plot
 colorise(im,~ . < 0.3,"blue",alpha=.2) \%>\% plot
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
