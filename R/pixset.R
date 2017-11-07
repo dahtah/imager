@@ -770,7 +770,7 @@ px.na <- function(im)
 ##' colorise(im,~ x < 50,"blue",alpha=.5) %>% plot
 ##' #Highlight pixels with low luminance values
 ##' colorise(im,~ . < 0.3,"blue",alpha=.2) %>% plot
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @export
 colorise <- function(im,px,col,alpha=1)
 {

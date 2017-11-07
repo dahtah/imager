@@ -4,16 +4,16 @@
 \alias{correlate}
 \title{Correlation of image by filter}
 \usage{
-correlate(im, filter, dirichlet = FALSE, normalise = FALSE)
+correlate(im, filter, neumann = FALSE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{filter}{the correlation kernel.}
 
-\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
-
 \item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
+
+\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
 }
 \description{
 The correlation of image im by filter flt is defined as:

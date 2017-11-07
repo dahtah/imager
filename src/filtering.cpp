@@ -215,11 +215,11 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool neumann=true) {
 //' correlate(boats,filter) %>% plot(main="Correlation")
 //' convolve(boats,filter) %>% plot(main="Convolution")
 // [[Rcpp::export]]
-NumericVector correlate(NumericVector im,NumericVector filter, bool dirichlet=false,bool normalise = false) {
+NumericVector correlate(NumericVector im,NumericVector filter, bool neumann=false,bool normalise = false) {
   CId img = as<CId >(im);
   CId flt = as<CId >(filter);
   try{
-    img.correlate(flt,dirichlet,normalise);
+    img.correlate(flt,neumann,normalise);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
@@ -248,11 +248,11 @@ NumericVector correlate(NumericVector im,NumericVector filter, bool dirichlet=fa
 //' correlate(boats,filter) %>% plot(main="Correlation")
 //' convolve(boats,filter) %>% plot(main="Convolution")
 // [[Rcpp::export]]
-NumericVector convolve(NumericVector im,NumericVector filter, bool dirichlet=false,bool normalise = false) {
+NumericVector convolve(NumericVector im,NumericVector filter, bool neumann=false,bool normalise = false) {
   CId img = as<CId >(im);
   CId flt = as<CId >(filter);
   try{
-    img.convolve(flt,dirichlet,normalise);
+    img.convolve(flt,neumann,normalise);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);

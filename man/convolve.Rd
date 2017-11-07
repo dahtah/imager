@@ -4,16 +4,16 @@
 \alias{convolve}
 \title{Convolve image by filter.}
 \usage{
-convolve(im, filter, dirichlet = FALSE, normalise = FALSE)
+convolve(im, filter, neumann = FALSE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{filter}{a filter (another image)}
 
-\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
-
 \item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
+
+\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
 }
 \description{
 The result  res of the convolution of an image img by filter flt is defined to be:

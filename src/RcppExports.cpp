@@ -541,30 +541,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // correlate
-NumericVector correlate(NumericVector im, NumericVector filter, bool dirichlet, bool normalise);
-RcppExport SEXP _imager_correlate(SEXP imSEXP, SEXP filterSEXP, SEXP dirichletSEXP, SEXP normaliseSEXP) {
+NumericVector correlate(NumericVector im, NumericVector filter, bool neumann, bool normalise);
+RcppExport SEXP _imager_correlate(SEXP imSEXP, SEXP filterSEXP, SEXP neumannSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type filter(filterSEXP);
-    Rcpp::traits::input_parameter< bool >::type dirichlet(dirichletSEXP);
+    Rcpp::traits::input_parameter< bool >::type neumann(neumannSEXP);
     Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    rcpp_result_gen = Rcpp::wrap(correlate(im, filter, dirichlet, normalise));
+    rcpp_result_gen = Rcpp::wrap(correlate(im, filter, neumann, normalise));
     return rcpp_result_gen;
 END_RCPP
 }
 // convolve
-NumericVector convolve(NumericVector im, NumericVector filter, bool dirichlet, bool normalise);
-RcppExport SEXP _imager_convolve(SEXP imSEXP, SEXP filterSEXP, SEXP dirichletSEXP, SEXP normaliseSEXP) {
+NumericVector convolve(NumericVector im, NumericVector filter, bool neumann, bool normalise);
+RcppExport SEXP _imager_convolve(SEXP imSEXP, SEXP filterSEXP, SEXP neumannSEXP, SEXP normaliseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type im(imSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type filter(filterSEXP);
-    Rcpp::traits::input_parameter< bool >::type dirichlet(dirichletSEXP);
+    Rcpp::traits::input_parameter< bool >::type neumann(neumannSEXP);
     Rcpp::traits::input_parameter< bool >::type normalise(normaliseSEXP);
-    rcpp_result_gen = Rcpp::wrap(convolve(im, filter, dirichlet, normalise));
+    rcpp_result_gen = Rcpp::wrap(convolve(im, filter, neumann, normalise));
     return rcpp_result_gen;
 END_RCPP
 }
