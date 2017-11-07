@@ -1,4 +1,5 @@
 #include <imager.h>
+#include "wrappers_cimglist.h"
 using namespace Rcpp;
 using namespace cimg_library;
 
@@ -95,6 +96,8 @@ NumericVector isoblur(NumericVector im,float sigma,bool neumann=true,bool gaussi
   }
   return wrap(img);
 }
+
+
 
 
 //' Blur image with the median filter.
@@ -200,7 +203,7 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool neumann=true) {
 //' @param im an image
 //' @param filter the correlation kernel.
 //' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
-//' @param normalise normalise filter (default FALSE)
+//' @param normalise compute a normalised correlation (ie. local cosine similarity)
 //'      
 //'
 //' @export
@@ -230,11 +233,11 @@ NumericVector correlate(NumericVector im,NumericVector filter, bool dirichlet=fa
 //'
 //'      The result  res of the convolution of an image img by filter flt is defined to be:
 //'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
-//'
+//'     
 //' @param im an image
 //' @param filter a filter (another image)
 //' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
-//' @param normalise normalise filter (default FALSE)
+//' @param normalise compute a normalised correlation (ie. local cosine similarity)
 //' @export
 //' @seealso correlate
 //' @examples

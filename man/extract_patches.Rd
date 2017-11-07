@@ -7,7 +7,7 @@
 \usage{
 extract_patches(im, cx, cy, wx, wy, boundary_conditions = 0L)
 
-extract_patches3D(im, cx, cy, cz, wx, wy, wz)
+extract_patches3D(im, cx, cy, cz, wx, wy, wz, boundary_conditions = 0L)
 }
 \arguments{
 \item{im}{an image}

@@ -13,7 +13,7 @@ correlate(im, filter, dirichlet = FALSE, normalise = FALSE)
 
 \item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
 
-\item{normalise}{normalise filter (default FALSE)}
+\item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
 }
 \description{
 The correlation of image im by filter flt is defined as:

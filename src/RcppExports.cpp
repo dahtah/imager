@@ -1508,8 +1508,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // extract_patches3D
-List extract_patches3D(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector cz, IntegerVector wx, IntegerVector wy, IntegerVector wz);
-RcppExport SEXP _imager_extract_patches3D(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP czSEXP, SEXP wxSEXP, SEXP wySEXP, SEXP wzSEXP) {
+List extract_patches3D(NumericVector im, IntegerVector cx, IntegerVector cy, IntegerVector cz, IntegerVector wx, IntegerVector wy, IntegerVector wz, int boundary_conditions);
+RcppExport SEXP _imager_extract_patches3D(SEXP imSEXP, SEXP cxSEXP, SEXP cySEXP, SEXP czSEXP, SEXP wxSEXP, SEXP wySEXP, SEXP wzSEXP, SEXP boundary_conditionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1520,7 +1520,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type wx(wxSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type wy(wySEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type wz(wzSEXP);
-    rcpp_result_gen = Rcpp::wrap(extract_patches3D(im, cx, cy, cz, wx, wy, wz));
+    Rcpp::traits::input_parameter< int >::type boundary_conditions(boundary_conditionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(extract_patches3D(im, cx, cy, cz, wx, wy, wz, boundary_conditions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1733,7 +1734,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_patch_summary_cimg", (DL_FUNC) &_imager_patch_summary_cimg, 6},
     {"_imager_extract_fast", (DL_FUNC) &_imager_extract_fast, 6},
     {"_imager_extract_patches", (DL_FUNC) &_imager_extract_patches, 6},
-    {"_imager_extract_patches3D", (DL_FUNC) &_imager_extract_patches3D, 7},
+    {"_imager_extract_patches3D", (DL_FUNC) &_imager_extract_patches3D, 8},
     {"_imager_draw_image", (DL_FUNC) &_imager_draw_image, 6},
     {"_imager_do_patchmatch", (DL_FUNC) &_imager_do_patchmatch, 8},
     {"_imager_checkcoords", (DL_FUNC) &_imager_checkcoords, 5},

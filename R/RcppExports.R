@@ -317,7 +317,7 @@ boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
 #' @param im an image
 #' @param filter the correlation kernel.
 #' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
-#' @param normalise normalise filter (default FALSE)
+#' @param normalise compute a normalised correlation (ie. local cosine similarity)
 #'      
 #'
 #' @export
@@ -336,11 +336,11 @@ correlate <- function(im, filter, dirichlet = FALSE, normalise = FALSE) {
 #'
 #'      The result  res of the convolution of an image img by filter flt is defined to be:
 #'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
-#'
+#'     
 #' @param im an image
 #' @param filter a filter (another image)
 #' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
-#' @param normalise normalise filter (default FALSE)
+#' @param normalise compute a normalised correlation (ie. local cosine similarity)
 #' @export
 #' @seealso correlate
 #' @examples
@@ -941,8 +941,8 @@ extract_patches <- function(im, cx, cy, wx, wy, boundary_conditions = 0L) {
 #' @param wz vector of coordinates for patch depth
 #' @describeIn extract_patches Extract 3D patches
 #' @export
-extract_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {
-    .Call(`_imager_extract_patches3D`, im, cx, cy, cz, wx, wy, wz)
+extract_patches3D <- function(im, cx, cy, cz, wx, wy, wz, boundary_conditions = 0L) {
+    .Call(`_imager_extract_patches3D`, im, cx, cy, cz, wx, wy, wz, boundary_conditions)
 }
 
 draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
