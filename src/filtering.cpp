@@ -73,19 +73,8 @@ NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',
 }
 
 
-//' Blur image isotropically.
-//' @param im an image
-//' @param sigma Standard deviation of the blur.
-//' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
-//' @param gaussian Use a Gaussian filter (actually vanVliet-Young). Default: 0th-order Deriche filter.
-//' @seealso deriche,vanvliet
-//' @export
-//' @examples
-//' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=3")
-//' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=10")
-//' @seealso medianblur
 // [[Rcpp::export]]
-NumericVector isoblur(NumericVector im,float sigma,bool neumann=true,bool gaussian=false) {
+NumericVector isoblur_(NumericVector im,float sigma,bool neumann=true,bool gaussian=false) {
   CId img = as< CId >(im);
   try{
     img.blur(sigma,neumann,gaussian);

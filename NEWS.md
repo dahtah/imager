@@ -6,17 +6,31 @@ is equivalent to: ``` (Xc(boats)/width(boats))*boats ``` and creates a fading ef
 ``` imchange(boats,~ c==1,~ xs*.) ```
 is the same thing but applied only to the first colour channel (R) 
    
+   
 * (experimental feature) quick-and-dirty interactive interfaces are now easy to program using the interact() function. Use it to explore filter parameters, interactive segmentation. For more sophisticated needs, use e.g. shiny. 
 
 * (experimental feature) as.igraph methods for images and pixsets convert images into graph representations. Nodes are pixels, and edges are drawn between neighbouring pixels. On pixsets, this allows some interesting morphological operations, e.g. contour tracing. On images, it could be used for various graph-based image processing algorithms, like spectral graph clustering
 
+  * new function "inpaint", which fills in missing parts of an image with a weighted avg. of the neighbours. Useful for salt-and-pepper-ish noise, e.g:
+  ```
+  im <- boats
+  im[sample(nPix(im),1e4)] <- NA
+  inpaint(im,1) %>% imlist(im,.) %>%
+              setNames(c("before","after")) %>% 
+			  plot(layout="row")
+  ```
+  
+* isoblur now has optional na.rm argument, and can ignore missing values. 
+
+  
 * new function: colorise, to fill in regions with a certain colour. Also comes with a formula interface, just like imeval. Ex: highlight central region in image
     ``` colorise(boats,~ sqrt(xc^2+yc^2) < 140,"blue",alpha=.2) %>% plot ```
 see ?colorise for more. 
 	
 * new function: load.dir, to load all images in a directory  
   
-* Hough transforms for circles and lines are now available, see hough_circle and hough_line
+  * new function: Hough transforms for circles and lines are now available, see hough_circle and hough_line
+  
 * most functions that take a colour argument now accept colour names, e.g.:
   ```imfill(10,10,val="red")``` or ```autocrop(im,col="black")```
 

@@ -475,9 +475,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// isoblur
-NumericVector isoblur(NumericVector im, float sigma, bool neumann, bool gaussian);
-RcppExport SEXP _imager_isoblur(SEXP imSEXP, SEXP sigmaSEXP, SEXP neumannSEXP, SEXP gaussianSEXP) {
+// isoblur_
+NumericVector isoblur_(NumericVector im, float sigma, bool neumann, bool gaussian);
+RcppExport SEXP _imager_isoblur_(SEXP imSEXP, SEXP sigmaSEXP, SEXP neumannSEXP, SEXP gaussianSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -485,7 +485,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< bool >::type neumann(neumannSEXP);
     Rcpp::traits::input_parameter< bool >::type gaussian(gaussianSEXP);
-    rcpp_result_gen = Rcpp::wrap(isoblur(im, sigma, neumann, gaussian));
+    rcpp_result_gen = Rcpp::wrap(isoblur_(im, sigma, neumann, gaussian));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1657,7 +1657,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_draw_text_", (DL_FUNC) &_imager_draw_text_, 7},
     {"_imager_deriche", (DL_FUNC) &_imager_deriche, 5},
     {"_imager_vanvliet", (DL_FUNC) &_imager_vanvliet, 5},
-    {"_imager_isoblur", (DL_FUNC) &_imager_isoblur, 4},
+    {"_imager_isoblur_", (DL_FUNC) &_imager_isoblur_, 4},
     {"_imager_medianblur", (DL_FUNC) &_imager_medianblur, 3},
     {"_imager_boxblur", (DL_FUNC) &_imager_boxblur, 3},
     {"_imager_imlap", (DL_FUNC) &_imager_imlap, 1},

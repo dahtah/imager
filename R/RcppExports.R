@@ -236,19 +236,8 @@ vanvliet <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
     .Call(`_imager_vanvliet`, im, sigma, order, axis, neumann)
 }
 
-#' Blur image isotropically.
-#' @param im an image
-#' @param sigma Standard deviation of the blur.
-#' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
-#' @param gaussian Use a Gaussian filter (actually vanVliet-Young). Default: 0th-order Deriche filter.
-#' @seealso deriche,vanvliet
-#' @export
-#' @examples
-#' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=3")
-#' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=10")
-#' @seealso medianblur
-isoblur <- function(im, sigma, neumann = TRUE, gaussian = FALSE) {
-    .Call(`_imager_isoblur`, im, sigma, neumann, gaussian)
+isoblur_ <- function(im, sigma, neumann = TRUE, gaussian = FALSE) {
+    .Call(`_imager_isoblur_`, im, sigma, neumann, gaussian)
 }
 
 #' Blur image with the median filter.
