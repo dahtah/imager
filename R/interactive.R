@@ -137,6 +137,7 @@ grabPoint <- function(im,output="coord")
 ##' This feature is experimental!!!
 ##' @param fun a function that takes a single argument (a list of user events) and returns an image to be plotted. The image won't be rescaled before plotting, so make sure RGB values are in [0,1]. 
 ##' @param title a title for the window (default "", none)
+##' @param init initial image to display (optional)
 ##' @return an image, specifically the last image displayed
 ##' @author Simon Barthelme
 ##' @examples
@@ -162,9 +163,13 @@ grabPoint <- function(im,output="coord")
 ##' ##Not run (interactive only)
 ##' ##map_il(1:10,~ isoblur(boats,.)) %>% gallery
 ##' @export
-interact <- function(fun,title="")
+interact <- function(fun,title="",init)
 {
-    interact_(fun,title)
+    if (missing(init))
+    {
+        init <- imfill(1,1,val=rep(0,3))
+    }
+    interact_(fun,init=init,title=title)
 }
 
 

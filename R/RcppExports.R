@@ -173,7 +173,7 @@ draw_circle <- function(im, x, y, radius, color, opacity = 1, filled = TRUE) {
     .Call(`_imager_draw_circle`, im, x, y, radius, color, opacity, filled)
 }
 
-draw_circle_ <- function(im, x, y, radius, color, opacity = 1, filled = TRUE) {
+draw_circle_ <- function(im, x, y, radius, color, opacity = 1L, filled = TRUE) {
     .Call(`_imager_draw_circle_`, im, x, y, radius, color, opacity, filled)
 }
 
@@ -485,8 +485,8 @@ bgraph <- function(px) {
     .Call(`_imager_bgraph`, px)
 }
 
-interact_ <- function(fun, title = "") {
-    .Call(`_imager_interact_`, fun, title)
+interact_ <- function(fun, init, title = "") {
+    .Call(`_imager_interact_`, fun, init, title)
 }
 
 interp_xy <- function(inp, ix, iy, z = 0L, c = 0L, cubic = FALSE) {

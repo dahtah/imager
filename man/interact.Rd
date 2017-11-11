@@ -4,12 +4,14 @@
 \alias{interact}
 \title{Build simple interactive interfaces using imager}
 \usage{
-interact(fun, title = "")
+interact(fun, title = "", init)
 }
 \arguments{
 \item{fun}{a function that takes a single argument (a list of user events) and returns an image to be plotted. The image won't be rescaled before plotting, so make sure RGB values are in [0,1].}
 
 \item{title}{a title for the window (default "", none)}
+
+\item{init}{initial image to display (optional)}
 }
 \value{
 an image, specifically the last image displayed

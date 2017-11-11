@@ -105,9 +105,10 @@ std::string cvt_keycode(const unsigned int key)
 
 
 // [[Rcpp::export]]
-NumericVector interact_(Function fun,std::string title = "")
+NumericVector interact_(Function fun,NumericVector init,std::string title = "")
 {
   List state;
+  CId img=as<CId >(init);
   state["mouse_x"] = -1;
   state["mouse_y"] = -1;
   state["mouse_button"] = 0;
@@ -116,7 +117,9 @@ NumericVector interact_(Function fun,std::string title = "")
   //NumericVector im = fun(state);
   //CId img = as<CId >(im);
   //  CImgDisplay disp(255*img,title.c_str(),0,false,false);
-  CImgDisplay disp(1,1,title.c_str(),0,false,false);
+  CImgDisplay disp(img.width(),img.height(),title.c_str(),0,false,false);
+  disp.display(255*img);
+
   //int a =0;
     while (true)
   //  while (false)
@@ -129,19 +132,25 @@ NumericVector interact_(Function fun,std::string title = "")
       state["mouse_y"] = disp.mouse_y() + 1;
       state["mouse_button"] = disp.button();
       state["mouse_wheel"] = disp.wheel();
-      disp.set_wheel(); 
+      
       state["key"] = (disp.key() ? cvt_keycode(disp.key()) : "");
       {
-	NumericVector nim = fun(state);
-	CId nimg = as<CId >(nim);
-	disp.resize(nimg.width(),nimg.height());
-	disp.display(255*nimg);
+	Rcpp::Nullable< NumericVector> inp =  fun(state);
+	if (inp.isNotNull())
+	  {
+	    NumericVector nim(inp);
+	    CId nimg = as<CId >(nim);
+	    if (disp.width() != nimg.width() or disp.height() != nimg.height())
+	      {
+		disp.resize(nimg.width(),nimg.height());
+	      }
+	    disp.display(255*nimg);
+	  }
       }
-      disp.flush();
 
       disp.wait();
       Rcpp::checkUserInterrupt();
     }
-  NumericVector nim = fun(state);
-  return wrap(nim);
+    CId out(disp);
+    return wrap(out);
 }

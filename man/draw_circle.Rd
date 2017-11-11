@@ -13,11 +13,11 @@ draw_circle(im, x, y, radius, color = "white", opacity = 1, filled = TRUE)
 
 \item{y}{y coordinates}
 
-\item{radius}{radius (either a single value or a vector)}
+\item{radius}{radius (either a single value or a vector of length equal to length(x))}
 
-\item{color}{either a vector, or a string}
+\item{color}{either a string ("red"), a character vector of length equal to x, or a matrix of dimension length(x) times spectrum(im)}
 
-\item{opacity}{0: transparent 1: opaque.}
+\item{opacity}{scalar or vector of length equal to length(x). 0: transparent 1: opaque.}
 
 \item{filled}{fill circle (default TRUE)}
 }

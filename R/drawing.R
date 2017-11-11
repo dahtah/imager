@@ -51,9 +51,9 @@ bucketfill <- function(im,x,y,z = 1,color,opacity=1,sigma=0,high_connexity=FALSE
 ##' @param im an image
 ##' @param x x coordinates
 ##' @param y y coordinates
-##' @param radius radius (either a single value or a vector)
-##' @param color either a vector, or a string
-##' @param opacity 0: transparent 1: opaque. 
+##' @param radius radius (either a single value or a vector of length equal to length(x))
+##' @param color either a string ("red"), a character vector of length equal to x, or a matrix of dimension length(x) times spectrum(im)
+##' @param opacity scalar or vector of length equal to length(x). 0: transparent 1: opaque.
 ##' @param filled fill circle (default TRUE)
 ##' @return an image
 ##' @seealso implot
@@ -64,13 +64,19 @@ bucketfill <- function(im,x,y,z = 1,color,opacity=1,sigma=0,high_connexity=FALSE
 ##' @export
 draw_circle <- function(im,x,y,radius,color="white",opacity=1,filled=TRUE)
 {
-    if (is.character(color))
+    if (is.vector(color) & (length(color) != length(x)))
     {
-        color <- col2rgb(color)[,1]/255
+        color <- matrix(color,length(x),length(color),byrow=TRUE)
     }
-    if (length(color)!=spectrum(im)) stop("colour argument has wrong length")
+
+    if (is.character(color))
+        {
+            color <- t(col2rgb(color)/255)
+        }
+    if (ncol(color)!=spectrum(im)) stop("colour argument has wrong length")
     if (length(x) != length(y)) stop("x and y must be the same length")
-    if (length(radius)==1) radius <- rep(radius,length(x)) 
+    if (length(radius)==1) radius <- rep(radius,length(x))
+    if (length(opacity)==1) opacity <- rep(opacity,length(x)) 
     draw_circle_(im,x,y,radius,color,opacity,filled)
 }
 

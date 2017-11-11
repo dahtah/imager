@@ -380,7 +380,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // draw_circle_
-NumericVector draw_circle_(NumericVector im, IntegerVector x, IntegerVector y, IntegerVector radius, NumericVector color, double opacity, bool filled);
+NumericVector draw_circle_(NumericVector im, IntegerVector x, IntegerVector y, IntegerVector radius, NumericMatrix color, NumericVector opacity, bool filled);
 RcppExport SEXP _imager_draw_circle_(SEXP imSEXP, SEXP xSEXP, SEXP ySEXP, SEXP radiusSEXP, SEXP colorSEXP, SEXP opacitySEXP, SEXP filledSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -389,8 +389,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type radius(radiusSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type color(colorSEXP);
-    Rcpp::traits::input_parameter< double >::type opacity(opacitySEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type color(colorSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type opacity(opacitySEXP);
     Rcpp::traits::input_parameter< bool >::type filled(filledSEXP);
     rcpp_result_gen = Rcpp::wrap(draw_circle_(im, x, y, radius, color, opacity, filled));
     return rcpp_result_gen;
@@ -777,14 +777,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // interact_
-NumericVector interact_(Function fun, std::string title);
-RcppExport SEXP _imager_interact_(SEXP funSEXP, SEXP titleSEXP) {
+NumericVector interact_(Function fun, NumericVector init, std::string title);
+RcppExport SEXP _imager_interact_(SEXP funSEXP, SEXP initSEXP, SEXP titleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Function >::type fun(funSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type init(initSEXP);
     Rcpp::traits::input_parameter< std::string >::type title(titleSEXP);
-    rcpp_result_gen = Rcpp::wrap(interact_(fun, title));
+    rcpp_result_gen = Rcpp::wrap(interact_(fun, init, title));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1678,7 +1679,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_hough_line_grad", (DL_FUNC) &_imager_hough_line_grad, 3},
     {"_imager_hough_circle_", (DL_FUNC) &_imager_hough_circle_, 2},
     {"_imager_bgraph", (DL_FUNC) &_imager_bgraph, 1},
-    {"_imager_interact_", (DL_FUNC) &_imager_interact_, 2},
+    {"_imager_interact_", (DL_FUNC) &_imager_interact_, 3},
     {"_imager_interp_xy", (DL_FUNC) &_imager_interp_xy, 6},
     {"_imager_interp_xyz", (DL_FUNC) &_imager_interp_xyz, 6},
     {"_imager_interp_xyzc", (DL_FUNC) &_imager_interp_xyzc, 6},

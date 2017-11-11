@@ -56,18 +56,19 @@ NumericVector draw_circle(NumericVector im,IntegerVector x, IntegerVector y,int 
 
 
 // [[Rcpp::export]]
-NumericVector draw_circle_(NumericVector im,IntegerVector x, IntegerVector y,IntegerVector radius,NumericVector color,double opacity=1,bool filled=true)
+NumericVector draw_circle_(NumericVector im,IntegerVector x, IntegerVector y,IntegerVector radius,NumericMatrix color,NumericVector opacity=1,bool filled=true)
 {
   CId img = as<CId >(im);
   for (int i = 0; i < x.length(); i++)
     {
+      NumericVector col = color(i,_);
       if (filled)
 	{
-	  img.draw_circle(x[i]-1,y[i]-1,radius[i],color.begin(),opacity);
+	  img.draw_circle(x[i]-1,y[i]-1,radius[i],col.begin(),opacity[i]);
 	}
       else
 	{
-	  img.draw_circle(x[i]-1,y[i]-1,radius[i],color.begin(),opacity,0);
+	  img.draw_circle(x[i]-1,y[i]-1,radius[i],col.begin(),opacity[i],0);
 	}
     }
   return wrap(img);

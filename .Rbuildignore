@@ -3,3 +3,4 @@
 ^appveyor\.yml$
 .git
 .gitignore
+m4
