@@ -1,4 +1,5 @@
 #include <imager.h>
+#include "wrappers_cimglist.h"
 using namespace Rcpp;
 using namespace cimg_library;
 
@@ -72,19 +73,8 @@ NumericVector vanvliet(NumericVector im,float sigma,int order=0,char axis = 'x',
 }
 
 
-//' Blur image isotropically.
-//' @param im an image
-//' @param sigma Standard deviation of the blur.
-//' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
-//' @param gaussian Use a Gaussian filter (actually vanVliet-Young). Default: 0th-order Deriche filter.
-//' @seealso deriche,vanvliet
-//' @export
-//' @examples
-//' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=3")
-//' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=10")
-//' @seealso medianblur
 // [[Rcpp::export]]
-NumericVector isoblur(NumericVector im,float sigma,bool neumann=true,bool gaussian=false) {
+NumericVector isoblur_(NumericVector im,float sigma,bool neumann=true,bool gaussian=false) {
   CId img = as< CId >(im);
   try{
     img.blur(sigma,neumann,gaussian);
@@ -95,6 +85,8 @@ NumericVector isoblur(NumericVector im,float sigma,bool neumann=true,bool gaussi
   }
   return wrap(img);
 }
+
+
 
 
 //' Blur image with the median filter.
@@ -199,8 +191,8 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool neumann=true) {
 //'
 //' @param im an image
 //' @param filter the correlation kernel.
-//' @param neumann if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE. 
-//' @param normalise normalise filter (default FALSE)
+//' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+//' @param normalise compute a normalised correlation (ie. local cosine similarity)
 //'      
 //'
 //' @export
@@ -230,11 +222,11 @@ NumericVector correlate(NumericVector im,NumericVector filter, bool neumann=fals
 //'
 //'      The result  res of the convolution of an image img by filter flt is defined to be:
 //'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
-//'
+//'     
 //' @param im an image
 //' @param filter a filter (another image)
-//' @param neumann if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE. 
-//' @param normalise normalise filter (default FALSE)
+//' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+//' @param normalise compute a normalised correlation (ie. local cosine similarity)
 //' @export
 //' @seealso correlate
 //' @examples

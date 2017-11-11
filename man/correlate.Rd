@@ -11,9 +11,9 @@ correlate(im, filter, neumann = FALSE, normalise = FALSE)
 
 \item{filter}{the correlation kernel.}
 
-\item{neumann}{if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE.}
+\item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
 
-\item{normalise}{normalise filter (default FALSE)}
+\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
 }
 \description{
 The correlation of image im by filter flt is defined as:

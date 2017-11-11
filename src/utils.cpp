@@ -214,7 +214,7 @@ List extract_patches(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerV
 //' @describeIn extract_patches Extract 3D patches
 //' @export
 // [[Rcpp::export]]
-List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector cz,IntegerVector wx,IntegerVector wy,IntegerVector wz)
+List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,IntegerVector cz,IntegerVector wx,IntegerVector wy,IntegerVector wz,int boundary_conditions=0)
 {
   CId img = as<CId >(im);
   int n = cx.length();
@@ -236,11 +236,11 @@ List extract_patches3D(NumericVector im,IntegerVector cx,IntegerVector cy,Intege
     {
       if (rep)
 	{
-	  out[i] = img.get_crop(cx(i)-wx(0)/2,cy(i)-wy(0)/2,cz(i)-wz(0)/2,cx(i)+wx(0)/2,cy(i)+wy(0)/2,cz(i)+wz(0)/2);
+	  out[i] = img.get_crop(cx(i)-wx(0)/2,cy(i)-wy(0)/2,cz(i)-wz(0)/2,cx(i)+wx(0)/2,cy(i)+wy(0)/2,cz(i)+wz(0)/2,boundary_conditions);
 	}
       else
 	{
-	  out[i] = img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cz(i)-wz(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2,cz(i)+wz(i)/2);
+	  out[i] = img.get_crop(cx(i)-wx(i)/2,cy(i)-wy(i)/2,cz(i)-wz(i)/2,cx(i)+wx(i)/2,cy(i)+wy(i)/2,cz(i)+wz(i)/2,boundary_conditions);
 	}
     }
   out.attr("class") = CharacterVector::create("imlist","list");

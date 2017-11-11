@@ -1,6 +1,7 @@
 ## Ignore travis config file
 ^\.travis\.yml$
 ^appveyor\.yml$
+^m4$
 .git
 .gitignore
 m4

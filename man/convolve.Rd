@@ -11,9 +11,9 @@ convolve(im, filter, neumann = FALSE, normalise = FALSE)
 
 \item{filter}{a filter (another image)}
 
-\item{neumann}{if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE.}
+\item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
 
-\item{normalise}{normalise filter (default FALSE)}
+\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
 }
 \description{
 The result  res of the convolution of an image img by filter flt is defined to be:

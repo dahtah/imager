@@ -236,19 +236,8 @@ vanvliet <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
     .Call(`_imager_vanvliet`, im, sigma, order, axis, neumann)
 }
 
-#' Blur image isotropically.
-#' @param im an image
-#' @param sigma Standard deviation of the blur.
-#' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
-#' @param gaussian Use a Gaussian filter (actually vanVliet-Young). Default: 0th-order Deriche filter.
-#' @seealso deriche,vanvliet
-#' @export
-#' @examples
-#' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=3")
-#' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=10")
-#' @seealso medianblur
-isoblur <- function(im, sigma, neumann = TRUE, gaussian = FALSE) {
-    .Call(`_imager_isoblur`, im, sigma, neumann, gaussian)
+isoblur_ <- function(im, sigma, neumann = TRUE, gaussian = FALSE) {
+    .Call(`_imager_isoblur_`, im, sigma, neumann, gaussian)
 }
 
 #' Blur image with the median filter.
@@ -316,8 +305,8 @@ boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
 #'
 #' @param im an image
 #' @param filter the correlation kernel.
-#' @param neumann if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE. 
-#' @param normalise normalise filter (default FALSE)
+#' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+#' @param normalise compute a normalised correlation (ie. local cosine similarity)
 #'      
 #'
 #' @export
@@ -336,11 +325,11 @@ correlate <- function(im, filter, neumann = FALSE, normalise = FALSE) {
 #'
 #'      The result  res of the convolution of an image img by filter flt is defined to be:
 #'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
-#'
+#'     
 #' @param im an image
 #' @param filter a filter (another image)
-#' @param neumann if TRUE, set boundary conditions to Neumann. FALSE, Dirichlet (zero-padding). Default FALSE. 
-#' @param normalise normalise filter (default FALSE)
+#' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+#' @param normalise compute a normalised correlation (ie. local cosine similarity)
 #' @export
 #' @seealso correlate
 #' @examples
@@ -941,8 +930,8 @@ extract_patches <- function(im, cx, cy, wx, wy, boundary_conditions = 0L) {
 #' @param wz vector of coordinates for patch depth
 #' @describeIn extract_patches Extract 3D patches
 #' @export
-extract_patches3D <- function(im, cx, cy, cz, wx, wy, wz) {
-    .Call(`_imager_extract_patches3D`, im, cx, cy, cz, wx, wy, wz)
+extract_patches3D <- function(im, cx, cy, cz, wx, wy, wz, boundary_conditions = 0L) {
+    .Call(`_imager_extract_patches3D`, im, cx, cy, cz, wx, wy, wz, boundary_conditions)
 }
 
 draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
