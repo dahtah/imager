@@ -14,9 +14,9 @@ convolve(im, filter, neumann = FALSE, normalise = FALSE)
 
 \item{filter}{the correlation kernel.}
 
-\item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
+\item{neumann}{boundary condition. Neumann if true, Dirichlet otherwise (default FALSE)}
 
-\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
+\item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
 }
 \description{
 The correlation of image im by filter flt is defined as:
