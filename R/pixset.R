@@ -168,19 +168,7 @@ print.pixset <- function(x,...)
         invisible(x)
     }
 
-## Ops.cimg <- function(e1, e2)
-## {
-##     out <- NextMethod(.Generic)
-##     if (is.logical(out) && length(dim(out))==4)
-##         {
-##             as.pixset(out)
-##         }
-##     else
-##         {
-##             out
-##         }
-## }
-
+#' @method Ops imager_array
 #' @export
 Ops.imager_array <- function(e1, e2)
 {

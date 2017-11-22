@@ -1,5 +1,7 @@
 # imager 0.50 Major release
 
+* Functions based on **plyr** are gradually being phased out in favour of ones based on **purrr** and **dplyr**. **plyr** is no longer loaded by default, which solves some conflicts, but may break existing code! If that's the case just add ```require(plyr)``` somewhere. 
+
 * new functions imeval and imchange. These create custom execution environments for functions, and simplify image pipelines: for example,
 ``` imeval(boats,~ xs*.) ```
 is equivalent to: ``` (Xc(boats)/width(boats))*boats ``` and creates a fading effect. 

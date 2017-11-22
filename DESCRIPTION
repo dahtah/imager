@@ -14,9 +14,9 @@ Description: Fast image processing for images in up to 4 dimensions (two spatial
     processing.
 License: LGPL
 Imports:
-    Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices,purrr,Cairo,downloader,igraph
+    Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices,purrr,Cairo,downloader,igraph,plyr
 Depends:
-    R (>= 2.10.0),plyr,magrittr
+    R (>= 2.10.0),magrittr
 URL: http://dahtah.github.io/imager, https://github.com/dahtah/imager
 BugReports: https://github.com/dahtah/imager/issues
 SystemRequirements: fftw3,libtiff,C++11

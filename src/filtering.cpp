@@ -184,14 +184,16 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool neumann=true) {
   return wrap(img);
 }
 
-//' Correlation of image by filter
+//' Correlation/convolution of image by filter
 //'
 //'  The correlation of image im by filter flt is defined as:
 //'  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
+//'  The convolution of an image img by filter flt is defined to be:
+//'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
 //'
 //' @param im an image
 //' @param filter the correlation kernel.
-//' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+//' @param neumann boundary condition. Neumann if true, Dirichlet otherwise (default FALSE)
 //' @param normalise compute a normalised correlation (ie. local cosine similarity)
 //'      
 //'
@@ -218,24 +220,8 @@ NumericVector correlate(NumericVector im,NumericVector filter, bool neumann=fals
 }
 
 
-//' Convolve image by filter.
-//'
-//'      The result  res of the convolution of an image img by filter flt is defined to be:
-//'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
-//'     
-//' @param im an image
-//' @param filter a filter (another image)
-//' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
-//' @param normalise compute a normalised correlation (ie. local cosine similarity)
+//' @describeIn correlate convolve image with filter
 //' @export
-//' @seealso correlate
-//' @examples
-//' #Edge filter
-//' filter <- as.cimg(function(x,y) sign(x-5),10,10) 
-//' layout(t(1:2))
-//' #Convolution vs. correlation 
-//' correlate(boats,filter) %>% plot(main="Correlation")
-//' convolve(boats,filter) %>% plot(main="Convolution")
 // [[Rcpp::export]]
 NumericVector convolve(NumericVector im,NumericVector filter, bool neumann=false,bool normalise = false) {
   CId img = as<CId >(im);
