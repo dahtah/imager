@@ -298,14 +298,16 @@ boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
     .Call(`_imager_boxblur_xy`, im, sx, sy, neumann)
 }
 
-#' Correlation of image by filter
+#' Correlation/convolution of image by filter
 #'
 #'  The correlation of image im by filter flt is defined as:
 #'  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
+#'  The convolution of an image img by filter flt is defined to be:
+#'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
 #'
 #' @param im an image
 #' @param filter the correlation kernel.
-#' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
+#' @param neumann boundary condition. Neumann if true, Dirichlet otherwise (default FALSE)
 #' @param normalise compute a normalised correlation (ie. local cosine similarity)
 #'      
 #'
@@ -321,24 +323,8 @@ correlate <- function(im, filter, neumann = FALSE, normalise = FALSE) {
     .Call(`_imager_correlate`, im, filter, neumann, normalise)
 }
 
-#' Convolve image by filter.
-#'
-#'      The result  res of the convolution of an image img by filter flt is defined to be:
-#'       \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
-#'     
-#' @param im an image
-#' @param filter a filter (another image)
-#' @param dirichlet boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE
-#' @param normalise compute a normalised correlation (ie. local cosine similarity)
+#' @describeIn correlate convolve image with filter
 #' @export
-#' @seealso correlate
-#' @examples
-#' #Edge filter
-#' filter <- as.cimg(function(x,y) sign(x-5),10,10) 
-#' layout(t(1:2))
-#' #Convolution vs. correlation 
-#' correlate(boats,filter) %>% plot(main="Correlation")
-#' convolve(boats,filter) %>% plot(main="Convolution")
 convolve <- function(im, filter, neumann = FALSE, normalise = FALSE) {
     .Call(`_imager_convolve`, im, filter, neumann, normalise)
 }
@@ -892,9 +878,9 @@ px_append <- function(imlist, axis) {
 #' #Example: median filtering using patch_summary_cimg
 #' #Center a patch at each pixel
 #' im <- grayscale(boats)
-#' patches <- pixel.grid(im)  %>% mutate(w=3,h=3)
+#' patches <- pixel.grid(im)  %>% dplyr::mutate(w=3,h=3)
 #' #Extract patch summary
-#' out <- mutate(patches,med=patch_summary_cimg(im,"ic",x,y,w,h))
+#' out <- dplyr::mutate(patches,med=patch_summary_cimg(im,"ic",x,y,w,h))
 #' as.cimg(out,v.name="med") %>% plot
 #' @export
 patch_summary_cimg <- function(im, expr, cx, cy, wx, wy) {

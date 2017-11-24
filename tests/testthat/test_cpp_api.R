@@ -13,5 +13,5 @@ NumericVector foo(NumericVector inp)
     Sys.setenv("R_TESTS" = "") #Workaround for obscure bug in testthat
 cppFunction(foo.inline,depends="imager")
 im <- grayscale(boats)
-expect_equal(im %>% isoblur(3) %>% erode_square(2),foo(im))
+expect_equal(im %>% isoblur(3,gaussian=FALSE) %>% erode_square(2),foo(im))
 })

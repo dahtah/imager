@@ -2,23 +2,33 @@
 % Please edit documentation in R/RcppExports.R
 \name{correlate}
 \alias{correlate}
-\title{Correlation of image by filter}
+\alias{convolve}
+\title{Correlation/convolution of image by filter}
 \usage{
 correlate(im, filter, neumann = FALSE, normalise = FALSE)
+
+convolve(im, filter, neumann = FALSE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{filter}{the correlation kernel.}
 
-\item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
+\item{neumann}{boundary condition. Neumann if true, Dirichlet otherwise (default FALSE)}
 
-\item{dirichlet}{boundary condition (FALSE=zero padding, TRUE=dirichlet). Default FALSE}
+\item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
 }
 \description{
 The correlation of image im by filter flt is defined as:
  \eqn{res(x,y,z) = sum_{i,j,k} im(x + i,y + j,z + k)*flt(i,j,k).}
+ The convolution of an image img by filter flt is defined to be:
+      \eqn{res(x,y,z) = sum_{i,j,k} img(x-i,y-j,z-k)*flt(i,j,k)}
 }
+\section{Functions}{
+\itemize{
+\item \code{convolve}: convolve image with filter
+}}
+
 \examples{
 #Edge filter
 filter <- as.cimg(function(x,y) sign(x-5),10,10) 
