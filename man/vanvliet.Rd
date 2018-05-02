@@ -13,7 +13,7 @@ vanvliet(im, sigma, order = 0L, axis = "x", neumann = FALSE)
 
 \item{order}{the order of the filter 0,1,2,3}
 
-\item{axis}{Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.}
+\item{axis}{Axis along which the filter is computed. One of 'x', 'y', 'z', 'c'}
 
 \item{neumann}{If true, use Neumann boundary conditions (default false, Dirichlet)}
 }

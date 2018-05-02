@@ -1,8 +1,8 @@
 Package: imager
 Type: Package
 Title: Image Processing Library Based on 'CImg'
-Version: 0.50.0
-Date: 2017-10-24
+Version: 0.41.0
+Date: 2018-04-30
 Author: Simon Barthelme [aut, cre]
 Authors@R: person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut","cre"))
 Maintainer: Simon Barthelme <simon.barthelme@gipsa-lab.fr>

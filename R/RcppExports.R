@@ -215,7 +215,7 @@ deriche <- function(im, sigma, order = 0L, axis = 'x', neumann = FALSE) {
 #' @param im an image
 #' @param sigma standard deviation of the Gaussian filter
 #' @param order the order of the filter 0,1,2,3
-#' @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
+#' @param axis  Axis along which the filter is computed. One of 'x', 'y', 'z', 'c'
 #' @param neumann If true, use Neumann boundary conditions (default false, Dirichlet)
 #' @references
 #'       From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
@@ -307,7 +307,7 @@ boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
 #'
 #' @param im an image
 #' @param filter the correlation kernel.
-#' @param neumann boundary condition. Neumann if true, Dirichlet otherwise (default FALSE)
+#' @param dirichlet boundary condition. Dirichlet if true, Neumann if false (default TRUE, Dirichlet)
 #' @param normalise compute a normalised correlation (ie. local cosine similarity)
 #'      
 #'
@@ -319,14 +319,14 @@ boxblur_xy <- function(im, sx, sy, neumann = TRUE) {
 #' #Convolution vs. correlation 
 #' correlate(boats,filter) %>% plot(main="Correlation")
 #' convolve(boats,filter) %>% plot(main="Convolution")
-correlate <- function(im, filter, neumann = FALSE, normalise = FALSE) {
-    .Call(`_imager_correlate`, im, filter, neumann, normalise)
+correlate <- function(im, filter, dirichlet = TRUE, normalise = FALSE) {
+    .Call(`_imager_correlate`, im, filter, dirichlet, normalise)
 }
 
 #' @describeIn correlate convolve image with filter
 #' @export
-convolve <- function(im, filter, neumann = FALSE, normalise = FALSE) {
-    .Call(`_imager_convolve`, im, filter, neumann, normalise)
+convolve <- function(im, filter, dirichlet = TRUE, normalise = FALSE) {
+    .Call(`_imager_convolve`, im, filter, dirichlet, normalise)
 }
 
 sharpen <- function(im, amplitude, sharpen_type = FALSE, edge = 1, alpha = 0, sigma = 0) {

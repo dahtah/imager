@@ -41,7 +41,7 @@ NumericVector deriche(NumericVector im,float sigma,int order=0,char axis = 'x',b
 //' @param im an image
 //' @param sigma standard deviation of the Gaussian filter
 //' @param order the order of the filter 0,1,2,3
-//' @param axis  Axis along which the filter is computed. Can be <tt>{ 'x' | 'y' | 'z' | 'c' }</tt>.
+//' @param axis  Axis along which the filter is computed. One of 'x', 'y', 'z', 'c'
 //' @param neumann If true, use Neumann boundary conditions (default false, Dirichlet)
 //' @references
 //'       From: I.T. Young, L.J. van Vliet, M. van Ginkel, Recursive Gabor filtering.
@@ -193,7 +193,7 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool neumann=true) {
 //'
 //' @param im an image
 //' @param filter the correlation kernel.
-//' @param neumann boundary condition. Neumann if true, Dirichlet otherwise (default FALSE)
+//' @param dirichlet boundary condition. Dirichlet if true, Neumann if false (default TRUE, Dirichlet)
 //' @param normalise compute a normalised correlation (ie. local cosine similarity)
 //'      
 //'
@@ -206,11 +206,11 @@ NumericVector boxblur_xy(NumericVector im,float sx,float sy,bool neumann=true) {
 //' correlate(boats,filter) %>% plot(main="Correlation")
 //' convolve(boats,filter) %>% plot(main="Convolution")
 // [[Rcpp::export]]
-NumericVector correlate(NumericVector im,NumericVector filter, bool neumann=false,bool normalise = false) {
+NumericVector correlate(NumericVector im,NumericVector filter, bool dirichlet=true,bool normalise = false) {
   CId img = as<CId >(im);
   CId flt = as<CId >(filter);
   try{
-    img.correlate(flt,neumann,normalise);
+    img.correlate(flt,!dirichlet,normalise);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
@@ -223,11 +223,11 @@ NumericVector correlate(NumericVector im,NumericVector filter, bool neumann=fals
 //' @describeIn correlate convolve image with filter
 //' @export
 // [[Rcpp::export]]
-NumericVector convolve(NumericVector im,NumericVector filter, bool neumann=false,bool normalise = false) {
+NumericVector convolve(NumericVector im,NumericVector filter, bool dirichlet=true,bool normalise = false) {
   CId img = as<CId >(im);
   CId flt = as<CId >(filter);
   try{
-    img.convolve(flt,neumann,normalise);
+    img.convolve(flt,!dirichlet,normalise);
     }
   catch(CImgException &e){
     forward_exception_to_r(e);
