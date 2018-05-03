@@ -20,7 +20,6 @@ Depends:
 URL: http://dahtah.github.io/imager, https://github.com/dahtah/imager
 BugReports: https://github.com/dahtah/imager/issues
 SystemRequirements: fftw3,libtiff,C++11
-Enhances: spatstat
 LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 6.0.1
