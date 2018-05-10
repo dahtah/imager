@@ -1,23 +1,5 @@
-language: r
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+sudo: false
 cache: packages
-sudo: required
-matrix:
-  include:
-    - os: osx
-      osx_image: xcode8
-      latex: false
-    - os: linux
-      dist: precise
-      sudo: true
-disable_homebrew: true
-warnings_are_errors: false
-
-
-apt_packages:
- - libfftw3-dev
-r_binary_packages:
- - png
- - jpeg
- - plyr
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir -p ~/.R && echo "SHLIB_OPENMP_CXXFLAGS = " >>~/.R/Makevars; fi

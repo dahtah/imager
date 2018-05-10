@@ -5,16 +5,16 @@
 \alias{convolve}
 \title{Correlation/convolution of image by filter}
 \usage{
-correlate(im, filter, neumann = FALSE, normalise = FALSE)
+correlate(im, filter, dirichlet = TRUE, normalise = FALSE)
 
-convolve(im, filter, neumann = FALSE, normalise = FALSE)
+convolve(im, filter, dirichlet = TRUE, normalise = FALSE)
 }
 \arguments{
 \item{im}{an image}
 
 \item{filter}{the correlation kernel.}
 
-\item{neumann}{boundary condition. Neumann if true, Dirichlet otherwise (default FALSE)}
+\item{dirichlet}{boundary condition. Dirichlet if true, Neumann if false (default TRUE, Dirichlet)}
 
 \item{normalise}{compute a normalised correlation (ie. local cosine similarity)}
 }

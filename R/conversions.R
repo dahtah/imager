@@ -486,7 +486,7 @@ grayscale <- function(im,method="Luma",drop=TRUE)
 cvt.frame <- function(f){
   f <- as.double(f)
   d <- dim(f)
-  dim(f) <- c(d[1:2],1,4)
+  dim(f) <- c(d[1:2],1,d[3])
   cimg(f) %>% imrotate(90) %>% mirror("x")
 }
 

@@ -149,9 +149,9 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' @param x a list of images
 ##' @param na.rm ignore NAs (default FALSE)
 ##' @examples
-##' im1 <- as.cimg(function(x,y) x,100,100)
-##' im2 <- as.cimg(function(x,y) y,100,100)
-##' im3 <- as.cimg(function(x,y) cos(x/10),100,100)
+##' im1 <- as.cimg(function(x,y) x,50,50)
+##' im2 <- as.cimg(function(x,y) y,50,50)
+##' im3 <- as.cimg(function(x,y) cos(x/10),50,50)
 ##' l <- imlist(im1,im2,im3)
 ##' add(l) %>% plot #Add the images
 ##' average(l) %>% plot #Average the images

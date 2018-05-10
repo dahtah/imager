@@ -271,9 +271,8 @@ NumericVector warp(NumericVector im,NumericVector warpfield,
 {
     CId img = as<CId >(im);
     CId wrp = as<CId >(warpfield);
-    //CId out(img,false);
     try{
-      if (mode==0 | mode == 2) //In R coordinates start at 1
+      if ((mode==0) || (mode == 2)) //In R coordinates start at 1
 	{
 	  wrp--;
 	}

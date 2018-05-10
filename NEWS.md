@@ -1,4 +1,4 @@
-# imager 0.50 Major release
+# imager 0.41 Major release
 
 * Functions based on **plyr** are gradually being phased out in favour of ones based on **purrr** and **dplyr**. **plyr** is no longer loaded by default, which solves some conflicts, but may break existing code! If that's the case just add ```require(plyr)``` somewhere. 
 
@@ -7,7 +7,6 @@
 is equivalent to: ``` (Xc(boats)/width(boats))*boats ``` and creates a fading effect. 
 ``` imchange(boats,~ c==1,~ xs*.) ```
 is the same thing but applied only to the first colour channel (R) 
-   
    
 * (experimental feature) quick-and-dirty interactive interfaces are now easy to program using the interact() function. Use it to explore filter parameters, interactive segmentation. For more sophisticated needs, use e.g. shiny. 
 
