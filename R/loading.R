@@ -155,8 +155,8 @@ has.ffmpeg <- function()
 
 has.magick <- function()
 {
-    test.magick <- c('conjure','montage') %>% Sys.which %>% Filter(function(v) nchar(v) > 0,.) %>% length
-    test.magick == 2
+    test.magick <- c('conjure','montage','magick') %>% Sys.which %>% map_lgl(function(v) nchar(v) > 0) 
+    any(test.magick)
 }
 
 convert.im.fromPNG <- function(A)
