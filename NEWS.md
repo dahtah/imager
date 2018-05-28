@@ -29,12 +29,14 @@ is the same thing but applied only to the first colour channel (R)
 see ?colorise for more. 
 	
 * new function: load.dir, to load all images in a directory  
-  
-  * new function: Hough transforms for circles and lines are now available, see hough_circle and hough_line
+
+* new function: Hough transforms for circles and lines are now available, see hough_circle and hough_line
   
 * most functions that take a colour argument now accept colour names, e.g.:
-  ```imfill(10,10,val="red")``` or ```autocrop(im,col="black")```
+       ```imfill(10,10,val="red")``` or ```autocrop(im,col="black")```
 
+* fixed problem with recent versions of ImageMagick that weren't detected properly
+	
 # imager 0.40.2 Minor release
 	* added crop.bbox for cropping image to the bounding box of a pixset
 	* updated CImg: fixes issues with Intel C compiler and libtiff giving pop-up warnings on Windows 

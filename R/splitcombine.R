@@ -164,17 +164,19 @@ imsplit.recur <- function(im,spl,nb=-1)
 ##' #parsort can also be used to produce parallel max. and min
 ##' (parsort(l)[[1]]) %>% plot("Parallel min")
 ##' (parsort(l)[[length(l)]]) %>% plot("Parallel max")
+##' #Resize boats so the next examples run faster
+##' im <- imresize(boats,.5)
 ##' #Edge detection (Euclidean norm of gradient)
-##' imgradient(boats,"xy") %>% enorm %>% plot
+##' imgradient(im,"xy") %>% enorm %>% plot
 ##' #Pseudo-artistic effects
-##' l <- map_il(seq(1,35,5),~ boxblur(boats,.))
+##' l <- map_il(seq(1,35,5),~ boxblur(im,.))
 ##' parmin(l) %>% plot
 ##' average(l) %>% plot
 ##' mult(l) %>% plot
 ##' #At each pixel, which colour channel has the maximum value?
-##' imsplit(boats,"c") %>% which.parmax %>% table
+##' imsplit(im,"c") %>% which.parmax %>% table
 ##' #Same thing using parorder (ties are broken differently)!!!
-##' imsplit(boats,"c") %>% { parorder(.)[[length(.)]] } %>% table
+##' imsplit(im,"c") %>% { parorder(.)[[length(.)]] } %>% table
 ##' @author Simon Barthelme
 ##' @seealso imsplit,Reduce
 NULL
