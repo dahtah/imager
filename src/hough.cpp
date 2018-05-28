@@ -11,7 +11,7 @@ NumericVector hough_line_px(LogicalVector px,NumericVector theta)
 {
   CIb ppx = as<CIb >(px);
   NumericVector ctheta = cos(theta),stheta = sin(theta);
-  int maxd = 2*ceil(sqrt(pow(ppx.width(),2)+pow(ppx.height(),2)));
+  int maxd = 2*ceil(sqrt(pow( (double) ppx.width(),2)+pow( (double) ppx.height(),2)));
   int offset = maxd/2;
   CId out(maxd,theta.length());
   out.fill(0);
@@ -39,7 +39,7 @@ NumericVector hough_line_grad(NumericVector im,int ntheta,double alpha=1.5)
   cimglist_for(grad,l) grad[l].blur((float)alpha);
 
   double thetamax = 2*cimg::PI,
-    rhomax = 2*ceil(sqrt(pow(img.width(),2)+pow(img.height(),2)));
+    rhomax = 2*ceil(sqrt(pow( (double) img.width(),2)+pow( (double) img.height(),2)));
   int offset = rhomax/2;
   CId out(rhomax,ntheta);
   out.fill(0);
