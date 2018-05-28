@@ -274,7 +274,7 @@ convert.im.toPNG <- function(A)
 load.example <- function(name)
 {
     fnames <- list(parrots="parrots.png",hubble="HubbleDeepField.jpg",
-                   tennis="tennis_sif.mpeg",birds="Leonardo_Birds.jpg",coins="coins.png")
+                   tennis="tennis_sif.mp4",birds="Leonardo_Birds.jpg",coins="coins.png")
     if (name %in% names(fnames))
     {
         fp <- paste0('extdata/',fnames[name]) %>% system.file(package='imager')
