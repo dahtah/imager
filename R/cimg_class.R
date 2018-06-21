@@ -506,7 +506,7 @@ imsub <- function(im,...)
         l <- as.list(substitute(list(...))[-1])
         consts <- list(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
         consts <- plyr::mutate(consts,cx=width/2,cy=height/2,cz=depth/2)
-        env <- parent.frame()
+        env <- new.env(parent = parent.frame())
         Reduce(function(a,b) subs(a,b,consts,envir=env),l,init=im)
     }
 
