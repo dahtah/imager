@@ -19,7 +19,7 @@ List bgraph(LogicalVector px)
   dst.reserve(nPix);
   const int dx[] = {1,-1,0,1}, dy[] = {0,1,1,1},n=4;
   int ind1,ind2;
-  const double s2 =sqrt(2);
+  const double s2 =sqrt(2.0);
   cimg_forXY(img,x,y)
     {
       if (img(x,y))

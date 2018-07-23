@@ -1,4 +1,16 @@
-imager 0.50 Major release
+imager 0.41.2 Minor release
+===========================
+
+-   Fixed bug in imsub: imsub had a nasty side-effect, that effectively
+    redefined variables "x",y","z", and "cc" if they happened to exist
+    in the current environment.
+
+imager 0.41.1 Minor release
+===========================
+
+-   Prof. Brian Ripley contributed fixes for compiler errors on Solaris
+
+imager 0.41 Major release
 =========================
 
 -   Functions based on **plyr** are gradually being phased out in favour
@@ -47,6 +59,9 @@ imager 0.50 Major release
 
 -   most functions that take a colour argument now accept colour names,
     e.g.: `imfill(10,10,val="red")` or `autocrop(im,col="black")`
+
+-   fixed problem with recent versions of ImageMagick that weren't
+    detected properly
 
 imager 0.40.2 Minor release
 ===========================
