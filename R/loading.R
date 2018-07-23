@@ -43,7 +43,6 @@ create.video.pipe <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,ext
     H <- as.integer(VI["height"])
     W <- as.integer(VI["width"])
     NF <- as.integer(VI["nb_frames"])
-    dd <- paste0(tempdir(),"/vid")
     if (!is.null(frames))
     {
         extra.args <- sprintf("%s -vframes %i ",extra.args,frames)

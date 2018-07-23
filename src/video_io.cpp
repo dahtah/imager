@@ -39,15 +39,11 @@ SEXP read_video(SEXP vpipe,
     R_xlen_t t = 0;
     R_xlen_t rgb = 0;
     R_xlen_t cimg_index = 0;
-    R_xlen_t chann_length = nf * he * wi;
-    int* cimgr = INTEGER(cimg_array);
-    int* cimgg = &INTEGER(cimg_array)[chann_length];
-    int* cimgb = &INTEGER(cimg_array)[2 * chann_length];
     while(remaining_size)
     {
 	if(bsize < remaining_size)
 	    bsize = remaining_size;
-	nbread = con->read(buf, sizeof(char), bsize, con);
+	nbread = con->read(buf, sizeof(unsigned char), bsize, con);
 	if(nbread != bsize)
 	{
 	    Rcpp::Rcout << "Read " << nbread << " bytes when expecting: " << bsize << " bytes\n";
