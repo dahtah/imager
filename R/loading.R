@@ -22,40 +22,86 @@
 ##' ## load.video(fname,skip=2) %>% play
 ##' @author Simon Barthelme
 ##' @export
-load.video <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,extra.args="",verbose=FALSE) wrap.url(fname,function(f) load.video.internal(f,skip.to=skip.to,maxSize=maxSize,frames=frames,fps=fps,extra.args=extra.args,verbose=verbose))
+load.video <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,extra.args="",verbose=FALSE,...) wrap.url(fname,function(f) load.video.internal(f,skip.to=skip.to,maxSize=maxSize,frames=frames,fps=fps,extra.args=extra.args,verbose=verbose,...))
 
-load.video.internal <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,extra.args="",verbose=FALSE)
+video.information <- function(fname)
+{
+    command <- sprintf("ffprobe -v error -show_format -show_streams '%s'", fname)
+    ffinfo <- system(command,
+                     intern = TRUE)
+    ffinfo <- grep("=", ffinfo, value = TRUE)
+    linfo <- gsub(".*=", "", ffinfo)
+    names(linfo) <- gsub("=.*", "", ffinfo)
+    linfo
+}
+
+## flags -f image2pipe -pix_fmt rgb24 and -vcode rawvideo tell ffmpeg to convert a video to a very intuitive raw format
+## single quotes were added around the filename to allow for files that contained spaces
+create.video.pipe <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,extra.args="",verbose=FALSE)
+{
+    VI <- video.information(fname)
+    H <- as.integer(VI["height"])
+    W <- as.integer(VI["width"])
+    NF <- as.integer(VI["nb_frames"])
+    if (!is.null(frames))
+    {
+        extra.args <- sprintf("%s -vframes %i ",extra.args,frames)
+        NF <- frames
+    }
+    
+    if (!is.null(fps)) extra.args <- sprintf("%s -vf fps=%.4d ",extra.args,fps)
+    verbose.args <- ""
+    if(!verbose)
+        verbose.args <- "2>/dev/null"
+    conversion.args <- "-f image2pipe -pix_fmt rgb24 -vcodec rawvideo"
+    command <- sprintf("ffmpeg -i '%s' %s %s -ss %s - %s",fname,extra.args,conversion.args,as.character(skip.to),verbose.args)
+    ## We keep the connection that will be passed on to `read_video` as well as some information about the video and the last frame we read
+    list(con = pipe(command,open="rb"),
+         height = H,
+         width = W,
+         nframes = NF,
+         current.frame = 0L)
+}
+
+read.video <- function(video.pipe,nframes = video.pipe$nframes - video.pipe$current.frame,block.size=10000L)
+{
+    if(nframes > video.pipe$nframes - video.pipe$current.frame)
+    {
+        stop("Number of frames requested exceeds the number of frames remaining in the video")
+    }
+    
+    RES <- array(0L,
+                 dim = c(video.pipe$width,
+                         video.pipe$height,
+                         nframes,
+                         3L))
+    read_video(video.pipe$con,
+               RES,
+               as.integer(nframes),
+               as.integer(video.pipe$width),
+               as.integer(video.pipe$height),
+               block_size = as.integer(block.size))
+    video.pipe$current.frame <- video.pipe$current.frame + nframes
+    if(video.pipe$current.frame == video.pipe$nframes)
+    {
+        close(video.pipe$con)
+    }
+    list(video.pipe = video.pipe,
+         cimg = as.cimg(RES))
+}
+
+## ffmpeg can convert videos to many formats, amongst them there are a few 'raw' formats.
+## The idea here is to convert the video to a raw format with the pixels coded as 3 bytes for RGB. The format is simpled, each pixel are coded on 3 consecutive bytes. The pixels are ordered first by width then by height and finally by frame.
+## The video can be loaded and transformed into an array compatible with a cimg
+## The ffmpeg command is formed and piped. Data is then directly read from the pipe thanks to the read.video function. Note that this allows data to be read by chunks of frames easily.
+## This approach doesn't write anything to the disk and significantly speeds up the loading of the video.
+load.video.internal <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,extra.args="",verbose=FALSE,...)
 {
     if (!has.ffmpeg()) stop("Can't find ffmpeg. Please install.")
-    dd <- paste0(tempdir(),"/vid")
-    if (!is.null(frames)) extra.args <- sprintf("%s -vframes %i ",extra.args,frames)
-    if (!is.null(fps)) extra.args <- sprintf("%s -vf fps=%.4d ",extra.args,fps)
     
-    arg <- sprintf("-i %s %s -ss %s ",fname,extra.args,as.character(skip.to)) %>% paste0(dd,"/image-%d.bmp")
-    tryCatch({
-    dir.create(dd)
-    system2("ffmpeg",arg,stdout=verbose,stderr=verbose)
-    fls <- dir(dd,full.names=TRUE)
-    if (length(fls)==0) stop("No output was generated")
-    ordr <- stringr::str_extract(fls,"(\\d)+\\.bmp") %>% stringr::str_split(stringr::fixed(".")) %>% purrr::map_int(~ as.integer(.[[1]])) %>% order
-    fls <- fls[ordr]
-    #Check total size
-    imsz <- load.image(fls[[1]]) %>% dim %>% prod
-    tsz <- ((imsz*8)*length(fls))/(1024^3)
-    if (tsz > maxSize)
-    {
-        msg <- sprintf("Video exceeds maximum allowed size in memory (%.2d Gb out of %.2d Gb)",tsz,maxSize)
-        unlink(dd,recursive=TRUE)
-        stop(msg)
-    }
-    else
-    {
-        out <- map_il(fls,load.image) %>% imappend("z")
-        out
-        
-    } },
-    finally=unlink(dd,recursive=TRUE))
-    
+    video.pipe <- create.video.pipe(fname,maxSize,skip.to,frames,fps,extra.args,verbose)
+    RES <- read.video(video.pipe,...)
+    RES$cimg
 }
 
 ##' Load image from file or URL

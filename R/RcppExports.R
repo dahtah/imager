@@ -948,3 +948,7 @@ px_split <- function(im, axis, nb = -1L) {
     .Call(`_imager_px_split`, im, axis, nb)
 }
 
+read_video <- function(vpipe, cimg_array, nframes, width, height, block_size) {
+    .Call(`_imager_read_video`, vpipe, cimg_array, nframes, width, height, block_size)
+}
+
