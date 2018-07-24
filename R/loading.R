@@ -26,8 +26,8 @@ load.video <- function(fname,maxSize=1,skip.to=0,frames=NULL,fps=NULL,extra.args
 
 video.information <- function(fname)
 {
-    ffinfo <- system("ffprobe -v error -show_format -show_streams " %p%
-                     gsub(" ", "\\\\ ", fname),
+    command <- sprintf("ffprobe -v error -show_format -show_streams '%s'", fname)
+    ffinfo <- system(command,
                      intern = TRUE)
     ffinfo <- grep("=", ffinfo, value = TRUE)
     linfo <- gsub(".*=", "", ffinfo)
