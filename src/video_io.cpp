@@ -23,7 +23,6 @@ SEXP read_video(SEXP vpipe,
 		SEXP block_size)
 {
     Rconnection con = R_GetConnection(vpipe);
-    int ra = INTEGER(cimg_array)[0];
     int nf = INTEGER(nframes)[0];
     int wi = INTEGER(width)[0];
     int he = INTEGER(height)[0];
@@ -31,7 +30,7 @@ SEXP read_video(SEXP vpipe,
     size_t total_size = nf * wi * he * 3;
     if(bsize > total_size)
 	bsize = total_size;
-    unsigned char* buf = Calloc(total_size, unsigned char);
+    unsigned char* buf = R_Calloc(total_size, unsigned char);
     size_t remaining_size = total_size;
     size_t nbread;
     R_xlen_t i = 0;
@@ -50,7 +49,7 @@ SEXP read_video(SEXP vpipe,
 	    Rf_error("Unexpected number of bytes read");
 	}
 	
-	for(int k = 0; k < bsize; k++)
+	for(size_t k = 0; k < bsize; k++)
 	{
 	    cimg_index = i + (j + (rgb * nf + t) * he) * wi;
 	    INTEGER(cimg_array)[cimg_index] = buf[k];
@@ -74,6 +73,6 @@ SEXP read_video(SEXP vpipe,
 	remaining_size -= bsize;
     }
     
-    free(buf);
+    R_Free(buf);
     return(cimg_array);
 }
