@@ -52,7 +52,7 @@ SEXP read_video(SEXP vpipe,
 	for(size_t k = 0; k < bsize; k++)
 	{
 	    cimg_index = i + (j + (rgb * nf + t) * he) * wi;
-	    INTEGER(cimg_array)[cimg_index] = buf[k];
+	    REAL(cimg_array)[cimg_index] = buf[k] / 255.;
 	    rgb ++;
 	    if(rgb == 3)
 	    {
