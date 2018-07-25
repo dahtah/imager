@@ -174,8 +174,9 @@ wrap.url <- function(file,fun)
     if (is.url)
     {
         url <- file
-        file <- tempfile()
-        downloader::download(url,file)
+        ext <- stringr::str_extract_all(url,"\\.([A-Za-z0-9]+$)")[[1]]
+        if (length(ext) > 0) file <- tempfile(fileext=ext) else file <- tempfile()
+        downloader::download(url,file,mode="wb")
         out <- fun(file)
         unlink(file)
         out

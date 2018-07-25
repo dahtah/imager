@@ -39,7 +39,7 @@ NumericVector hough_line_grad(NumericVector im,int ntheta,double alpha=1.5)
   cimglist_for(grad,l) grad[l].blur((float)alpha);
 
   double thetamax = 2*cimg::PI,
-    rhomax = 2*ceil(sqrt(pow( (double) img.width(),2)+pow( (double) img.height(),2)));
+    rhomax = 2*ceil(sqrt(pow(img.width(),2.0)+pow(img.height(),2.0)));
   int offset = rhomax/2;
   CId out(rhomax,ntheta);
   out.fill(0);
