@@ -4,7 +4,8 @@
 \alias{draw_rect}
 \title{Draw rectangle on image}
 \usage{
-draw_rect(im, x0, y0, x1, y1, color = "white", opacity = 1, filled = TRUE)
+draw_rect(im, x0, y0, x1, y1, color = "white", opacity = 1,
+  filled = TRUE)
 }
 \arguments{
 \item{im}{an image}

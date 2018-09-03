@@ -4,7 +4,8 @@
 \alias{rotate_xy}
 \title{Rotate image by an arbitrary angle, around a center point.}
 \usage{
-rotate_xy(im, angle, cx, cy, interpolation = 1L, boundary_conditions = 0L)
+rotate_xy(im, angle, cx, cy, interpolation = 1L,
+  boundary_conditions = 0L)
 }
 \arguments{
 \item{im}{an image}

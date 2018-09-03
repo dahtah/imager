@@ -97,7 +97,7 @@ NULL
 ##' @param xlab x axis label
 ##' @param ylab y axis label
 ##' @param interpolate should the image be plotted with antialiasing (default TRUE)
-##' @param asp aspect ratio. The default value (1) means that the aspect ratio of the image will be kept regardless of the dimensions of the plot. A numeric value other than one changes the aspect ratio, but it will be kept the same regardless of dimensions. Setting asp="varing" means the aspect ratio will depend on plot dimensions (this used to be the default in versions of imager < 0.40)
+##' @param asp aspect ratio. The default value (1) means that the aspect ratio of the image will be kept regardless of the dimensions of the plot. A numeric value other than one changes the aspect ratio, but it will be kept the same regardless of dimensions. Setting asp="varying" means the aspect ratio will depend on plot dimensions (this used to be the default in versions of imager < 0.40)
 ##' @param xaxs The style of axis interval calculation to be used for the x-axis. See ?par
 ##' @param yaxs The style of axis interval calculation to be used for the y-axis. See ?par
 ##' @param axes Whether to draw axes (default TRUE)

@@ -4,10 +4,11 @@
 \alias{plot.cimg}
 \title{Display an image using base graphics}
 \usage{
-\method{plot}{cimg}(x, frame, xlim = c(1, width(x)), ylim = c(height(x), 1),
-  xlab = "x", ylab = "y", rescale = TRUE, colourscale = NULL,
-  colorscale = NULL, interpolate = TRUE, axes = TRUE, main = "",
-  xaxs = "i", yaxs = "i", asp = 1, col.na = rgb(0, 0, 0, 0), ...)
+\method{plot}{cimg}(x, frame, xlim = c(1, width(x)),
+  ylim = c(height(x), 1), xlab = "x", ylab = "y", rescale = TRUE,
+  colourscale = NULL, colorscale = NULL, interpolate = TRUE,
+  axes = TRUE, main = "", xaxs = "i", yaxs = "i", asp = 1,
+  col.na = rgb(0, 0, 0, 0), ...)
 }
 \arguments{
 \item{x}{the image}
@@ -36,7 +37,7 @@
 
 \item{yaxs}{The style of axis interval calculation to be used for the y-axis. See ?par}
 
-\item{asp}{aspect ratio. The default value (1) means that the aspect ratio of the image will be kept regardless of the dimensions of the plot. A numeric value other than one changes the aspect ratio, but it will be kept the same regardless of dimensions. Setting asp="varing" means the aspect ratio will depend on plot dimensions (this used to be the default in versions of imager < 0.40)}
+\item{asp}{aspect ratio. The default value (1) means that the aspect ratio of the image will be kept regardless of the dimensions of the plot. A numeric value other than one changes the aspect ratio, but it will be kept the same regardless of dimensions. Setting asp="varying" means the aspect ratio will depend on plot dimensions (this used to be the default in versions of imager < 0.40)}
 
 \item{col.na}{which colour to use for NA values, as R rgb code. The default is "rgb(0,0,0,0)", which corresponds to a fully transparent colour.}
 
