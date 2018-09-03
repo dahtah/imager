@@ -1619,6 +1619,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// read_video
+SEXP read_video(SEXP vpipe, SEXP cimg_array, SEXP nframes, SEXP width, SEXP height, SEXP block_size);
+RcppExport SEXP _imager_read_video(SEXP vpipeSEXP, SEXP cimg_arraySEXP, SEXP nframesSEXP, SEXP widthSEXP, SEXP heightSEXP, SEXP block_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type vpipe(vpipeSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type cimg_array(cimg_arraySEXP);
+    Rcpp::traits::input_parameter< SEXP >::type nframes(nframesSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type width(widthSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type height(heightSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type block_size(block_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_video(vpipe, cimg_array, nframes, width, height, block_size));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_imager_RGBtoHSL", (DL_FUNC) &_imager_RGBtoHSL, 1},
@@ -1743,6 +1759,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_set_cimg_omp", (DL_FUNC) &_imager_set_cimg_omp, 1},
     {"_imager_has_omp", (DL_FUNC) &_imager_has_omp, 0},
     {"_imager_px_split", (DL_FUNC) &_imager_px_split, 3},
+    {"_imager_read_video", (DL_FUNC) &_imager_read_video, 6},
     {NULL, NULL, 0}
 };
 

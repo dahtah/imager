@@ -1,3 +1,11 @@
+# imager 0.41.2 Minor release
+
+* Fixed bug in imsub: imsub had a nasty side-effect, that effectively redefined variables "x",y","z", and "cc" if they happened to exist in the current environment. 
+
+# imager 0.41.1 Minor release
+
+* Prof. Brian Ripley contributed fixes for compiler errors on Solaris
+
 # imager 0.41 Major release
 
 * Functions based on **plyr** are gradually being phased out in favour of ones based on **purrr** and **dplyr**. **plyr** is no longer loaded by default, which solves some conflicts, but may break existing code! If that's the case just add ```require(plyr)``` somewhere. 
