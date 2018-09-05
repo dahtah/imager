@@ -2,7 +2,8 @@
 
 ##' Create an image of custom size by filling in repeated values
 ##'
-##' This is a convenience function for quickly creating blank images, or images filled with a specific colour. See examples. 
+##' This is a convenience function for quickly creating blank images, or images filled with a specific colour. See examples.
+##' If val is a logical value, creates a pixset instead. 
 ##' 
 ##' @param x width (default 1)
 ##' @param y height (default 1)
@@ -15,6 +16,7 @@
 ##' imfill(20,20) %>% plot #Blank image of size 20x20
 ##' imfill(20,20,val=c(1,0,0)) %>% plot #All red image
 ##' imfill(20,20,val="red") %>% plot #Same, using R colour name
+##' imfill(3,3,val=FALSE) #Pixset
 ##' imfill(dim=dim(boats)) #Blank image of the same size as the boats image
 ##' @author Simon Barthelme
 ##' @export
@@ -29,12 +31,19 @@ imfill <- function(x=1,y=1,z=1,val=0,dim=NULL)
             val <- col2rgb(val)[,1]/255
         }
         if (length(val) == 1)
+        {
+            if (is.logical(val))
+            {
+                array(val,c(x,y,z,1)) %>% pixset
+            }
+            else
             {
                 array(val,c(x,y,z,1)) %>% cimg
             }
+        }
         else
             {
-                llply(val,function(v) imfill(x,y,z,val=v)) %>% imappend("c")
+                map(val,function(v) imfill(x,y,z,val=v)) %>% imappend("c")
             }
     }
 

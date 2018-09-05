@@ -4,7 +4,7 @@
 \alias{pad}
 \title{Pad image with n pixels along specified axis}
 \usage{
-pad(im, nPix, axes, pos = 0, val = rep(0, spectrum(im)))
+pad(im, nPix, axes, pos = 0, val)
 }
 \arguments{
 \item{im}{the input image}

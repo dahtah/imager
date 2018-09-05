@@ -207,3 +207,32 @@ imchange <- function(obj,where,fo,env=parent.frame())
 }
 
 is.formula <- function (x) inherits(x, "formula")
+
+##' imdo runs imeval, and reshapes the output as an image of the same dimensions as the input (useful for functions that return vectors). 
+##'
+##' @param form a single formula
+##' @return
+##' @examples
+##' #The rank function outputs a vector
+##' grayscale(boats) %>% rank %>% class
+##' #Auto-reshape into an image
+##' grayscale(boats)  %>% imdo(~ rank(.)) %>% plot
+##' #Note that the above performs histogram normalisation
+##' 
+##' #Also works on lists
+##' imsplit(boats,"c") %>% imdo( ~ rank(.)) %>% imappend("c") %>% plot
+##' @author Simon Barthelme
+##' @describeIn imeval
+##' @export
+imdo <- function(obj,form)
+{
+    out <- imeval(im,form)
+    if (is.list(out))
+    {
+        map2_il(out,im,function(o,i) as.cimg(o,dim=dim(i)))
+    }
+    else 
+    {
+        as.cimg(out,dim=dim(im))
+    }
+}

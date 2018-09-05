@@ -627,8 +627,14 @@ inda <- list('x'=1,'y'=2,'z'=3,'c'=4)
 ##' pad(boats,20,pos=1,"xy") %>% plot
 ##' pad(boats,20,pos=1,"xy",val="red") %>% plot
 ##' @export
-pad <- function(im,nPix,axes,pos=0,val=rep(0,spectrum(im)))
+pad <- function(im,nPix,axes,pos=0,val)
 {
+    if (missing(val))
+    {
+        
+    }
+        
+        
     if (is.character(val))
     {
         val <- col2rgb(val)[,1]/255

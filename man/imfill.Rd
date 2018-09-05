@@ -22,12 +22,14 @@ an image object (class cimg)
 }
 \description{
 This is a convenience function for quickly creating blank images, or images filled with a specific colour. See examples.
+If val is a logical value, creates a pixset instead.
 }
 \examples{
 
 imfill(20,20) \%>\% plot #Blank image of size 20x20
 imfill(20,20,val=c(1,0,0)) \%>\% plot #All red image
 imfill(20,20,val="red") \%>\% plot #Same, using R colour name
+imfill(3,3,val=FALSE) #Pixset
 imfill(dim=dim(boats)) #Blank image of the same size as the boats image
 }
 \author{
