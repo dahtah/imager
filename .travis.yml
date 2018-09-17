@@ -3,3 +3,10 @@
 language: R
 sudo: false
 cache: packages
+addons:
+  apt:
+    packages:
+      - libtiff-dev
+      - libpng-dev
+      - libjpeg-dev
+      - libfftw3-dev
