@@ -2,9 +2,10 @@
 ##' Evaluation in an image context
 ##'
 ##' imeval does for images what "with" does for data.frames, namely contextual evaluation. It provides various shortcuts for pixel-wise operations.
-##' It takes inspiration from purrr::map in using formulas for defining anonymous functions using the "." argument.
+##' imdo runs imeval, and reshapes the output as an image of the same dimensions as the input (useful for functions that return vectors).
+##' imeval takes inspiration from purrr::map in using formulas for defining anonymous functions using the "." argument.
 ##' Usage is made clear (hopefully) in the examples.
-##' The old version of imeval used CImg's internal math parser, but has been retired. 
+##' The old version of imeval used CImg's internal math parser, but has been retired.
 ##' @param obj an image, pixset or imlist
 ##' @param ...  one or more formula objects, defining anonymous functions that will be evaluated with the image as first argument (with extra contextual variables added to the evaluation context)
 ##' @param env additional variables (defaults to the calling environment)
@@ -208,10 +209,8 @@ imchange <- function(obj,where,fo,env=parent.frame())
 
 is.formula <- function (x) inherits(x, "formula")
 
-##' imdo runs imeval, and reshapes the output as an image of the same dimensions as the input (useful for functions that return vectors). 
 ##'
 ##' @param form a single formula
-##' @return
 ##' @examples
 ##' #The rank function outputs a vector
 ##' grayscale(boats) %>% rank %>% class
@@ -221,18 +220,17 @@ is.formula <- function (x) inherits(x, "formula")
 ##' 
 ##' #Also works on lists
 ##' imsplit(boats,"c") %>% imdo( ~ rank(.)) %>% imappend("c") %>% plot
-##' @author Simon Barthelme
-##' @describeIn imeval
+##' @describeIn imeval run imeval and reshape
 ##' @export
 imdo <- function(obj,form)
 {
-    out <- imeval(im,form)
+    out <- imeval(obj,form)
     if (is.list(out))
     {
-        map2_il(out,im,function(o,i) as.cimg(o,dim=dim(i)))
+        map2_il(out,obj,function(o,i) as.cimg(o,dim=dim(i)))
     }
     else 
     {
-        as.cimg(out,dim=dim(im))
+        as.cimg(out,dim=dim(obj))
     }
 }

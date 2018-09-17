@@ -2,9 +2,12 @@
 % Please edit documentation in R/imeval.R
 \name{imeval}
 \alias{imeval}
+\alias{imdo}
 \title{Evaluation in an image context}
 \usage{
 imeval(obj, ..., env = parent.frame())
+
+imdo(obj, form)
 }
 \arguments{
 \item{obj}{an image, pixset or imlist}
@@ -12,13 +15,21 @@ imeval(obj, ..., env = parent.frame())
 \item{...}{one or more formula objects, defining anonymous functions that will be evaluated with the image as first argument (with extra contextual variables added to the evaluation context)}
 
 \item{env}{additional variables (defaults to the calling environment)}
+
+\item{form}{a single formula}
 }
 \description{
 imeval does for images what "with" does for data.frames, namely contextual evaluation. It provides various shortcuts for pixel-wise operations.
-It takes inspiration from purrr::map in using formulas for defining anonymous functions using the "." argument.
+imdo runs imeval, and reshapes the output as an image of the same dimensions as the input (useful for functions that return vectors).
+imeval takes inspiration from purrr::map in using formulas for defining anonymous functions using the "." argument.
 Usage is made clear (hopefully) in the examples.
 The old version of imeval used CImg's internal math parser, but has been retired.
 }
+\section{Functions}{
+\itemize{
+\item \code{imdo}: run imeval and reshape
+}}
+
 \examples{
 ## Computing mean absolute deviation
 imeval(boats, ~ mean(abs(.-median(.))))
@@ -74,6 +85,14 @@ grayscale(boats) \%>\%
 ##e.g.
 imeval(boats, ~ .*s(.,3)) \%>\% plot
 
+#The rank function outputs a vector
+grayscale(boats) \%>\% rank \%>\% class
+#Auto-reshape into an image
+grayscale(boats)  \%>\% imdo(~ rank(.)) \%>\% plot
+#Note that the above performs histogram normalisation
+
+#Also works on lists
+imsplit(boats,"c") \%>\% imdo( ~ rank(.)) \%>\% imappend("c") \%>\% plot
 }
 \seealso{
 imchange, which modifies specific parts of an image

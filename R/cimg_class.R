@@ -631,10 +631,9 @@ pad <- function(im,nPix,axes,pos=0,val)
 {
     if (missing(val))
     {
-        
+        val <- if (is.pixset(im)) FALSE else 0
+        val <- rep(val,dim(im)[4])
     }
-        
-        
     if (is.character(val))
     {
         val <- col2rgb(val)[,1]/255
