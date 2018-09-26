@@ -221,15 +221,15 @@ convert.im.fromPNG <- function(A)
         mirror(A,"x") %>% imrotate(-90)
     }
 
-load.png <- function(file)
-    {
-        png::readPNG(file) %>% convert.im.fromPNG
-    }
+## load.png <- function(file)
+##     {
+##         png::readPNG(file) %>% convert.im.fromPNG
+##     }
 
-load.jpeg <- function(file)
-    {
-        jpeg::readJPEG(file) %>% convert.im.fromPNG
-    }
+## load.jpeg <- function(file)
+##     {
+##         jpeg::readJPEG(file) %>% convert.im.fromPNG
+##     }
 
 
 

@@ -286,7 +286,7 @@ frames <- function(im,index,drop=FALSE)
         names(res) <- nm
         if (drop)
             {
-                res <- llply(res,function(v)  as.array(v) %>% squeeze)
+                res <- map(res,function(v)  as.array(v) %>% squeeze)
             }
         res
     }
@@ -325,7 +325,7 @@ channels <- function(im,index,drop=FALSE)
         names(res) <- nm
         if (drop)
             {
-                res <- llply(res,function(v) { as.array(v) %>% squeeze})
+                res <- map(res,function(v) { as.array(v) %>% squeeze})
             }
         res
     }
@@ -341,11 +341,11 @@ imcol <- function(im,x)
     }
     else if (depth(im) > 1)
     {
-        frames(im) %>% llply(function(v) imcol(v,x))
+        frames(im) %>% map(function(v) imcol(v,x))
     }
     else if (spectrum(im) > 1)
     {
-        channels(im) %>% llply(function(v) imcol(v,x))
+        channels(im) %>% map(function(v) imcol(v,x))
     }
     else
     {
@@ -364,11 +364,11 @@ imrow <- function(im,y)
     }
     else if (depth(im) > 1)
     {
-        frames(im) %>% llply(function(v) imrow(v,y))
+        frames(im) %>% map(function(v) imrow(v,y))
     }
     else if (spectrum(im) > 1)
     {
-        channels(im) %>% llply(function(v) imrow(v,y))
+        channels(im) %>% map(function(v) imrow(v,y))
     }
     else
     {

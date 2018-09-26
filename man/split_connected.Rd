@@ -13,18 +13,20 @@ split_connected(px, ...)
 }
 \value{
 a list of pixsets
-px <- isoblur(grayscale(boats),5) > .75
-plot(px)
-spl <- split_connected(px)
-plot(spl[[1]])
-px <- isoblur(grayscale(boats),5) > .75
-plot(px)
-spl <- split_connected(px)
-plot(spl[[1]])
 }
 \description{
 Compute connected components (using "label"), then split into as many sets as there are components.
 Useful for segmentation
+}
+\examples{
+px <- isoblur(grayscale(boats),5) > .75
+plot(px)
+spl <- split_connected(px)
+plot(spl[[1]])
+px <- isoblur(grayscale(boats),5) > .75
+plot(px)
+spl <- split_connected(px)
+plot(spl[[1]])
 }
 \seealso{
 label

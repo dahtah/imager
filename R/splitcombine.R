@@ -100,7 +100,7 @@ imsplit <- function(im,axis,nb=-1)
     d <- dim(im)
     if (nb!=-1)
     {
-        b.end <- laply(l,function(v) dim(v)[d.ind]) %>% cumsum
+        b.end <- map_int(l,function(v) dim(v)[d.ind]) %>% cumsum
         b.start <- c(1,b.end[-length(l)]+1)
         b.str <- sprintf("= %i - %i",b.start,b.end)
         names(l) <- paste(axis,b.str)

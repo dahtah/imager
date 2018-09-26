@@ -36,11 +36,11 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
                 }
             else if (depth(im) != 1)
                 {
-                    frames(im) %>% llply(interp,locations=locations,cubic=cubic)
+                    frames(im) %>% map(interp,locations=locations,cubic=cubic)
                 }
             else if (spectrum(im) != 1)
                 {
-                    channels(im) %>% llply(interp,locations=locations,cubic=cubic)
+                    channels(im) %>% map(interp,locations=locations,cubic=cubic)
                 }
         }
     else if (setequal(nms,c("x","y","z")))
@@ -51,7 +51,7 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
                 }
             else
                 {
-                      channels(im) %>% llply(interp,locations=locations,cubic=cubic)
+                      channels(im) %>% map(interp,locations=locations,cubic=cubic)
                 }
         }
         else if (setequal(nms,c("x","y","c")))
@@ -62,7 +62,7 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
                 }
             else
                 {
-                      frames(im) %>% llply(interp,locations=locations,cubic=cubic)
+                      frames(im) %>% map(interp,locations=locations,cubic=cubic)
                 }
         }
     else if (all(c("x","y","z","c") %in% nms))
@@ -75,25 +75,18 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
         }
 }
 
-
 check.inside <- function(im,locations)
 {
     if (any(names(locations) == "cc"))
     {
-        locations <- plyr::rename(locations,c("cc"="c")) 
+        ind <- which(names(locations) == "cc")
+        names(locations)[ind] <- "c"
     }
     check <- list(x = function(x) { (x >= 1) & (x <= width(im)) },
                   y = function(y) { (y >= 1) & (y <= height(im)) },
                   z = function(z) { (z >= 1) & (z <= depth(im)) },
                   c = function(c) { (c >= 1) & (c <= spectrum(im)) })
     nms <- intersect(names(locations),c("x","y","z","c"))
-    ## if (!all(c("x","y","z","c") %in% nms))
-    ## {
-    ##     stop('Unrecognised coordinates (use x,y,z,c to index the locations)')
-    ## }
-    ##     else
-    ##     {
-    A <- laply(nms,function(nm) check[[nm]](locations[[nm]]))
+    A <- map_lgl(nms,function(nm) all(check[[nm]](locations[[nm]])))
     all(A)
-##        }                               
 }

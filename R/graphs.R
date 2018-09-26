@@ -32,6 +32,7 @@
 #' @export
 as.igraph.pixset <- function(x,weighted=TRUE,...)
 {
+    try_require("igraph","as.igraph.pixset")
     px <- x
     if (any(dim(px)[3:4] > 1)) stop('Only defined for 2D pixsets')
     bg <- bgraph(px)
@@ -85,6 +86,7 @@ as.igraph.pixset <- function(x,weighted=TRUE,...)
 ##' @export
 as.igraph.cimg <- function(x,mask=px.all(channel(im,1)))
 {
+    try_require("igraph","as.igraph.cimg")
     im <- x
     if (any(dim(mask)[1:2] !=dim(im)[1:2])) {
         stop('image and mask must have the same x,y dimensions')
