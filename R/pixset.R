@@ -532,6 +532,7 @@ px.flood <- function(im,x,y,z=1,sigma=0,high_connexity=FALSE)
 ##' @param ... further arguments passed to label
 ##' @seealso label
 ##' @return a list of pixsets
+##' @examples
 ##' px <- isoblur(grayscale(boats),5) > .75
 ##' plot(px)
 ##' spl <- split_connected(px)
