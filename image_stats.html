@@ -164,13 +164,13 @@ pos &lt;- cbind(pos.x,pos.y)</code></pre>
 <pre class="r"><code>val &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2]))
 head(val,3)</code></pre>
 <pre><code>## $`1`
-## [1] 0.3618824 0.3775686 0.3658039
+## [1] 0.4053725 0.4157255 0.4106275
 ## 
 ## $`2`
-## [1] 0.4097647 0.4224314 0.4097647
+## [1] 0.2062353 0.2122745 0.2158431
 ## 
 ## $`3`
-## [1] 0.1544314 0.1583529 0.1489020</code></pre>
+## [1] 0.5960784 0.8881961 0.1214118</code></pre>
 <p>In each element of the list, the first value corresponds to the value of the central pixel, the second to the left-hand neighbour and the third to the right-hand neighbour. We transform the list to a matrix and plot the value of the neighbours as a function of the value of the central pixel:</p>
 <pre class="r"><code>mat &lt;- do.call(rbind,val)
 plot(mat[,1],mat[,2],xlab=&quot;Central value&quot;,ylab=&quot;Left-hand neighbour&#39;s value&quot; )</code></pre>
@@ -180,9 +180,9 @@ plot(mat[,1],mat[,2],xlab=&quot;Central value&quot;,ylab=&quot;Left-hand neighbo
 <p>As the scatterplots suggest, neighbouring pixels tend to be highly correlated:</p>
 <pre class="r"><code>cor(mat)</code></pre>
 <pre><code>##           [,1]      [,2]      [,3]
-## [1,] 1.0000000 0.9898123 0.9926999
-## [2,] 0.9898123 1.0000000 0.9798512
-## [3,] 0.9926999 0.9798512 1.0000000</code></pre>
+## [1,] 1.0000000 0.9811223 0.9806297
+## [2,] 0.9811223 1.0000000 0.9504346
+## [3,] 0.9806297 0.9504346 1.0000000</code></pre>
 <p>We can repeat the analysis using neighbours that are further away:</p>
 <pre class="r"><code>stencil &lt;- data.frame(dx=c(0,-4,4),dy=c(0,0,0)) #Selects neighbours that are 4 pixels away in x direction
 pos.x &lt;- round(runif(500,5,width(im)-4))
@@ -190,9 +190,9 @@ pos &lt;- cbind(pos.x,pos.y)
 mat &lt;- alply(pos,1,function(v) get.stencil(im.bw,stencil,x=v[1],y=v[2])) %&gt;% do.call(rbind,.)
 cor(mat)</code></pre>
 <pre><code>##           [,1]      [,2]      [,3]
-## [1,] 1.0000000 0.9253716 0.9254339
-## [2,] 0.9253716 1.0000000 0.8800382
-## [3,] 0.9254339 0.8800382 1.0000000</code></pre>
+## [1,] 1.0000000 0.9615075 0.9276398
+## [2,] 0.9615075 1.0000000 0.8890339
+## [3,] 0.9276398 0.8890339 1.0000000</code></pre>
 <p>Here the correlation coefficients (1,2) and (1,3) represent correlations between pixels that are 4 units away (~ 98%), while coefficient (2,3) represents a correlation between pixels that are 8 units away (~ 94%). Correlation then seems to drop as a function of distance. We can make a more systematic analysis using a wider stencil:</p>
 <pre class="r"><code>stencil &lt;- expand.grid(dx=seq(-10,10,1),dy=seq(-10,10,1))
 head(stencil,4)</code></pre>
@@ -218,10 +218,10 @@ C &lt;- cor(mat)</code></pre>
 Dy &lt;- dist(stencil$dy) %&gt;% as.matrix #Distance along the y axis
 df &lt;- data.frame(dist.x = c(Dx),dist.y = c(Dy), cor = c(C))
 head(df,3)</code></pre>
-<pre><code>##   dist.x dist.y      cor
-## 1      0      0 1.000000
-## 2      1      0 0.984381
-## 3      2      0 0.962831</code></pre>
+<pre><code>##   dist.x dist.y       cor
+## 1      0      0 1.0000000
+## 2      1      0 0.9815287
+## 3      2      0 0.9463133</code></pre>
 <p>Plotting the results:</p>
 <pre class="r"><code>library(ggplot2)
 ggplot(df,aes(dist.x,dist.y))+geom_point(aes(size=cor))</code></pre>
@@ -287,7 +287,7 @@ plot(impulse,main=&quot;Dirac image&quot;)</code></pre>
 <pre class="r"><code>correlogram &lt;- function(im,pos)
     {
         #A cross-shaped stencil
-        stencil &lt;- data.frame(dx=c(seq(-10,10,1),rep(0,11)),dy=c(rep(0,11),seq(-10,10,1)))
+        stencil &lt;- data.frame(dx=c(seq(-10,10,1),rep(0,21)),dy=c(rep(0,21),seq(-10,10,1))) %&gt;% unique
         mat &lt;- alply(pos,1,function(v) get.stencil(im,stencil,x=v[1],y=v[2])) %&gt;% do.call(rbind,.)
         Dx &lt;- dist(stencil$dx) %&gt;% as.matrix #Distance along the x axis
         Dy &lt;- dist(stencil$dy) %&gt;% as.matrix #Distance along the y axis

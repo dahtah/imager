@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Stippling and TSP art</title>
+
+<script src="stippling_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="stippling_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="stippling_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="stippling_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="stippling_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="stippling_files/navigation-1.1/tabsets.js"></script>
+<link href="stippling_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="stippling_files/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Stippling and TSP art</h1>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#stippling"><span class="toc-section-number">1</span> Stippling</a></li>
+<li><a href="#some-variants-of-stippling"><span class="toc-section-number">2</span> Some variants of stippling</a></li>
+<li><a href="#tsp-traveling-salesman-problem-art"><span class="toc-section-number">3</span> TSP (Traveling Salesman Problem) art</a></li>
+</ul>
+</div>
+
+<p><a href="http://sites.google.com/site/simonbarthelme">Simon Barthelmé</a> (GIPSA-lab, CNRS)</p>
+<p>The bits of code here mimic the sort of computer art produced by the <a href="http://wiki.evilmadscientist.com/StippleGen">StippleGen</a> program (and others). <a href="http://mrl.nyu.edu/~ajsecord/stipples.html">Stippling</a> (Seccord, 2002) produces pointillist drawings (it’s essentially a variant of dithering) and TSP art renders shapes using a single continuous line.</p>
+<div id="stippling" class="section level1">
+<h1><span class="header-section-number">1</span> Stippling</h1>
+<p>Stippling has a interesting connection to statistics, specifically spatial statistics. Let’s say the goal is to render an image by drawing a lot of black dots. Areas with a high density of black dots will appear dark, while areas with a low density will appear light. We could use simple random sampling for this purpose:</p>
+<pre class="r"><code>library(dplyr)
+library(imager)
+##image from Seccord (2002)
+im &lt;- load.image(&quot;http://dahtah.github.io/imager/images/stippling_leaves.png&quot;)
+plot(im)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-1-1.png" width="624" /></p>
+<pre class="r"><code>##Draw pixels with prob. proportional to 1 minus the grayscale value
+xy &lt;- sample(nPix(im),1e4,replace=TRUE,prob=1-im) %&gt;%
+    coord.index(im,.) %&gt;%
+    select(x,y)
+plot(xy,ylim=c(height(im),1),pch=19,cex=.5,axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-1-2.png" width="624" /></p>
+<p>The general principle is fine but the end result looks like crap. Drawing points IID produces a lot of near-overlap. More pleasing results could be achieved if we could reduce the overlap between dots. One way to do this is via thinning, as in Matern point processes: erase dots that are too close to other dots. Unfortunately, this reduces dot density more in high-density areas than it does in high-density areas, which reduces contrast. From a statistical point of view, the objective is to change the distribution of the dots to reduce overlap (a high-order statistic) while leaving the first-order statistic (density) unperturbed. Seccord (2002) uses weighted Voronoi diagrams. Refer to the paper for a full explanation, but it’s a variant of Lloyd’s algorithm, AKA k-means.</p>
+<p>Given a set of points <span class="math inline">\(\mathcal{X} = x_1, \ldots, x_n\)</span>, the Voronoi diagram is a set of cells <span class="math inline">\(V_i\)</span> for <span class="math inline">\(V_i\)</span> contains all the points of the plane that are closer to <span class="math inline">\(x_i\)</span> than to any other points in <span class="math inline">\(\mathcal{X}\)</span></p>
+<p>To compute a Voronoi diagram in imager, we can use the distance transform and a watershed, like so:</p>
+<pre class="r"><code>##Compute Voronoi diagram for points xy over image of size (w,h)
+##Uses a distance transform followed by watershed 
+voronoi &lt;- function(xy,w,h)
+{
+    v &lt;- imfill(w,h)
+    ind &lt;- round(xy) %&gt;% index.coord(v,.)
+    v[ind] &lt;- seq_along(ind)
+    d &lt;- distance_transform(v&gt;0,1)
+    watershed(v,-d,fill_lines=FALSE)
+}
+#Resolution
+res &lt;- 300
+xy &lt;- data.frame(x=runif(5,1,res),y=runif(5,1,res))
+vr &lt;- voronoi(xy,res,res)
+plot(vr)
+points(xy,col=&quot;red&quot;,pch=19)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
+<p>To get the center of mass of each cell, we convert to a data.frame format and use dplyr:</p>
+<pre class="r"><code>xy.c &lt;- as.data.frame(vr) %&gt;%
+    group_by(value) %&gt;% dplyr::mutate(x=mean(x),y=mean(y))
+plot(vr)
+points(xy,col=&quot;red&quot;,pch=19)
+points(xy.c,col=&quot;blue&quot;,pch=19)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-3-1.png" width="624" /></p>
+<p>The set of centers is generally different from the initial set of points, unless we started from a special set of highly-regular point locations. Such regular sets give rise to so-called <a href="https://en.wikipedia.org/wiki/Centroidal_Voronoi_tessellation">centroidal Voronoi diagrams</a> (CVD). CVDs are produced by starting from a bunch of random locations, and iterating the step that got us from the red dots to the blue dots.</p>
+<p>The code below starts with random, IID locations, and runs 50 iterations of Lloyd’s algorithm:</p>
+<pre class="r"><code>cvd &lt;- function(xy,res,nSteps=50)
+{
+    for (ind in seq_len(nSteps))
+        {
+            xy &lt;- voronoi(xy,res,res) %&gt;% as.data.frame %&gt;%
+                group_by(value) %&gt;%
+                dplyr::mutate(x=mean(x),y=mean(y)) %&gt;%
+                ungroup  %&gt;% 
+                select(x,y)
+        }
+    xy
+}
+
+##Start from initial random set and iterate 50 times to get an (approx.) CVD
+xy &lt;- data.frame(x=runif(50,1,res),y=runif(50,1,res))
+cvd(xy,res,55) %&gt;% plot(col=&quot;blue&quot;,pch=19)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+<p>An iteration of Lloyd’s algorithm has a powerful <em>regularising</em> effect on the points. In our case it’s too powerful, and we need to balance the requirement of regularity with that of keeping many dots in dark areas.</p>
+<p>Enters Seccord’s algorithm, a variant of Lloyd’s where instead of computing the center of mass of each Voronoi cell, we compute a weighted center of mass where the weights are formed from pixel values. The weights are set such that centers are pulled towards dark areas. It’s a straightforward modification of the code above:</p>
+<pre class="r"><code>##Compute Voronoi diagram of point set xy,
+##and return center of mass of each cell (with density given by image dens)
+cvt &lt;- function(xy,dens)
+{
+    voronoi(xy,width(dens),height(dens)) %&gt;% as.data.frame %&gt;%
+        mutate(vim=c(dens)) %&gt;%
+        group_by(value) %&gt;%
+        dplyr::summarise(x=weighted.mean(x,w=vim),y=weighted.mean(y,w=vim)) %&gt;%
+        select(x,y) %&gt;%
+        filter(x %inr% c(1,width(dens)),y %inr% c(1,height(dens)))
+}</code></pre>
+<p>Iterate this process several times, and you have a stippling algorithm.</p>
+<pre class="r"><code>##im: (grayscale) image to stipple
+##ndots: number of dots fro stippling
+##gamma: contrast enhancement
+##nSteps: number of iterations
+stipple &lt;- function(im,nDots=1e3,gamma=1,nSteps=5)
+{
+    dens &lt;- (1-im)^gamma
+    xy &lt;- sample(nPix(im),nDots,replace=TRUE,prob=dens) %&gt;% coord.index(im,.) %&gt;% select(x,y)
+    for (ind in seq_along(nSteps))
+    {
+        xy &lt;- cvt(xy,dens)
+        ## uncomment if you want to plot each step
+        ##         plot(im); points(xy,col=&quot;red&quot;)
+    }
+    xy
+}
+
+out &lt;- stipple(im,1e4,gamma=1)
+plot(out,ylim=c(height(im),1),cex=.1,pch=19,axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-6-1.png" width="624" /></p>
+</div>
+<div id="some-variants-of-stippling" class="section level1">
+<h1><span class="header-section-number">2</span> Some variants of stippling</h1>
+<p>Below, a variant that plots line segments instead of dots, orienting each segment using the image gradient:</p>
+<pre class="r"><code>library(purrr)
+plot.segments &lt;- function(im,out,scale=40)
+{
+    g &lt;- imgradient(im,&quot;xy&quot;) %&gt;% map(~ isoblur(.,3)) %&gt;% map(~ interp(.,out))
+    plot(out,ylim=c(height(im),1),cex=.5,pch=19,col=&quot;white&quot;,axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)
+    segments(out$x,out$y,out$x-scale*g$y,out$y+scale*g$x)
+}
+
+plot.segments(im,out)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-7-1.png" width="624" /></p>
+<p>Another variant, with a mosaic effect:</p>
+<pre class="r"><code>mosaic &lt;- function(im,nDots=1e4,scale=140,gamma=.2)
+{
+    out &lt;- grayscale(im) %&gt;% stipple(nDots,gamma=gamma)
+    col &lt;- interp(im,out) %$% rgb(c.1,c.2,c.3,.8)
+    g &lt;- grayscale(im) %&gt;% imgradient(&quot;xy&quot;) %&gt;% map(~ isoblur(.,3)) %&gt;% map(~ interp(.,out))
+    plot(im,axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)
+    #plot(out,ylim=c(height(im),1),cex=.5,pch=19,col=&quot;white&quot;,axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)
+    segments(out$x,out$y,out$x-scale*g$y,out$y+scale*g$x,col=col,lwd=8)
+}
+
+load.example(&quot;parrots&quot;) %&gt;% mosaic</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-8-1.png" width="624" /></p>
+</div>
+<div id="tsp-traveling-salesman-problem-art" class="section level1">
+<h1><span class="header-section-number">3</span> TSP (Traveling Salesman Problem) art</h1>
+<p>In TSP art, instead of plotting the dots individually we connect them all using line segments.To get a nice set of connecting segments and not some random hairball, a good path through the points is found by solving a spatial TSP. In R there’s the TSP package for that, which is handy but doesn’t scale all that well to large point sets:</p>
+<pre class="r"><code>library(TSP)
+##im is the original image (used only for its dimensions)
+##out is the output of the stipple function (dot positions)
+draw.tsp &lt;- function(im,out)
+{
+    tour &lt;- out %&gt;% ETSP %&gt;% solve_TSP
+    plot(out[tour,],type=&quot;l&quot;,ylim=c(height(im),1),axes=FALSE,xlab=&quot;&quot;,ylab=&quot;&quot;)
+}
+
+##Be careful, this is memory-heavy (also, slow)
+out &lt;- stipple(im,4e3,gamma=1.5)
+draw.tsp(im,out)</code></pre>
+<p><img src="stippling_files/figure-html/unnamed-chunk-9-1.png" width="624" /></p>
+<p>Some post-processing will let you erase the uglier bits, but I leave that as an exercise to the reader.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

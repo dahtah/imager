@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to imager</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Simon Barthelmé, Gipsa-lab, CNRS" />
+    <link href="intro_slides_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="intro_slides_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction to imager
+### Simon Barthelmé, Gipsa-lab, CNRS
+### 24.10.2018
+
+---
+
+
+
+
+# imager
+
+- Project started in 2015, when I had some image analysis to do and was dissatisfied with the state of things in R
+- Goal: have an image processing toolkit that's
+  + reasonably fast
+  + interfaces well with other R functions/packages
+  + is based on a good C/C++ back-end
+- I picked CImg by David Tschumperlé because it's well designed, had most features I needed and it's not too huge
+- Most of the credit goes to David for an amazing library
+- Today: imager is a large-ish package used by  ~20 packages on CRAN
+
+---
+
+# Outline
+
+- Installing imager
+- Basics: loading, plotting
+- Playing with contrast
+- Basic colour processing
+- Splitting, recombining
+- A segmentation example
+- Pixsets
+- Advanced features, going further
+
+---
+
+# Installing imager
+
+- If you're using OSX, please install XQuartz first. 
+- On Linux: you need a few libraries, on Ubuntu/Mint/Debian run: 
+ *sudo apt-get install libfftw3-dev libtiff-dev*
+- There are some external dependencies: install ffmpeg for video support, imagemagick if you have exotic file formats 
+- Then: *install.packages('imager')*
+---
+
+# Loading and plotting
+
+
+```r
+library(imager)
+# A default image
+plot(boats)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-2-1.png" width="384" /&gt;
+
+---
+
+# Loading and plotting
+
+
+```r
+#load.example has some example pictures
+parrots &lt;- load.example('parrots')
+#print some image properties
+parrots
+```
+
+```
+## Image. Width: 768 pix Height: 512 pix Depth: 1 Colour channels: 3
+```
+
+---
+
+# Loading and plotting
+
+
+```r
+plot(parrots)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-4-1.png" width="384" /&gt;
+
+
+---
+
+# Loading and plotting
+
+
+```r
+#can load from files or URLs
+url &lt;- 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lac_du_Crozet.jpg/1280px-Lac_du_Crozet.jpg'
+im &lt;- load.image(url)
+plot(im)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-5-1.png" width="384" /&gt;
+
+---
+
+# How images are stored
+
+Let's start with grayscale images:
+
+
+```r
+im &lt;- grayscale(boats)
+str(im)
+```
+
+```
+##  'cimg' num [1:256, 1:384, 1, 1] 0.388 0.386 0.385 0.385 0.386 ...
+```
+
+- Images are just (4D) arrays: first two dimensions are 'x' and 'y'. 
+- Each value in the array is the value of a pixel. 
+- For grayscale images, by convention, 0=black and 1=white. Grays are in-between
+
+---
+# Reducing contrast
+
+If 1 is white, then 0.5 is mid-gray. If we divide the image by 2, that means the lightest pixel will be mid-gray instead of white. However: 
+
+
+```r
+#This doesn't seem to change anything ???
+plot(im/2)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-7-1.png" width="384" /&gt;
+
+
+---
+# Reducing contrast
+
+Explanation: the plot function rescales internally by default the image to full range (it's often more convenient). Suppress that behaviour by setting rescale=FALSE
+
+
+```r
+plot(im/2,rescale=FALSE)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-8-1.png" width="384" /&gt;
+
+```r
+#plot(im*2,rescale=FALSE) #Error!
+```
+
+---
+# Statistics on grayscale values
+
+To examine which proportion of pixels have which gray values, plot a histogram:
+
+```r
+hist(im,xlab="Gray value")
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-9-1.png" width="384" /&gt;
+
+
+
+---
+# Histogram equalisation
+
+When all gray values appear equally often, we expect a flat histogram. Histogram equalisation looks for a transformation of pixel values in order to achieve a flat histogram. Here's a trick:
+
+
+```r
+ecdf(im)(im)  %&gt;% hist
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-10-1.png" width="384" /&gt;
+
+```r
+ecdf(im)(im)  %&gt;% as.cimg(dim=dim(im))  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-10-2.png" width="384" /&gt;
+
+Why does this work? If eg. 75% of pixels have value &lt;= 0.6, then ecdf(im)(.6) = 0.75, so that in the transformed image 75% of pixels have value &lt;= 0.75. Repeat for every proportion `\(q\)`. 
+
+---
+# Example
+
+Example taken from Wikipedia article: 
+
+
+```r
+hist.eq &lt;- function(im)   ecdf(im)(im)  %&gt;% as.cimg(dim=dim(im))
+#Original image
+url &lt;- "https://upload.wikimedia.org/wikipedia/commons/0/08/Unequalized_Hawkes_Bay_NZ.jpg"
+org &lt;- load.image(url)  %&gt;% grayscale
+plot(org,rescale=FALSE)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-11-1.png" width="384" /&gt;
+
+---
+# Default (linear) rescaling
+
+
+```r
+plot(org)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-12-1.png" width="384" /&gt;
+
+---
+# Histogram equalisation
+
+
+```r
+plot(hist.eq(org))
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-13-1.png" width="384" /&gt;
+
+---
+# Reshaping vectors into images
+
+There's one step in hist.eq that I haven't explained: reshaping
+
+```
+ecdf(im)(im)  %&gt;% as.cimg(dim=dim(im))
+```
+
+ecdf returns a vector, so we need to turn that back into a cimg object:
+
+```r
+vec &lt;- ecdf(im)(im)
+str(vec)
+```
+
+```
+##  num [1:98304] 0.171 0.165 0.163 0.164 0.165 ...
+```
+
+```r
+prod(dim(im)) #vector has the right length
+```
+
+```
+## [1] 98304
+```
+
+```r
+as.cimg(vec,dim=dim(im))
+```
+
+```
+## Image. Width: 256 pix Height: 384 pix Depth: 1 Colour channels: 1
+```
+
+```r
+#another example
+as.cimg(1:100,dim=c(10,10,1,1)) 
+```
+
+```
+## Image. Width: 10 pix Height: 10 pix Depth: 1 Colour channels: 1
+```
+
+---
+# Coordinate system
+
+imager uses the "traditional" coordinate system for images: `\(x\)` goes from left to right, `\(y\)` is top-to-bottom, the origin is at the top-left corner:
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-15-1.png" width="576" /&gt;
+
+---
+# Coordinate system
+
+Xc and Yc are shortcuts that return the  x and y coordinates at every pixel:
+
+
+```r
+Xc(im)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-16-1.png" width="288" /&gt;
+---
+# Coordinate system
+
+Xc and Yc are shortcuts that return the  x and y coordinates at every pixel:
+
+
+```r
+Yc(im)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-17-1.png" width="288" /&gt;
+
+---
+# Coordinate system
+
+Here's how to obtain a fade-in effect (along the X-axis)
+
+
+```r
+X.scaled &lt;- Xc(im)/width(im)
+plot(im*X.scaled)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-18-1.png" width="288" /&gt;
+---
+
+# Coordinate system
+
+Here's how to put a spotlight at the center: 
+
+
+```r
+#Distance to origin
+D &lt;- sqrt((Xc(im)-width(im)/2)^2 + (Yc(im)-height(im)/2)^2)
+plot(im/(.1+D/max(D)))
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-19-1.png" width="288" /&gt;
+
+---
+
+# imeval
+
+imeval is a function that provides lots of shortcuts: 
+
+```r
+#as in previous slide, multiply by x coordinate
+imeval(im,~ .*xs)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-20-1.png" width="384" /&gt;
+
+---
+# imeval
+
+imeval is a function that provides lots of shortcuts: 
+
+```r
+#spotlight at center
+imeval(im, ~ .*(1/(.1+rho/max(rho))))  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-21-1.png" width="384" /&gt;
+
+---
+# Generating images
+
+
+```r
+#imfill just fills an image by repeating the same value
+black &lt;- imfill(100,100,val=0)
+imeval(black,~ cos(2*pi*(xs+ys)))  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-22-1.png" width="384" /&gt;
+
+---
+# Generating images
+
+The famous Gabor patch: 
+
+```r
+imeval(black,~ exp(-.005*rho^2)*cos(8*pi*(xs+ys)))  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-23-1.png" width="384" /&gt;
+
+---
+# Working with colour 
+
+A topic in itself, will only scratch the surface here. 
+Colour is stored along the *fourth* dimension of cimg arrays: most images have 3 colour channels, corresponding to red, green and blue
+
+
+```r
+dim(boats)
+```
+
+```
+## [1] 256 384   1   3
+```
+
+Each channel represents the intensity of the R, G and B components at each pixel. 
+
+---
+# Viewing each channel separately
+
+First use of the imsplit function (about which more later): split the image into its colour channels
+
+
+```r
+#Split image along the colour dimension, and plot
+im.s &lt;- imsplit(boats,"c")
+str(im.s)
+```
+
+```
+## List of 3
+##  $ c = 1: 'cimg' num [1:256, 1:384, 1, 1] 0.388 0.386 0.385 0.385 0.386 ...
+##  $ c = 2: 'cimg' num [1:256, 1:384, 1, 1] 0.388 0.386 0.385 0.385 0.386 ...
+##  $ c = 3: 'cimg' num [1:256, 1:384, 1, 1] 0.388 0.386 0.385 0.385 0.386 ...
+##  - attr(*, "class")= chr [1:2] "imlist" "list"
+```
+
+Note the object type: im.s is an "imlist", a specialised list that holds images. 
+
+
+---
+# Viewing each channel separately
+
+
+
+```r
+plot(im.s)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-26-1.png" width="384" /&gt;
+
+---
+# Performing hist. equalisation on each channel separately
+
+We split the image and recombine:
+
+
+```r
+im.eq &lt;- imsplit(boats,"c")  %&gt;% map_il(hist.eq)  %&gt;% imappend("c")
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-28-1.png" width="384" /&gt;
+
+---
+# Segmenting an image by colour
+
+
+
+```r
+parrots &lt;- load.example("parrots")
+im &lt;- imresize(parrots,.3)
+plot(im)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-29-1.png" width="384" /&gt;
+
+---
+# Segmenting an image by colour
+
+We reshape the data into a matrix with 3 colums (R,G, and B)
+
+```r
+library(rgl)
+library(purrr)
+M &lt;- imsplit(im,"c")  %&gt;% map(as.vector)  %&gt;% do.call(cbind,.)
+plot3d(M)
+```
+
+```
+## Warning in par3d(userMatrix = structure(c(1, 0, 0, 0, 0,
+## 0.342020143325668, : font family "sans" not found, using "bitmap"
+```
+
+---
+# k-means for clustering
+
+
+```r
+km &lt;- kmeans(M,5)
+cls &lt;- as.cimg(km$cluster,dim=gsdim(im))
+plot(cls)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-31-1.png" width="384" /&gt;
+
+---
+# k-means for clustering
+
+
+```r
+cscale &lt;- function(cls) { v &lt;- km$centers[cls,];rgb(v[,1],v[,2],v[,3]) }
+plot(cls,colorscale=cscale,rescale=FALSE)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-32-1.png" width="384" /&gt;
+
+---
+# Same thing with more clusters (k=8)
+
+
+```r
+km &lt;- kmeans(M,8)
+cls &lt;- as.cimg(km$cluster,dim=gsdim(im))
+cscale &lt;- function(cls) { v &lt;- km$centers[cls,];rgb(v[,1],v[,2],v[,3]) }
+plot(as.cimg(km$cluster,dim=gsdim(im)),colorscale=cscale,rescale=FALSE)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-33-1.png" width="384" /&gt;
+
+---
+# Summary so far
+
+- Colour is stored as three consecutive channels
+- These channels are Red, Green and Blue
+- The more similar two colours are the more similar their RGB values
+- The statement above is a gross over-simplification and colour scientists would scream bloody murder if they heard it
+- Nonetheless it's good enough for grouping regions by colour
+- It's easy to use R's own function for clustering in order to perform segmentation
+
+---
+# Extra tip: what to do when image has alpha channel
+
+It's a common occurence when downloading images off the web: image has 4 colour channels instead of 3. The 4th channel is the transparency (a.k.a. "alpha") channel. imager doesn't know what to do with that one, so: 
+
+```
+rm.alpha(im) #drop the channel
+flatten.alpha(im) #flatten: transparency will be taken into account
+```
+
+---
+# Splitting and combining 
+
+We've seen how we often need to split images into colour channels, do some stuff and recombine the results. This is a very common pattern, and *imager* has many functions for that. 
+Workhorse for splitting: imsplit 
+
+
+```r
+im &lt;- parrots
+imsplit(im,"c")
+```
+
+```
+## Image list of size 3
+```
+
+
+---
+# Splitting and combining 
+
+We've seen how we often need to split images into colour channels, do some stuff and recombine the results. This is a very common pattern, and *imager* has many functions for that. 
+Workhorse for splitting: imsplit 
+
+
+```r
+#Split into 4 blocks, along the x axis
+imsplit(im,"x",4)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-35-1.png" width="384" /&gt;
+
+---
+# Splitting and combining 
+
+We've seen how we often need to split images into colour channels, do some stuff and recombine the results. This is a very common pattern, and *imager* has many functions for that. 
+Workhorse for splitting: imsplit 
+
+
+```r
+#Split into blocks of 250 pixels, along the y axis
+imsplit(im,"y",-250)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-36-1.png" width="384" /&gt;
+
+---
+# Example: replace green channel with noise
+
+
+
+```r
+imsplit(im,"c")  %&gt;%
+    modify_at(2,~ imnoise(dim=dim(.),sd=.1))  %&gt;%
+    imappend("c")  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-37-1.png" width="384" /&gt;
+
+---
+# Example: split image into 4 blocks
+
+
+```r
+imsplit(im,"x",2)  %&gt;% map(~ imsplit(.,"y",2)) %&gt;%
+    flatten  %&gt;% setNames(1:4)  %&gt;% as.imlist  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-38-1.png" width="384" /&gt;
+
+---
+# Histogram eq. on every frame
+
+
+```r
+#imager also handles (short) videos
+tennis &lt;- load.example("tennis")  %&gt;% grayscale
+vid &lt;- imsplit(tennis,"z")  %&gt;% map_il(hist.eq)  %&gt;% imappend("z")
+#run play(vid,loop=TRUE) to see results (they look crappy)
+```
+
+---
+# Reductions
+
+Reductions take a list of images, and return a pixel-wise statistic computed *across* images:
+
+
+```r
+#Maximum across colour channels
+imsplit(im,"c")  %&gt;% parmax  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-40-1.png" width="384" /&gt;
+
+```r
+#Average across colour channels
+imsplit(im,"c")  %&gt;% average  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-40-2.png" width="384" /&gt;
+
+```r
+#Maximum across scales
+map_il(seq(1,10,l=5),~ isoblur(im,.))  %&gt;% parmax  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-40-3.png" width="384" /&gt;
+
+type ?parmax for a complete list
+
+---
+# Pixsets 
+
+Pixsets are just sets of pixels: they can represent a Region of Interest (ROI), or a foreground/background segmentation, or the left-hand part of an image, etc. 
+
+
+```r
+im &lt;- grayscale(boats)
+#all pixels with value less than .5
+plot(im &lt; .5)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-41-1.png" width="384" /&gt;
+
+```r
+str(im &lt; .5)
+```
+
+```
+##  'pixset' logi [1:256, 1:384, 1, 1] TRUE TRUE TRUE TRUE TRUE TRUE ...
+```
+
+A "pixset" object is just an array of logicals (TRUE means the pixel is in the set, FALSE means it isn't). 
+
+---
+# Selecting by colour
+
+This function selects pixels by colour. Try and break it down into components you understand: 
+
+
+```r
+select.by.colour &lt;- function(im,col,thr="auto")
+{
+    if (is.character(col)) #e.g. "red", need to convert to RGB values
+    {
+        col &lt;- col2rgb(col)[,1]/255
+    }
+    sim &lt;- imsplit(im,"c")  %&gt;% map2(col,function(a,b) (a-b)^2)  %&gt;% average
+    !threshold(sim,thr)
+}
+```
+
+---
+# Selecting by colour
+
+
+```r
+plot(parrots)
+px.red &lt;- select.by.colour(parrots,"red","10%")
+highlight(px.red,"green")
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-43-1.png" width="384" /&gt;
+
+---
+# Selecting by colour
+
+The colorise function is sometimes useful: 
+
+```r
+colorise(parrots,px.red,col="red")  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-44-1.png" width="384" /&gt;
+
+---
+# Cleaning up a pixset
+
+Let's say we only want the red part of the right-hand bird, how do we get that? 
+
+
+```r
+px.red &lt;- select.by.colour(parrots,"red","18%")
+plot(px.red)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-45-1.png" width="384" /&gt;
+
+---
+# Growing a pixset
+
+The "grow" operation will extend a pixset to include all its neighbours. "shrink" does the opposite. Technically they're called "dilation" and "erosion". 
+
+
+```r
+grow(px.red,10)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-46-1.png" width="384" /&gt;
+
+```r
+shrink(px.red,10)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-46-2.png" width="384" /&gt;
+
+---
+# Grow then shrink: fill in holes
+
+
+```r
+px &lt;- grow(px.red,10)  %&gt;% shrink(10)
+plot(px)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-47-1.png" width="384" /&gt;
+
+---
+# Shrink then grow: eliminate small components
+
+
+```r
+px.clean &lt;- shrink(px,7)  %&gt;% grow(7)
+plot(px.clean)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-48-1.png" width="384" /&gt;
+
+---
+# Split into connected components
+
+
+```r
+comp &lt;- split_connected(px.clean)
+plot(comp)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-49-1.png" width="384" /&gt;
+
+---
+# Split into connected components
+
+Highlight largest connected area
+
+
+```r
+areas &lt;- map_dbl(comp,sum)
+areas
+```
+
+```
+## [1] 72810  1072   602   244
+```
+
+```r
+#Select component with highest area
+plot(parrots);highlight(comp[[which.max(areas)]],col="green")
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-50-1.png" width="384" /&gt;
+
+---
+# A warning
+
+Be careful with split_connected: it's convenient, but if you have a lot of very small components, you'll get a huge list of images, and you may run out of memory. 
+
+---
+# A warning
+
+Here's another way of selecting the red bird: it's the largest connected area (excluding background pixels)
+
+
+```r
+#Each connected region gets a label from 0 to (k-1), where k is the number of regions
+lb &lt;- label(px.clean)
+range(lb)
+```
+
+```
+## [1] 0 8
+```
+
+```r
+ind &lt;- which.max(tabulate(lb*px.clean))
+plot(lb==ind)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-51-1.png" width="384" /&gt;
+
+---
+# Some more segmentation
+
+So far we've selected by colour. The next example invites a selection by luminance thresholding: 
+
+```r
+#coins picture from scikit-image
+coins &lt;- load.example("coins")
+plot(coins)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-52-1.png" width="384" /&gt;
+
+
+---
+# Simple thresholding 
+
+
+```r
+px &lt;- threshold(coins)
+colorise(coins,px,"red",alpha=.5)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-53-1.png" width="384" /&gt;
+
+Unfortunately the image has a luminance gradient, and a constant threshold over the image doesn't give good results! 
+
+---
+# Removing a luminance gradient
+
+Here's a very R-way of removing the gradient: fit a linear trend and remove. 
+
+
+```r
+df &lt;- as.data.frame(coins)
+head(df)
+```
+
+```
+##   x y     value
+## 1 1 1 0.1843137
+## 2 2 1 0.4823529
+## 3 3 1 0.5215686
+## 4 4 1 0.5058824
+## 5 5 1 0.5372549
+## 6 6 1 0.5176471
+```
+
+---
+# Removing a luminance gradient
+
+Here's a very R-way of removing the gradient: fit a linear trend and remove. 
+
+
+```r
+trend &lt;- lm(value ~ x*y,data=df)  %&gt;% fitted
+as.cimg(trend,dim=dim(coins))  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-55-1.png" width="384" /&gt;
+
+---
+# Removing a luminance gradient
+
+
+```r
+coins.corr &lt;- coins-trend
+plot(coins.corr)
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-56-1.png" width="384" /&gt;
+
+---
+# Removing a luminance gradient
+
+
+```r
+px &lt;- threshold(coins.corr)
+colorise(coins,px,"red",alpha=.5)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-57-1.png" width="384" /&gt;
+
+---
+# Cleaning up, filling in
+
+
+```r
+px &lt;- clean(px,3)  %&gt;% fill(7)
+colorise(coins,px,"red",alpha=.5)  %&gt;% plot
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-58-1.png" width="384" /&gt;
+
+---
+# Compute centroids, areas 
+
+Again, we do things the R way:
+
+
+```r
+library(dplyr)
+df &lt;- label(px)  %&gt;% as.data.frame  %&gt;%
+    dplyr::filter(value &gt; 0)  %&gt;%
+    group_by(value)  %&gt;% summarise(area=length(x),x=mean(x),y=mean(y))
+plot(coins)
+with(df,points(x,y,pch=19,col="red"))
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-59-1.png" width="384" /&gt;
+
+---
+# Extract all coins by order of size
+
+
+```r
+areas &lt;- arrange(df,desc(area))  %&gt;% mutate(radius=1.2*sqrt(area/pi),x0=x-radius,x1=x+radius,y0=y-radius,y1=y+radius)
+plot(coins)
+with(areas,rect(x0,y1,x1,y0,border="red",lwd=2))
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-60-1.png" width="384" /&gt;
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-61-1.png" width="384" /&gt;
+
+---
+# Extract all coins by order of size
+
+
+```r
+#Select the areas within each box 
+as.list(areas)  %&gt;% transpose  %&gt;%
+    map_il(~ imsub(coins,x %inr% c(.$x0,.$x1),y %inr% c(.$y0,.$y1)))  %&gt;%
+    imappend("x")  %&gt;% plot(axes=FALSE,asp="varying")
+```
+
+&lt;img src="intro_slides_files/figure-html/unnamed-chunk-62-1.png" width="1152" /&gt;
+
+
+
+---
+# Summing up
+
+- Most of the package is organised around three types of objects: raster images (S3 class 'cimg'), image lists ('imlist') and pixel sets ('pixset'). All are thin layers over native R data (arrays and lists of arrays). 
+- Instead of using lots of explicit metadata (like *spatstat* and *raster*), *imager* is based on convention: there's only one coordinate system, we expect you to keep track of which colourspace your images use, etc. 
+- There's lots of facilities for converting data into shapes and formats that can be used by other packages
+
+---
+# Going further 
+
+*imager* has tons of functions and it's not a package you can just learn overnight. Fortunately there's two vignettes plus a [website](https://dahtah.github.io/imager)  with some fun things to try. 
+
+---
+# Future features
+
+- I'd like to add better support for NA's. Currently support is very spotty, be careful if you have missing pixels. 
+- Better error messages would be nice
+- Coming soon (probably): a class representing segmentations
+
+
+
+If you find bugs, please report them on the [issues](github.com/dahtah/imager/issues) page. I'm also happy to accept contributions (code, documentation, etc.) 
+
+Thanks!!
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

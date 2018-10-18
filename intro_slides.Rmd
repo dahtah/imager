@@ -1,0 +1,760 @@
+---
+title: "Introduction to imager"
+author: Simon Barthelmé, Gipsa-lab, CNRS
+date: 24.10.2018
+output:
+  xaringan::moon_reader:
+    yolo: false
+    fig_width: 4 
+    fig_height: 4
+---
+
+```{r echo=FALSE,message=FALSE}
+library(knitr)
+library(rgl)
+knit_hooks$set(webgl = hook_webgl)
+plot.minimal <- function(im,axes=FALSE,...)
+    {
+        mm <- par("mar")
+        om <- par("oma")
+        if (is.cimg(im))
+            {
+                par("mar"=rep(0.5,4))
+                imager:::plot.cimg(im,...,axes=axes)
+            }
+        else if (is.pixset(im))
+            {
+                par("mar"=rep(0,4))
+                imager:::plot.pixset(im,...,axes=axes)
+            }
+        else if (is.imlist(im))
+            {
+                par("mar"=rep(1,4))
+
+                imager:::plot.imlist(im,...,axes=axes)
+            }
+        par("mar"=mm,"oma"=om)
+    }
+
+plot.cimg <- plot.minimal
+plot.imlist <- plot.minimal
+plot.pixset <- plot.minimal
+
+```
+
+# imager
+
+- Project started in 2015, when I had some image analysis to do and was dissatisfied with the state of things in R
+- Goal: have an image processing toolkit that's
+  + reasonably fast
+  + interfaces well with other R functions/packages
+  + is based on a good C/C++ back-end
+- I picked CImg by David Tschumperlé because it's well designed, had most features I needed and it's not too huge
+- Most of the credit goes to David for an amazing library
+- Today: imager is a large-ish package used by  ~20 packages on CRAN
+
+---
+
+# Outline
+
+- Installing imager
+- Basics: loading, plotting
+- Playing with contrast
+- Basic colour processing
+- Splitting, recombining
+- A segmentation example
+- Pixsets
+- Advanced features, going further
+
+---
+
+# Installing imager
+
+- If you're using OSX, please install XQuartz first. 
+- On Linux: you need a few libraries, on Ubuntu/Mint/Debian run: 
+ *sudo apt-get install libfftw3-dev libtiff-dev*
+- There are some external dependencies: install ffmpeg for video support, imagemagick if you have exotic file formats 
+- Then: *install.packages('imager')*
+---
+
+# Loading and plotting
+
+```{r message=FALSE}
+library(imager)
+# A default image
+plot(boats)
+```
+
+---
+
+# Loading and plotting
+
+```{r message=FALSE}
+#load.example has some example pictures
+parrots <- load.example('parrots')
+#print some image properties
+parrots
+```
+
+---
+
+# Loading and plotting
+
+```{r message=FALSE}
+plot(parrots)
+```
+
+
+---
+
+# Loading and plotting
+
+```{r message=FALSE,cache=TRUE}
+#can load from files or URLs
+url <- 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lac_du_Crozet.jpg/1280px-Lac_du_Crozet.jpg'
+im <- load.image(url)
+plot(im)
+
+```
+
+---
+
+# How images are stored
+
+Let's start with grayscale images:
+
+```{r }
+im <- grayscale(boats)
+str(im)
+```
+
+- Images are just (4D) arrays: first two dimensions are 'x' and 'y'. 
+- Each value in the array is the value of a pixel. 
+- For grayscale images, by convention, 0=black and 1=white. Grays are in-between
+
+---
+# Reducing contrast
+
+If 1 is white, then 0.5 is mid-gray. If we divide the image by 2, that means the lightest pixel will be mid-gray instead of white. However: 
+
+```{r }
+#This doesn't seem to change anything ???
+plot(im/2)
+```
+
+
+---
+# Reducing contrast
+
+Explanation: the plot function rescales internally by default the image to full range (it's often more convenient). Suppress that behaviour by setting rescale=FALSE
+
+```{r }
+plot(im/2,rescale=FALSE)
+#plot(im*2,rescale=FALSE) #Error!
+```
+
+---
+# Statistics on grayscale values
+
+To examine which proportion of pixels have which gray values, plot a histogram:
+```{r }
+hist(im,xlab="Gray value")
+```
+
+
+
+---
+# Histogram equalisation
+
+When all gray values appear equally often, we expect a flat histogram. Histogram equalisation looks for a transformation of pixel values in order to achieve a flat histogram. Here's a trick:
+
+```{r }
+ecdf(im)(im)  %>% hist
+ecdf(im)(im)  %>% as.cimg(dim=dim(im))  %>% plot
+```
+
+Why does this work? If eg. 75% of pixels have value <= 0.6, then ecdf(im)(.6) = 0.75, so that in the transformed image 75% of pixels have value <= 0.75. Repeat for every proportion $q$. 
+
+---
+# Example
+
+Example taken from Wikipedia article: 
+
+```{r}
+hist.eq <- function(im)   ecdf(im)(im)  %>% as.cimg(dim=dim(im))
+#Original image
+url <- "https://upload.wikimedia.org/wikipedia/commons/0/08/Unequalized_Hawkes_Bay_NZ.jpg"
+org <- load.image(url)  %>% grayscale
+plot(org,rescale=FALSE)
+```
+
+---
+# Default (linear) rescaling
+
+```{r}
+plot(org)
+```
+
+---
+# Histogram equalisation
+
+```{r}
+plot(hist.eq(org))
+```
+
+---
+# Reshaping vectors into images
+
+There's one step in hist.eq that I haven't explained: reshaping
+
+```
+ecdf(im)(im)  %>% as.cimg(dim=dim(im))
+```
+
+ecdf returns a vector, so we need to turn that back into a cimg object:
+```{r }
+vec <- ecdf(im)(im)
+str(vec)
+prod(dim(im)) #vector has the right length
+as.cimg(vec,dim=dim(im))
+#another example
+as.cimg(1:100,dim=c(10,10,1,1)) 
+```
+
+---
+# Coordinate system
+
+imager uses the "traditional" coordinate system for images: $x$ goes from left to right, $y$ is top-to-bottom, the origin is at the top-left corner:
+```{r echo=FALSE,fig.width=6,fig.height=5}
+imager:::plot.cimg(im,xlab="x",ylab="y")
+arrows(10,10,30,10,col="red",len=.1)
+arrows(10,10,10,30,col="red",len=.1)
+text(c(35,10),c(10,35),c("x","y"))
+```
+
+---
+# Coordinate system
+
+Xc and Yc are shortcuts that return the  x and y coordinates at every pixel:
+
+```{r fig.width=3,fig.height=3}
+Xc(im)  %>% plot
+```
+---
+# Coordinate system
+
+Xc and Yc are shortcuts that return the  x and y coordinates at every pixel:
+
+```{r fig.width=3,fig.height=3}
+Yc(im)  %>% plot
+```
+
+---
+# Coordinate system
+
+Here's how to obtain a fade-in effect (along the X-axis)
+
+```{r fig.width=3,fig.height=3}
+X.scaled <- Xc(im)/width(im)
+plot(im*X.scaled)
+```
+---
+
+# Coordinate system
+
+Here's how to put a spotlight at the center: 
+
+```{r fig.width=3,fig.height=3}
+#Distance to origin
+D <- sqrt((Xc(im)-width(im)/2)^2 + (Yc(im)-height(im)/2)^2)
+plot(im/(.1+D/max(D)))
+```
+
+---
+
+# imeval
+
+imeval is a function that provides lots of shortcuts: 
+```{r }
+#as in previous slide, multiply by x coordinate
+imeval(im,~ .*xs)  %>% plot
+```
+
+---
+# imeval
+
+imeval is a function that provides lots of shortcuts: 
+```{r }
+#spotlight at center
+imeval(im, ~ .*(1/(.1+rho/max(rho))))  %>% plot
+```
+
+---
+# Generating images
+
+```{r }
+#imfill just fills an image by repeating the same value
+black <- imfill(100,100,val=0)
+imeval(black,~ cos(2*pi*(xs+ys)))  %>% plot
+```
+
+---
+# Generating images
+
+The famous Gabor patch: 
+```{r }
+imeval(black,~ exp(-.005*rho^2)*cos(8*pi*(xs+ys)))  %>% plot
+```
+
+---
+# Working with colour 
+
+A topic in itself, will only scratch the surface here. 
+Colour is stored along the *fourth* dimension of cimg arrays: most images have 3 colour channels, corresponding to red, green and blue
+
+```{r }
+dim(boats)
+```
+
+Each channel represents the intensity of the R, G and B components at each pixel. 
+
+---
+# Viewing each channel separately
+
+First use of the imsplit function (about which more later): split the image into its colour channels
+
+```{r }
+#Split image along the colour dimension, and plot
+im.s <- imsplit(boats,"c")
+str(im.s)
+```
+
+Note the object type: im.s is an "imlist", a specialised list that holds images. 
+
+
+---
+# Viewing each channel separately
+
+
+```{r }
+plot(im.s)
+```
+
+---
+# Performing hist. equalisation on each channel separately
+
+We split the image and recombine:
+
+```{r }
+im.eq <- imsplit(boats,"c")  %>% map_il(hist.eq)  %>% imappend("c")
+```
+
+```{r echo=FALSE}
+plot(im.eq)
+```
+
+---
+# Segmenting an image by colour
+
+
+```{r }
+parrots <- load.example("parrots")
+im <- imresize(parrots,.3)
+plot(im)
+```
+
+---
+# Segmenting an image by colour
+
+We reshape the data into a matrix with 3 colums (R,G, and B)
+```{r message=FALSE}
+library(rgl)
+library(purrr)
+M <- imsplit(im,"c")  %>% map(as.vector)  %>% do.call(cbind,.)
+plot3d(M)
+```
+
+---
+# k-means for clustering
+
+```{r }
+km <- kmeans(M,5)
+cls <- as.cimg(km$cluster,dim=gsdim(im))
+plot(cls)
+```
+
+---
+# k-means for clustering
+
+```{r }
+cscale <- function(cls) { v <- km$centers[cls,];rgb(v[,1],v[,2],v[,3]) }
+plot(cls,colorscale=cscale,rescale=FALSE)
+```
+
+---
+# Same thing with more clusters (k=8)
+
+```{r }
+km <- kmeans(M,8)
+cls <- as.cimg(km$cluster,dim=gsdim(im))
+cscale <- function(cls) { v <- km$centers[cls,];rgb(v[,1],v[,2],v[,3]) }
+plot(as.cimg(km$cluster,dim=gsdim(im)),colorscale=cscale,rescale=FALSE)
+```
+
+---
+# Summary so far
+
+- Colour is stored as three consecutive channels
+- These channels are Red, Green and Blue
+- The more similar two colours are the more similar their RGB values
+- The statement above is a gross over-simplification and colour scientists would scream bloody murder if they heard it
+- Nonetheless it's good enough for grouping regions by colour
+- It's easy to use R's own function for clustering in order to perform segmentation
+
+---
+# Extra tip: what to do when image has alpha channel
+
+It's a common occurence when downloading images off the web: image has 4 colour channels instead of 3. The 4th channel is the transparency (a.k.a. "alpha") channel. imager doesn't know what to do with that one, so: 
+
+```
+rm.alpha(im) #drop the channel
+flatten.alpha(im) #flatten: transparency will be taken into account
+```
+
+---
+# Splitting and combining 
+
+We've seen how we often need to split images into colour channels, do some stuff and recombine the results. This is a very common pattern, and *imager* has many functions for that. 
+Workhorse for splitting: imsplit 
+
+```{r }
+im <- parrots
+imsplit(im,"c")
+```
+
+
+---
+# Splitting and combining 
+
+We've seen how we often need to split images into colour channels, do some stuff and recombine the results. This is a very common pattern, and *imager* has many functions for that. 
+Workhorse for splitting: imsplit 
+
+```{r }
+#Split into 4 blocks, along the x axis
+imsplit(im,"x",4)  %>% plot
+```
+
+---
+# Splitting and combining 
+
+We've seen how we often need to split images into colour channels, do some stuff and recombine the results. This is a very common pattern, and *imager* has many functions for that. 
+Workhorse for splitting: imsplit 
+
+```{r }
+
+#Split into blocks of 250 pixels, along the y axis
+imsplit(im,"y",-250)  %>% plot
+```
+
+---
+# Example: replace green channel with noise
+
+
+```{r }
+imsplit(im,"c")  %>%
+    modify_at(2,~ imnoise(dim=dim(.),sd=.1))  %>%
+    imappend("c")  %>% plot
+```
+
+---
+# Example: split image into 4 blocks
+
+```{r }
+
+imsplit(im,"x",2)  %>% map(~ imsplit(.,"y",2)) %>%
+    flatten  %>% setNames(1:4)  %>% as.imlist  %>% plot
+
+```
+
+---
+# Histogram eq. on every frame
+
+```{r }
+#imager also handles (short) videos
+tennis <- load.example("tennis")  %>% grayscale
+vid <- imsplit(tennis,"z")  %>% map_il(hist.eq)  %>% imappend("z")
+#run play(vid,loop=TRUE) to see results (they look crappy)
+```
+
+---
+# Reductions
+
+Reductions take a list of images, and return a pixel-wise statistic computed *across* images:
+
+```{r }
+#Maximum across colour channels
+imsplit(im,"c")  %>% parmax  %>% plot
+#Average across colour channels
+imsplit(im,"c")  %>% average  %>% plot
+#Maximum across scales
+map_il(seq(1,10,l=5),~ isoblur(im,.))  %>% parmax  %>% plot
+```
+
+type ?parmax for a complete list
+
+---
+# Pixsets 
+
+Pixsets are just sets of pixels: they can represent a Region of Interest (ROI), or a foreground/background segmentation, or the left-hand part of an image, etc. 
+
+```{r }
+im <- grayscale(boats)
+#all pixels with value less than .5
+plot(im < .5)
+str(im < .5)
+```
+
+A "pixset" object is just an array of logicals (TRUE means the pixel is in the set, FALSE means it isn't). 
+
+---
+# Selecting by colour
+
+This function selects pixels by colour. Try and break it down into components you understand: 
+
+```{r }
+select.by.colour <- function(im,col,thr="auto")
+{
+    if (is.character(col)) #e.g. "red", need to convert to RGB values
+    {
+        col <- col2rgb(col)[,1]/255
+    }
+    sim <- imsplit(im,"c")  %>% map2(col,function(a,b) (a-b)^2)  %>% average
+    !threshold(sim,thr)
+}
+```
+
+---
+# Selecting by colour
+
+```{r }
+plot(parrots)
+px.red <- select.by.colour(parrots,"red","10%")
+highlight(px.red,"green")
+```
+
+---
+# Selecting by colour
+
+The colorise function is sometimes useful: 
+```{r }
+colorise(parrots,px.red,col="red")  %>% plot
+```
+
+---
+# Cleaning up a pixset
+
+Let's say we only want the red part of the right-hand bird, how do we get that? 
+
+```{r }
+px.red <- select.by.colour(parrots,"red","18%")
+plot(px.red)
+```
+
+---
+# Growing a pixset
+
+The "grow" operation will extend a pixset to include all its neighbours. "shrink" does the opposite. Technically they're called "dilation" and "erosion". 
+
+```{r }
+grow(px.red,10)  %>% plot
+shrink(px.red,10)  %>% plot
+```
+
+---
+# Grow then shrink: fill in holes
+
+```{r }
+px <- grow(px.red,10)  %>% shrink(10)
+plot(px)
+```
+
+---
+# Shrink then grow: eliminate small components
+
+```{r }
+px.clean <- shrink(px,7)  %>% grow(7)
+plot(px.clean)
+```
+
+---
+# Split into connected components
+
+```{r }
+comp <- split_connected(px.clean)
+plot(comp)
+```
+
+---
+# Split into connected components
+
+Highlight largest connected area
+
+```{r }
+areas <- map_dbl(comp,sum)
+areas
+#Select component with highest area
+plot(parrots);highlight(comp[[which.max(areas)]],col="green")
+```
+
+---
+# A warning
+
+Be careful with split_connected: it's convenient, but if you have a lot of very small components, you'll get a huge list of images, and you may run out of memory. 
+
+---
+# A warning
+
+Here's another way of selecting the red bird: it's the largest connected area (excluding background pixels)
+
+```{r fig.height=2.4 }
+#Each connected region gets a label from 0 to (k-1), where k is the number of regions
+lb <- label(px.clean)
+range(lb)
+ind <- which.max(tabulate(lb*px.clean))
+plot(lb==ind)
+```
+
+---
+# Some more segmentation
+
+So far we've selected by colour. The next example invites a selection by luminance thresholding: 
+```{r fig.height=3.2 }
+#coins picture from scikit-image
+coins <- load.example("coins")
+plot(coins)
+```
+
+
+---
+# Simple thresholding 
+
+```{r fig.height=3.2 }
+px <- threshold(coins)
+colorise(coins,px,"red",alpha=.5)  %>% plot
+```
+
+Unfortunately the image has a luminance gradient, and a constant threshold over the image doesn't give good results! 
+
+---
+# Removing a luminance gradient
+
+Here's a very R-way of removing the gradient: fit a linear trend and remove. 
+
+```{r fig.height=3.2 }
+df <- as.data.frame(coins)
+head(df)
+```
+
+---
+# Removing a luminance gradient
+
+Here's a very R-way of removing the gradient: fit a linear trend and remove. 
+
+```{r fig.height=3.2 }
+trend <- lm(value ~ x*y,data=df)  %>% fitted
+as.cimg(trend,dim=dim(coins))  %>% plot
+```
+
+---
+# Removing a luminance gradient
+
+```{r fig.height=3.2 }
+coins.corr <- coins-trend
+plot(coins.corr)
+```
+
+---
+# Removing a luminance gradient
+
+```{r fig.height=3.2 }
+px <- threshold(coins.corr)
+colorise(coins,px,"red",alpha=.5)  %>% plot
+```
+
+---
+# Cleaning up, filling in
+
+```{r fig.height=3.2 }
+px <- clean(px,3)  %>% fill(7)
+colorise(coins,px,"red",alpha=.5)  %>% plot
+```
+
+---
+# Compute centroids, areas 
+
+Again, we do things the R way:
+
+```{r message=FALSE,fig.height=3.2}
+library(dplyr)
+df <- label(px)  %>% as.data.frame  %>%
+    dplyr::filter(value > 0)  %>%
+    group_by(value)  %>% summarise(area=length(x),x=mean(x),y=mean(y))
+plot(coins)
+with(df,points(x,y,pch=19,col="red"))
+
+```
+
+---
+# Extract all coins by order of size
+
+```{r results='hide'}
+areas <- arrange(df,desc(area))  %>% mutate(radius=1.2*sqrt(area/pi),x0=x-radius,x1=x+radius,y0=y-radius,y1=y+radius)
+plot(coins)
+with(areas,rect(x0,y1,x1,y0,border="red",lwd=2))
+```
+
+```{r echo=FALSE,fig.height=3.2}
+mm <- par("mar")
+par("mar"=rep(0,4))
+imager:::plot.cimg(coins,axes=FALSE)
+with(areas,rect(x0,y1,x1,y0,border="red",lwd=2))
+par("mar"=mm)
+```
+
+---
+# Extract all coins by order of size
+
+```{r fig.height=3,fig.width=12}
+#Select the areas within each box 
+as.list(areas)  %>% transpose  %>%
+    map_il(~ imsub(coins,x %inr% c(.$x0,.$x1),y %inr% c(.$y0,.$y1)))  %>%
+    imappend("x")  %>% plot(axes=FALSE,asp="varying")
+```
+
+
+
+---
+# Summing up
+
+- Most of the package is organised around three types of objects: raster images (S3 class 'cimg'), image lists ('imlist') and pixel sets ('pixset'). All are thin layers over native R data (arrays and lists of arrays). 
+- Instead of using lots of explicit metadata (like *spatstat* and *raster*), *imager* is based on convention: there's only one coordinate system, we expect you to keep track of which colourspace your images use, etc. 
+- There's lots of facilities for converting data into shapes and formats that can be used by other packages
+
+---
+# Going further 
+
+*imager* has tons of functions and it's not a package you can just learn overnight. Fortunately there's two vignettes plus a [website](https://dahtah.github.io/imager)  with some fun things to try. 
+
+---
+# Future features
+
+- I'd like to add better support for NA's. Currently support is very spotty, be careful if you have missing pixels. 
+- Better error messages would be nice
+- Coming soon (probably): a class representing segmentations
+
+
+
+If you find bugs, please report them on the [issues](github.com/dahtah/imager/issues) page. I'm also happy to accept contributions (code, documentation, etc.) 
+
+Thanks!!
+

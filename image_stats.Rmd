@@ -202,7 +202,7 @@ Taking finite differences usually has the effect of partially decorrelating the 
 correlogram <- function(im,pos)
     {
         #A cross-shaped stencil
-        stencil <- data.frame(dx=c(seq(-10,10,1),rep(0,11)),dy=c(rep(0,11),seq(-10,10,1)))
+        stencil <- data.frame(dx=c(seq(-10,10,1),rep(0,21)),dy=c(rep(0,21),seq(-10,10,1))) %>% unique
         mat <- alply(pos,1,function(v) get.stencil(im,stencil,x=v[1],y=v[2])) %>% do.call(rbind,.)
         Dx <- dist(stencil$dx) %>% as.matrix #Distance along the x axis
         Dy <- dist(stencil$dy) %>% as.matrix #Distance along the y axis
