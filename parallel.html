@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -142,12 +142,12 @@ fun &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% lapply(rank)
     
 system.time(fun())</code></pre>
 <pre><code>##    user  system elapsed 
-##  12.413   0.536  12.945</code></pre>
+##   7.420   0.148   7.569</code></pre>
 <pre class="r"><code>#Parallel version: use mclapply
 fun.par &lt;- function() imsplit(im,&quot;c&quot;) %&gt;% mclapply(rank,mc.cores=2)
 system.time(fun.par())</code></pre>
 <pre><code>##    user  system elapsed 
-##   4.790   0.608  10.250</code></pre>
+##   2.608   0.200   5.297</code></pre>
 </div>
 <div id="native-parallelisation-cimg-and-openmp" class="section level1">
 <h1><span class="header-section-number">2</span> Native parallelisation: CImg and OpenMP</h1>
@@ -165,16 +165,16 @@ OpenMPController::omp_set_num_threads(1)</code></pre>
 ## [1] 1</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
-##   expr      min      lq     mean   median       uq      max neval
-##  fun() 463.7745 465.425 469.6804 466.8861 468.3055 499.1592    15</code></pre>
+##   expr      min       lq     mean   median       uq      max neval
+##  fun() 321.2343 321.4757 322.0489 321.7571 322.4195 323.8651    15</code></pre>
 <pre class="r"><code>#2 cores
 OpenMPController::omp_set_num_threads(2)</code></pre>
 <pre><code>## [[1]]
 ## [1] 2</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
-##   expr      min       lq     mean   median       uq      max neval
-##  fun() 250.1561 260.1025 262.2085 264.3445 266.5629 268.8653    15</code></pre>
+##   expr      min       lq     mean median      uq      max neval
+##  fun() 161.9575 163.2676 165.7719 164.66 165.988 175.4034    15</code></pre>
 <pre class="r"><code>#3 cores, etc.
 OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre><code>## [[1]]
@@ -182,7 +182,7 @@ OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre class="r"><code>microbenchmark(fun(),times=15)</code></pre>
 <pre><code>## Unit: milliseconds
 ##   expr      min       lq     mean   median       uq      max neval
-##  fun() 295.3284 297.5541 300.0099 299.4172 302.8274 306.2033    15</code></pre>
+##  fun() 116.8546 129.1712 137.0371 132.9894 143.9082 171.7494    15</code></pre>
 <p>If CImg’s parallelisation doesn’t seem to work on your machine, it’s probably because you compiled the package with clang, which has patchy support for OpenMP. Recompile using gcc if possible.</p>
 </div>
 <div id="parallelisation-in-r-vs.native-parallelisation" class="section level1">
@@ -194,8 +194,8 @@ OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre class="r"><code>fun.R &lt;- function() imsplit(boats,&quot;c&quot;) %&gt;% mclapply(function(v) medianblur(v,50),mc.cores=3)
 microbenchmark(fun.R(),times=20)</code></pre>
 <pre><code>## Unit: seconds
-##     expr      min      lq     mean   median       uq      max neval
-##  fun.R() 4.840825 5.21166 5.275059 5.291631 5.363318 5.467941    20</code></pre>
+##     expr      min       lq    mean   median       uq      max neval
+##  fun.R() 2.800479 2.807245 2.86281 2.811756 2.858016 3.381394    20</code></pre>
 <p>Second, CImg’s native version:</p>
 <pre class="r"><code>OpenMPController::omp_set_num_threads(3)</code></pre>
 <pre><code>## [[1]]
@@ -203,8 +203,8 @@ microbenchmark(fun.R(),times=20)</code></pre>
 <pre class="r"><code>fun.nat &lt;- function() medianblur(boats,50)
 microbenchmark(fun.nat(),times=20)</code></pre>
 <pre><code>## Unit: seconds
-##       expr      min       lq    mean   median       uq      max neval
-##  fun.nat() 5.140669 5.220139 5.39972 5.270974 5.475182 6.057458    20</code></pre>
+##       expr     min       lq     mean   median       uq      max neval
+##  fun.nat() 2.76762 2.770584 2.771579 2.771564 2.772501 2.776503    20</code></pre>
 <p>Pros and cons of using native parallelisation:</p>
 <ul>
 <li>Transparent</li>
@@ -244,7 +244,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

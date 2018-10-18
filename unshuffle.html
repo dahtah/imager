@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -140,9 +140,10 @@ scramble(boats) %&gt;% plot</code></pre>
 imlist(im,scramble(im)) %&gt;% plot(layout=&quot;row&quot;)</code></pre>
 <p><img src="unshuffle_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
 <p>The unshuffling relies on the spatial structure of images: adjacent columns tend to be similar. If we compute a distance matrix that compare all pairs of rows, we should be able to pick out an order that minimises the total distance. That’s a seriation problem, and R has a whole <a href="https://cran.r-project.org/web/packages/seriation/index.html">package</a> dedicated to seriation. There are many was of solving seriation problems (see the package’s vignette), and one of them is to cast seriation as an instance of the Traveling Salesman Problem, as Robin does. In this case it works wonders and is trivially easy to implement :</p>
-<pre class="r"><code>library(seriation)
-
-unscramble &lt;- function(im.s,method=&quot;TSP&quot;,...)
+<pre class="r"><code>library(seriation)</code></pre>
+<pre><code>## Warning: replacing previous import by &#39;magrittr::%&gt;%&#39; when loading
+## &#39;dendextend&#39;</code></pre>
+<pre class="r"><code>unscramble &lt;- function(im.s,method=&quot;TSP&quot;,...)
 {
     cols &lt;- imsplit(im.s,&quot;x&quot;)
     #Compute a distance matrix (using L1 - Manhattan - distance)
@@ -219,7 +220,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

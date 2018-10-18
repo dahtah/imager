@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -169,6 +169,9 @@ library(cowplot)</code></pre>
 <pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
 ## 
 ##     ggsave</code></pre>
+<pre><code>## The following object is masked from &#39;package:imager&#39;:
+## 
+##     draw_text</code></pre>
 <pre class="r"><code>##Subsample: take every fourth pixel
 dgr.sub &lt;- dplyr::filter(dgr,(x %% 4) ==0,(y %% 4) == 0)
 
@@ -235,7 +238,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

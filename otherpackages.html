@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -145,8 +145,11 @@ plot(rst)</code></pre>
 <div id="magick" class="section level1">
 <h1><span class="header-section-number">2</span> magick</h1>
 <p>Use the following functions (with thanks to Jan Wijffels): because of a bug in R CMD check, they’re called “magick2cimg” and “magick2imlist”, and not “as.cimg” and “as.imlist”.</p>
-<pre class="r"><code>library(magick)
-#A dancing banana
+<pre class="r"><code>library(magick)</code></pre>
+<pre><code>## Linking to ImageMagick 6.8.9.9
+## Enabled features: fontconfig, freetype, fftw, lcms, pango, x11
+## Disabled features: cairo, ghostscript, rsvg, webp</code></pre>
+<pre class="r"><code>#A dancing banana
 banana &lt;- image_read(&quot;https://jeroenooms.github.io/images/banana.gif&quot;)
 magick2cimg(banana,alpha=&quot;flatten&quot;) %&gt;% plot</code></pre>
 <pre><code>## Warning in plot.cimg(.): Showing first frame</code></pre>
@@ -217,7 +220,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

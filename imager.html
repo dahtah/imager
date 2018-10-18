@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -160,19 +160,19 @@ file &lt;- system.file(&#39;extdata/parrots.png&#39;,package=&#39;imager&#39;)
 im &lt;- load.image(file)
 
 plot(im) #Parrots!</code></pre>
-<p><img src="imager_files/figure-html/quickstart-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/quickstart-1.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>im.blurry &lt;- isoblur(im,10) #Blurry parrots!
 plot(im.blurry)</code></pre>
-<p><img src="imager_files/figure-html/quickstart-2.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/quickstart-2.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>im.xedges &lt;- deriche(im,2,order=2,axis=&quot;x&quot;) #Edge detector along x-axis
 plot(im.xedges)</code></pre>
-<p><img src="imager_files/figure-html/quickstart-3.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/quickstart-3.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>im.yedges &lt;- deriche(im,2,order=2,axis=&quot;y&quot;) #Edge detector along y-axis
 plot(im.yedges)</code></pre>
-<p><img src="imager_files/figure-html/quickstart-4.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/quickstart-4.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>#Chain operations using the pipe operator (from magrittr)
 deriche(im,2,order=2,axis=&quot;x&quot;) %&gt;% deriche(2,order=2,axis=&quot;y&quot;) %&gt;% plot</code></pre>
-<p><img src="imager_files/figure-html/quickstart-5.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/quickstart-5.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>#Another example of chaining: image gradient along x and y axes
 layout(matrix(1:2,1,2));
 grayscale(im) %&gt;% imgradient(&quot;xy&quot;) %&gt;% plot(layout=&quot;row&quot;)</code></pre>
@@ -310,48 +310,48 @@ sin(noise) + 3*noise </code></pre>
 noise[,,,1] #First colour channel</code></pre>
 <pre><code>, , 1
 
-          [,1]       [,2]      [,3]       [,4]        [,5]
-[1,] 0.3510337 0.76994033 0.1585224 0.85659146 0.345474361
-[2,] 0.8456644 0.01383741 0.9971350 0.69984376 0.388089864
-[3,] 0.3275034 0.89027737 0.6519898 0.54386820 0.907249955
-[4,] 0.3949027 0.03133751 0.3398497 0.21482575 0.006593775
-[5,] 0.2303667 0.42780621 0.7485127 0.06081203 0.419723301
+           [,1]      [,2]      [,3]      [,4]      [,5]
+[1,] 0.15729737 0.1211601 0.8988929 0.4159581 0.3028848
+[2,] 0.84973167 0.6274368 0.2415643 0.4966623 0.2269957
+[3,] 0.54568313 0.3016971 0.2838756 0.4746036 0.2844496
+[4,] 0.04863492 0.2658499 0.6029072 0.2423509 0.1071429
+[5,] 0.01277593 0.5369538 0.4148199 0.4948992 0.3521130
 
 , , 2
 
-          [,1]      [,2]      [,3]       [,4]      [,5]
-[1,] 0.9190668 0.8040562 0.2477229 0.18348958 0.3005642
-[2,] 0.7214234 0.9532363 0.4843048 0.80618905 0.7443933
-[3,] 0.3884877 0.4896235 0.1195527 0.09582635 0.3718278
-[4,] 0.6626700 0.3609153 0.1333640 0.64431858 0.9894917
-[5,] 0.7536416 0.4578405 0.9426645 0.03182711 0.3771937
+           [,1]      [,2]      [,3]      [,4]      [,5]
+[1,] 0.79095569 0.3831404 0.9740569 0.7082703 0.2716844
+[2,] 0.02995088 0.4527976 0.5571453 0.3556408 0.8869119
+[3,] 0.16175638 0.1366967 0.7246627 0.2537838 0.5740961
+[4,] 0.40808831 0.5199738 0.3159353 0.9300932 0.5880399
+[5,] 0.11933058 0.7494124 0.7374537 0.2995378 0.5914280
 
 , , 3
 
-           [,1]        [,2]      [,3]      [,4]      [,5]
-[1,] 0.06709956 0.994025144 0.5526753 0.2698329 0.5989443
-[2,] 0.69054710 0.698176055 0.7654785 0.8453901 0.1252817
-[3,] 0.64665840 0.007431889 0.1556904 0.6569562 0.5875018
-[4,] 0.02632171 0.538871856 0.5511799 0.6785020 0.7733848
-[5,] 0.58920388 0.856742959 0.6064965 0.7258797 0.3654295
+           [,1]      [,2]       [,3]      [,4]      [,5]
+[1,] 0.60391048 0.5167028 0.02420186 0.5472331 0.3797664
+[2,] 0.06801864 0.5697795 0.66071426 0.9646910 0.4229982
+[3,] 0.78926741 0.9300144 0.62414829 0.9306036 0.9666980
+[4,] 0.27166128 0.3196066 0.03260900 0.4725431 0.7499543
+[5,] 0.48957878 0.8283884 0.11846634 0.3872923 0.3950798
 
 , , 4
 
-          [,1]      [,2]      [,3]       [,4]       [,5]
-[1,] 0.2001784 0.9162113 0.6247090 0.07353605 0.01083378
-[2,] 0.3194382 0.7227267 0.6255889 0.79507656 0.20019494
-[3,] 0.8530176 0.8208716 0.6750365 0.98036421 0.79974117
-[4,] 0.5475812 0.5518732 0.8364710 0.57146296 0.05832274
-[5,] 0.1842463 0.4753840 0.5273422 0.78843016 0.05364201
+            [,1]      [,2]      [,3]      [,4]      [,5]
+[1,] 0.002466594 0.1436853 0.9389031 0.6733791 0.1285260
+[2,] 0.772557458 0.5994659 0.2597808 0.3718233 0.3210910
+[3,] 0.892276678 0.7209472 0.8854790 0.7158221 0.6365918
+[4,] 0.017707171 0.7006387 0.4359491 0.5040516 0.5311173
+[5,] 0.897455861 0.2024645 0.4403962 0.7566717 0.3084604
 
 , , 5
 
-          [,1]      [,2]      [,3]       [,4]       [,5]
-[1,] 0.4514860 0.1975269 0.8431716 0.62626085 0.26102108
-[2,] 0.2873308 0.9433144 0.9796437 0.55679229 0.10640043
-[3,] 0.1747636 0.9531210 0.9684121 0.06136671 0.07005774
-[4,] 0.4573823 0.6753696 0.0684578 0.28194490 0.34898283
-[5,] 0.6432527 0.4418153 0.2459070 0.97942470 0.91352755</code></pre>
+           [,1]      [,2]      [,3]       [,4]      [,5]
+[1,] 0.53776992 0.4647327 0.9597835 0.01976816 0.9679417
+[2,] 0.08520387 0.5630616 0.3748003 0.93281874 0.5851739
+[3,] 0.08174300 0.9684200 0.6424220 0.24108078 0.6385822
+[4,] 0.57478002 0.1302111 0.4727503 0.57880176 0.6190047
+[5,] 0.49731932 0.1970284 0.1391678 0.60512846 0.1805122</code></pre>
 <pre class="r"><code>dim(noise[1:4,,,] )</code></pre>
 <pre><code>[1] 4 5 5 3</code></pre>
 <p>which makes life easier if you want to use ggplot2 for plotting (see <a href="getting_started.html">tutorial</a>).</p>
@@ -610,15 +610,15 @@ imwarp(parrots,map=map.shift) %&gt;% plot</code></pre>
 <p>The warping algorithm has two modes, “forward” and “backward”. In forward mode you go through all <span class="math inline">\((x,y)\)</span> pixels in the source, and paint the corresponding location <span class="math inline">\(M(x,y)\)</span> in the target image. This may result in unpainted pixels, as in the following example:</p>
 <pre class="r"><code>map.scale &lt;- function(x,y) list(x=1.5*x,y=1.5*y)
 imwarp(parrots,map=map.scale) %&gt;% plot(main=&quot;Forward mode&quot;)</code></pre>
-<p><img src="imager_files/figure-html/warp_scale_forward-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/warp_scale_forward-1.jpeg" title="" alt="" width="624" /></p>
 <p>In backward mode you go through all pixels <span class="math inline">\((x&#39;,y&#39;)\)</span> in the target image, and look up their ancestor <span class="math inline">\(M^{-1}(x&#39;,y&#39;)\)</span> in the source image. Backward mode has no missing pixel problems, but now you need to define the inverse map and set the “direction” argument to “backward”.</p>
 <pre class="r"><code>map.scale.bw &lt;- function(x,y) list(x=x/1.5,y=y/1.5)
 imwarp(parrots,map=map.scale.bw,direction=&quot;backward&quot;) %&gt;% plot(main=&quot;Backward mode&quot;)</code></pre>
-<p><img src="imager_files/figure-html/warp_scale_backward-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/warp_scale_backward-1.jpeg" title="" alt="" width="624" /></p>
 <p>Of course shifting and scaling things is boring and the whole point of warping is to do things like that:</p>
 <pre class="r"><code>map &lt;- function(x,y) list(x=exp(y/600)*x,y=y*exp(-sin(x/40)))
 imwarp(parrots,map=map,direction=&quot;forward&quot;) %&gt;% plot()</code></pre>
-<p><img src="imager_files/figure-html/warped_warp-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/warped_warp-1.jpeg" title="" alt="" width="624" /></p>
 <p>See ?imwarp for more. Note that 3D warping is possible as well.</p>
 </div>
 <div id="lagged-operators" class="section level1">
@@ -626,10 +626,10 @@ imwarp(parrots,map=map,direction=&quot;forward&quot;) %&gt;% plot()</code></pre>
 <p>To compute the difference between successive images in a video, you can use the shift operator:</p>
 <pre class="r"><code>#Compute difference between two successive frames (at lag 1)
 (imshift(tennis,delta_z=1)-tennis) %&gt;% plot(frame=2,main=&quot;Difference betw. frames 2 and 1&quot;)</code></pre>
-<p><img src="imager_files/figure-html/lag-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/lag-1.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>#Compute difference between frames (at lag 3)
 (imshift(tennis,delta_z=3)-tennis) %&gt;% plot(frame=4,main=&quot;Difference between frames 3 and 1&quot;)</code></pre>
-<p><img src="imager_files/figure-html/lag-2.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/lag-2.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>#note that shift uses interpolation. that makes it relatively slow, but one advantage is that it allows non-integer lags:
 #shift(tennis,delta_z=3.5)-tennis
 #is valid</code></pre>
@@ -669,10 +669,10 @@ lines(xv,imp.dr/max(imp.dr),col=&quot;red&quot;,lwd=2)</code></pre>
 <pre class="r"><code>im &lt;- imfill(3e3,3e3)
 system.time(deriche(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.173   0.039   0.126 </code></pre>
+  0.096   0.012   0.042 </code></pre>
 <pre class="r"><code>system.time(vanvliet(im,3))</code></pre>
 <pre><code>   user  system elapsed 
-  0.241   0.027   0.128 </code></pre>
+  0.168   0.004   0.047 </code></pre>
 <p>In both cases computation time is independent of filter bandwidth, which is a very nice feature (the filters are IIR).</p>
 </div>
 <div id="ffts-and-the-periodicsmooth-decomposition" class="section level1">
@@ -681,21 +681,21 @@ system.time(deriche(im,3))</code></pre>
 <pre class="r"><code>im &lt;- as.cimg(function(x,y) sin(x/5)+cos(x/4)*sin(y/2),128,128)
 ff &lt;- FFT(im)
 plot(ff$real,main=&quot;Real part of the transform&quot;)</code></pre>
-<p><img src="imager_files/figure-html/FFT-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/FFT-1.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>plot(ff$imag,main=&quot;Imaginary part of the transform&quot;)</code></pre>
-<p><img src="imager_files/figure-html/FFT-2.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/FFT-2.jpeg" title="" alt="" width="624" /></p>
 <pre class="r"><code>sqrt(ff$real^2+ff$imag^2) %&gt;% plot(main=&quot;Power spectrum&quot;)</code></pre>
-<p><img src="imager_files/figure-html/FFT-3.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/FFT-3.jpeg" title="" alt="" width="624" /></p>
 <p>If you want to use CImg’s FFT on images of arbitrary size you should enable FFTW3 support. Install FFTW3 on your system, then run install_github(“dahtah/imager”,ref=“fftw”). As a workaround you can also use R’s native fft:</p>
 <pre class="r"><code>rff &lt;- as.matrix(im) %&gt;% fft
 Re(rff) %&gt;% as.cimg %&gt;% plot(main=&quot;Real part of the transform (R&#39;s native code)&quot;)</code></pre>
-<p><img src="imager_files/figure-html/FFT_nativeR-1.jpeg" width="624" /></p>
+<p><img src="imager_files/figure-html/FFT_nativeR-1.jpeg" title="" alt="" width="624" /></p>
 <p>Important: both FFT and fft will attempt to perform a multi-dimensional FFT of the input, with dimensionality defined by the dimensionality of the array. If you want to compute a 2D FFT for every frame of a video, use a split (imsplit or ilply).</p>
 <p>The FFT works best for periodic signals. One way of making signals periodic is via zero-padding (use the pad function), another is to use the periodic-smooth decomposition of Moisan (2011):</p>
 <pre class="r"><code>layout(t(1:2))
 periodic.part(parrots) %&gt;% plot(main=&quot;Periodic part of parrots&quot;)
 (parrots- periodic.part(parrots)) %&gt;% plot(main=&quot;Smooth residual of parrots&quot;)</code></pre>
-<p><img src="imager_files/figure-html/periodicsmooth-1.jpeg" width="1152" /></p>
+<p><img src="imager_files/figure-html/periodicsmooth-1.jpeg" title="" alt="" width="1152" /></p>
 <p>See ?periodic.smooth for details.</p>
 </div>
 <div id="morphology" class="section level1">
@@ -726,7 +726,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

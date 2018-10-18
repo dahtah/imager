@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -357,10 +357,10 @@ all.equal(canny,canny2)</code></pre>
 <p>The second function is much faster, at least on this image (for this particular choice of thresholds):</p>
 <pre class="r"><code>system.time(hystFP(list(strong=strong,weak=weak)))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.473   0.004   0.477</code></pre>
+##   0.688   0.012   0.698</code></pre>
 <pre class="r"><code>system.time(rescueFill(strong,weak))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.193   0.012   0.204</code></pre>
+##   0.172   0.004   0.174</code></pre>
 </div>
 
 
@@ -386,7 +386,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
