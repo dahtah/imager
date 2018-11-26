@@ -448,7 +448,7 @@ threshold <- function(im,thr="auto",approx=TRUE,adjust=1)
 cut.kmeans <- function(x)
 {
     km <- kmeans(x,2)
-    m <- which.min(km$center)
+    m <- which.min(km$centers)
     max(x[km$cluster==m])
 }
 
