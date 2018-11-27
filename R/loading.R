@@ -70,7 +70,7 @@ read.video <- function(video.pipe,nframes = video.pipe$nframes - video.pipe$curr
         stop("Number of frames requested exceeds the number of frames remaining in the video")
     }
     
-    RES <- array(0L,
+    RES <- array(0,
                  dim = c(video.pipe$width,
                          video.pipe$height,
                          nframes,
