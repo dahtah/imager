@@ -13,7 +13,7 @@ isoblur(im, sigma, neumann = TRUE, gaussian = TRUE, na.rm = FALSE)
 
 \item{neumann}{If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)}
 
-\item{gaussian}{Use a Gaussian filter (actually vanVliet-Young). Default: 0th-order Deriche filter.}
+\item{gaussian}{Use a Gaussian filter (actually van Vliet-Young). Default: 0th-order Deriche filter.}
 
 \item{na.rm}{if TRUE, ignore NA values. Default FALSE, in which case the whole image is NA if one of the values is NA (following the definition of the Gaussian filter)}
 }
@@ -22,7 +22,7 @@ Blur image isotropically.
 }
 \examples{
 isoblur(boats,3) \%>\% plot(main="Isotropic blur, sigma=3")
-isoblur(boats,3) \%>\% plot(main="Isotropic blur, sigma=10")
+isoblur(boats,10) \%>\% plot(main="Isotropic blur, sigma=10")
 }
 \seealso{
 deriche,vanvliet,inpaint,medianblur
