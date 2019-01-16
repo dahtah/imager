@@ -24,13 +24,13 @@ imsharpen <- function(im,amplitude,type="diffusion",edge=1,alpha=0,sigma=0)
 #' @param im an image
 #' @param sigma Standard deviation of the blur (positive)
 #' @param neumann If true, use Neumann boundary conditions, Dirichlet otherwise  (default true, Neumann)
-#' @param gaussian Use a Gaussian filter (actually vanVliet-Young). Default: 0th-order Deriche filter.
+#' @param gaussian Use a Gaussian filter (actually van Vliet-Young). Default: 0th-order Deriche filter.
 #' @param na.rm if TRUE, ignore NA values. Default FALSE, in which case the whole image is NA if one of the values is NA (following the definition of the Gaussian filter)
 #' @seealso deriche,vanvliet,inpaint,medianblur
 #' @export
 #' @examples
 #' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=3")
-#' isoblur(boats,3) %>% plot(main="Isotropic blur, sigma=10")
+#' isoblur(boats,10) %>% plot(main="Isotropic blur, sigma=10")
 isoblur <- function(im,sigma,neumann=TRUE,gaussian=TRUE,na.rm=FALSE)
 {
     if (na.rm)
