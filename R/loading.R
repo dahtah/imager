@@ -398,7 +398,7 @@ save.video <- function(im,fname,...)
 #borrowed from pkgmaker::file_extension
 fileext <- function(f)
 {
-    sub(".*\\.([^.]{3})$", "\\1", f) %>% tolower
+    sub(".*\\.([^.]{3,4})$", "\\1", f) %>% tolower
 }
 
                     
