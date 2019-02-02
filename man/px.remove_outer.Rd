@@ -21,5 +21,5 @@ plot(im)
 as.pixset(im) \%>\% px.remove_outer \%>\% plot
 }
 \author{
-Simon Barthelmé
+Simon Barthelme
 }
