@@ -784,7 +784,7 @@ colorise <- function(im,px,col,alpha=1)
 ##' All pixels that belong to a connected region in contact with image boundaries are set to FALSE. 
 ##' @param px a pixset
 ##' @return a pixset 
-##' @author Simon Barthelmé
+##' @author Simon Barthelme
 ##' @examples
 ##' im <- draw_circle(imfill(100,100),c(0,50,100),c(50,50,50),radius=10,color=1)
 ##' plot(im)
