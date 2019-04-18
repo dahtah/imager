@@ -40,7 +40,7 @@ Building R packages on Windows is a bit of a pain so you're probably better off 
 
 To build under Linux make sure you have the headers for libX11 and libfftw3 (optionally, libtiff as well). On my Ubuntu system this seems to be enough:
 
-	sudo apt-get install libfftw3-dev libX11-dev libtiff-dev
+	sudo apt-get install libfftw3-dev libx11-dev libtiff-dev
 
 
 ### External dependencies
