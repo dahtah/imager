@@ -133,5 +133,5 @@ draw_text <- function(im,x,y,text,color,opacity=1,fsize=20)
         color <- col2rgb(color)[,1]/255
     }
     if (length(color)!=spectrum(im)) stop("colour argument has wrong length")
-    draw_text_(im,x,y,text,color,opacity=1,fsize=20)
+    draw_text_(im,x,y,text,color,opacity,fsize)
 }
