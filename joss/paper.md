@@ -37,3 +37,5 @@ The package is now relatively mature (over 3 years old). As a testament to its u
 # Acknowledgements
 
 Simon Barthelmé is supported by a grant from the French National Agency for Research (ANR GenGP, ANR-16-CE23-0008). 
+
+# References
