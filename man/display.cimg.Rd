@@ -17,8 +17,8 @@
 Press escape or close the window to exit.
 }
 \examples{
-##Not run: interactive only 
-##display(boats,TRUE) #Normalisation on 
+##Not run: interactive only
+##display(boats,TRUE) #Normalisation on
 ##display(boats/2,TRUE) #Normalisation on, so same as above
 ##display(boats,FALSE) #Normalisation off
 ##display(boats/2,FALSE) #Normalisation off, so different from above

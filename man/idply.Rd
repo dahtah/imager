@@ -2,7 +2,7 @@
 % Please edit documentation in R/splitcombine.R
 \name{idply}
 \alias{idply}
-\title{Split an image along axis, apply function, return a data.frame}
+\title{Split an image along axis, map function, return a data.frame}
 \usage{
 idply(im, axis, fun, ...)
 }
@@ -16,7 +16,7 @@ idply(im, axis, fun, ...)
 \item{...}{extra arguments to function fun}
 }
 \description{
-Shorthand for imsplit followed by ldply
+Shorthand for imsplit followed by purrr::map_df
 }
 \examples{
 idply(boats,"c",mean) #mean luminance per colour channel
