@@ -16,7 +16,7 @@ iiply(im, axis, fun, ...)
 \item{...}{extra arguments to function fun}
 }
 \description{
-This is just imsplit followed by llply followed by imappend
+This is just imsplit followed by purrr::map followed by imappend
 }
 \examples{
 ##' #Normalise colour channels separately, recombine
