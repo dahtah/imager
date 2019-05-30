@@ -23,7 +23,7 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
         }
     if (any(names(locations) == "cc"))
     {
-        locations <- plyr::rename(locations,c("cc"="c")) 
+        locations <- rename_plyr(locations,c("cc"="c"))
     }
 
     nms <- intersect(names(locations),c("x","y","z","c"))
@@ -36,11 +36,11 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
                 }
             else if (depth(im) != 1)
                 {
-                    frames(im) %>% llply(interp,locations=locations,cubic=cubic)
+                    frames(im) %>% purrr::map(interp,locations=locations,cubic=cubic)
                 }
             else if (spectrum(im) != 1)
                 {
-                    channels(im) %>% llply(interp,locations=locations,cubic=cubic)
+                    channels(im) %>% purrr::map(interp,locations=locations,cubic=cubic)
                 }
         }
     else if (setequal(nms,c("x","y","z")))
@@ -51,7 +51,7 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
                 }
             else
                 {
-                      channels(im) %>% llply(interp,locations=locations,cubic=cubic)
+                      channels(im) %>% purrr::map(interp,locations=locations,cubic=cubic)
                 }
         }
         else if (setequal(nms,c("x","y","c")))
@@ -62,7 +62,7 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
                 }
             else
                 {
-                      frames(im) %>% llply(interp,locations=locations,cubic=cubic)
+                      frames(im) %>% purrr::map(interp,locations=locations,cubic=cubic)
                 }
         }
     else if (all(c("x","y","z","c") %in% nms))
@@ -80,7 +80,7 @@ check.inside <- function(im,locations)
 {
     if (any(names(locations) == "cc"))
     {
-        locations <- plyr::rename(locations,c("cc"="c")) 
+        locations <- rename_plyr(locations,c("cc"="c"))
     }
     check <- list(x = function(x) { (x >= 1) & (x <= width(im)) },
                   y = function(y) { (y >= 1) & (y <= height(im)) },
@@ -93,7 +93,7 @@ check.inside <- function(im,locations)
     ## }
     ##     else
     ##     {
-    A <- laply(nms,function(nm) check[[nm]](locations[[nm]]))
+    A <- purrr::map_lgl(nms,function(nm) check[[nm]](locations[[nm]]))
     all(A)
-##        }                               
+##        }
 }

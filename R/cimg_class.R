@@ -13,7 +13,6 @@ NULL
 #' @importFrom utils file_test
 #' @importFrom graphics axis plot rasterImage layout lines plot.new plot.window title abline polygon
 #' @importFrom stats quantile rnorm kmeans setNames
-#' @importFrom plyr llply laply ldply ddply dlply ldply rename mutate
 #' @importFrom purrr map map_dbl map_lgl map_df map2 map_int pmap reduce keep
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
@@ -286,7 +285,7 @@ frames <- function(im,index,drop=FALSE)
         names(res) <- nm
         if (drop)
             {
-                res <- llply(res,function(v)  as.array(v) %>% squeeze)
+                res <- purrr::map(res,function(v)  as.array(v) %>% squeeze)
             }
         res
     }
@@ -325,7 +324,7 @@ channels <- function(im,index,drop=FALSE)
         names(res) <- nm
         if (drop)
             {
-                res <- llply(res,function(v) { as.array(v) %>% squeeze})
+                res <- purrr::map(res,function(v) { as.array(v) %>% squeeze})
             }
         res
     }
@@ -341,11 +340,11 @@ imcol <- function(im,x)
     }
     else if (depth(im) > 1)
     {
-        frames(im) %>% llply(function(v) imcol(v,x))
+        frames(im) %>% purrr::map(function(v) imcol(v,x))
     }
     else if (spectrum(im) > 1)
     {
-        channels(im) %>% llply(function(v) imcol(v,x))
+        channels(im) %>% purrr::map(function(v) imcol(v,x))
     }
     else
     {
@@ -364,11 +363,11 @@ imrow <- function(im,y)
     }
     else if (depth(im) > 1)
     {
-        frames(im) %>% llply(function(v) imrow(v,y))
+        frames(im) %>% purrr::map(function(v) imrow(v,y))
     }
     else if (spectrum(im) > 1)
     {
-        channels(im) %>% llply(function(v) imrow(v,y))
+        channels(im) %>% purrr::map(function(v) imrow(v,y))
     }
     else
     {
@@ -505,7 +504,7 @@ imsub <- function(im,...)
     {
         l <- as.list(substitute(list(...))[-1])
         consts <- list(width=width(im),height=height(im),depth=depth(im),spectrum=spectrum(im))
-        consts <- plyr::mutate(consts,cx=width/2,cy=height/2,cz=depth/2)
+        consts <- mutate_plyr(consts,cx=width/2,cy=height/2,cz=depth/2)
         env <- new.env(parent = parent.frame())
         Reduce(function(a,b) subs(a,b,consts,envir=env),l,init=im)
     }
