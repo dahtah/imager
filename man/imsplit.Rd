@@ -11,7 +11,7 @@ imsplit(im, axis, nb = -1)
 
 \item{axis}{the axis along which to split (for example 'c')}
 
-\item{nb}{number of objects to split into. 
+\item{nb}{number of objects to split into.
 if nb=-1 (the default) the maximum number of splits is used, i.e. split(im,"c") produces a list containing all individual colour channels.}
 }
 \description{
