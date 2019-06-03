@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{rename_plyr}
 \alias{rename_plyr}
-\title{Modify names by name, not position. (copied from plyr)}
+\title{Modify names by name, not position.}
 \usage{
 rename_plyr(x, replace, warn_missing = TRUE, warn_duplicated = TRUE)
 }
@@ -21,13 +21,14 @@ Note: x is not altered: To save the result, you need to copy the returned
   data into a variable.}
 }
 \description{
-Modify names by name, not position. (copied from plyr)
+This function copied directly from plyr, and modified to use a different
+name to avoid namespace collisions with dplyr/tidyverse functions.
 }
 \examples{
 x <- c("a" = 1, "b" = 2, d = 3, 4)
 # Rename column d to "c", updating the variable "x" with the result
-x <- rename(x, replace = c("d" = "c"))
+x <- rename_plyr(x, replace = c("d" = "c"))
 x
 # Rename column "disp" to "displacement"
-rename(mtcars, c("disp" = "displacement"))
+rename_plyr(mtcars, c("disp" = "displacement"))
 }
