@@ -849,7 +849,10 @@ flatten.alpha <- function(im,bg="white")
 }
 
 
-#' Modify names by name, not position. (copied from plyr)
+#' Modify names by name, not position.
+#'
+#' This function copied directly from plyr, and modified to use a different
+#' name to avoid namespace collisions with dplyr/tidyverse functions.
 #'
 #' @param x named object to modify
 #' @param replace named character vector, with new names as values, and
@@ -864,10 +867,10 @@ flatten.alpha <- function(im,bg="white")
 #' @examples
 #' x <- c("a" = 1, "b" = 2, d = 3, 4)
 #' # Rename column d to "c", updating the variable "x" with the result
-#' x <- rename(x, replace = c("d" = "c"))
+#' x <- rename_plyr(x, replace = c("d" = "c"))
 #' x
 #' # Rename column "disp" to "displacement"
-#' rename(mtcars, c("disp" = "displacement"))
+#' rename_plyr(mtcars, c("disp" = "displacement"))
 rename_plyr <- function(x, replace, warn_missing = TRUE, warn_duplicated = TRUE ) {
 
   # This line does the real work of `rename()`.
@@ -882,4 +885,46 @@ rename_plyr <- function(x, replace, warn_missing = TRUE, warn_duplicated = TRUE 
             call. = FALSE)
   }
   x
+}
+
+#' Mutate a data frame by adding new or replacing existing columns.
+#'
+#' This function copied directly from plyr, and modified to use a different
+#' name to avoid namespace collisions with dplyr/tidyverse functions.
+#'
+#' This function is very similar to \code{\link{transform}} but it executes
+#' the transformations iteratively so that later transformations can use the
+#' columns created by earlier transformations.  Like transform, unnamed
+#' components are silently dropped.
+#'
+#' Mutate seems to be considerably faster than transform for large data
+#' frames.
+#'
+#' @param .data the data frame to transform
+#' @param ... named parameters giving definitions of new columns.
+#' @seealso \code{\link{subset}}, \code{\link{summarise}},
+#'   \code{\link{arrange}}.  For another somewhat different approach to
+#'   solving the same problem, see \code{\link{within}}.
+#' @examples
+#' # Examples from transform
+#' data(airquality)
+#' mutate_plyr(airquality, Ozone = -Ozone)
+#' mutate_plyr(airquality, new = -Ozone, Temp = (Temp - 32) / 1.8)
+#'
+#' # Things transform can't do
+#' mutate_plyr(airquality, Temp = (Temp - 32) / 1.8, OzT = Ozone / Temp)
+#'
+#' # mutate is rather faster than transform
+#' system.time(transform(baseball, avg_ab = ab / g))
+#' system.time(mutate_plyr(baseball, avg_ab = ab / g))
+mutate_plyr <- function(.data, ...) {
+  stopifnot(is.data.frame(.data) || is.list(.data) || is.environment(.data))
+
+  cols <- as.list(substitute(list(...))[-1])
+  cols <- cols[names(cols) != ""] # Silently drop unnamed columns
+
+  for (col in names(cols)) {
+    .data[[col]] <- eval(cols[[col]], .data, parent.frame())
+  }
+  .data
 }
