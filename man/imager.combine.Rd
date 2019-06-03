@@ -75,7 +75,7 @@ parrank(x, increasing = TRUE)
 }
 \description{
 These functions take a list of images and combine them by adding, multiplying, taking the parallel min or max, etc.
-The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign.
+The max. in absolute value of (x1,x2) is defined as x1 if (|x1| > |x2|), x2 otherwise. It's useful for example in getting the most extreme value while keeping the sign. 
 "parsort","parrank" and "parorder" aren't really reductions because they return a list of the same size. They perform a pixel-wise sort (resp. order and rank) across the list.
 parvar returns an unbiased estimate of the variance (as in the base var function). parsd returns the square root of parvar.
 }

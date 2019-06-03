@@ -49,7 +49,7 @@ See examples for an explanation.
 If the image is one dimensional (i.e., a simple row or column image), then pixel values will be plotted as a line.
 }
 \examples{
-plot(boats,main="Boats")
+plot(boats,main="Boats") 
 plot(boats,axes=FALSE,xlab="",ylab="")
 
 #Pixel values are rescaled to 0-1 by default, so that the following two plots are identical

@@ -16,7 +16,7 @@ Capture the current R plot device as a cimg image
 ##interactive only:
 ##plot(1:10)
 ###Make a plot of the plot
-##capture.plot() \%>\% plot
+##capture.plot() \%>\% plot 
 }
 \author{
 Simon Barthelme
