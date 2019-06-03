@@ -5,7 +5,7 @@
 ##' Moisan (2011) defines an additive image decomposition
 ##' im = periodic + smooth
 ##' where the periodic part shouldn't be too far from the original image. The periodic part can be used in frequency-domain analyses, to reduce the artifacts induced by non-periodicity.
-##' 
+##'
 ##' @param im an image
 ##' @return an image
 ##' @examples
@@ -16,7 +16,7 @@
 ##' #The smooth error is the difference between
 ##' #the original image and its periodic part
 ##' (im-periodic.part(im)) %>% plot(main="Smooth part")
-##' 
+##'
 ##' @references  L. Moisan, Periodic plus Smooth Image Decomposition,J. Math. Imaging Vision, vol. 39:2, pp. 161-179, 2011
 ##' @author Simon Barthelme
 ##' @export
@@ -30,7 +30,7 @@ periodic.part <- function(im)
             {
                 periodic_part(im)
             }
-        
+
     }
 
 
@@ -38,13 +38,13 @@ periodic.part <- function(im)
 ##'
 ##' This function is equivalent to R's builtin fft, up to normalisation (R's version is unnormalised, this one is). It calls CImg's implementation.
 ##' Important note: FFT will compute a multidimensional Fast Fourier Transform, using as many dimensions as you have in the image, meaning that if you have a colour video, it will perform a 4D FFT. If you want to compute separate FFTs across channels, use imsplit.
-##' 
+##'
 ##' @param im.real The real part of the input (an image)
-##' @param im.imag The imaginary part (also an image. If missing, assume the signal is real). 
+##' @param im.imag The imaginary part (also an image. If missing, assume the signal is real).
 ##' @param inverse If true compute the inverse FFT (default: FALSE)
 ##' @return a list with components "real" (an image) and "imag" (an image), corresponding to the real and imaginary parts of the transform
 ##' @examples
-##' 
+##'
 ##' im <- as.cimg(function(x,y) sin(x/5)+cos(x/4)*sin(y/2),128,128)
 ##' ff <- FFT(im)
 ##' plot(ff$real,main="Real part of the transform")
@@ -69,17 +69,17 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
     }
 
 
-##' Resize image uniformly 
+##' Resize image uniformly
 ##'
-##' Resize image by a single scale factor. For non-uniform scaling and a wider range of options, see resize. 
+##' Resize image by a single scale factor. For non-uniform scaling and a wider range of options, see resize.
 ##'
 ##' @name resize_uniform
 ##' @param im an image
 ##' @param scale a scale factor
-##' @param interpolation interpolation method to use (see doc for resize). Default 3, linear. Set to 5 for cubic, 6 for Lanczos (higher quality).  
+##' @param interpolation interpolation method to use (see doc for resize). Default 3, linear. Set to 5 for cubic, 6 for Lanczos (higher quality).
 ##' @return an image
 ##' @references
-##' For double-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}. For half-scaling uses what the CImg doc describes as an "optimised filter", see resize_halfXY in CImg.h. 
+##' For double-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}. For half-scaling uses what the CImg doc describes as an "optimised filter", see resize_halfXY in CImg.h.
 ##' @seealso resize
 ##' @examples
 ##' im <- load.example("parrots")
@@ -92,7 +92,7 @@ NULL
 ##' @export
 imresize <- function(im,scale=1,interpolation=3)
     {
-        
+
         if (depth(im) == 1 & ((1/scale)%%2)==0) #Half-size, quarter-size, etc.
             {
                 nTimes <- -log2(scale)
@@ -140,15 +140,15 @@ imhessian <- function(im,axes=c("xx","xy","yy"))
 ##'
 ##' @param im background image
 ##' @param sprite sprite to draw on background image
-##' @param x location 
-##' @param y location 
-##' @param z location 
+##' @param x location
+##' @param y location
+##' @param z location
 ##' @param opacity transparency level (default 1)
 ##' @author Simon Barthelme
 ##' @examples
 ##' im <- load.example("parrots")
 ##' boats.small <- imresize(boats,.5)
-##' #I'm aware the result is somewhat ugly 
+##' #I'm aware the result is somewhat ugly
 ##' imdraw(im,boats.small,x=400,y=10,opacity=.7) %>% plot
 ##' @export
 ##' @seealso imager.combine, for different ways of combining images
@@ -174,9 +174,9 @@ imdraw <- function(im,sprite,x=1,y=1,z=1,opacity=1)
             }
     }
 
-##' Renormalise image 
+##' Renormalise image
 ##'
-##' Pixel data is usually expressed on a 0...255 scale for displaying. This function performs a linear renormalisation to range min...max 
+##' Pixel data is usually expressed on a 0...255 scale for displaying. This function performs a linear renormalisation to range min...max
 ##' @param x numeric data
 ##' @param min min of the range
 ##' @param max max of the range
@@ -227,19 +227,19 @@ iterate <- function(f,k)
             }
     }
 
-##' Compute image gradient 
+##' Compute image gradient
 ##'
 ##' Light interface for get_gradient. Refer to get_gradient for details on the computation.
-##' 
+##'
 ##' @param im an image of class cimg
 ##' @param axes direction along which to compute the gradient. Either a single character (e.g. "x"), or multiple characters (e.g. "xyz"). Default: "xy"
 ##' @param scheme numerical scheme (default '3', rotation invariant)
-##' @return an image or a list of images, depending on the value of "axes" 
+##' @return an image or a list of images, depending on the value of "axes"
 ##' @author Simon Barthelme
 ##' @export
 ##' @examples
 ##' grayscale(boats) %>% imgradient("x") %>% plot
-##' imgradient(boats,"xy") #Returns a list 
+##' imgradient(boats,"xy") #Returns a list
 imgradient <- function(im,axes="xy",scheme=3)
     {
         gr <- get_gradient(im,axes,scheme)
@@ -256,10 +256,10 @@ imgradient <- function(im,axes="xy",scheme=3)
 
 ##' Image warping
 ##'
-##' Image warping consists in remapping pixels, ie. you define a function 
+##' Image warping consists in remapping pixels, ie. you define a function
 ##' M(x,y,z) -> (x',y',z')
-##' that displaces pixel content from (x,y,z) to (x',y',z'). 
-##' Actual implementations rely on either the forward transformation M, or the backward (inverse) transformation M^-1. 
+##' that displaces pixel content from (x,y,z) to (x',y',z').
+##' Actual implementations rely on either the forward transformation M, or the backward (inverse) transformation M^-1.
 ##' In CImg the forward implementation will go through all source (x,y,z) pixels and "paint" the corresponding pixel at (x',y',z'). This will result in unpainted pixels in the output if M is expansive (for example in the case of a scaling M(x,y,z) = 5*(x,y,z)).
 ##' The backward implementation will go through every pixel in the destination image and look for ancestors in the source, meaning that every pixel will be painted.
 ##' There are two ways of specifying the map: absolute or relative coordinates. In absolute coordinates you specify M or M^-1 directly. In relative coordinates you specify an offset function D:
@@ -267,10 +267,10 @@ imgradient <- function(im,axes="xy",scheme=3)
 ##' M^-1(x,y) = (x,y) - D(x,y) (backward)
 ##'
 ##' Note that 3D warps are possible as well.
-##' The mapping should be specified via the "map" argument, see examples. 
-##' 
+##' The mapping should be specified via the "map" argument, see examples.
+##'
 ##' @param im an image
-##' @param map a function that takes (x,y) or (x,y,z) as arguments and returns a named list with members (x,y) or (x,y,z) 
+##' @param map a function that takes (x,y) or (x,y,z) as arguments and returns a named list with members (x,y) or (x,y,z)
 ##' @param direction "forward" or "backward" (default "forward")
 ##' @param coordinates "absolute" or "relative" (default "relative")
 ##' @param boundary boundary conditions: "dirichlet", "neumann", "periodic". Default "dirichlet"
@@ -325,7 +325,7 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
 ##' Generates a "dirac" image, i.e. with all values set to 0 except one.
 ##'
 ##' This small utility is useful to examine the impulse response of a filter
-##' 
+##'
 ##' @param dims a vector of image dimensions, or an image whose dimensions will be used. If dims has length < 4 some guesswork will be used (see examples and ?as.cimg.array)
 ##' @param x where to put the dirac (x coordinate)
 ##' @param y y coordinate
@@ -333,8 +333,8 @@ imwarp <- function(im,map,direction="forward",coordinates="absolute",boundary="d
 ##' @param cc colour coordinate (default 1)
 ##' @return an image
 ##' @examples
-##' #Explicit settings of all dimensions 
-##' imdirac(c(50,50,1,1),20,20) 
+##' #Explicit settings of all dimensions
+##' imdirac(c(50,50,1,1),20,20)
 ##' imdirac(c(50,50),20,20) #Implicit
 ##' imdirac(c(50,50,3),20,20,cc=2) #RGB
 ##' imdirac(c(50,50,7),20,20,z=2) #50x50 video with 7 frames
@@ -391,18 +391,18 @@ imdirac <- function(dims,x,y,z=1,cc=1)
 
 
 
-##' Threshold grayscale image 
+##' Threshold grayscale image
 ##'
 ##' Thresholding corresponding to setting all values below a threshold to 0, all above to 1.
 ##' If you call threshold with thr="auto" a threshold will be computed automatically using kmeans (ie., using a variant of Otsu's method).
 ##' This works well if the pixel values have a clear bimodal distribution. If you call threshold with a string argument of the form "XX\%" (e.g., "98\%"), the threshold will be set at percentile XX.
-##' Computing quantiles or running kmeans is expensive for large images, so if approx == TRUE threshold will skip pixels if the total number of pixels is above 10,000. Note that thresholding a colour image will threshold all the colour channels jointly, which may not be the desired behaviour! Use iiply(im,"c",threshold) to find optimal values for each channel separately. 
-##' 
+##' Computing quantiles or running kmeans is expensive for large images, so if approx == TRUE threshold will skip pixels if the total number of pixels is above 10,000. Note that thresholding a colour image will threshold all the colour channels jointly, which may not be the desired behaviour! Use iiply(im,"c",threshold) to find optimal values for each channel separately.
+##'
 ##' @param im the image
-##' @param thr a threshold, either numeric, or "auto", or a string for quantiles 
+##' @param thr a threshold, either numeric, or "auto", or a string for quantiles
 ##' @param approx Skip pixels when computing quantiles in large images (default TRUE)
 ##' @param adjust use to adjust the automatic threshold: if the auto-threshold is at k, effective threshold will be at adjust*k (default 1)
-##' @return a pixset with the selected pixels 
+##' @return a pixset with the selected pixels
 ##' @examples
 ##' im <- load.example("birds")
 ##' im.g <- grayscale(im)
@@ -427,7 +427,7 @@ threshold <- function(im,thr="auto",approx=TRUE,adjust=1)
             {
                 v <- im
             }
-            
+
             if (thr=="auto")
             {
                 thr <- cut.kmeans(c(v))*adjust
@@ -454,7 +454,7 @@ cut.kmeans <- function(x)
 
 ##' Return information on image file
 ##'
-##' This function calls ImageMagick's "identify" utility on an image file to get some information. You need ImageMagick on your path for this to work. 
+##' This function calls ImageMagick's "identify" utility on an image file to get some information. You need ImageMagick on your path for this to work.
 ##' @param fname path to a file
 ##' @return a list with fields name, format, width (pix.), height (pix.), size (bytes)
 ##' @author Simon Barthelme
@@ -476,7 +476,7 @@ iminfo <- function(fname)
     {
         stop('File does not exist')
     }
-    
+
     if (has.magick())
     {
         cmd <- "identify -format  \"%f;%m;%w;%h;%b  \""
@@ -511,7 +511,7 @@ iminfo <- function(fname)
 }
 
 
-##' Crop the outer margins of an image 
+##' Crop the outer margins of an image
 ##'
 ##' This function crops pixels on each side of an image. This function is a kind of inverse (centred) padding, and is useful e.g. when you want to get only the valid part of a convolution
 ##' @param im an image
@@ -525,7 +525,7 @@ iminfo <- function(fname)
 ##' #These two versions are equivalent
 ##' imfill(10,10) %>% crop.borders(nx=1,ny=1)
 ##' imfill(10,10) %>% crop.borders(nPix=1)
-##' 
+##'
 ##' #Filter, keep valid part
 ##' correlate(boats,imfill(3,3)) %>% crop.borders(nPix=2)
 ##' @export
@@ -564,17 +564,17 @@ patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
     do_patchmatch(im1,im2,sx,sy,sz,nIter,nRad,init)
 }
 
-#' Return image patch summary 
+#' Return image patch summary
 #'
-#' Patches are rectangular image regions centered at cx,cy with width wx and height wy. This function provides a fast way of extracting a statistic over image patches (for example, their mean).  
+#' Patches are rectangular image regions centered at cx,cy with width wx and height wy. This function provides a fast way of extracting a statistic over image patches (for example, their mean).
 #' Supported functions: sum,mean,min,max,median,var,sd, or any valid CImg expression.
-#' WARNINGS: 
+#' WARNINGS:
 #' - values outside of the image region are considered to be 0.
-#' - widths and heights should be odd integers (they're rounded up otherwise). 
+#' - widths and heights should be odd integers (they're rounded up otherwise).
 #' @param im an image
 #' @param expr statistic to extract. a string, either one of the usual statistics like "mean","median", or a CImg expression.
-#' @param cx vector of x coordinates for patch centers 
-#' @param cy vector of y coordinates for patch centers 
+#' @param cx vector of x coordinates for patch centers
+#' @param cy vector of y coordinates for patch centers
 #' @param wx vector of patch widths (or single value)
 #' @param wy vector of patch heights (or single value)
 #' @return a numeric vector
@@ -633,7 +633,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 
 ##' Check that value is in a range
 ##'
-##' A shortcut for x >= a | x <= b. 
+##' A shortcut for x >= a | x <= b.
 ##' @param x numeric values
 ##' @param range a vector of length two, of the form c(a,b)
 ##' @return a vector of logicals
@@ -661,7 +661,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
     }
 }
 
-#' Autocrop image region 
+#' Autocrop image region
 #'
 #' @param im an image
 #' @param color Colour used for the crop. If missing, the colour is taken from the top-left pixel. Can also be a colour name (e.g. "red", or "black")
@@ -681,7 +681,7 @@ patchstat <- function(im,expr,cx,cy,wx,wy)
 #' autocrop(padded) %>% plot
 #' padded2 <- bucketfill(padded,1,1,col=c(0,0,0),sigma=.1)
 #' autocrop(padded2) %>% plot
-#' 
+#'
 autocrop <- function(im,color=color.at(im,1,1),axes="zyx")
 {
     if (is.character(color))
@@ -693,10 +693,10 @@ autocrop <- function(im,color=color.at(im,1,1),axes="zyx")
 
 ##' Control CImg's parallelisation
 ##'
-##' On supported architectures CImg can parallelise many operations using OpenMP. 
+##' On supported architectures CImg can parallelise many operations using OpenMP.
 ##' Use this function to turn parallelisation on or off.
-##' 
-##' @param mode Either "adaptive","always" or "none". The default is adaptive (parallelisation for large images only). 
+##'
+##' @param mode Either "adaptive","always" or "none". The default is adaptive (parallelisation for large images only).
 ##' @return NULL (function is used for side effects)
 ##' @author Simon Barthelme
 ##' @examples
@@ -727,9 +727,9 @@ cimg.use.openmp <- function(mode="adaptive")
 ##'
 ##' This is just a light interface over contourLines. See help for contourLines for details.
 ##' If the image has more than one colour channel, return a list with the contour lines in each channel.
-##' Does not work on 3D images. 
+##' Does not work on 3D images.
 ##' @param x an image or pixset
-##' @param nlevels number of contour levels. For pixsets this can only equal two. 
+##' @param nlevels number of contour levels. For pixsets this can only equal two.
 ##' @param ... extra parameters passed to contourLines
 ##' @return a list of contours
 ##' @author Simon Barthelme
@@ -790,13 +790,13 @@ contours.pixset <- function(x,nlevels=NULL,...)
 
 ##' Remove alpha channel and store as attribute
 ##'
-##' @param im an image with 4 RGBA colour channels 
+##' @param im an image with 4 RGBA colour channels
 ##' @return an image with only three RGB channels and the alpha channel as attribute
 ##' @examples
 ##' #An image with 4 colour channels (RGBA)
 ##' im <- imfill(2,2,val=c(0,0,0,0))
 ##' #Remove fourth channel
-##' rm.alpha(im) 
+##' rm.alpha(im)
 ##' attr(rm.alpha(im),"alpha")
 ##' @author Simon Barthelme
 ##' @seealso flatten.alpha
@@ -863,7 +863,6 @@ flatten.alpha <- function(im,bg="white")
 #'   than once in \code{x} after the operation.
 #' Note: x is not altered: To save the result, you need to copy the returned
 #'   data into a variable.
-#' @importFrom stats setNames
 #' @examples
 #' x <- c("a" = 1, "b" = 2, d = 3, 4)
 #' # Rename column d to "c", updating the variable "x" with the result
@@ -915,6 +914,7 @@ rename_plyr <- function(x, replace, warn_missing = TRUE, warn_duplicated = TRUE 
 #' mutate_plyr(airquality, Temp = (Temp - 32) / 1.8, OzT = Ozone / Temp)
 #'
 #' # mutate is rather faster than transform
+#' data(baseball)
 #' system.time(transform(baseball, avg_ab = ab / g))
 #' system.time(mutate_plyr(baseball, avg_ab = ab / g))
 mutate_plyr <- function(.data, ...) {
