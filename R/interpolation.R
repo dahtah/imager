@@ -1,13 +1,13 @@
 ##' Interpolate image values
 ##'
 ##' This function provides 2D and 3D (linear or cubic) interpolation for pixel values.
-##' Locations need to be provided as a data.frame with variables x,y,z, and c (the last two are optional). 
+##' Locations need to be provided as a data.frame with variables x,y,z, and c (the last two are optional).
 ##' @param im the image (class cimg)
-##' @param locations a data.frame 
+##' @param locations a data.frame
 ##' @param cubic if TRUE, use cubic interpolation. If FALSE, use linear (default FALSE)
 ##' @param extrapolate allow extrapolation (to values outside the image)
 ##' @examples
-##' 
+##'
 ##' loc <- data.frame(x=runif(10,1,width(boats)),y=runif(10,1,height(boats))) #Ten random locations
 ##' interp(boats,loc)
 ##' @export
@@ -23,7 +23,7 @@ interp <- function(im,locations,cubic=FALSE,extrapolate=TRUE)
         }
     if (any(names(locations) == "cc"))
     {
-        locations <- rename_plyr(locations,c("cc"="c"))
+        names(locations) <- stringr::str_replace_all(names(locations),c("cc"="c"))
     }
 
     nms <- intersect(names(locations),c("x","y","z","c"))
@@ -80,7 +80,7 @@ check.inside <- function(im,locations)
 {
     if (any(names(locations) == "cc"))
     {
-        locations <- rename_plyr(locations,c("cc"="c"))
+        names(locations) <- stringr::str_replace_all(names(locations),c("cc"="c"))
     }
     check <- list(x = function(x) { (x >= 1) & (x <= width(im)) },
                   y = function(y) { (y >= 1) & (y <= height(im)) },
