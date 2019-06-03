@@ -25,7 +25,7 @@ BugReports: https://github.com/dahtah/imager/issues
 SystemRequirements: fftw3,libtiff,C++11
 LinkingTo: Rcpp
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests:
     knitr,
     rmarkdown,ggplot2,dplyr,scales,

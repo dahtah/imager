@@ -24,22 +24,3 @@ components are silently dropped.
 Mutate seems to be considerably faster than transform for large data
 frames.
 }
-\examples{
-# Examples from transform
-data(airquality)
-mutate_plyr(airquality, Ozone = -Ozone)
-mutate_plyr(airquality, new = -Ozone, Temp = (Temp - 32) / 1.8)
-
-# Things transform can't do
-mutate_plyr(airquality, Temp = (Temp - 32) / 1.8, OzT = Ozone / Temp)
-
-# mutate is rather faster than transform
-data(baseball)
-system.time(transform(baseball, avg_ab = ab / g))
-system.time(mutate_plyr(baseball, avg_ab = ab / g))
-}
-\seealso{
-\code{\link{subset}}, \code{\link{summarise}},
-  \code{\link{arrange}}.  For another somewhat different approach to
-  solving the same problem, see \code{\link{within}}.
-}
