@@ -863,9 +863,6 @@ flatten.alpha <- function(im,bg="white")
 #'
 #' @param .data the data frame to transform
 #' @param ... named parameters giving definitions of new columns.
-#' @seealso \code{\link{subset}}, \code{\link{summarise}},
-#'   \code{\link{arrange}}.  For another somewhat different approach to
-#'   solving the same problem, see \code{\link{within}}.
 #' @examples
 #' # Examples from transform
 #' data(airquality)
