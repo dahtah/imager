@@ -490,7 +490,7 @@ iminfo <- function(fname)
                 dat <- dat[[1]]
                 names(dat) <- c("name","format","width","height","size")
                 size <- NULL #pointless, only here to make CRAN happy
-                plyr::mutate(as.list(dat),width=as.numeric(width),height=as.numeric(height),size=as.numeric(stringr::str_sub(size,end=-2)))
+                dplyr::mutate(as.list(dat),width=as.numeric(width),height=as.numeric(height),size=as.numeric(stringr::str_sub(size,end=-2)))
             }
             else
             {
