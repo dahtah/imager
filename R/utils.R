@@ -863,19 +863,6 @@ flatten.alpha <- function(im,bg="white")
 #'
 #' @param .data the data frame to transform
 #' @param ... named parameters giving definitions of new columns.
-#' @examples
-#' # Examples from transform
-#' data(airquality)
-#' mutate_plyr(airquality, Ozone = -Ozone)
-#' mutate_plyr(airquality, new = -Ozone, Temp = (Temp - 32) / 1.8)
-#'
-#' # Things transform can't do
-#' mutate_plyr(airquality, Temp = (Temp - 32) / 1.8, OzT = Ozone / Temp)
-#'
-#' # mutate is rather faster than transform
-#' data(baseball)
-#' system.time(transform(baseball, avg_ab = ab / g))
-#' system.time(mutate_plyr(baseball, avg_ab = ab / g))
 mutate_plyr <- function(.data, ...) {
   stopifnot(is.data.frame(.data) || is.list(.data) || is.environment(.data))
 
