@@ -25,7 +25,7 @@ CFlags <- function(print = TRUE) {
 
 inlineCxxPlugin <- function(...) {
     plugin <- Rcpp::Rcpp.plugin.maker(
-        include.before = "#include <imager.h>;",
+        include.before = "#include <imager.h>",
         include.after = "using namespace cimg_library;",
 	package        = "imager",
         Makevars = NULL, Makevars.win = NULL

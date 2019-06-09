@@ -16,7 +16,7 @@ liply(lst, fun, axis, ...)
 \item{...}{further arguments to be passed to fun}
 }
 \description{
-This is just a shortcut for llply followed by imappend
+This is just a shortcut for purrr::map followed by imappend
 }
 \examples{
 build.im <- function(size) as.cimg(function(x,y) (x+y)/size,size,size)

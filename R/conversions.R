@@ -123,7 +123,7 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,
     else
     {
         if (missing(frames)) frames <- 1:depth(im)
-        imager::frames(im,frames) %>% llply(as.raster.cimg)
+        imager::frames(im,frames) %>% purrr::map(as.raster.cimg)
     }
 }
 

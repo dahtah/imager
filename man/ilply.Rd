@@ -16,7 +16,7 @@ ilply(im, axis, fun, ...)
 \item{...}{extra arguments for function fun}
 }
 \description{
-Shorthand for imsplit followed by llply
+Shorthand for imsplit followed by purrr::map
 }
 \examples{
 parrots <- load.example("parrots")

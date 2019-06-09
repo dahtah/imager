@@ -13,7 +13,7 @@ cimg.use.openmp(mode = "adaptive")
 NULL (function is used for side effects)
 }
 \description{
-On supported architectures CImg can parallelise many operations using OpenMP. 
+On supported architectures CImg can parallelise many operations using OpenMP.
 Use this function to turn parallelisation on or off.
 }
 \examples{

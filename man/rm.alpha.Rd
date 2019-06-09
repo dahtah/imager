@@ -19,7 +19,7 @@ Remove alpha channel and store as attribute
 #An image with 4 colour channels (RGBA)
 im <- imfill(2,2,val=c(0,0,0,0))
 #Remove fourth channel
-rm.alpha(im) 
+rm.alpha(im)
 attr(rm.alpha(im),"alpha")
 }
 \seealso{

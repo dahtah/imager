@@ -23,9 +23,9 @@ patchstat(im, expr, cx, cy, wx, wy)
 a numeric vector
 }
 \description{
-Patches are rectangular image regions centered at cx,cy with width wx and height wy. This function provides a fast way of extracting a statistic over image patches (for example, their mean).  
+Patches are rectangular image regions centered at cx,cy with width wx and height wy. This function provides a fast way of extracting a statistic over image patches (for example, their mean).
 Supported functions: sum,mean,min,max,median,var,sd, or any valid CImg expression.
-WARNINGS: 
+WARNINGS:
 - values outside of the image region are considered to be 0.
 - widths and heights should be odd integers (they're rounded up otherwise).
 }
