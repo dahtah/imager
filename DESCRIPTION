@@ -29,5 +29,5 @@ RoxygenNote: 6.1.1
 Suggests:
     knitr,
     rmarkdown,ggplot2,dplyr,scales,
-    testthat,OpenMPController,raster,spatstat
+    testthat,OpenMPController,raster,spatstat, magick
 VignetteBuilder: knitr

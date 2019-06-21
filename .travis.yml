@@ -5,8 +5,22 @@ sudo: false
 cache: packages
 addons:
   apt:
+    update: true
+    sources:
+            - sourceline: 'ppa:opencpu/imagemagick'
     packages:
       - libtiff-dev
       - libpng-dev
       - libjpeg-dev
       - libfftw3-dev
+      - libmagick++-dev
+      - librsvg2-dev
+      - libwebp-dev
+      - libpoppler-cpp-dev
+      - libtesseract-dev
+      - libleptonica-dev
+      - tesseract-ocr-eng
+      - cargo
+      - r-cran-rgdal
+      - gsfonts
+        

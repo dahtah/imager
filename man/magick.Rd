@@ -4,11 +4,14 @@
 \alias{magick}
 \alias{magick2imlist}
 \alias{magick2cimg}
-\title{Convert a magick image to a cimg image or image list}
+\alias{cimg2magick}
+\title{Convert a magick image to a cimg image or image list and vice versa}
 \usage{
 magick2imlist(obj, alpha = "rm", ...)
 
 magick2cimg(obj, alpha = "rm", ...)
+
+cimg2magick(im, rotate = TRUE)
 }
 \arguments{
 \item{obj}{an object of class "magick-image"}
@@ -16,16 +19,24 @@ magick2cimg(obj, alpha = "rm", ...)
 \item{alpha}{what do to with the alpha channel ("rm": remove and store as attribute, "flatten": flatten, "keep": keep). Default: "rm"}
 
 \item{...}{ignored}
+
+\item{im}{an image of class cimg}
+
+\item{rotate}{determine if rotate image to adjust orientation of image}
 }
 \value{
 an object of class cimg or imlist
+
+an object of class "magick-image"
 }
 \description{
-The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects.
+The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects or imager objects into magick objects. Note that cimg2magick function requires magick package.
 }
 \seealso{
 flatten.alpha, rm.alpha
 }
 \author{
 Jan Wijffels, Simon Barthelme
+
+Shota Ochi
 }
