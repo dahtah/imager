@@ -13,6 +13,7 @@ NULL
 #' @importFrom utils file_test
 #' @importFrom graphics axis plot rasterImage layout lines plot.new plot.window title abline polygon
 #' @importFrom stats quantile rnorm kmeans setNames
+#' @importFrom plyr rename
 #' @importFrom purrr map map_dbl map_lgl map_df map2 map_int pmap reduce keep
 #' @importFrom png readPNG writePNG
 #' @importFrom jpeg writeJPEG readJPEG
