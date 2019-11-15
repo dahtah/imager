@@ -118,7 +118,7 @@ index.coord <- function(im,coords,outside="stop")
 {
     if ("c" %in% names(coords))
             {
-                coords <- rename(coords,list("c"="cc")) #Safer
+                names(coords) <- stringr::str_replace_all(names(coords),c("c"="cc")) #Safer
             }
     nc <- setdiff(names.coords,"c")
     ms <- setdiff(nc,names(coords))
