@@ -23,6 +23,7 @@ flattenAlpha <- function(im)
 ##' @seealso plot, capture.plot
 ##' @export
 ##' @examples
+##' \dontrun{
 ##' b.new <- implot(boats,text(150,50,"Boats!!!",cex=3))
 ##' plot(b.new)
 ##' #Draw a line on a white background
@@ -33,10 +34,14 @@ flattenAlpha <- function(im)
 ##' draw.fun <- function() text(150,50,"Boats!!!",cex=3)
 ##' out <- implot(im,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
 ##' plot(out)
+##' }
 ##' @author Simon Barthelme
 ##' @export
 implot <- function(im,expr,...)
     {
+        if (!requireNamespace("Cairo", quietly=TRUE)) {
+            stop("The Cairo package is required, please install it first")
+        }
         w <- width(im)
         h <- height(im)
         Cairo::Cairo(type="raster",width=w,height=h)

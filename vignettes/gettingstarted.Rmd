@@ -623,7 +623,7 @@ All functions are documented.
 - implot, capture.plot: use base graphics on images
 - imeval, as.cimg.function: create parametric images
 - imnoise,imfill,imdirac
-- implot
+- implot requires the Cairo package
 
 ## Modifying images
 
