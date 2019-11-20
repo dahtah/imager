@@ -15,7 +15,7 @@ flattenAlpha <- function(im)
 ##'
 ##' This function lets you use an image as a canvas for base graphics, meaning you can use R functions like "text" and "points" to plot things on an image.
 ##' The function takes as argument an image and an expression, executes the expression with the image as canvas, and outputs the result as an image (of the same size).
-##' 
+##'
 ##' @param im an image (class cimg)
 ##' @param expr an expression (graphics code to execute)
 ##' @param ... passed on to plot.cimg, to control the initial rendering of the image (for example the colorscale)
@@ -23,6 +23,7 @@ flattenAlpha <- function(im)
 ##' @seealso plot, capture.plot
 ##' @export
 ##' @examples
+##' \dontrun{
 ##' b.new <- implot(boats,text(150,50,"Boats!!!",cex=3))
 ##' plot(b.new)
 ##' #Draw a line on a white background
@@ -33,10 +34,14 @@ flattenAlpha <- function(im)
 ##' draw.fun <- function() text(150,50,"Boats!!!",cex=3)
 ##' out <- implot(im,draw.fun(),colorscale=function(v) rgb(0,v,v),rescale=FALSE)
 ##' plot(out)
+##' }
 ##' @author Simon Barthelme
 ##' @export
 implot <- function(im,expr,...)
     {
+        if (!requireNamespace("Cairo", quietly=TRUE)) {
+            stop("The Cairo package is required, please install it first")
+        }
         w <- width(im)
         h <- height(im)
         Cairo::Cairo(type="raster",width=w,height=h)
@@ -56,5 +61,3 @@ implot <- function(im,expr,...)
             out
         }
     }
-
-

@@ -12,9 +12,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 
 ---
-  
+
 ```{r init,echo=FALSE}
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE, 
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE,
                comment=NA, verbose=TRUE, fig.width=5, fig.height=5,dev='jpeg',dev.args=list(quality=50))
 ```
 **imager** contains a large array of functions for working with image data, with most of these functions coming from the [CImg library](http://www.cimg.eu/) by David Tschumperlé. This vignette is just a short tutorial, you'll find more information and examples on the website. Each function in the package is documented and comes with examples, so have a look at package documentation as well.
@@ -34,7 +34,7 @@ Note the y axis running downwards: the origin is at the top-left corner, which i
 class(boats)
 ```
 
-and we can get some basic info by typing: 
+and we can get some basic info by typing:
 
 ```{r}
 boats
@@ -70,10 +70,10 @@ plot(boats/2)
 
 That's because the `plot` function automatically rescales the image data so that the whole range of colour values is used. There are two reasons why that's the default behaviour:
 
-1. There's no agreed-upon standard for how RGB values should be scaled. Some software, like CImg, uses a range of 0-255 (dark to light), other, like R's `rgb` function, uses a 0-1 range. 
-2. Often it's just more convenient to work with a zero-mean image, which means having negative values. 
+1. There's no agreed-upon standard for how RGB values should be scaled. Some software, like CImg, uses a range of 0-255 (dark to light), other, like R's `rgb` function, uses a 0-1 range.
+2. Often it's just more convenient to work with a zero-mean image, which means having negative values.
 
-If you don't want **imager** to rescale the colours automatically, set rescale to FALSE, but now **imager** will want values that are in the $[0,1]$ range. 
+If you don't want **imager** to rescale the colours automatically, set rescale to FALSE, but now **imager** will want values that are in the $[0,1]$ range.
 
 ```{r}
 layout(t(1:2))
@@ -87,7 +87,7 @@ If you'd like tighter control over how **imager** converts pixel values into col
 rgb(0,1,0)
 ```
 
-The function `rgb` is a colour scale, i.e., it takes pixel values and returns colours. We can define an alternative colour scale that swaps the red and green values: 
+The function `rgb` is a colour scale, i.e., it takes pixel values and returns colours. We can define an alternative colour scale that swaps the red and green values:
 
 ```{r}
 cscale <- function(r,g,b) rgb(g,r,b)
@@ -111,7 +111,7 @@ cscale(0)
 grayscale(boats) %>% plot(colourscale=cscale,rescale=FALSE)
 ```
 
-See the documentation for `plot.cimg` and `as.raster.cimg` for more information and examples. 
+See the documentation for `plot.cimg` and `as.raster.cimg` for more information and examples.
 
 The next thing you'll probably want to be doing is to load an image, which can be done using load.image. **imager** ships with another example image, which is stored somewhere in your R library. We find out where using `system.file`
 
@@ -126,13 +126,13 @@ parrots <- load.image(fpath)
 plot(parrots)
 ```
 
-**imager** supports JPEG, PNG, TIFF and BMP natively - for other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/index.php). 
+**imager** supports JPEG, PNG, TIFF and BMP natively - for other formats you'll need to install [ImageMagick](http://www.imagemagick.org/script/index.php).
 
 # Example 1: Histogram equalisation
 
 Histogram equalisation is a textbook example of a contrast-enhancing filter. It's also a good topic for an introduction to what you can do with **imager**.
 
-Image histograms are just histogram of pixel values, which are of course pretty easy to obtain in R: 
+Image histograms are just histogram of pixel values, which are of course pretty easy to obtain in R:
 
 ```{r fig.width=4, fig.height=2.2}
 grayscale(boats) %>% hist(main="Luminance values in boats picture")
@@ -170,7 +170,7 @@ hist(f(x),main="Histogram of ecdf(x)")
 
 ```
 
-We can apply it directly to images as follows: 
+We can apply it directly to images as follows:
 
 ```{r fig.width=4, fig.height=3}
 boats.g <- grayscale(boats)
@@ -178,7 +178,7 @@ f <- ecdf(boats.g)
 plot(f,main="Empirical CDF of luminance values")
 ```
 
-Again we're using a standard R function (`ecdf`), which returns another function corresponding to the ECDF of luminance values in boats.g. 
+Again we're using a standard R function (`ecdf`), which returns another function corresponding to the ECDF of luminance values in boats.g.
 
 If we run the pixel data back through `f` we get a flat histogram:
 
@@ -204,14 +204,14 @@ So far we've run this on a grayscale image. If we want to do this on RGB data, w
 #Hist. equalisation for grayscale
 hist.eq <- function(im) as.cimg(ecdf(im)(im),dim=dim(im))
 
-#Split across colour channels, 
+#Split across colour channels,
 cn <- imsplit(boats,"c")
 cn #we now have a list of images
 cn.eq <- map_il(cn,hist.eq) #run hist.eq on each
 imappend(cn.eq,"c") %>% plot(main="All channels equalised") #recombine and plot
 ```
 
-The map_il function is a variant of lapply inspired by the [purrr](http://purrr.tidyverse.org/) package. It applies a function to each element of a list and returns an image list. You can use purrr together with image for all kinds of neat tricks, e.g.: 
+The map_il function is a variant of lapply inspired by the [purrr](http://purrr.tidyverse.org/) package. It applies a function to each element of a list and returns an image list. You can use purrr together with image for all kinds of neat tricks, e.g.:
 
 ```{r}
 library(purrr)
@@ -241,7 +241,7 @@ gr
 plot(gr,layout="row")
 ```
 
-The object "gr" is an image list, with two components, one for the gradient along $x$, the other for the gradient along $y$. "gr" is an object with class "imlist", which is just a list of images but comes with a few convenience functions (for example, a plotting function as used above). 
+The object "gr" is an image list, with two components, one for the gradient along $x$, the other for the gradient along $y$. "gr" is an object with class "imlist", which is just a list of images but comes with a few convenience functions (for example, a plotting function as used above).
 
 
 To be more specific, noting $I(x,y)$ the image intensity at location $x,y$, what **imager** returns is an approximation of:
@@ -279,7 +279,7 @@ And the second takes a list of images and computes the Euclidean norm pixel-wise
 
 $$ u_i = \sqrt( \sum_j x_{ij}^2) $$
 
-where $x_ij$ is the value of pixel $i$ in the $j-th$ element of the list. 
+where $x_ij$ is the value of pixel $i$ in the $j-th$ element of the list.
 
 `enorm` is an example of a "reduction" function. They're useful for combining pixel values over several images. We'll see another example below when we look at blob detection.
 
@@ -316,7 +316,7 @@ p+scale_fill_gradient(low="black",high="white")
 Colour images are a bit trickier. We could plot each channel separately:
 
 ```{r fig.width=7}
-df <- as.data.frame(boats) 
+df <- as.data.frame(boats)
 p <- ggplot(df,aes(x,y))+geom_raster(aes(fill=value))+facet_wrap(~ cc)
 p+scale_y_reverse()
 ```
@@ -378,7 +378,7 @@ rbinom(100*100,1,.001) %>% as.cimg(x=100,y=100)
 
 Suppose our task is to find the location of the center of the blobs. There are several way of doing that, but one that's convenient is to go through image hessians. Blobs are local maxima in the image, and local maxima are usually associated with a hessian matrix that's positive definite (the well-known second-order optimality condition). A matrix that's positive definite has positive determinant, which we can compute via:
 
-$$ \mathrm{det}(H) = I_{xx} \times I_{yy} - I_{xy}^2 $$ 
+$$ \mathrm{det}(H) = I_{xx} \times I_{yy} - I_{xy}^2 $$
 
 where $I_{xx}$ is the second derivative of the image along x, etc. See wikipedia on [blob detection](https://en.wikipedia.org/wiki/Blob_detection) for more.
 
@@ -481,7 +481,7 @@ isoblur(hub,5) %>% get.centers("99.8%") %$% points(mx,my,col="red")
 and the detector is now picking up large objects only. What if we want to detect objects at various scale? The solution is to aggregate the results over scale, which is what multiscale approaches do.
 
 ```{r}
- #Compute determinant at scale "scale". 
+ #Compute determinant at scale "scale".
 hessdet <- function(im,scale=1) isoblur(im,scale) %>% imhessian %$% { scale^2*(xx*yy - xy^2) }
 #Note the scaling (scale^2) factor in the determinant
 plot(hessdet(hub,1),main="Determinant of the Hessian at scale 1")
@@ -526,11 +526,11 @@ p <- ggplot(as.data.frame(hub),aes(x,y))+geom_raster(aes(fill=value))+geom_point
 p+scale_fill_gradient(low="black",high="white")+scale_x_continuous(expand=c(0,0))+scale_y_continuous(expand=c(0,0),trans=scales::reverse_trans())
 ```
 
-The results aren't perfect - there are spurious points (especially along the seamlines), but it's not a bad start given the small amount of code. Note how the scale index follows the scale of the actual objects. 
+The results aren't perfect - there are spurious points (especially along the seamlines), but it's not a bad start given the small amount of code. Note how the scale index follows the scale of the actual objects.
 
 # How images are represented
 
-It's important to know how **imager** stores image data, if only to understand the occasional error messages. Images are represented as 4D numeric arrays, which is consistent with CImg's storage standard (it is unfortunately inconsistent with other R libraries, like **spatstat**, but converting between representations is easy). 
+It's important to know how **imager** stores image data, if only to understand the occasional error messages. Images are represented as 4D numeric arrays, which is consistent with CImg's storage standard (it is unfortunately inconsistent with other R libraries, like **spatstat**, but converting between representations is easy).
 The four dimensions are labelled x,y,z,c. The first two are the usual spatial dimensions, the third one will usually correspond to depth or time, and the fourth one is colour. Remember the order, it will be used consistently in **imager**.
 If you only have grayscale images then the two extra dimensions are obviously pointless, but they won't bother you much. Your objects will still be officially 4 dimensional, with two trailing flat dimensions.
 Pixels are stored in the following manner: we scan the image beginning at the upper-left corner, along the x axis. Once we hit the end of the scanline, we move to the next line. Once we hit the end of the screen, we move to the next frame (increasing z) and repeat the process. If we have several colour channels, then once we're done with the first colour channel we move to the next one.
@@ -547,12 +547,12 @@ and a colour image:
 dim(parrots)
 ```
 
-In a similar vein, a 400x400 colour video of 50 frames will have dimension 400x400x50x3 (which is of course fairly large, beware memory issues when working with videos). 
+In a similar vein, a 400x400 colour video of 50 frames will have dimension 400x400x50x3 (which is of course fairly large, beware memory issues when working with videos).
 
 In order to save you some time, most functions try to have reasonable defaults so that you don't have to specify all dimensions if you're only working with a grayscale picture. For example, you can use the array subset operator as if you only had two dimensions:
 
 ```{r}
-im <- imfill(10,10) 
+im <- imfill(10,10)
 dim(im)
 im[,1] <- 1:10 #Change the first *row* in the image - dimensions are x,y,z,c
 im[,1,1,1] <- 1:10 #Same thing, more verbose
@@ -571,16 +571,16 @@ as.cimg(array(1:9,c(10,10,4))) #Assumes it's a grayscale video with 4 frames (la
 
 # Learning more
 
-The next step is to learn about pixsets, which have their own vignette: 
+The next step is to learn about pixsets, which have their own vignette:
 ``` vignette("pixsets") ```
 
-pixsets represent sets of pixels and are all-around quite useful. 
+pixsets represent sets of pixels and are all-around quite useful.
 
-After that, you can have a browse around the [website](http://dahtah.github.io/imager). 
+After that, you can have a browse around the [website](http://dahtah.github.io/imager).
 
 # imager functions by theme
 
-All functions are documented. 
+All functions are documented.
 
 ## Loading, saving, reading image information
 
@@ -619,11 +619,11 @@ All functions are documented.
 - interp
 
 ## Generating images
-   
+
 - implot, capture.plot: use base graphics on images
 - imeval, as.cimg.function: create parametric images
 - imnoise,imfill,imdirac
-- implot
+- implot requires the Cairo package
 
 ## Modifying images
 
@@ -673,4 +673,3 @@ All functions are documented.
 ## Misc.
 
 - displacement, diffusion_tensors
-
