@@ -924,8 +924,8 @@ draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
     .Call(`_imager_draw_image`, im, sprite, x, y, z, opacity)
 }
 
-do_patchmatch <- function(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide) {
-    .Call(`_imager_do_patchmatch`, im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide)
+do_patchmatch <- function(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, occ_penalization, guide) {
+    .Call(`_imager_do_patchmatch`, im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, occ_penalization, guide)
 }
 
 checkcoords <- function(x, y, z, c, d) {

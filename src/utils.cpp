@@ -271,15 +271,16 @@ List do_patchmatch(NumericVector im1,NumericVector im2,
 			  unsigned int patch_depth,
 			  unsigned int nb_iterations,
 			  unsigned int nb_randoms,
-			  NumericVector guide)
+			  float occ_penalization,
+                          NumericVector guide)
 {
   try{
     CId img1 = as<CId >(im1);
     CId img2 = as<CId >(im2);
     CId g = as<CId >(guide);
     CId mscore(img1,"xyzc");
-    CImg<int> out = img1.patchmatch(img2,patch_width,patch_height,patch_depth,
-				    nb_iterations,nb_randoms,g,mscore);
+    CImg<int> out = img1.matchpatch(img2,patch_width,patch_height,patch_depth,
+				    nb_iterations,nb_randoms,occ_penalization,g,mscore);
     CId outfl(out);
     return List::create(_["warp"] = wrap(outfl),_["score"] = wrap(mscore));
     }
