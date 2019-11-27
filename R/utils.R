@@ -548,7 +548,7 @@ crop.borders <- function(im,nx=0,ny=0,nz=0,nPix)
 }
 
 
-patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
+patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,occPenal,init)
 {
     if (missing(init)) #Initialise to identity mapping
     {
@@ -561,7 +561,7 @@ patchmatch <- function(im1,im2,sx=1,sy=1,sz=1,nIter=10,nRad=10,init)
             init <- list(Xc(im1),Yc(im1),Zc(im1)) %>% imappend("c")
         }
     }
-    do_patchmatch(im1,im2,sx,sy,sz,nIter,nRad,init)
+    do_patchmatch(im1,im2,sx,sy,sz,nIter,nRad,occPenal,init)
 }
 
 #' Return image patch summary

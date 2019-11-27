@@ -1543,8 +1543,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_patchmatch
-List do_patchmatch(NumericVector im1, NumericVector im2, unsigned int patch_width, unsigned int patch_height, unsigned int patch_depth, unsigned int nb_iterations, unsigned int nb_randoms, NumericVector guide);
-RcppExport SEXP _imager_do_patchmatch(SEXP im1SEXP, SEXP im2SEXP, SEXP patch_widthSEXP, SEXP patch_heightSEXP, SEXP patch_depthSEXP, SEXP nb_iterationsSEXP, SEXP nb_randomsSEXP, SEXP guideSEXP) {
+List do_patchmatch(NumericVector im1, NumericVector im2, unsigned int patch_width, unsigned int patch_height, unsigned int patch_depth, unsigned int nb_iterations, unsigned int nb_randoms, float occ_penalization, NumericVector guide);
+RcppExport SEXP _imager_do_patchmatch(SEXP im1SEXP, SEXP im2SEXP, SEXP patch_widthSEXP, SEXP patch_heightSEXP, SEXP patch_depthSEXP, SEXP nb_iterationsSEXP, SEXP nb_randomsSEXP, SEXP occ_penalizationSEXP, SEXP guideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1555,8 +1555,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned int >::type patch_depth(patch_depthSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type nb_iterations(nb_iterationsSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type nb_randoms(nb_randomsSEXP);
+    Rcpp::traits::input_parameter< float >::type occ_penalization(occ_penalizationSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type guide(guideSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_patchmatch(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide));
+    rcpp_result_gen = Rcpp::wrap(do_patchmatch(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, occ_penalization, guide));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1753,7 +1754,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_imager_extract_patches", (DL_FUNC) &_imager_extract_patches, 6},
     {"_imager_extract_patches3D", (DL_FUNC) &_imager_extract_patches3D, 8},
     {"_imager_draw_image", (DL_FUNC) &_imager_draw_image, 6},
-    {"_imager_do_patchmatch", (DL_FUNC) &_imager_do_patchmatch, 8},
+    {"_imager_do_patchmatch", (DL_FUNC) &_imager_do_patchmatch, 9},
     {"_imager_checkcoords", (DL_FUNC) &_imager_checkcoords, 5},
     {"_imager_cimg_omp", (DL_FUNC) &_imager_cimg_omp, 0},
     {"_imager_set_cimg_omp", (DL_FUNC) &_imager_set_cimg_omp, 1},

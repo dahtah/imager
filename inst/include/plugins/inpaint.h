@@ -133,7 +133,7 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
 
   CImg<floatT> confidences(nmask), priorities(dx,dy,1,2,-1), pC;
   CImg<unsigned int> saved_patches(4,256), is_visited(width(),height(),1,1,0);
-  CImg<ucharT> pM, pN;  // Pre-declare patch variables (avoid iterative memory alloc/dealloc).
+  CImg<ucharT> pM, pN;  // Pre-declare patch variables (avoid iterative memory alloc/dealloc)
   CImg<T> pP, pbest;
   CImg<floatT> weights(patch_size,patch_size,1,1,0);
   weights.draw_gaussian((float)p1,(float)p1,patch_size/15.0f,&one)/=patch_size2;
@@ -148,13 +148,13 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
     CImg_5x5(M,unsigned char);
 
     cimg_for_in5x5(nmask,xm0,ym0,xm1,ym1,x,y,0,0,M,unsigned char)
-      if (!Mcc && (Mcp || Mcn || Mpc || Mnc)) { // Found mask border point.
+      if (!Mcc && (Mcp || Mcn || Mpc || Mnc)) { // Found mask border point
 
         float confidence_term = -1, data_term = -1;
-        if (priorities(x,y)>=0) { // If priority has already been computed.
+        if (priorities(x,y)>=0) { // If priority has already been computed
           confidence_term = priorities(x,y,0);
           data_term = priorities(x,y,1);
-        } else { // If priority must be computed/updated.
+        } else { // If priority must be computed/updated
 
           // Compute smoothed normal vector.
           const float
@@ -199,7 +199,7 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
             mean_ixiy += w*ix*iy;
             mean_iy2 += w*iy*iy;
           }
-          const float // Compute tensor-directed data term.
+          const float // Compute tensor-directed data term
             ux = mean_ix2*(-ny) + mean_ixiy*nx,
             uy = mean_ixiy*(-ny) + mean_iy2*nx;
           data_term = std::sqrt(ux*ux + uy*uy);
@@ -248,7 +248,7 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
     }
     const int l2 = (int)final_lookup_size/2, l1 = (int)final_lookup_size - l2 - 1;
 
-#ifdef gmic_debug
+#ifdef inpaint_debug
     CImg<ucharT> visu(*this,false);
     for (unsigned int C = 0; C<nb_lookup_candidates; ++C) {
       const int
@@ -265,7 +265,7 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
       disp_debug.display(visu).set_title("DEBUG");
     }
     ++foo;
-#endif // #ifdef gmic_debug
+#endif // #ifdef inpaint_debug
 
     // Find best patch candidate to fill target point.
     _inpaint_patch_crop(target_x - p1,target_y - p1,target_x + p2,target_y + p2,0).move_to(pP);
@@ -281,8 +281,8 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
       const int
         xl = (int)lookup_candidates(0,C),
         yl = (int)lookup_candidates(1,C),
-        x0 = cimg::max(p1,xl - l1), y0 = cimg::max(p1,yl - l1),
-        x1 = cimg::min(width() - 1 - p2,xl + l2), y1 = cimg::min(height() - 1 - p2,yl + l2);
+        x0 = std::max(p1,xl - l1), y0 = std::max(p1,yl - l1),
+        x1 = std::min(width() - 1 - p2,xl + l2), y1 = std::min(height() - 1 - p2,yl + l2);
       for (int y = y0; y<=y1; y+=_lookup_increment)
         for (int x = x0; x<=x1; x+=_lookup_increment) if (is_visited(x,y)!=target_index) {
             if (is_strict_search) mask._inpaint_patch_crop(x - p1,y - p1,x + p2,y + p2,1).move_to(pN);
@@ -308,21 +308,21 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
           }
     }
 
-    if (best_x<0) { // If no best patch found.
-      priorities(target_x - ox,target_y - oy,0)/=10; // Reduce its priority (lower data_term).
+    if (best_x<0) { // If no best patch found
+      priorities(target_x - ox,target_y - oy,0)/=10; // Reduce its priority (lower data_term)
       if (++nb_fails>=4) { // If too much consecutive fails :
         nb_fails = 0;
-        _lookup_size+=_lookup_size/2; // Try to expand the lookup size.
+        _lookup_size+=_lookup_size/2; // Try to expand the lookup size
         if (++nb_lookups>=3) {
-          if (is_strict_search) { // If still fails, switch to non-strict search mode.
+          if (is_strict_search) { // If still fails, switch to non-strict search mode
             is_strict_search = false;
             _lookup_size = lookup_size;
             nb_lookups = 0;
           }
-          else return *this; // Pathological case, probably a weird mask.
+          else return *this; // Pathological case, probably a weird mask
         }
       }
-    } else { // Best patch found -> reconstruct missing part on the target patch.
+    } else { // Best patch found -> reconstruct missing part on the target patch
       _lookup_size = lookup_size;
       nb_lookups = nb_fails = 0;
       _inpaint_patch_crop(best_x - p1,best_y - p1,best_x + p2,best_y + p2,0).move_to(pbest);
@@ -345,24 +345,24 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
       if (++nb_saved_patches>=saved_patches._height) saved_patches.resize(4,-200,1,1,0);
     }
   }
-  nmask.assign();  // Free some unused memory resources.
+  nmask.assign();  // Free some unused memory resources
   priorities.assign();
   confidences.assign();
   is_visited.assign();
 
   // Blend inpainting result (if requested), using multi-scale blending algorithm.
   if (blend_size && blend_scales) {
-    const float _blend_threshold = cimg::max(0.0f,cimg::min(1.0f,blend_threshold));
+    const float _blend_threshold = std::max(0.0f,std::min(1.0f,blend_threshold));
     saved_patches._height = nb_saved_patches;
 
     // Re-crop image and mask if outer blending is activated.
     if (is_blend_outer) {
       const int
         b2 = (int)blend_size/2, b1 = (int)blend_size - b2 - 1,
-        xb0 = cimg::max(0,ox - b1),
-        yb0 = cimg::max(0,oy - b1),
-        xb1 = cimg::min(_width - 1,xb0 + dx + b1 + b2),
-        yb1 = cimg::min(_height - 1,yb0 + dy + b1 + b2);
+        xb0 = std::max(0,ox - b1),
+        yb0 = std::max(0,oy - b1),
+        xb1 = std::min(_width - 1,xb0 + dx + b1 + b2),
+        yb1 = std::min(_height - 1,yb0 + dy + b1 + b2);
       ox = xb0; oy = yb0; dx = xb1 - xb0 + 1U, dy = yb1 - yb0 + 1U;
     }
 
@@ -391,17 +391,17 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
     CImg_3x3(I,float);
     cimg_for3XY(offsets,x,y) if (mask(x + ox,y + oy)) {
       const float
-        iox = cimg::max((float)offsets(_n1x,y,0) - offsets(x,y,0),
-                        (float)offsets(x,y,0) - offsets(_p1x,y,0)),
-        ioy = cimg::max((float)offsets(x,_n1y,1) - offsets(x,y,1),
-                        (float)offsets(x,y,1) - offsets(x,_p1y,1)),
+        iox = std::max((float)offsets(_n1x,y,0) - offsets(x,y,0),
+                       (float)offsets(x,y,0) - offsets(_p1x,y,0)),
+        ioy = std::max((float)offsets(x,_n1y,1) - offsets(x,y,1),
+                       (float)offsets(x,y,1) - offsets(x,_p1y,1)),
         ion = std::sqrt(iox*iox + ioy*ioy);
       float iin = 0;
       cimg_forC(*this,c) {
         cimg_get3x3(*this,x,y,0,c,I,float);
         const float
-          iix = (float)cimg::max(Inc - Icc,Icc - Ipc),
-          iiy = (float)cimg::max(Icn - Icc,Icc - Icp);
+          iix = (float)std::max(Inc - Icc,Icc - Ipc),
+          iiy = (float)std::max(Icn - Icc,Icc - Icp);
         iin+=std::log(1 + iix*iix + iiy*iiy);
       }
       iin/=_spectrum;
@@ -436,17 +436,17 @@ CImg<T>& inpaint_patch(const CImg<t>& mask, const unsigned int patch_size=11,
           ys = (int)*(ptr++),
           xd = (int)*(ptr++),
           yd = (int)*(ptr++);
-        if (xs - b1<0 || ys - b1<0 || xs + b2>=width() || ys + b2>=height()) { // Blend with partial patch.
+        if (xs - b1<0 || ys - b1<0 || xs + b2>=width() || ys + b2>=height()) { // Blend with partial patch
           const int
-            xs0 = cimg::max(0,xs - b1),
-            ys0 = cimg::max(0,ys - b1),
-            xs1 = cimg::min(width() - 1,xs + b2),
-            ys1 = cimg::min(height() - 1,ys + b2);
+            xs0 = std::max(0,xs - b1),
+            ys0 = std::max(0,ys - b1),
+            xs1 = std::min(width() - 1,xs + b2),
+            ys1 = std::min(height() - 1,ys + b2);
           _inpaint_patch_crop(xs0,ys0,xs1,ys1,0).move_to(pP);
           weights._inpaint_patch_crop(xs0 - xs + b1,ys0 - ys + b1,xs1 - xs + b1,ys1 - ys + b1,0).move_to(pC);
           blended.draw_image(xd + xs0 - xs - ox,yd + ys0 - ys - oy,pP,pC,-1);
           cumul.draw_image(xd + xs0 - xs - ox,yd + ys0 - ys - oy,pC,-1);
-        } else { // Blend with full-size patch.
+        } else { // Blend with full-size patch
           _inpaint_patch_crop(xs - b1,ys - b1,xs + b2,ys + b2,0).move_to(pP);
           blended.draw_image(xd - b1 - ox,yd - b1 - oy,pP,weights,-1);
           cumul.draw_image(xd - b1 - ox,yd - b1 - oy,weights,-1);
