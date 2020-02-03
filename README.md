@@ -107,6 +107,7 @@ If you want to add features or fix a bug, just fork this repository and send me 
 ## Contributors 
 
 The package's author is Simon Barthelmé (Gipsa-lab, CNRS). The following people have gracefully contributed code, bug fixes or testing:
+
 - Stefan Roediger
 - Aaron Robotham
 - Martin Roth
