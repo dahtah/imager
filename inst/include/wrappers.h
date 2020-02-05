@@ -63,7 +63,7 @@ namespace Rcpp {
   template <> inline SEXP wrap(const cimg_library::CImgList<double> &ilist) 
   {
     Rcpp::List out(ilist.size());
-    for (int i = 0;i < ilist.size(); i++)
+    for (unsigned int i = 0;i < ilist.size(); i++)
       {
 	out[i] = wrap(ilist(i));
       }
@@ -74,7 +74,7 @@ namespace Rcpp {
   template <> inline SEXP wrap(const cimg_library::CImgList<bool > &ilist) 
   {
     Rcpp::List out(ilist.size());
-    for (int i = 0;i < ilist.size(); i++)
+    for (unsigned int i = 0;i < ilist.size(); i++)
       {
 	out[i] = wrap(ilist(i));
       }
