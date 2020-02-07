@@ -1,14 +1,13 @@
 Package: imager
 Type: Package
 Title: Image Processing Library Based on 'CImg'
-Version: 0.41.1
-Date: 2018-04-30
+Version: 0.42.0
 Author: Simon Barthelme [aut], David Tschumperle [ctb], Jan Wijffels [ctb], Haz Edine Assemlal [ctb], Shota Ochi[cre]
 Authors@R: c(person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut")),
  person("David","Tschumperle",role=c("ctb")),
  person("Jan","Wijffels",role=c("ctb")),
  person("Haz Edine","Assemlal",role=c("ctb")),
- person("Shota","Ochi",role=c("cre")))
+ person("Shota","Ochi",email="shotaochi1990@gmail.com",role=c("cre")))
 Maintainer: Shota Ochi <shotaochi1990@gmail.com>
 Description: Fast image processing for images in up to 4 dimensions (two spatial
     dimensions, one time/depth dimension, one colour dimension). Provides most
