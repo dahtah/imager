@@ -4,8 +4,7 @@
 \alias{imnoise}
 \title{Generate (Gaussian) white-noise image}
 \usage{
-imnoise(x = 1, y = 1, z = 1, cc = 1, mean = 0, sd = 1,
-  dim = NULL)
+imnoise(x = 1, y = 1, z = 1, cc = 1, mean = 0, sd = 1, dim = NULL)
 }
 \arguments{
 \item{x}{width}

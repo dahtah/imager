@@ -4,8 +4,14 @@
 \alias{diffusion_tensors}
 \title{Compute field of diffusion tensors for edge-preserving smoothing.}
 \usage{
-diffusion_tensors(im, sharpness = 0.7, anisotropy = 0.6, alpha = 0.6,
-  sigma = 1.1, is_sqrt = FALSE)
+diffusion_tensors(
+  im,
+  sharpness = 0.7,
+  anisotropy = 0.6,
+  alpha = 0.6,
+  sigma = 1.1,
+  is_sqrt = FALSE
+)
 }
 \arguments{
 \item{im}{an image}

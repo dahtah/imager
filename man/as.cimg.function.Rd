@@ -4,8 +4,16 @@
 \alias{as.cimg.function}
 \title{Create an image by sampling a function}
 \usage{
-\method{as.cimg}{function}(obj, width, height, depth = 1, spectrum = 1,
-  standardise = FALSE, dim = NULL, ...)
+\method{as.cimg}{`function`}(
+  obj,
+  width,
+  height,
+  depth = 1,
+  spectrum = 1,
+  standardise = FALSE,
+  dim = NULL,
+  ...
+)
 }
 \arguments{
 \item{obj}{a function with arguments (x,y), or (x,y,cc), or (x,y,z), etc. Must be vectorised; see examples.}

@@ -4,8 +4,7 @@
 \alias{warp}
 \title{Warp image}
 \usage{
-warp(im, warpfield, mode = 0L, interpolation = 1L,
-  boundary_conditions = 0L)
+warp(im, warpfield, mode = 0L, interpolation = 1L, boundary_conditions = 0L)
 }
 \arguments{
 \item{im}{an image}

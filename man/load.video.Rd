@@ -4,8 +4,16 @@
 \alias{load.video}
 \title{Load a video using ffmpeg}
 \usage{
-load.video(fname, maxSize = 1, skip.to = 0, frames = NULL,
-  fps = NULL, extra.args = "", verbose = FALSE, ...)
+load.video(
+  fname,
+  maxSize = 1,
+  skip.to = 0,
+  frames = NULL,
+  fps = NULL,
+  extra.args = "",
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{fname}{file to load}

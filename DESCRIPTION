@@ -3,7 +3,7 @@ Type: Package
 Title: Image Processing Library Based on 'CImg'
 Version: 0.41.1
 Date: 2018-04-30
-Author: Simon Barthelme [aut, cre], David Tschumperle [ctb], Jan Wijffels [ctb], Haz Edine Assemlal [ctb]
+Author: Simon Barthelme [aut], David Tschumperle [ctb], Jan Wijffels [ctb], Haz Edine Assemlal [ctb], Shota Ochi[cre]
 Authors@R: c(person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut")),
  person("David","Tschumperle",role=c("ctb")),
  person("Jan","Wijffels",role=c("ctb")),
@@ -26,7 +26,7 @@ BugReports: https://github.com/dahtah/imager/issues
 SystemRequirements: fftw3,libtiff,C++11
 LinkingTo: Rcpp
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Suggests:
     knitr,
     rmarkdown,ggplot2,dplyr,scales,

@@ -4,8 +4,7 @@
 \alias{imsharpen}
 \title{Sharpen image.}
 \usage{
-imsharpen(im, amplitude, type = "diffusion", edge = 1, alpha = 0,
-  sigma = 0)
+imsharpen(im, amplitude, type = "diffusion", edge = 1, alpha = 0, sigma = 0)
 }
 \arguments{
 \item{im}{an image}

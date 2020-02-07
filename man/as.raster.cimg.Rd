@@ -4,8 +4,15 @@
 \alias{as.raster.cimg}
 \title{Convert a cimg object to a raster object for plotting}
 \usage{
-\method{as.raster}{cimg}(x, frames, rescale = TRUE, colourscale = NULL,
-  colorscale = NULL, col.na = rgb(0, 0, 0, 0), ...)
+\method{as.raster}{cimg}(
+  x,
+  frames,
+  rescale = TRUE,
+  colourscale = NULL,
+  colorscale = NULL,
+  col.na = rgb(0, 0, 0, 0),
+  ...
+)
 }
 \arguments{
 \item{x}{an image (of class cimg)}
