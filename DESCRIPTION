@@ -4,11 +4,12 @@ Title: Image Processing Library Based on 'CImg'
 Version: 0.41.1
 Date: 2018-04-30
 Author: Simon Barthelme [aut, cre], David Tschumperle [ctb], Jan Wijffels [ctb], Haz Edine Assemlal [ctb]
-Authors@R: c(person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut","cre")),
+Authors@R: c(person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut")),
  person("David","Tschumperle",role=c("ctb")),
  person("Jan","Wijffels",role=c("ctb")),
- person("Haz Edine","Assemlal",role=c("ctb")))
-Maintainer: Simon Barthelme <simon.barthelme@gipsa-lab.fr>
+ person("Haz Edine","Assemlal",role=c("ctb")),
+ person("Shota","Ochi",role=c("cre")))
+Maintainer: Shota Ochi <shotaochi1990@gmail.com>
 Description: Fast image processing for images in up to 4 dimensions (two spatial
     dimensions, one time/depth dimension, one colour dimension). Provides most
     traditional image processing tools (filtering, morphology, transformations,
