@@ -11,8 +11,7 @@ load.video(
   frames = NULL,
   fps = NULL,
   extra.args = "",
-  verbose = FALSE,
-  ...
+  verbose = FALSE
 )
 }
 \arguments{
