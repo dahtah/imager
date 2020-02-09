@@ -22,7 +22,7 @@ Depends:
     R (>= 2.10.0),magrittr
 URL: http://dahtah.github.io/imager, https://github.com/dahtah/imager
 BugReports: https://github.com/dahtah/imager/issues
-SystemRequirements: fftw3,libtiff,C++11,FFmpeg
+SystemRequirements: fftw3,libtiff,C++11
 LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 7.0.2
