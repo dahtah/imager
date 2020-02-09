@@ -1,0 +1,11 @@
+windows.h defines FALSE as int.
+This confuses R_useDynamicSymbols function.
+That's why we must undef FALSE in CImg.h.
+
+Procedure
+1. replace FALSE with FALSE_windows in CImg.h
+2. insert the lines in just below #include<windows.h>
+#ifdef FALSE
+enum {FALSE_windows = FALSE};
+#undef FALSE
+#endif
