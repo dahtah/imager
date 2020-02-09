@@ -13,7 +13,7 @@
 #include <Rcpp.h>
 
 #ifdef _OPENMP
-#define cimg_use_openmp
+#define cimg_use_openmp 1
 #endif
 
 #define cimg_use_abort
@@ -23,11 +23,6 @@
 #define cimg_test_abort() Rcpp::checkUserInterrupt()
 #define cimg_test_abort2() Rcpp::checkUserInterrupt()
 #endif // #ifdef cimg_use_openmp
-
-#ifdef cimg_use_openmp
-#undef cimg_use_openmp
-#endif
-#include "CImg.h"
 
 #undef _X
 #undef _Y
