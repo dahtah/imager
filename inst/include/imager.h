@@ -24,6 +24,7 @@
 #define cimg_test_abort2() Rcpp::checkUserInterrupt()
 #endif // #ifdef cimg_use_openmp
 
+#include "CImg.h"
 #undef _X
 #undef _Y
 #undef _Z
