@@ -11,7 +11,6 @@
 ##' @param fps frames per second (default NULL, determined automatically)
 ##' @param extra.args extra arguments to be passed to ffmpeg (default "", none)
 ##' @param verbose if TRUE, show ffmpeg output (default FALSE)
-##' @param ... arguments to be passed on to ffmpeg
 ##' @return an image with the extracted frames along the "z" coordinates
 ##' @seealso save.video, make.video
 ##' @examples
