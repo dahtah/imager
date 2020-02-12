@@ -8,7 +8,7 @@ test_that("load_and_save_videos",{
         
         ff <- tempfile(fileext=".mp4")
         save.video(im,ff)
-        file_test("-f",ff)
+        expect(file_test("-f",ff),TRUE)
         im2 <- load.video(ff)
         unlink(ff)
         expect_equal(im,im2)
