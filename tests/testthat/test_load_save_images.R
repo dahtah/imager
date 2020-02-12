@@ -9,4 +9,4 @@ test_that("load_and_save_images",{
     im2 <- load.image(ff)
     unlink(ff)
     expect_equal(im,im2)
-)
+})
