@@ -4,10 +4,19 @@
 \alias{resize}
 \title{Resize image}
 \usage{
-resize(im, size_x = -100L, size_y = -100L, size_z = -100L,
-  size_c = -100L, interpolation_type = 1L, boundary_conditions = 0L,
-  centering_x = 0, centering_y = 0, centering_z = 0,
-  centering_c = 0)
+resize(
+  im,
+  size_x = -100L,
+  size_y = -100L,
+  size_z = -100L,
+  size_c = -100L,
+  interpolation_type = 1L,
+  boundary_conditions = 0L,
+  centering_x = 0,
+  centering_y = 0,
+  centering_z = 0,
+  centering_c = 0
+)
 }
 \arguments{
 \item{im}{an image}

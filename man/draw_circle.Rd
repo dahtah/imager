@@ -4,8 +4,7 @@
 \alias{draw_circle}
 \title{Draw circle on image}
 \usage{
-draw_circle(im, x, y, radius, color = "white", opacity = 1,
-  filled = TRUE)
+draw_circle(im, x, y, radius, color = "white", opacity = 1, filled = TRUE)
 }
 \arguments{
 \item{im}{an image}

@@ -83,7 +83,7 @@ as.igraph.pixset <- function(x,weighted=TRUE,...)
 ##' igraph::distances(G,5000) %>% as.vector %>%
 ##'     as.cimg(dim=gsdim(im)) %>% plot
 ##' @export
-as.igraph.cimg <- function(x,mask=px.all(channel(im,1)))
+as.igraph.cimg <- function(x,mask=px.all(channel(im,1)),...)
 {
     im <- x
     if (any(dim(mask)[1:2] !=dim(im)[1:2])) {

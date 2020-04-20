@@ -4,8 +4,14 @@
 \alias{imwarp}
 \title{Image warping}
 \usage{
-imwarp(im, map, direction = "forward", coordinates = "absolute",
-  boundary = "dirichlet", interpolation = "linear")
+imwarp(
+  im,
+  map,
+  direction = "forward",
+  coordinates = "absolute",
+  boundary = "dirichlet",
+  interpolation = "linear"
+)
 }
 \arguments{
 \item{im}{an image}

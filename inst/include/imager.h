@@ -1,7 +1,9 @@
 #ifndef IMAGER_H
 #define IMAGER_H
 
+#ifndef STRICT_R_HEADERS
 #define STRICT_R_HEADERS
+#endif
 
 #if defined(Rcpp_hpp) && !defined(COMPILING_IMAGER)
 #error "The file 'Rcpp.h' should not be included. Please correct to include only 'imager.h'."
@@ -11,7 +13,7 @@
 #include <Rcpp.h>
 
 #ifdef _OPENMP
-#define cimg_use_openmp
+#define cimg_use_openmp 1
 #endif
 
 #define cimg_use_abort
@@ -22,9 +24,7 @@
 #define cimg_test_abort2() Rcpp::checkUserInterrupt()
 #endif // #ifdef cimg_use_openmp
 
-
 #include "CImg.h"
-
 #undef _X
 #undef _Y
 #undef _Z

@@ -4,7 +4,7 @@
 \alias{as.igraph.cimg}
 \title{Form a graph from an image}
 \usage{
-\method{as.igraph}{cimg}(x, mask = px.all(channel(im, 1)))
+\method{as.igraph}{cimg}(x, mask = px.all(channel(im, 1)), ...)
 }
 \arguments{
 \item{x}{an image (must be 2D, 3D not implemented yet)}

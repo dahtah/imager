@@ -5,8 +5,14 @@
 \alias{save.video}
 \title{Make/save a video using ffmpeg}
 \usage{
-make.video(dname, fname, pattern = "image-\%d.png", fps = 25,
-  extra.args = "", verbose = FALSE)
+make.video(
+  dname,
+  fname,
+  pattern = "image-\%d.png",
+  fps = 25,
+  extra.args = "",
+  verbose = FALSE
+)
 
 save.video(im, fname, ...)
 }

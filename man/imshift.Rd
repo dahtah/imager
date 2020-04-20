@@ -4,8 +4,14 @@
 \alias{imshift}
 \title{Shift image content.}
 \usage{
-imshift(im, delta_x = 0L, delta_y = 0L, delta_z = 0L, delta_c = 0L,
-  boundary_conditions = 0L)
+imshift(
+  im,
+  delta_x = 0L,
+  delta_y = 0L,
+  delta_z = 0L,
+  delta_c = 0L,
+  boundary_conditions = 0L
+)
 }
 \arguments{
 \item{im}{an image}
