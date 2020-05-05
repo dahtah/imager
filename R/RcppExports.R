@@ -924,8 +924,8 @@ draw_image <- function(im, sprite, x = 0L, y = 0L, z = 0L, opacity = 1) {
     .Call(`_imager_draw_image`, im, sprite, x, y, z, opacity)
 }
 
-do_patchmatch <- function(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide) {
-    .Call(`_imager_do_patchmatch`, im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, guide)
+do_patchmatch <- function(im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, occ_penalization, guide) {
+    .Call(`_imager_do_patchmatch`, im1, im2, patch_width, patch_height, patch_depth, nb_iterations, nb_randoms, occ_penalization, guide)
 }
 
 checkcoords <- function(x, y, z, c, d) {
@@ -946,9 +946,5 @@ has_omp <- function() {
 
 px_split <- function(im, axis, nb = -1L) {
     .Call(`_imager_px_split`, im, axis, nb)
-}
-
-read_video <- function(vpipe, cimg_array, nframes, width, height, block_size) {
-    .Call(`_imager_read_video`, vpipe, cimg_array, nframes, width, height, block_size)
 }
 

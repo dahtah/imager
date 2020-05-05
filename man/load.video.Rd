@@ -4,8 +4,15 @@
 \alias{load.video}
 \title{Load a video using ffmpeg}
 \usage{
-load.video(fname, maxSize = 1, skip.to = 0, frames = NULL,
-  fps = NULL, extra.args = "", verbose = FALSE, ...)
+load.video(
+  fname,
+  maxSize = 1,
+  skip.to = 0,
+  frames = NULL,
+  fps = NULL,
+  extra.args = "",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{fname}{file to load}
@@ -21,8 +28,6 @@ load.video(fname, maxSize = 1, skip.to = 0, frames = NULL,
 \item{extra.args}{extra arguments to be passed to ffmpeg (default "", none)}
 
 \item{verbose}{if TRUE, show ffmpeg output (default FALSE)}
-
-\item{...}{arguments to be passed on to ffmpeg}
 }
 \value{
 an image with the extracted frames along the "z" coordinates

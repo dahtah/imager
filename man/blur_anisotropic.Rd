@@ -4,9 +4,19 @@
 \alias{blur_anisotropic}
 \title{Blur image anisotropically, in an edge-preserving way.}
 \usage{
-blur_anisotropic(im, amplitude, sharpness = 0.7, anisotropy = 0.6,
-  alpha = 0.6, sigma = 1.1, dl = 0.8, da = 30, gauss_prec = 2,
-  interpolation_type = 0L, fast_approx = TRUE)
+blur_anisotropic(
+  im,
+  amplitude,
+  sharpness = 0.7,
+  anisotropy = 0.6,
+  alpha = 0.6,
+  sigma = 1.1,
+  dl = 0.8,
+  da = 30,
+  gauss_prec = 2,
+  interpolation_type = 0L,
+  fast_approx = TRUE
+)
 }
 \arguments{
 \item{im}{an image}

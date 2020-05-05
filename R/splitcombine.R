@@ -1,6 +1,6 @@
 ##' Apply function to each element of a list, then combine the result as an image by appending along specified axis
 ##'
-##' This is just a shortcut for llply followed by imappend
+##' This is just a shortcut for purrr::map followed by imappend
 ##' @param lst a list
 ##' @param fun function to apply
 ##' @param axis which axis to append along (e.g. "c" for colour)
@@ -11,13 +11,13 @@
 ##' @export
 liply <- function(lst,fun,axis,...)
     {
-        llply(lst,fun,...) %>% imappend(axis=axis)
+        purrr::map(lst,fun,...) %>% imappend(axis=axis)
     }
 
 
 ##' Split an image along axis, apply function, return a list
 ##'
-##' Shorthand for imsplit followed by llply
+##' Shorthand for imsplit followed by purrr::map
 ##' @param im image
 ##' @param axis axis for the split (e.g "c")
 ##' @param fun function to apply
@@ -28,11 +28,11 @@ liply <- function(lst,fun,axis,...)
 ##' @export
 ilply <- function(im,axis,fun,...)
     {
-        imsplit(im,axis) %>% llply(fun,...) 
+        imsplit(im,axis) %>% purrr::map(fun,...)
     }
-##' Split an image along axis, apply function, return a data.frame
+##' Split an image along axis, map function, return a data.frame
 ##'
-##' Shorthand for imsplit followed by ldply
+##' Shorthand for imsplit followed by purrr::map_df
 ##' @param im image
 ##' @param axis axis for the split (e.g "c")
 ##' @param fun function to apply
@@ -42,14 +42,15 @@ ilply <- function(im,axis,fun,...)
 ##' @export
 idply <- function(im,axis,fun,...)
     {
-        imsplit(im,axis) %>% ldply(fun,...) 
+    # Extra as.data.frame(t(...)) added to force output to resemble plyr::ldply
+        imsplit(im,axis) %>% purrr::map_df(function(x, ...) as.data.frame(t(fun(x, ...))), .id = ".id")
     }
 
 ##' Split an image, apply function, recombine the results as an image
 ##'
-##' This is just imsplit followed by llply followed by imappend
-##' 
-##' @param im image 
+##' This is just imsplit followed by purrr::map followed by imappend
+##'
+##' @param im image
 ##' @param axis axis for the split (e.g "c")
 ##' @param fun function to apply
 ##' @param ... extra arguments to function fun
@@ -60,7 +61,7 @@ idply <- function(im,axis,fun,...)
 ##' @export
 iiply <- function(im,axis,fun,...)
     {
-        imsplit(im,axis) %>% llply(fun,...) %>% imappend(axis=axis)
+        imsplit(im,axis) %>% purrr::map(fun,...) %>% imappend(axis=axis)
     }
 
 ##' Split an image along a certain axis (producing a list)
@@ -100,7 +101,7 @@ imsplit <- function(im,axis,nb=-1)
     d <- dim(im)
     if (nb!=-1)
     {
-        b.end <- laply(l,function(v) dim(v)[d.ind]) %>% cumsum
+        b.end <- map_dbl(l,function(v) dim(v)[d.ind]) %>% cumsum
         b.start <- c(1,b.end[-length(l)]+1)
         b.str <- sprintf("= %i - %i",b.start,b.end)
         names(l) <- paste(axis,b.str)
@@ -117,7 +118,7 @@ imsplit.recur <- function(im,spl,nb=-1)
     {
         if (length(spl) > 1)
             {
-                imsplit.recur(im,spl[[1]]) %>% llply(imsplit.recur,spl=spl[-1])
+                imsplit.recur(im,spl[[1]]) %>% purrr::map(imsplit.recur,spl=spl[-1])
             }
         else
             {
@@ -126,7 +127,7 @@ imsplit.recur <- function(im,spl,nb=-1)
                 d <- dim(im)
                 if (nb!=-1)
                     {
-                        b.end <- laply(l,function(v) dim(v)[d.ind]) %>% cumsum
+                        b.end <- map_dbl(l,function(v) dim(v)[d.ind]) %>% cumsum
                         b.start <- c(1,b.end[-length(l)]+1)
                         b.str <- sprintf("= %i - %i",b.start,b.end)
                         names(l) <- paste(axis,b.str)
@@ -373,23 +374,23 @@ maxmin.ind <- function(L,max=TRUE)
     pind
 }
 
-#' Combine a list of images into a single image 
-#' 
+#' Combine a list of images into a single image
+#'
 #' All images will be concatenated along the x,y,z, or c axis.
-#' 
-#' @param imlist a list of images (all elements must be of class cimg) 
+#'
+#' @param imlist a list of images (all elements must be of class cimg)
 #' @param axis the axis along which to concatenate (for example 'c')
 #' @seealso imsplit (the reverse operation)
 #' @export
 #' @examples
 #' imappend(list(boats,boats),"x") %>% plot
 #' imappend(list(boats,boats),"y") %>% plot
-#' plyr::rlply(3,imnoise(100,100)) %>% imappend("c") %>% plot
+#' purrr::map(1:3, ~imnoise(100,100)) %>% imappend("c") %>% plot
 #' boats.gs <- grayscale(boats)
-#' plyr::llply(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) %>% imappend("c") %>% plot
+#' purrr::map(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) %>% imappend("c") %>% plot
 #' #imappend also works on pixsets
 #' imsplit(boats > .5,"c") %>% imappend("x") %>% plot
-##' @export 
+##' @export
 imappend <- function(imlist,axis)
 {
     if (all(map_lgl(imlist,is.cimg)))

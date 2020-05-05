@@ -20,7 +20,7 @@ This function calls ImageMagick's "identify" utility on an image file to get som
 someFiles <- dir("*.png") #Find all PNGs in directory
 iminfo(someFiles[1])
 #Get info on all files, as a data frame
-info <- plyr::ldply(someFiles,function(v) iminfo(v) \%>\% as.data.frame) 
+info <- purrr::map_df(someFiles,function(v) iminfo(v) \%>\% as.data.frame)
 }
 }
 \author{

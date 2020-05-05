@@ -8,7 +8,9 @@ Imager is an image/video processing package for R, based on [CImg](http://cimg.e
 
 Imager is on CRAN, so
 
-	install.packages("imager")
+```r
+install.packages("imager")
+```
 
 should do the trick. You may also want to install ImageMagick and ffmpeg, see "External Dependencies" below. 
 
@@ -16,7 +18,9 @@ The version of CRAN will often lag the one on github. If you'd like to install t
 
 Install the devtools package if you haven't already. Run:
 
-	devtools::install_github("dahtah/imager")
+```r
+devtools::install_github("dahtah/imager")
+```
 
 If that doesn't work then you're probably missing a build environment or a library, see below.
 
@@ -25,7 +29,10 @@ If that doesn't work then you're probably missing a build environment or a libra
 
 Install [XQuartz](https://www.xquartz.org/) if you haven't already (it's required for the interactive functions). 
 You'll need Xcode (OS X's development environment) to compile source packages. The FFTW library is needed, and the easiest way to install it is via [Homebrew](http://brew.sh/). Install Homebrew, then run:
-	brew install fftw
+
+```sh
+brew install fftw
+```
 
 Optionally, install libtiff for better support of TIFF files. 
 
@@ -40,8 +47,9 @@ Building R packages on Windows is a bit of a pain so you're probably better off 
 
 To build under Linux make sure you have the headers for libX11 and libfftw3 (optionally, libtiff as well). On my Ubuntu system this seems to be enough:
 
-	sudo apt-get install libfftw3-dev libX11-dev libtiff-dev
-
+```sh
+sudo apt-get install libfftw3-dev libX11-dev libtiff-dev
+```
 
 ### External dependencies
 
@@ -54,25 +62,30 @@ To load and save videos you'll need [ffmpeg](http://ffmpeg.org/download.html), n
 
 Here's a small demo that actually demonstrates an interesting property of colour perception:
 
-	library(imager)
-	library(purrr)
-	parrots <- load.example("parrots")
-	plot(parrots)
-	#Define a function that converts to YUV, blurs a specific channel, and converts back
-	bchan <- function(im,ind,sigma=5) { 
-		im <- RGBtoYUV(im)
-		channel(im,ind) <- isoblur(channel(im,ind),sigma); 
-		YUVtoRGB(im)
-	}
-	#Run the function on all three channels and collect the results as a list
-	blurred <- map_il(1:3,~ bchan(parrots,.))
-	names(blurred) <- c("Luminance blur (Y)","Chrominance blur (U)","Chrominance blur (V)")
-	plot(blurred)
+```r
+library(imager)
+library(purrr)
+parrots <- load.example("parrots")
+plot(parrots)
+#Define a function that converts to YUV, blurs a specific channel, and converts back
+bchan <- function(im,ind,sigma=5) { 
+	im <- RGBtoYUV(im)
+	channel(im,ind) <- isoblur(channel(im,ind),sigma); 
+	YUVtoRGB(im)
+}
+#Run the function on all three channels and collect the results as a list
+blurred <- map_il(1:3,~ bchan(parrots,.))
+names(blurred) <- c("Luminance blur (Y)","Chrominance blur (U)","Chrominance blur (V)")
+plot(blurred)
+```
 	
 We're much more [sensitive to luminance edges than we are to colour edges](https://en.wikipedia.org/wiki/Chroma_subsampling). 
 
 Documentation is available [here](http://dahtah.github.io/imager/). To get a list of all package functions, run:
-	ls(pos = "package:imager")
+
+```r
+ls(pos = "package:imager")
+```
 
 ## Important warning on memory usage
 
@@ -94,6 +107,7 @@ If you want to add features or fix a bug, just fork this repository and send me 
 ## Contributors 
 
 The package's author is Simon Barthelmé (Gipsa-lab, CNRS). The following people have gracefully contributed code, bug fixes or testing:
+
 - Stefan Roediger
 - Aaron Robotham
 - Martin Roth

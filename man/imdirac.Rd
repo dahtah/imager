@@ -24,8 +24,8 @@ an image
 This small utility is useful to examine the impulse response of a filter
 }
 \examples{
-#Explicit settings of all dimensions 
-imdirac(c(50,50,1,1),20,20) 
+#Explicit settings of all dimensions
+imdirac(c(50,50,1,1),20,20)
 imdirac(c(50,50),20,20) #Implicit
 imdirac(c(50,50,3),20,20,cc=2) #RGB
 imdirac(c(50,50,7),20,20,z=2) #50x50 video with 7 frames

@@ -17,9 +17,9 @@ All images will be concatenated along the x,y,z, or c axis.
 \examples{
 imappend(list(boats,boats),"x") \%>\% plot
 imappend(list(boats,boats),"y") \%>\% plot
-plyr::rlply(3,imnoise(100,100)) \%>\% imappend("c") \%>\% plot
+purrr::map(1:3, ~imnoise(100,100)) \%>\% imappend("c") \%>\% plot
 boats.gs <- grayscale(boats)
-plyr::llply(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) \%>\% imappend("c") \%>\% plot
+purrr::map(seq(1,5,l=3),function(v) isoblur(boats.gs,v)) \%>\% imappend("c") \%>\% plot
 #imappend also works on pixsets
 imsplit(boats > .5,"c") \%>\% imappend("x") \%>\% plot
 }

@@ -4,8 +4,15 @@
 \alias{displacement}
 \title{Estimate displacement field between two images.}
 \usage{
-displacement(sourceIm, destIm, smoothness = 0.1, precision = 5,
-  nb_scales = 0L, iteration_max = 10000L, is_backward = FALSE)
+displacement(
+  sourceIm,
+  destIm,
+  smoothness = 0.1,
+  precision = 5,
+  nb_scales = 0L,
+  iteration_max = 10000L,
+  is_backward = FALSE
+)
 }
 \arguments{
 \item{sourceIm}{Reference image.}

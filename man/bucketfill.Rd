@@ -4,8 +4,16 @@
 \alias{bucketfill}
 \title{Bucket fill}
 \usage{
-bucketfill(im, x, y, z = 1, color, opacity = 1, sigma = 0,
-  high_connexity = FALSE)
+bucketfill(
+  im,
+  x,
+  y,
+  z = 1,
+  color,
+  opacity = 1,
+  sigma = 0,
+  high_connexity = FALSE
+)
 }
 \arguments{
 \item{im}{an image}

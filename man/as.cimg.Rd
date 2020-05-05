@@ -20,8 +20,7 @@ as.cimg(obj, ...)
 
 \method{as.cimg}{cimg}(obj, ...)
 
-\method{as.cimg}{vector}(obj, x = NA, y = NA, z = NA, cc = NA,
-  dim = NULL, ...)
+\method{as.cimg}{vector}(obj, x = NA, y = NA, z = NA, cc = NA, dim = NULL, ...)
 
 \method{as.cimg}{matrix}(obj, ...)
 }

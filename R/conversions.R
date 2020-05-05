@@ -123,7 +123,7 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,
     else
     {
         if (missing(frames)) frames <- 1:depth(im)
-        imager::frames(im,frames) %>% llply(as.raster.cimg)
+        imager::frames(im,frames) %>% purrr::map(as.raster.cimg)
     }
 }
 
@@ -492,9 +492,9 @@ cvt.frame <- function(f){
 
 
 
-#' Convert a magick image to a cimg image or image list
+#' Convert a magick image to a cimg image or image list and vice versa
 #'
-#' The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects. 
+#' The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects or imager objects into magick objects. Note that cimg2magick function requires magick package.
 #' @param obj an object of class "magick-image"
 #' @name magick
 #' @param ... ignored
@@ -531,7 +531,26 @@ magick2cimg <- function(obj,alpha="rm",...)
     magick2imlist(obj,alpha=alpha) %>% imappend("z")
 }
 
-
+#' @rdname magick
+#' @param im an image of class cimg
+#' @param rotate determine if rotate image to adjust orientation of image
+#' @return an object of class "magick-image"
+#' @export
+#' @author Shota Ochi
+cimg2magick <- function(im, rotate = TRUE)
+{
+    out <- as.array(frames(im, drop = TRUE)[[1]])
+    if (spectrum(im) == 1)
+    {
+        out <- array(out, c(dim(im)[1], dim(im)[2], 1))
+    }
+    out <- magick::image_read(out)
+    if (rotate)
+    {
+        out <- magick::image_rotate(out, 90)
+    }
+    out
+}
 
 #' Convert a RasterLayer/RasterBrick to a cimg image/image list
 #'

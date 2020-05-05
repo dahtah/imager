@@ -4,8 +4,14 @@
 \alias{imwarp}
 \title{Image warping}
 \usage{
-imwarp(im, map, direction = "forward", coordinates = "absolute",
-  boundary = "dirichlet", interpolation = "linear")
+imwarp(
+  im,
+  map,
+  direction = "forward",
+  coordinates = "absolute",
+  boundary = "dirichlet",
+  interpolation = "linear"
+)
 }
 \arguments{
 \item{im}{an image}
@@ -24,10 +30,10 @@ imwarp(im, map, direction = "forward", coordinates = "absolute",
 a warped image
 }
 \description{
-Image warping consists in remapping pixels, ie. you define a function 
+Image warping consists in remapping pixels, ie. you define a function
 M(x,y,z) -> (x',y',z')
-that displaces pixel content from (x,y,z) to (x',y',z'). 
-Actual implementations rely on either the forward transformation M, or the backward (inverse) transformation M^-1. 
+that displaces pixel content from (x,y,z) to (x',y',z').
+Actual implementations rely on either the forward transformation M, or the backward (inverse) transformation M^-1.
 In CImg the forward implementation will go through all source (x,y,z) pixels and "paint" the corresponding pixel at (x',y',z'). This will result in unpainted pixels in the output if M is expansive (for example in the case of a scaling M(x,y,z) = 5*(x,y,z)).
 The backward implementation will go through every pixel in the destination image and look for ancestors in the source, meaning that every pixel will be painted.
 There are two ways of specifying the map: absolute or relative coordinates. In absolute coordinates you specify M or M^-1 directly. In relative coordinates you specify an offset function D:
