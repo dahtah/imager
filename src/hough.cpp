@@ -69,7 +69,7 @@ NumericVector hough_circle_(LogicalVector px, int radius)
     {
       if (ppx(x,y))
 	{
-	  out.draw_circle(x,y,radius,col,.1,0);
+	  out.draw_circle(x,y,radius,col,.1,1);
 	}
     }
   return wrap(out);
