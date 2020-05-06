@@ -4,7 +4,9 @@
 \name{boats}
 \alias{boats}
 \title{Photograph of sailing boats from Kodak set}
-\format{an image of class cimg}
+\format{
+an image of class cimg
+}
 \source{
 \url{ http://r0k.us/graphics/kodak/kodim09.html }
 }
