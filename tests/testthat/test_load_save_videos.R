@@ -4,7 +4,7 @@ library(Rcpp)
 test_that("load_and_save_videos",{
     if (imager:::has.ffmpeg())
     {
-        if (!is.na(system("ffmpeg -verion", intern = TRUE)[1])) 
+        if (!is.na(system("ffmpeg -version", intern = TRUE)[1])) 
         {
             im <- imfill(10,10,3,val=c(0,0,0))
         
