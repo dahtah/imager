@@ -116,21 +116,6 @@
 
 // Disable silly warnings on some Microsoft VC++ compilers.
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:4127)
-#pragma warning(disable:4244)
-#pragma warning(disable:4311)
-#pragma warning(disable:4312)
-#pragma warning(disable:4319)
-#pragma warning(disable:4512)
-#pragma warning(disable:4571)
-#pragma warning(disable:4640)
-#pragma warning(disable:4706)
-#pragma warning(disable:4710)
-#pragma warning(disable:4800)
-#pragma warning(disable:4804)
-#pragma warning(disable:4820)
-#pragma warning(disable:4996)
 
 #ifndef _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_DEPRECATE 1
@@ -63373,7 +63358,7 @@ namespace cil = cimg_library_suffixed;
 #define PI 3.141592653589793238462643383
 #endif
 #ifdef _MSC_VER
-#pragma warning(pop)
+
 #endif
 
 #endif
