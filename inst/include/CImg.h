@@ -548,10 +548,7 @@ extern "C" {
 // (see methods 'CImg<T>::{load,save}_exr()').
 #ifdef cimg_use_openexr
 #if __GNUC__>=5
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated"
-#pragma GCC diagnostic ignored "-Wdeprecated-copy"
-#pragma GCC diagnostic ignored "-Wshadow"
+
 #endif
 #include "ImfRgbaFile.h"
 #include "ImfInputFile.h"
@@ -559,7 +556,7 @@ extern "C" {
 #include "ImfMatrixAttribute.h"
 #include "ImfArray.h"
 #if __GNUC__>=5
-#pragma GCC diagnostic pop
+
 #endif
 #endif
 
