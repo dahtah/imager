@@ -48,7 +48,27 @@ Building R packages on Windows is a bit of a pain so you're probably better off 
 To build under Linux make sure you have the headers for libX11 and libfftw3 (optionally, libtiff as well). On my Ubuntu system this seems to be enough:
 
 ```sh
-sudo apt-get install libfftw3-dev libX11-dev libtiff-dev
+sudo apt-get install libfftw3-dev libx11-dev libtiff-dev
+```
+
+For other Linux distributions, you can query the [SystemRequirements database](https://github.com/r-hub/sysreqsdb) to determine the relevant dependency package names for [imager](https://sysreqs.r-hub.io/pkg/imager):
+
+```r
+# install prerequisites
+install.packages("remotes")
+remotes::install_github("r-hub/sysreqs")
+
+# set platform, supported platforms are listed here: https://github.com/r-hub/sysreqsdb/tree/master/platforms
+target <- "linux-x86_64-arch-gcc"
+
+# print package names as character vector
+tmp <- tempfile(pattern = "DESCRIPTION")
+download.file(url = "https://github.com/dahtah/imager/raw/master/DESCRIPTION",
+              destfile = tmp)
+sysreqs::(desc = tmp,
+          platform = "linux-x86_64-arch-gcc",
+	  soft = FALSE)
+rm(tmp)
 ```
 
 ### External dependencies
