@@ -58,7 +58,7 @@ For other Linux distributions, you can query the [SystemRequirements database](h
 install.packages("remotes")
 remotes::install_github("r-hub/sysreqs")
 
-# set platform, supported platforms are listed here: https://github.com/r-hub/sysreqsdb/tree/master/platforms
+# set platform; supported platforms are listed here: https://github.com/r-hub/sysreqsdb/tree/master/platforms
 target <- "linux-x86_64-arch-gcc"
 
 # print package names as character vector
