@@ -66,7 +66,7 @@ tmp <- tempfile(pattern = "DESCRIPTION")
 download.file(url = "https://github.com/dahtah/imager/raw/master/DESCRIPTION",
               destfile = tmp)
 sysreqs::(desc = tmp,
-          platform = "linux-x86_64-arch-gcc",
+          platform = target,
 	  soft = FALSE)
 rm(tmp)
 ```
