@@ -586,6 +586,7 @@ LIBOBJS
 TIFF_LIBS
 TIFF_CFLAGS
 HAVE_FFTW
+DONT_HAVE_X11
 OPENMP_CXXFLAGS
 FFTW_LIBS
 FFTW_CFLAGS
@@ -2825,9 +2826,15 @@ else
   HAVE_LIBX11=FALSE
 fi
 
-  if test "$HAVE_LIBX11" == FALSE; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: X11 library not found, please install X11 library." >&5
-$as_echo "X11 library not found, please install X11 library." >&6; }
+  if test "$HAVE_LIBX11" == TRUE; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: X11 library found." >&5
+$as_echo "X11 library found." >&6; }
+    DONT_HAVE_X11=''
+    #DONT_HAVE_X11='-Dcimg_display=0'
+  else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: X11 library not found, please install X11 library if you need the display capabilities of CImg." >&5
+$as_echo "X11 library not found, please install X11 library if you need the display capabilities of CImg." >&6; }
+    DONT_HAVE_X11='-Dcimg_display=0'
   fi
   if test x$no_x = xyes ; then
     as_fn_error $? "X11 not found but required, configure aborted." "$LINENO" 5
@@ -3375,6 +3382,7 @@ $as_echo "$ac_cv_prog_cxx_openmp" >&6; }
 
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
+
 
 
 

@@ -932,7 +932,7 @@ NULL
 
 #' Display image using CImg library
 #'
-#' Press escape or close the window to exit.
+#' Press escape or close the window to exit. Note that you need X11 library to use this function.
 #'
 #' @param x an image (cimg object)
 #' @param rescale if true pixel values are rescaled to [0-1] (default TRUE)
@@ -951,7 +951,7 @@ display.cimg <- function(x,...,rescale=TRUE)
 
 ##' Display object using CImg library
 ##'
-##' CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in RStudio.
+##' CImg has its own functions for fast, interactive image plotting. Use this if you get frustrated with slow rendering in RStudio. Note that you need X11 library to use this function.
 ##' @param x an image or a list of images
 ##' @param ... ignored
 ##' @seealso display.cimg, display.imlist

@@ -14,7 +14,7 @@
 \item{rescale}{if true pixel values are rescaled to [0-1] (default TRUE)}
 }
 \description{
-Press escape or close the window to exit.
+Press escape or close the window to exit. Note that you need X11 library to use this function.
 }
 \examples{
 ##Not run: interactive only 

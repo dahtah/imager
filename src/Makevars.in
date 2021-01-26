@@ -1,3 +1,3 @@
-PKG_CPPFLAGS = $(OPENMP_CXXFLAGS) @CPPFLAGS@ @HAVE_FFTW@ @FFTW_CFLAGS@ @TIFF_CFLAGS@ -I../inst/include -DCIMG_COMPILING -Dcimg_use_rng -Dcimg_use_r -Dcimg_use_fftw3_singlethread -Dcimg_verbosity=1 -Dcimg_date='""' -Dcimg_time='""'
+PKG_CPPFLAGS = $(OPENMP_CXXFLAGS) @CPPFLAGS@ @DONT_HAVE_X11@ @HAVE_FFTW@ @FFTW_CFLAGS@ @TIFF_CFLAGS@ -I../inst/include -DCIMG_COMPILING -Dcimg_use_rng -Dcimg_use_r -Dcimg_use_fftw3_singlethread -Dcimg_verbosity=1 -Dcimg_date='""' -Dcimg_time='""'
 PKG_LIBS =  $(OPENMP_CXXFLAGS) @LIBS@  @HAVE_FFTW@ @FFTW_LIBS@ @TIFF_LIBS@ $(RCPP_LDFLAGS)
 

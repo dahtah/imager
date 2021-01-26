@@ -50,8 +50,13 @@ AC_PATH_PROG([PKGCONF],[pkg-config],[],[$PATH:/usr/local/bin:ext/bin:ext:/sw/bin
 
   AC_PATH_X
   AC_CHECK_LIB(X11, XOpenDisplay, [HAVE_LIBX11=TRUE], [HAVE_LIBX11=FALSE])
-  if test "$HAVE_LIBX11" == FALSE; then
-    AC_MSG_RESULT([X11 library not found, please install X11 library.])
+  if test "$HAVE_LIBX11" == TRUE; then
+    AC_MSG_RESULT([X11 library found.])
+    DONT_HAVE_X11=''
+    #DONT_HAVE_X11='-Dcimg_display=0'
+  else
+    AC_MSG_RESULT([X11 library not found, please install X11 library if you need the display capabilities of CImg.])
+    DONT_HAVE_X11='-Dcimg_display=0'
   fi
   if test x$no_x = xyes ; then
     AC_MSG_ERROR([X11 not found but required, configure aborted.])
@@ -208,6 +213,7 @@ dnl this the meat of R's m4/openmp.m4
 AC_SUBST(OPENMP_CXXFLAGS)
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
+AC_SUBST(DONT_HAVE_X11)
 AC_SUBST(HAVE_FFTW)
 AC_SUBST(FFTW_CFLAGS)
 AC_SUBST(FFTW_LIBS)

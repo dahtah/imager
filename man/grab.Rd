@@ -24,7 +24,8 @@ Depending on the value of the output parameter. Either a vector of coordinates (
 \description{
 These functions let you select a shape in an image (a point, a line, or a rectangle)
 They either return the coordinates of the shape (default), or the contents.
-In case of lines contents are interpolated. Note that grabLine does not support the "pixset" return type.
+In case of lines contents are interpolated. Note that grabLine does not support the "pixset" return type. 
+Note that you need X11 library to use these functions.
 }
 \examples{
 ##Not run: interactive only 

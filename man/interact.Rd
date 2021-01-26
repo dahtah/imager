@@ -21,6 +21,7 @@ To explore the effect of certain image manipulations, filter settings, etc., it'
 You can exit the interface at any time by pressing Esc.
 See examples for more.
 This feature is experimental!!!
+Note that you need X11 library to use this function.
 }
 \examples{
 #Implement a basic image gallery:

@@ -4,6 +4,10 @@ using namespace cimg_library;
 
 std::string cvt_keycode(const unsigned int key)
 {
+#if cimg_display==0
+   (void)key;
+   Rcpp::stop("Please install X11 library to use this function.");
+#else
   switch (key) {
     // case cimg::keySPACE : return "space";
     // case cimg::keyRETURN : return "return";
@@ -99,6 +103,7 @@ std::string cvt_keycode(const unsigned int key)
   case cimg::keyPADMUL : return "padmul";
   case cimg::keyPADDIV : return "paddiv";	
   }
+#endif
   return "unknown";
   
 }
@@ -107,6 +112,13 @@ std::string cvt_keycode(const unsigned int key)
 // [[Rcpp::export]]
 NumericVector interact_(Function fun,NumericVector init,std::string title = "")
 {
+#if cimg_display==0
+  CId out=as<CId >(init);
+  (void)fun;
+  (void)title;
+  Rcpp::stop("Please install X11 library to use this function.");
+  return wrap(out);
+#else
   List state;
   CId img=as<CId >(init);
   state["mouse_x"] = -1;
@@ -153,4 +165,5 @@ NumericVector interact_(Function fun,NumericVector init,std::string title = "")
     }
     CId out(disp);
     return wrap(out);
+#endif
 }

@@ -7,6 +7,11 @@ using namespace cimg_library;
 // [[Rcpp::export]]
 void display_(NumericVector im,bool rescale=true)
 {
+#if cimg_display==0
+  (void)im;
+  (void)rescale;
+   Rcpp::stop("Please install X11 library to use this function.");
+#else 
    CId img = as<CId >(im);
    int norm;
    if (rescale)
@@ -27,21 +32,26 @@ void display_(NumericVector im,bool rescale=true)
    	Rcpp::checkUserInterrupt();
 	disp.wait();
       }
-
+#endif
    return;
 }
 
 // [[Rcpp::export]]
 void display_list(List imlist)
 {
+#if cimg_display==0
+   (void)imlist;
+   Rcpp::stop("Please install X11 library to use this function.");
+#else 
    CImgList<double> L = sharedCImgList(imlist);
    L.display("",false);
+#endif
    return;
 }
 
 //' Play a video 
 //'
-//' A very basic video player. Press the space bar to pause and ESC to close. 
+//' A very basic video player. Press the space bar to pause and ESC to close. Note that you need X11 library to use this function.
 //' @param vid A cimg object, to be played as video
 //' @param loop loop the video (default false)
 //' @param delay delay between frames, in ms. Default 30.
@@ -50,6 +60,14 @@ void display_list(List imlist)
 // [[Rcpp::export]]
 void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalise=true)
 {
+
+#if cimg_display==0
+  (void)vid;
+  (void)loop;
+  (void)delay;
+  (void)normalise;
+  Rcpp::stop("Please install X11 library to use this function.");
+#else 
   unsigned long t0 = cimg::time();
   unsigned long dt;
   CId img = as<CId >(vid);
@@ -104,7 +122,7 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
 	  }
 	Rcpp::checkUserInterrupt();
       }
-
+#endif
     return;
 }
 
@@ -112,7 +130,13 @@ void play(NumericVector vid,bool loop=false,unsigned long delay=30,bool normalis
 NumericVector select(NumericVector im,int type=2)
 {
 CImg<double> img = as<CImg<double> >(im);
-CImg<double> out;
-out = img.get_select("",type);
-return wrap(out);
+#if cimg_display==0
+  (void)type;
+  Rcpp::stop("Please install X11 library to use this function.");
+  return wrap(img);
+#else 
+  CImg<double> out;
+  out = img.get_select("",type);
+  return wrap(out);
+#endif
 }
