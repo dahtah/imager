@@ -1,7 +1,7 @@
 Package: imager
 Type: Package
 Title: Image Processing Library Based on 'CImg'
-Version: 0.42.1
+Version: 0.42.7
 Author: Simon Barthelme [aut], David Tschumperle [ctb], Jan Wijffels [ctb], Haz Edine Assemlal [ctb], Shota Ochi [cre]
 Authors@R: c(person("Simon","Barthelme",email="simon.barthelme@gipsa-lab.fr",role=c("aut")),
  person("David","Tschumperle",role=c("ctb")),
@@ -20,14 +20,14 @@ Imports:
     Rcpp (>= 0.11.5),methods,stringr,png,jpeg,readbitmap,grDevices,purrr,downloader,igraph
 Depends:
     R (>= 2.10.0),magrittr
-URL: http://dahtah.github.io/imager, https://github.com/dahtah/imager
+URL: http://dahtah.github.io/imager/, https://github.com/dahtah/imager/
 BugReports: https://github.com/dahtah/imager/issues
-SystemRequirements: fftw3,libtiff,C++11
+SystemRequirements: fftw3,libtiff,C++11,X11
 LinkingTo: Rcpp
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests:
     knitr,
     rmarkdown,ggplot2,dplyr,scales,
-    testthat,OpenMPController,raster,spatstat, magick,Cairo
+    testthat,OpenMPController,raster,spatstat,magick,Cairo
 VignetteBuilder: knitr

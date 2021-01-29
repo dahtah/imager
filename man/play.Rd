@@ -16,5 +16,5 @@ play(vid, loop = FALSE, delay = 30L, normalise = TRUE)
 \item{normalise}{if true pixel values are rescaled to 0...255 (default TRUE). The normalisation is based on the *first frame*. If you don't want the default behaviour you can normalise by hand. Default TRUE.}
 }
 \description{
-A very basic video player. Press the space bar to pause and ESC to close.
+A very basic video player. Press the space bar to pause and ESC to close. Note that you need X11 library to use this function.
 }

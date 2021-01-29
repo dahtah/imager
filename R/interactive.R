@@ -5,6 +5,7 @@
 ##' These functions let you select a shape in an image (a point, a line, or a rectangle)
 ##' They either return the coordinates of the shape (default), or the contents.
 ##' In case of lines contents are interpolated. Note that grabLine does not support the "pixset" return type. 
+##' Note that you need X11 library to use these functions.
 ##' @name grab
 ##' @param im an image
 ##' @param output one of "im","pixset","coord","value". Default "coord"
@@ -135,6 +136,7 @@ grabPoint <- function(im,output="coord")
 ##' You can exit the interface at any time by pressing Esc.
 ##' See examples for more.
 ##' This feature is experimental!!!
+##' Note that you need X11 library to use this function.
 ##' @param fun a function that takes a single argument (a list of user events) and returns an image to be plotted. The image won't be rescaled before plotting, so make sure RGB values are in [0,1]. 
 ##' @param title a title for the window (default "", none)
 ##' @param init initial image to display (optional)

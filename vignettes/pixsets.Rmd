@@ -240,7 +240,7 @@ imsplit(px,"c") %>% parany %>% highlight
 
 # An example: segmentation with pixsets
 
-The following example is derived from the documentation for [scikit-image](http://scikit-image.org/docs/dev/user_guide/tutorial_segmentation.html). The objective is to segment the coins from the background. 
+The following example is derived from the documentation for [scikit-image](https://scikit-image.org/docs/dev/user_guide/tutorial_segmentation.html). The objective is to segment the coins from the background. 
 
 ```{r}
 im <- load.example("coins")

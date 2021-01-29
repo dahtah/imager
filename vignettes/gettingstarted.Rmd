@@ -211,7 +211,7 @@ cn.eq <- map_il(cn,hist.eq) #run hist.eq on each
 imappend(cn.eq,"c") %>% plot(main="All channels equalised") #recombine and plot
 ```
 
-The map_il function is a variant of lapply inspired by the [purrr](http://purrr.tidyverse.org/) package. It applies a function to each element of a list and returns an image list. You can use purrr together with image for all kinds of neat tricks, e.g.:
+The map_il function is a variant of lapply inspired by the [purrr](https://purrr.tidyverse.org/) package. It applies a function to each element of a list and returns an image list. You can use purrr together with image for all kinds of neat tricks, e.g.:
 
 ```{r}
 library(purrr)
@@ -345,7 +345,7 @@ We'll see more interesting uses for **ggplot2** later.
 
 # Blob detection/extraction of local maxima, denoising, scale-space
 
-Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for [scikit-image](http://scikit-image.org/))
+Our goal will be to find the coordinates of the galaxies in this picture (I took the idea from the documentation for [scikit-image](https://scikit-image.org/))
 
 ```{r}
 hub <- load.example("hubble") %>% grayscale
@@ -576,7 +576,7 @@ The next step is to learn about pixsets, which have their own vignette:
 
 pixsets represent sets of pixels and are all-around quite useful.
 
-After that, you can have a browse around the [website](http://dahtah.github.io/imager).
+After that, you can have a browse around the [website](https://dahtah.github.io/imager/).
 
 # imager functions by theme
 

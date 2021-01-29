@@ -147,7 +147,7 @@ display_list <- function(imlist) {
 
 #' Play a video 
 #'
-#' A very basic video player. Press the space bar to pause and ESC to close. 
+#' A very basic video player. Press the space bar to pause and ESC to close. Note that you need X11 library to use this function.
 #' @param vid A cimg object, to be played as video
 #' @param loop loop the video (default false)
 #' @param delay delay between frames, in ms. Default 30.

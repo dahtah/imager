@@ -13,6 +13,17 @@ if test -z "${R_HOME}"; then
   echo "could not determine R_HOME"
   exit 1
 fi
+CC=`"${R_HOME}/bin/R" CMD config CC`
+CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+LDFLAGS=`"${R_HOME}/bin/R" CMD config LDFLAGS`
+
+CXX=`"${R_HOME}/bin/R" CMD config CXX`
+if test -z "$CXX"; then
+  AC_MSG_ERROR([No C++ compiler is available])
+fi
+CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
+AC_LANG(C++)
 
 RBIN="${R_HOME}/bin/R"
 
@@ -30,12 +41,23 @@ if test `uname` = "Darwin" ; then
 else
   darwin="no"
 fi
-## --- Darwin ----------------------------------------------------------------
+
+# check the presense of pkg-config (from Cairo package)
+AC_PATH_PROG([PKGCONF],[pkg-config],[],[$PATH:/usr/local/bin:ext/bin:ext:/sw/bin:/opt/bin])
 
 
 # ---[ X11 ]------------------------------------------------------------------
 
   AC_PATH_X
+  AC_CHECK_LIB(X11, XOpenDisplay, [HAVE_LIBX11=TRUE], [HAVE_LIBX11=FALSE])
+  if test "$HAVE_LIBX11" == TRUE; then
+    AC_MSG_RESULT([X11 library found.])
+    DONT_HAVE_X11=''
+    #DONT_HAVE_X11='-Dcimg_display=0'
+  else
+    AC_MSG_RESULT([X11 library not found, please install X11 library if you need the display capabilities of CImg.])
+    DONT_HAVE_X11='-Dcimg_display=0'
+  fi
   if test x$no_x = xyes ; then
     AC_MSG_ERROR([X11 not found but required, configure aborted.])
   fi
@@ -48,10 +70,9 @@ fi
     LIBS="${LIBS} -lX11"
   fi
 
-
-if test x$L_LIB != x; then
-  LIBS="${L_LIB} ${LIBS}"
-fi
+  if test x$L_LIB != x; then
+    LIBS="${L_LIB} ${LIBS}"
+  fi
 
 
 
@@ -62,38 +83,65 @@ AC_MSG_NOTICE([Checking if FFTW3 library is available using pkg-config])
 ## --- FFTW 3 ----------------------------------------------------------------
 PKG_CHECK_MODULES(FFTW, fftw3, [HAVE_FFTW=TRUE], [HAVE_FFTW=FALSE])
 
-if test "$HAVE_FFTW" == TRUE
-then
-	HAVE_FFTW='-Dcimg_use_fftw3'
-	AC_MSG_RESULT([FFTW3 found!])
+if test "$HAVE_FFTW" == TRUE; then
+  HAVE_FFTW='-Dcimg_use_fftw3'
+  AC_MSG_RESULT([FFTW3 found!])
 else
-	HAVE_FFTW=''
+  HAVE_FFTW=''
   # Return message that package requires FFTW3 library
   AC_MSG_RESULT([FFTW library not found, please install fftw3 for better FFT support.])
 fi
 
 
-#check for libtiff (from rtiff package)
-AC_CHECK_LIB([tiff], [TIFFOpen], [have_tiff=yes], [have_tiff=no])
-if test "x${have_tiff}" = xyes; then
-TIFF_LIBS="-ltiff"
-TIFF_CFLAGS="-Dcimg_use_tiff"
-else
-  ## version for Mac OS X, static libtiff 4.0.x
-  unset ac_cv_lib_tiff_TIFFOpen
-  echo 'Try static libs needed on OS X'
-  AC_CHECK_LIB([tiff], [TIFFOpen], [have_tiff=yes], [have_tiff=no],
-               [-llzma -ljpeg -lz])
-  if test "x${have_tiff}" = xyes; then
-    TIFF_CFLAGS="-Dcimg_use_tiff"
-    TIFF_LIBS="-ltiff -llzma -ljpeg -lz"
+#check for libtiff 
+#(from Cairo and modified)
+if test "xx$PKGCONF" != "xx"; then
+  AC_MSG_CHECKING([whether pkg-config knows about libtiff-4])
+  if "${PKGCONF}" --exists libtiff-4; then
+    AC_MSG_RESULT([yes])
+    AC_MSG_CHECKING([for configurable backends])
+    TIFF_LIBS=`"${PKGCONF}" --libs libtiff-4`
+    TIFF_CFLAGS=`"${PKGCONF}" --cflags libtiff-4`
+    TIFF_CFLAGS="${TIFF_CFLAGS} -Dcimg_use_tiff"
+    AC_MSG_CHECKING([whether --static is needed])
+    saveLIBS="$LIBS"
+    LIBS="$saveLIBS ${TIFF_LIBS}"
+    AC_LINK_IFELSE([AC_LANG_FUNC_LINK_TRY(TIFFOpen)],
+      [AC_MSG_RESULT([no])],
+      [TIFF_LIBS=`"${PKGCONF}" --libs --static libtiff-4`
+       LIBS="$saveLIBS ${TIFF_LIBS}"
+       AC_LINK_IFELSE([AC_LANG_FUNC_LINK_TRY(TIFFOpen)],
+        [AC_MSG_RESULT([yes])],
+        [AC_MSG_RESULT([neither works, abandoning pkg-config])
+        TIFF_LIBS=''
+       ])
+      ])
+    LIBS="$saveLIBS"
   else
-    echo Could not find libtiff. Install libtiff for better tiff support
-    TIFF_CFLAGS=""
-    TIFF_LIBS=""
+    AC_MSG_RESULT([no])
+  fi
+else
+  #(from rtiff package) 
+  AC_CHECK_LIB([tiff], [TIFFOpen], [have_tiff=yes], [have_tiff=no])
+  if test "x${have_tiff}" = xyes; then
+  TIFF_LIBS="-ltiff"
+  TIFF_CFLAGS="-Dcimg_use_tiff"
+  else
+    ## version for Mac macOS, static libtiff 4.0.x
+    unset ac_cv_lib_tiff_TIFFOpen
+    echo 'Try static libs needed on macOS'
+    AC_CHECK_LIB([tiff], [TIFFOpen], [have_tiff=yes], [have_tiff=no],
+                 [-llzma -ljpeg -lz])
+    if test "x${have_tiff}" = xyes; then
+      TIFF_CFLAGS="-Dcimg_use_tiff"
+      TIFF_LIBS="-ltiff -llzma -ljpeg -lz"
+    else
+      echo Could not find libtiff. Install libtiff for better tiff support
+      TIFF_CFLAGS=""
+      TIFF_LIBS=""
+    fi
   fi
 fi
-
 
 
 # Check for OpenMP (from randomForests package)
@@ -165,6 +213,7 @@ dnl this the meat of R's m4/openmp.m4
 AC_SUBST(OPENMP_CXXFLAGS)
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
+AC_SUBST(DONT_HAVE_X11)
 AC_SUBST(HAVE_FFTW)
 AC_SUBST(FFTW_CFLAGS)
 AC_SUBST(FFTW_LIBS)

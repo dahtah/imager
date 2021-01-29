@@ -79,7 +79,7 @@ FFT <- function(im.real,im.imag,inverse=FALSE)
 ##' @param interpolation interpolation method to use (see doc for resize). Default 3, linear. Set to 5 for cubic, 6 for Lanczos (higher quality).
 ##' @return an image
 ##' @references
-##' For double-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://scale2x.sourceforge.net/algorithm.html}. For half-scaling uses what the CImg doc describes as an "optimised filter", see resize_halfXY in CImg.h.
+##' For double-scale, triple-scale, etc. uses an anisotropic scaling algorithm described in: \url{http://www.scale2x.it/algorithm.html}. For half-scaling uses what the CImg doc describes as an "optimised filter", see resize_halfXY in CImg.h.
 ##' @seealso resize
 ##' @examples
 ##' im <- load.example("parrots")
