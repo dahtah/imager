@@ -103,15 +103,20 @@ as.raster.cimg <- function(x,frames,rescale=TRUE,colourscale=NULL,
         {
             dim(im) <- dim(im)[1:2]
             r <- im %>%  colourscale
-            dim(r) <- dim(im)[2:1]
-            class(r) <- "raster"
         }
-        else{
+        else if (spectrum(im) == 3) { #RGB
             v <- channels(im) %>% lapply(as.matrix)
             r <- colourscale(v[[1]],v[[2]],v[[3]])
-            dim(r) <- dim(im)[2:1]
-            class(r) <- "raster"
         }
+        else if (spectrum(im) == 4) { #RGBA
+            v <- channels(im) %>% lapply(as.matrix)
+            r <- colourscale(v[[1]],v[[2]],v[[3]],v[[4]])
+        }
+        else {
+            stop("Don't know how to convert an image with ", spectrum(im), " channels to raster.")
+        }
+        dim(r) <- dim(im)[2:1]
+        class(r) <- "raster"
         if (has.na)
         {
             #Insert col.na where appropriate
