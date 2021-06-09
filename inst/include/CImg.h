@@ -22918,7 +22918,7 @@ namespace cimg_library_suffixed {
         // Filename specified.
         CImg<charT> ss(siz_arg2 + 1);
         cimg_forX(ss,i) ss[i] = (char)ptr_arg2[i];
-        ss.back() = 0;
+        if (ss.size() != 0) ss.back() = 0;
         if (!siz_arg1) return cimg::fdate(ss,(unsigned int)*ptr_arg1);
         for (unsigned int k = 0; k<siz_out; ++k) ptr_out[k] = ptr_arg1[k];
         cimg::fdate(ss,ptr_out,siz_out);
@@ -23360,7 +23360,7 @@ namespace cimg_library_suffixed {
         const ulongT siz = (ulongT)mp.opcode[3];
         CImg<charT> ss(siz + 1);
         cimg_forX(ss,i) ss[i] = (char)ptrs[i];
-        ss.back() = 0;
+        if (ss.size() != 0) ss.back() = 0;
         return (double)cimg::fsize(ss);
       }
 
@@ -23647,7 +23647,7 @@ namespace cimg_library_suffixed {
         const ulongT siz = (ulongT)mp.opcode[3];
         CImg<charT> ss(siz + 1);
         cimg_forX(ss,i) ss[i] = (char)ptrs[i];
-        ss.back() = 0;
+        if (ss.size() != 0)  ss.back() = 0;
         return (double)cimg::is_directory(ss);
       }
 
@@ -23672,7 +23672,7 @@ namespace cimg_library_suffixed {
         const ulongT siz = (ulongT)mp.opcode[3];
         CImg<charT> ss(siz + 1);
         cimg_forX(ss,i) ss[i] = (char)ptrs[i];
-        ss.back() = 0;
+        if (ss.size() != 0) ss.back() = 0;
         return (double)cimg::is_file(ss);
       }
 
@@ -25561,7 +25561,7 @@ namespace cimg_library_suffixed {
                                       cimg::type<T>::string(),w,h,d,s,sizM);
         CImg<charT> ss(siz2 + 1);
         cimg_for_inX(ss,0,ss.width() - 1,i) ss[i] = (char)ptr2[i];
-        ss.back() = 0;
+        if (ss.size() != 0) ss.back() = 0;
 
         CImg<doubleT> img;
         if (siz1) cimg_mp_func_store(ptr1 + 1,
@@ -25584,7 +25584,7 @@ namespace cimg_library_suffixed {
         CImg<charT> ss(siz + 1 - ind);
         ptrs+=1 + ind;
         cimg_forX(ss,i) ss[i] = (char)ptrs[i];
-        ss.back() = 0;
+        if (ss.size() != 0) ss.back() = 0;
 
         const char *s = ss._data;
         while (*s && *s<=32) ++s;
