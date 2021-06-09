@@ -15,7 +15,7 @@ vignette: >
 
 ```{r init,echo=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE,
-               comment=NA, verbose=TRUE, fig.width=5, fig.height=5,dev='jpeg',dev.args=list(quality=50))
+               comment=NA, verbose=TRUE, fig.width=5, fig.height=5,dev='jpeg',dev.args=list(quality=25))
 ```
 **imager** contains a large array of functions for working with image data, with most of these functions coming from the [CImg library](http://www.cimg.eu/) by David Tschumperlé. This vignette is just a short tutorial, you'll find more information and examples on the website. Each function in the package is documented and comes with examples, so have a look at package documentation as well.
 
