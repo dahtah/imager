@@ -77,7 +77,7 @@ sysreqs::sysreqs(desc = tmp,
 
 <sup>Created on 2022-12-20 with [reprex v2.0.2](https://reprex.tidyverse.org)</sup>
 
-The last line above inidcates the required system packages. On Ubuntu (or Debian) Linux you would install them via
+The last line above indicates the required system packages. On Ubuntu (or Debian) Linux you would install them via
 
 ```sh
 sudo apt install libfftw3-dev libtiff-dev libxml2-dev libicu-dev libgmp-dev libpng-dev libglpk-dev
