@@ -45,30 +45,42 @@ Building R packages on Windows is a bit of a pain so you're probably better off 
 
 ### Linux
 
-To build under Linux make sure you have the headers for libX11 and libfftw3 (optionally, libtiff as well). On my Ubuntu system this seems to be enough:
+To build under Linux make sure you have the headers for libx11 and libfftw3 (optionally, libtiff as well) installed. To determine a complete list of required system dependencies (incl. transitive ones), you can query the [SystemRequirements database](https://github.com/r-hub/sysreqsdb) via the R package [sysreqs](https://github.com/r-hub/sysreqs).
 
-```sh
-sudo apt-get install libfftw3-dev libx11-dev libtiff-dev
-```
+Example R code to do this for Ubuntu Linux:
 
-For other Linux distributions, you can query the [SystemRequirements database](https://github.com/r-hub/sysreqsdb) to determine the relevant dependency package names for [imager](https://sysreqs.r-hub.io/pkg/imager):
-
-```r
-# install prerequisites
-install.packages("remotes")
+``` r
+# install necessary R packages
+if (!("remotes" %in% rownames(installed.packages()))) {
+    install.packages(pkgs = "remotes",
+                     repos = "https://cloud.r-project.org/")
+}
 remotes::install_github("r-hub/sysreqs")
+#> Using github PAT from envvar GITHUB_PAT
+#> Skipping install of 'sysreqs' from a github remote, the SHA1 (f068afa9) has not changed since last install.
+#>   Use `force = TRUE` to force installation
 
-# set platform; supported platforms are listed here: https://github.com/r-hub/sysreqsdb/tree/master/platforms
-target <- "linux-x86_64-arch-gcc"
-
-# print package names as character vector
+# download imager's DESCRIPTION file (to parse it for system requirements later on)
 tmp <- tempfile(pattern = "DESCRIPTION")
 download.file(url = "https://github.com/dahtah/imager/raw/master/DESCRIPTION",
               destfile = tmp)
-sysreqs::(desc = tmp,
-          platform = "linux-x86_64-arch-gcc",
-	  soft = FALSE)
-rm(tmp)
+
+# print system package names
+sysreqs::sysreqs(desc = tmp,
+                 # set platform identifier (here we use the one for Ubuntu Linux)
+                 # supported platforms are listed here: https://github.com/r-hub/sysreqsdb/tree/master/platforms
+                 platform = "linux-x86_64-ubuntu-gcc",
+                 soft = FALSE) |>
+    cat()
+#> libfftw3-dev libtiff-dev libxml2-dev libicu-dev libgmp-dev libpng-dev libglpk-dev
+```
+
+<sup>Created on 2022-12-20 with [reprex v2.0.2](https://reprex.tidyverse.org)</sup>
+
+The last line above indicates the required system packages. On Ubuntu (or Debian) Linux you would install them via
+
+```sh
+sudo apt install libfftw3-dev libtiff-dev libxml2-dev libicu-dev libgmp-dev libpng-dev libglpk-dev
 ```
 
 ### External dependencies
