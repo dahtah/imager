@@ -159,7 +159,7 @@ as.cimg.raster <- function(obj,...)
 cimg2im <- function(img,W=NULL)
     {
         
-        if (requireNamespace("spatstat",quietly=TRUE))
+        if (requireNamespace("spatstat.geom",quietly=TRUE))
             {
                 if (depth(img) > 1)
                     {
@@ -173,12 +173,12 @@ cimg2im <- function(img,W=NULL)
                     }
                 else
                     {
-                        imrotate(img,90) %>% as.array %>% squeeze %>% spatstat::as.im(W=W)
+                        imrotate(img,90) %>% as.array %>% squeeze %>% spatstat.geom::as.im(W=W)
                     }
             }
         else
             {
-                stop("The spatstat package is required")
+                stop("The spatstat.geom package is required")
             }
     }
 
@@ -192,13 +192,13 @@ cimg2im <- function(img,W=NULL)
 ##' @export
 im2cimg <- function(img)
     {
-        if (requireNamespace("spatstat",quietly=TRUE))
+        if (requireNamespace("spatstat.geom",quietly=TRUE))
             {
-                spatstat::as.matrix.im(img) %>% as.cimg %>% imrotate(-90)
+                spatstat.geom::as.matrix.im(img) %>% as.cimg %>% imrotate(-90)
             }
         else
             {
-                stop("The spatstat package is required")
+                stop("The spatstat.geom package is required")
             }
     }
 

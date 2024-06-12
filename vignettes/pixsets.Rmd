@@ -15,7 +15,7 @@ vignette: >
 
 ```{r init,echo=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, cache=FALSE, 
-               comment=NA, verbose=TRUE, fig.width=5, fig.height=5,dev='jpeg',dev.args=list(quality=50))
+               comment=NA, verbose=TRUE, fig.width=5, fig.height=5,dev='jpeg',dev.args=list(quality=25))
 ```
 If you've already gone through the "Getting started" vignette, you know about image objects ("cimg" class). This vignette introduces pixsets, which is the other important kind of objects. Pixsets represent sets of pixels, or equivalently binary images, AKA "masks". 
 ```{r}

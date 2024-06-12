@@ -1,1 +1,2 @@
 I removed the lines that contained #pragma warning() or #pragma GCC diagnostic.
+I replaced the lines "ss.back() = 0;" with "if (ss.back() != 0) ss.back = 0;".
