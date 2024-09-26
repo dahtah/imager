@@ -494,7 +494,7 @@ cvt.frame <- function(f){
 
 #' Convert a magick image to a cimg image or image list and vice versa
 #'
-#' The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects or imager objects into magick objects. Note that cimg2magick function requires magick package.
+#' The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects or imager objects into magick objects. Note that cimg2magick function requires magick package and is deprecated.
 #' @param obj an object of class "magick-image"
 #' @name magick
 #' @param ... ignored
@@ -539,6 +539,7 @@ magick2cimg <- function(obj,alpha="rm",...)
 #' @author Shota Ochi
 cimg2magick <- function(im, rotate = TRUE)
 {
+    message("cimg2magick function is deprecated.\nUse image_read function of magick package instead.\n")
     out <- as.array(frames(im, drop = TRUE)[[1]])
     if (spectrum(im) == 1)
     {

@@ -30,7 +30,7 @@ an object of class cimg or imlist
 an object of class "magick-image"
 }
 \description{
-The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects or imager objects into magick objects. Note that cimg2magick function requires magick package.
+The magick library package stores its data as "magick-image" object, which may in fact contain several images or an animation. These functions convert magick objects into imager objects or imager objects into magick objects. Note that cimg2magick function requires magick package and is deprecated.
 }
 \seealso{
 flatten.alpha, rm.alpha
